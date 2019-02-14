@@ -1,0 +1,18 @@
+dependencies {
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"    
+
+    compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
+    compile project(":gcp-common")
+    compile "io.micronaut:micronaut-tracing:$micronautVersion"
+    compile "io.micronaut:micronaut-inject:$micronautVersion"
+    compile("io.zipkin.gcp:zipkin-sender-stackdriver:0.10.1")
+    compile 'io.grpc:grpc-auth:1.18.0'
+    compile 'io.grpc:grpc-netty:1.18.0'
+    compile "io.opentracing.brave:brave-opentracing:0.33.10"
+    compile 'io.zipkin.gcp:brave-propagation-stackdriver:0.10.1'
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testCompile "io.micronaut:micronaut-inject-java"
+    testCompile "io.micronaut:micronaut-inject-groovy"
+    testCompile "io.micronaut.test:micronaut-test-spock:1.0.2"
+}

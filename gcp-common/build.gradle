@@ -1,0 +1,13 @@
+dependencies {
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
+
+    compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
+    compile "io.micronaut:micronaut-inject:$micronautVersion"
+    compile 'com.google.auth:google-auth-library-oauth2-http:0.13.0'
+    compile 'com.google.cloud:google-cloud-core:1.62.0'
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testCompile "io.micronaut:micronaut-inject-java"
+    testCompile "io.micronaut.test:micronaut-test-spock:1.0.2"
+    testCompile "io.micronaut:micronaut-inject-groovy"
+}
