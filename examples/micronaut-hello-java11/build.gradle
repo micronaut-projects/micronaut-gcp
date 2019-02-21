@@ -20,7 +20,7 @@ apply plugin:"application"
 apply plugin:"java"
 apply plugin:"net.ltgt.apt-eclipse"
 apply plugin:"net.ltgt.apt-idea"
-apply plugin: "com.google.cloud.tools.appengine-standard"
+apply plugin: "com.google.cloud.tools.appengine-appyaml"
 
 repositories {
     mavenLocal()
