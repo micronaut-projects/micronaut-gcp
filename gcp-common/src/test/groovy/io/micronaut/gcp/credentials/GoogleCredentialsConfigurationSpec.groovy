@@ -16,7 +16,7 @@ class GoogleCredentialsConfigurationSpec extends Specification {
 
     void "test google credentials configuration"() {
         expect:
-        configuration.oauthScopes == GoogleCredentialsConfiguration.DEFAULT_SCOPES
-        context.getBean(GoogleCredentialsProvider)
+        configuration.scopes == GoogleCredentialsConfiguration.DEFAULT_SCOPES
+        context.getBean(GoogleCredentials)
     }
 }

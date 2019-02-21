@@ -1,15 +1,22 @@
 package io.micronaut.gcp.tracing.zipkin;
 
 import brave.propagation.Propagation;
-import com.google.api.gax.core.GoogleCredentialsProvider;
+import com.google.auth.oauth2.GoogleCredentials;
 import io.grpc.CallOptions;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import io.grpc.auth.MoreCallCredentials;
+import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.env.Environment;
+import io.micronaut.context.event.BeanCreatedEventListener;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.UserAgentHeaderProvider;
 import io.micronaut.gcp.condition.RequiresGoogleProjectId;
 import io.micronaut.tracing.brave.AsyncReporterConfiguration;
+import io.micronaut.tracing.brave.BraveTracerConfiguration;
 import zipkin2.Span;
 import zipkin2.propagation.stackdriver.StackdriverTracePropagation;
 import zipkin2.reporter.AsyncReporter;
@@ -17,28 +24,59 @@ import zipkin2.reporter.Sender;
 import zipkin2.reporter.stackdriver.StackdriverEncoder;
 import zipkin2.reporter.stackdriver.StackdriverSender;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
 
 @Factory
 @Requires(classes = StackdriverSender.class)
-@Requires(env = Environment.GOOGLE_COMPUTE)
+@Requires(property = "gcp.trace.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 public class StackdriverSenderFactory {
+    public static final URI TRACE_SCOPE = URI.create("https://www.googleapis.com/auth/trace.append");
+    public static final String TRACE_TARGET = "cloudtrace.googleapis.com";
 
+    @Singleton
+    @Bean(preDestroy = "shutdownNow")
+    @Named("stackdriverTraceSenderChannel")
+    protected ManagedChannel stackdriverTraceSenderChannel() {
+        UserAgentHeaderProvider userAgentHeaderProvider = new UserAgentHeaderProvider("trace");
 
-    @Requires(classes = StackdriverSender.class)
+        return ManagedChannelBuilder.forTarget(TRACE_TARGET)
+                .userAgent(userAgentHeaderProvider.getUserAgent())
+                .build();
+    }
+
     @RequiresGoogleProjectId
-    @Requires(beans = GoogleCredentialsProvider.class)
+    @Requires(classes = StackdriverSender.class)
     @Singleton
     protected Sender stackdriverSender(
             GoogleCloudConfiguration cloudConfiguration,
-            GoogleCredentialsProvider credentialsProvider) throws IOException {
+            GoogleCredentials credentials,
+            @Named("stackdriverTraceSenderChannel") ManagedChannel channel) throws IOException {
 
-        return StackdriverSender.newBuilder()
+        GoogleCredentials traceCredentials = credentials.createScoped(Arrays.asList(TRACE_SCOPE.toString()));
+
+        return StackdriverSender.newBuilder(channel)
                 .projectId(cloudConfiguration.getProjectId())
                 .callOptions(CallOptions.DEFAULT
-                        .withCallCredentials(MoreCallCredentials.from(credentialsProvider.getCredentials())))
+                        .withCallCredentials(MoreCallCredentials.from(traceCredentials)))
                 .build();
+    }
+
+    @Singleton
+    @Requires(classes = StackdriverSender.class)
+    protected BeanCreatedEventListener<BraveTracerConfiguration> braveTracerConfigurationBeanCreatedEventListener() {
+        return (configuration) -> {
+            BraveTracerConfiguration configurationBean = configuration.getBean();
+
+            configurationBean.getTracingBuilder()
+                    .traceId128Bit(true)
+                    .supportsJoin(false);
+
+            return configurationBean;
+        };
     }
 
     @Singleton
