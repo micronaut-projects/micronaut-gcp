@@ -53,7 +53,7 @@ import java.util.Arrays;
  */
 @Factory
 @Requires(classes = StackdriverSender.class)
-@Requires(property = "gcp.trace.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = StackdriverSenderFactory.PROPERTY_ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 public class StackdriverSenderFactory {
 
     /**
@@ -65,6 +65,11 @@ public class StackdriverSenderFactory {
      * The trace target to use.
      */
     public static final String TRACE_TARGET = "cloudtrace.googleapis.com";
+
+    /**
+     * The property used to enable tracing.
+     */
+    public static final String PROPERTY_ENABLED = "gcp.tracing.enabled";
 
     /**
      * @return A GRPC channel to use to send traces.

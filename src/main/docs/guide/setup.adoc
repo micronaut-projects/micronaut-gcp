@@ -1,0 +1,17 @@
+The `micronaut-gcp-common` module includes basic setup for running applications on Google Cloud.
+
+dependency:io.micronaut.gcp:micronaut-gcp-common[version="{version}"]
+
+=== Google Project ID
+
+The module features a base api:gcp.GoogleCloudConfiguration[] which you can use to configure or retrieve the GCP Project ID:
+
+include::{includedir}configurationProperties/io.micronaut.gcp.GoogleCloudConfiguration.adoc[]
+
+You can inject this bean and use the `getProjectId()` method to retrieve the configured or detected project ID.
+
+=== Google Credentials
+
+The module will setup a bean of exposing the `com.google.auth.oauth2.GoogleCredentials` instance that are either detected from the local environment or configured by api:gcp.credentials.GoogleCredentialsConfiguration[]:
+
+include::{includedir}configurationProperties/io.micronaut.gcp.credentials.GoogleCredentialsConfiguration.adoc[]

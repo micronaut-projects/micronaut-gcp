@@ -1,0 +1,17 @@
+The `micronaut-gcp-tracing` integrates Micronaut with https://cloud.google.com/trace[Stackdriver Trace].
+
+To enable it add the following dependency:
+
+dependency:io.micronaut.gcp:micronaut-gcp-tracing[version="{version}"]
+
+Then enabling Zipkin tracing in your configuration `application.yml`:
+
+.Enabling Stackdriver Trace
+[source,yaml]
+----
+tracing:
+    zipkin:
+        enabled: true
+----
+
+NOTE: The `gcp.tracing.enabled` property (which defaults to `true`) can be used to enable/disable only the GCP tracing.
