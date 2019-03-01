@@ -12,6 +12,16 @@ Then enabling Zipkin tracing in your configuration `application.yml`:
 tracing:
     zipkin:
         enabled: true
+        # [Optional] Set sampling probability to 100% for dev/testing purposes to observe traces.
+        #
+        # sampler:
+        #    probability=1.0
+
+# [Optional] configuration to enable/disable Stackdriver Trace configuration.
+# This is defaulted to true.
+#
+# gcp:
+#    tracing:
+#        enabled: true
 ----
 
-NOTE: The `gcp.tracing.enabled` property (which defaults to `true`) can be used to enable/disable only the GCP tracing.

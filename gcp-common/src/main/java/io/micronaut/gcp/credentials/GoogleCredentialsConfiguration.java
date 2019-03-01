@@ -61,7 +61,9 @@ public class GoogleCredentialsConfiguration {
     }
 
     /**
-     * The scopes to use.
+     * The default scopes to associate with the application to access specific APIs.
+     * See <a href="https://developers.google.com/identity/protocols/googlescopes">Google Scopes</a> for a complete list.
+     * Leave this empty if you don't need additional API access.
      *
      * @param scopes The scopes
      */
@@ -70,7 +72,10 @@ public class GoogleCredentialsConfiguration {
     }
 
     /**
-     * The location of the credentials.
+     * The location of the service account credential key file. See
+     * <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Understanding Service Accounts</a>
+     * for more information on generating a service account key file.
+	 *
      * @return The location
      */
     public @Nonnull Optional<String> getLocation() {
@@ -78,7 +83,7 @@ public class GoogleCredentialsConfiguration {
     }
 
     /**
-     * Sets the location to use.
+     * Sets the location to the service account credential key file.
      * @param location The location
      */
     public void setLocation(@Nullable String location) {
@@ -86,7 +91,8 @@ public class GoogleCredentialsConfiguration {
     }
 
     /**
-     * The encoded key.
+     * The Base64 encoded service account key content. This is not recommended except if you need to encode service
+     * account key via an environmental variable. For other use cases, configure <pre>location</pre> instead.
      * @return The key
      */
     public @Nonnull Optional<String> getEncodedKey() {
@@ -94,7 +100,7 @@ public class GoogleCredentialsConfiguration {
     }
 
     /**
-     * Sets the encoded key.
+     * Sets the Base64 encoded service account key content..
      * @param encodedKey The key
      */
     public void setEncodedKey(@Nullable String encodedKey) {
