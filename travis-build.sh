@@ -80,7 +80,7 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
       if [[ $EXIT_STATUS -eq 0 ]]; then
        ./gradlew --console=plain --no-daemon docs  || EXIT_STATUS=$?
 
-        git clone https://${GH_TOKEN}@github.com/micronaut-projects/micronaut-aws.git -b gh-pages gh-pages --single-branch > /dev/null
+        git clone https://${GH_TOKEN}@github.com/micronaut-projects/micronaut-gcp.git -b gh-pages gh-pages --single-branch > /dev/null
 
         cd gh-pages
 
