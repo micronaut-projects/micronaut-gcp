@@ -19,6 +19,12 @@ import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 
+/**
+ * Implementation of {@link RequiresGoogleProjectId}.
+ *
+ * @author graemerocher
+ * @since 1.0
+ */
 public class RequiresProjectIdCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context) {

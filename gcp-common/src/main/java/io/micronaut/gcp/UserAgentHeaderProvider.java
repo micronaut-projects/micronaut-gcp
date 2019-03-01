@@ -35,6 +35,11 @@ public class UserAgentHeaderProvider implements HeaderProvider {
 
     private final Map<String, String> headers;
 
+    /**
+     * Default constructor.
+     *
+     * @param component The component
+     */
     public UserAgentHeaderProvider(String component) {
         this.userAgent = computeUserAgent(component);
         this.headers = Collections.singletonMap("User-Agent", this.userAgent);

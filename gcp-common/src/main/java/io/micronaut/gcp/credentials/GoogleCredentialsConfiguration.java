@@ -17,6 +17,7 @@ package io.micronaut.gcp.credentials;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
+import io.micronaut.gcp.GoogleCloudConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,10 +26,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@ConfigurationProperties("gcp.credentials")
+/**
+ * Configuration for the Google credentials.
+ *
+ * @author graemerocher
+ * @author Ray Tsang
+ * @since 1.0
+ */
+@ConfigurationProperties(GoogleCredentialsConfiguration.PREFIX)
 @Context
 public class GoogleCredentialsConfiguration {
+    /**
+     * The default scopes.
+     */
     public static final List<URI> DEFAULT_SCOPES = Collections.emptyList();
+
+    /**
+     * The prefix to use.
+     */
+    public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".credentials";
 
     private List<URI> scopes = DEFAULT_SCOPES;
 
@@ -36,27 +52,52 @@ public class GoogleCredentialsConfiguration {
 
     private String encodedKey;
 
+    /**
+     * The scopes to use.
+     * @return The scopes
+     */
     public @Nonnull List<URI> getScopes() {
         return scopes;
     }
 
+    /**
+     * The scopes to use.
+     *
+     * @param scopes The scopes
+     */
     public void setScopes(@Nullable List<URI> scopes) {
         this.scopes = scopes == null ? Collections.emptyList() : scopes;
     }
 
-    public Optional<String> getLocation() {
+    /**
+     * The location of the credentials.
+     * @return The location
+     */
+    public @Nonnull Optional<String> getLocation() {
         return Optional.ofNullable(path);
     }
 
-    public void setLocation(String location) {
+    /**
+     * Sets the location to use.
+     * @param location The location
+     */
+    public void setLocation(@Nullable String location) {
         this.path = path;
     }
 
-    public Optional<String> getEncodedKey() {
+    /**
+     * The encoded key.
+     * @return The key
+     */
+    public @Nonnull Optional<String> getEncodedKey() {
         return Optional.ofNullable(encodedKey);
     }
 
-    public void setEncodedKey(String encodedKey) {
+    /**
+     * Sets the encoded key.
+     * @param encodedKey The key
+     */
+    public void setEncodedKey(@Nullable String encodedKey) {
         this.encodedKey = encodedKey;
     }
 }

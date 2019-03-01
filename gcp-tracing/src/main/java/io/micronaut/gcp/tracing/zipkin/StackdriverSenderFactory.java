@@ -23,7 +23,6 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.auth.MoreCallCredentials;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
-import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import io.micronaut.core.util.StringUtils;
@@ -39,23 +38,41 @@ import zipkin2.reporter.Sender;
 import zipkin2.reporter.stackdriver.StackdriverEncoder;
 import zipkin2.reporter.stackdriver.StackdriverSender;
 
+import javax.annotation.Nonnull;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
+/**
+ * Configures the {@link StackdriverSender} for Micronaut if present on the classpath.
+ *
+ * @author graemerocher
+ * @author Ray Tsang
+ * @since 1.0
+ */
 @Factory
 @Requires(classes = StackdriverSender.class)
 @Requires(property = "gcp.trace.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 public class StackdriverSenderFactory {
+
+    /**
+     * The trace scope to use.
+     */
     public static final URI TRACE_SCOPE = URI.create("https://www.googleapis.com/auth/trace.append");
+
+    /**
+     * The trace target to use.
+     */
     public static final String TRACE_TARGET = "cloudtrace.googleapis.com";
 
+    /**
+     * @return A GRPC channel to use to send traces.
+     */
     @Singleton
     @Bean(preDestroy = "shutdownNow")
     @Named("stackdriverTraceSenderChannel")
-    protected ManagedChannel stackdriverTraceSenderChannel() {
+    protected @Nonnull ManagedChannel stackdriverTraceSenderChannel() {
         UserAgentHeaderProvider userAgentHeaderProvider = new UserAgentHeaderProvider("trace");
 
         return ManagedChannelBuilder.forTarget(TRACE_TARGET)
@@ -63,13 +80,20 @@ public class StackdriverSenderFactory {
                 .build();
     }
 
+    /**
+     * The {@link StackdriverSender} bean.
+     * @param cloudConfiguration The google cloud configuration
+     * @param credentials The credentials
+     * @param channel The channel to use
+     * @return The sender
+     */
     @RequiresGoogleProjectId
     @Requires(classes = StackdriverSender.class)
     @Singleton
-    protected Sender stackdriverSender(
-            GoogleCloudConfiguration cloudConfiguration,
-            GoogleCredentials credentials,
-            @Named("stackdriverTraceSenderChannel") ManagedChannel channel) throws IOException {
+    protected @Nonnull Sender stackdriverSender(
+            @Nonnull GoogleCloudConfiguration cloudConfiguration,
+            @Nonnull GoogleCredentials credentials,
+            @Nonnull @Named("stackdriverTraceSenderChannel") ManagedChannel channel) {
 
         GoogleCredentials traceCredentials = credentials.createScoped(Arrays.asList(TRACE_SCOPE.toString()));
 
@@ -80,9 +104,13 @@ public class StackdriverSenderFactory {
                 .build();
     }
 
+    /**
+     * A {@link BeanCreatedEventListener} that modifies the brave trace configuration for Stackdriver compatibility.
+     * @return The {@link BeanCreatedEventListener}
+     */
     @Singleton
     @Requires(classes = StackdriverSender.class)
-    protected BeanCreatedEventListener<BraveTracerConfiguration> braveTracerConfigurationBeanCreatedEventListener() {
+    protected @Nonnull BeanCreatedEventListener<BraveTracerConfiguration> braveTracerConfigurationBeanCreatedEventListener() {
         return (configuration) -> {
             BraveTracerConfiguration configurationBean = configuration.getBean();
 
@@ -94,16 +122,26 @@ public class StackdriverSenderFactory {
         };
     }
 
+    /**
+     * The {@link StackdriverTracePropagation#FACTORY} as a bean.
+     * @return The bean.
+     */
     @Singleton
     @Requires(beans = StackdriverSender.class)
     protected Propagation.Factory stackdriverPropagation() {
         return StackdriverTracePropagation.FACTORY;
     }
 
+    /**
+     * A custom {@link AsyncReporter} that uses {@link StackdriverEncoder#V2}.
+     *
+     * @param configuration The configuration
+     * @return The bean.
+     */
     @Singleton
     @Requires(classes = StackdriverSender.class)
     @Requires(beans = AsyncReporterConfiguration.class)
-    public AsyncReporter<Span> stackdriverReporter(AsyncReporterConfiguration configuration) {
+    public AsyncReporter<Span> stackdriverReporter(@Nonnull AsyncReporterConfiguration configuration) {
         return configuration.getBuilder()
                 .build(StackdriverEncoder.V2);
     }

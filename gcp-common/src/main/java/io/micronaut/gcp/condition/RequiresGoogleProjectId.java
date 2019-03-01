@@ -19,6 +19,12 @@ import io.micronaut.context.annotation.Requires;
 
 import java.lang.annotation.*;
 
+/**
+ * A custom condition that indicates the bean requires a configured Google Project ID.
+ *
+ * @author graemerocher
+ * @since 1.0
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})

@@ -20,9 +20,11 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.util.ArgumentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -32,6 +34,13 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A factory for creating {@link GoogleCredentials}.
+ *
+ * @author graemerocher
+ * @author Ray Tsang
+ * @since 1.0
+ */
 @Factory
 @Requires(classes = com.google.auth.oauth2.GoogleCredentials.class)
 public class GoogleCredentialsFactory {
@@ -39,15 +48,25 @@ public class GoogleCredentialsFactory {
 
     private final GoogleCredentialsConfiguration configuration;
 
-    public GoogleCredentialsFactory(GoogleCredentialsConfiguration configuration) {
+    /**
+     * Default constructor.
+     * @param configuration The configuration
+     */
+    public GoogleCredentialsFactory(@Nonnull GoogleCredentialsConfiguration configuration) {
+        ArgumentUtils.requireNonNull("configuration", configuration);
         this.configuration = configuration;
     }
 
+    /**
+     * Method used to return the default {@link GoogleCredentials} and provide it as a bean.
+     * @return The {@link GoogleCredentials}
+     * @throws IOException An exception if an error occurs
+     */
     @Requires(missingBeans = GoogleCredentials.class)
     @Requires(classes = com.google.auth.oauth2.GoogleCredentials.class)
     @Primary
     @Singleton
-    GoogleCredentials defaultGoogleCredentials() throws IOException {
+    protected GoogleCredentials defaultGoogleCredentials() throws IOException {
         final List<String> scopes = configuration.getScopes().stream()
                 .map(URI::toString).collect(Collectors.toList());
 

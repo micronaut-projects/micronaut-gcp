@@ -20,14 +20,38 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.exceptions.ConfigurationException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-@ConfigurationProperties(Environment.GOOGLE_COMPUTE)
+/**
+ * General Google cloud configuration.
+ *
+ * @author graemerocher
+ * @author Ray Tsang
+ * @since 1.0
+ */
+@ConfigurationProperties(GoogleCloudConfiguration.PREFIX)
 public class GoogleCloudConfiguration {
 
+    /**
+     * A message to report if no project id is configured.
+     */
     public static final String NO_PROJECT_ID_MESSAGE = "No Google Cloud Project ID found. See ServiceOptions.getDefaultProjectId() for description on how to configure the service ID";
+
+    /**
+     * The prefix to use.
+     */
+    public static final String PREFIX = Environment.GOOGLE_COMPUTE;
+
     private String projectId;
 
-    public String getProjectId() {
+    /**
+     * Returns the Google project ID for the project.
+     *
+     * @return The project id
+     * @throws ConfigurationException if no project ID is found
+     */
+    public @Nonnull String getProjectId() {
         if (projectId == null) {
             projectId = ServiceOptions.getDefaultProjectId();
             if (projectId == null) {
@@ -37,13 +61,22 @@ public class GoogleCloudConfiguration {
         return projectId;
     }
 
-    public void setProjectId(String projectId) {
+    /**
+     * Sets the project id to use.
+     * @param projectId The project id to use
+     */
+    public void setProjectId(@Nullable String projectId) {
         this.projectId = projectId;
     }
 
+    /**
+     * Whether a project id is configured.
+     * @return True if one is
+     */
     public boolean hasProjectId() {
         try {
-            return getProjectId() != null;
+            getProjectId();
+            return true;
         } catch (ConfigurationException e) {
             return false;
         }
