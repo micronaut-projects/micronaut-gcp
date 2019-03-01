@@ -38,27 +38,6 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
 
         ./gradlew --stop
         ./gradlew check --no-daemon || EXIT_STATUS=$?
-
-        if [[ $EXIT_STATUS -eq 0 ]]; then
-            cd examples/alexa-hello-world-kotlin
-            ./gradlew check --no-daemon  || EXIT_STATUS=$?
-            cd ../..
-        fi
-        if [[ $EXIT_STATUS -eq 0 ]]; then
-            cd examples/alexa-hello-world-java
-            ./gradlew check --no-daemon  || EXIT_STATUS=$?
-            cd ../..
-        fi
-        if [[ $EXIT_STATUS -eq 0 ]]; then
-            cd examples/alexa-hello-world-groovy
-            ./gradlew check --no-daemon  || EXIT_STATUS=$?
-            cd ../..
-        fi
-        if [[ $EXIT_STATUS -eq 0 ]]; then
-            cd examples/api-proxy-example
-            ./gradlew check --no-daemon  || EXIT_STATUS=$?
-            cd ../..
-        fi        
     fi
 fi
 
