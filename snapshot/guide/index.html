@@ -47,7 +47,7 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>3</strong><span>Stackdriver Tracing</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
                                 
                             </div>
                         </div>
@@ -83,7 +83,7 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>3</strong><span>Stackdriver Tracing</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
         
         </div>
     </div>
@@ -139,6 +139,15 @@
 </div>
 </div>
 </p>
+</div>
+<div class="paragraph">
+<p>Prerequisites:
+. You should have a <a href="http://console.cloud.google.com">Google Cloud Platform</a> project created
+. <a href="https://cloud.google.com/sdk/install">Install gcloud CLI</a>
+. Configure default project <code>gcloud config set project YOUR_PROJECT_ID</code>
+. Authenticate with <code>gcloud auth login</code>
+. Authenticate application default credential with <code>gcloud auth application-default login</code>
+It&#8217;s strongly recommended that you use a <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Service Account</a> for your application.</p>
 </div>
 <div class="sect2">
 <h3 id="_google_project_id">Google Project ID</h3>
@@ -196,24 +205,26 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.scopes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The scopes to use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default scopes to associate with the application to access specific APIs.
+ See &lt;a href="https://developers.google.com/identity/protocols/googlescopes"&gt;Google Scopes&lt;/a&gt; for a complete list.
+ Leave this empty if you don&#8217;t need additional API access.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.encoded-key</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the encoded key.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Base64 encoded service account key content..</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.location</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the location to use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the location to the service account credential key file.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 
 
-<h1 id="tracing">3 Stackdriver Tracing</h1>
+<h1 id="tracing">3 Stackdriver Trace</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/tracing.adoc"'>
@@ -253,20 +264,19 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">tracing:
     zipkin:
-        enabled: true</code></pre>
+        enabled: true
+        # [Optional] Set sampling probability to 100% for dev/testing purposes to observe traces.
+        #
+        # sampler:
+        #    probability=1.0
+
+# [Optional] configuration to enable/disable Stackdriver Trace configuration.
+# This is defaulted to true.
+#
+# gcp:
+#    tracing:
+#        enabled: true</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <code>gcp.tracing.enabled</code> property (which defaults to <code>true</code>) can be used to enable/disable only the GCP tracing.
-</td>
-</tr>
-</table>
 </div>
 
     </div>

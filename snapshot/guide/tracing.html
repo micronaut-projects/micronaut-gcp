@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3 Stackdriver Tracing 1.0.0.BUILD-SNAPSHOT</title>
+    <title>3 Stackdriver Trace 1.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -35,7 +35,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/setup.html"><strong>2</strong><span>Setting up GCP Support</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Tracing</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Trace</span></a>
                         </div>
                         
                     </div>
@@ -65,7 +65,7 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>3 Stackdriver Tracing</h1>
+                    <h1>3 Stackdriver Trace</h1>
 
                     <p><strong>Version:</strong> 1.0.0.BUILD-SNAPSHOT</p>
                 </div>
@@ -74,7 +74,7 @@ function addJsClass() {
 
                 
 
-<h1 id="tracing">3 Stackdriver Tracing</h1>
+<h1 id="tracing">3 Stackdriver Trace</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/tracing.adoc"'>
@@ -114,20 +114,19 @@ function addJsClass() {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">tracing:
     zipkin:
-        enabled: true</code></pre>
+        enabled: true
+        # [Optional] Set sampling probability to 100% for dev/testing purposes to observe traces.
+        #
+        # sampler:
+        #    probability=1.0
+
+# [Optional] configuration to enable/disable Stackdriver Trace configuration.
+# This is defaulted to true.
+#
+# gcp:
+#    tracing:
+#        enabled: true</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <code>gcp.tracing.enabled</code> property (which defaults to <code>true</code>) can be used to enable/disable only the GCP tracing.
-</td>
-</tr>
-</table>
 </div>
 
 

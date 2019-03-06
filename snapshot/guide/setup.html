@@ -35,7 +35,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/setup.html"><strong>2</strong><span>Setting up GCP Support</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Tracing</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Trace</span></a>
                         </div>
                         
                     </div>
@@ -62,7 +62,7 @@ function addJsClass() {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Tracing</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Trace</span> >></a></div>
                 
 
 
@@ -104,6 +104,15 @@ function addJsClass() {
 </div>
 </div>
 </p>
+</div>
+<div class="paragraph">
+<p>Prerequisites:
+. You should have a <a href="http://console.cloud.google.com">Google Cloud Platform</a> project created
+. <a href="https://cloud.google.com/sdk/install">Install gcloud CLI</a>
+. Configure default project <code>gcloud config set project YOUR_PROJECT_ID</code>
+. Authenticate with <code>gcloud auth login</code>
+. Authenticate application default credential with <code>gcloud auth application-default login</code>
+It&#8217;s strongly recommended that you use a <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Service Account</a> for your application.</p>
 </div>
 <div class="sect2">
 <h3 id="_google_project_id">Google Project ID</h3>
@@ -161,17 +170,19 @@ function addJsClass() {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.scopes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The scopes to use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default scopes to associate with the application to access specific APIs.
+ See &lt;a href="https://developers.google.com/identity/protocols/googlescopes"&gt;Google Scopes&lt;/a&gt; for a complete list.
+ Leave this empty if you don&#8217;t need additional API access.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.encoded-key</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the encoded key.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Base64 encoded service account key content..</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.location</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the location to use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the location to the service account credential key file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -182,7 +193,7 @@ function addJsClass() {
                 
                     <div class="toc-item prev-left"><a href="../guide/introduction.html">&lt;&lt; <strong>1</strong><span>Introduction</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Tracing</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/tracing.html"><strong>3</strong><span>Stackdriver Trace</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
