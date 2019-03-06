@@ -72,10 +72,9 @@ public class GoogleCredentialsConfiguration {
     }
 
     /**
-     * The location of the service account credential key file. See
-     * <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Understanding Service Accounts</a>
+     * The location of the service account credential key file. 
+     * See <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Understanding Service Accounts</a>
      * for more information on generating a service account key file.
-	 *
      * @return The location
      */
     public @Nonnull Optional<String> getLocation() {
