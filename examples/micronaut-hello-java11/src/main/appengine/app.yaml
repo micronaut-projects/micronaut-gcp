@@ -1,3 +1,0 @@
-runtime: java11
-instance_class: F4
-entrypoint: 'java -agentpath:/opt/cdbg/cdbg_java_agent.so=--log_dir=/var/log -jar micronaut-hello-java11-0.1.jar'
