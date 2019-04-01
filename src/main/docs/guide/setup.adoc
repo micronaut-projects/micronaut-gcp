@@ -3,11 +3,13 @@ The `micronaut-gcp-common` module includes basic setup for running applications 
 dependency:io.micronaut.gcp:micronaut-gcp-common[version="{version}"]
 
 Prerequisites:
+
 . You should have a http://console.cloud.google.com[Google Cloud Platform] project created
 . https://cloud.google.com/sdk/install[Install gcloud CLI]
 . Configure default project `gcloud config set project YOUR_PROJECT_ID`
 . Authenticate with `gcloud auth login`
 . Authenticate application default credential with `gcloud auth application-default login`
+
 It's strongly recommended that you use a https://cloud.google.com/iam/docs/understanding-service-accounts[Service Account] for your application.
 
 === Google Project ID
