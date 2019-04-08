@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>2 Setting up GCP Support 1.0.0.RC1</title>
+    <title>2 Setting up GCP Support 1.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -69,7 +69,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>2 Setting up GCP Support</h1>
 
-                    <p><strong>Version:</strong> 1.0.0.RC1</p>
+                    <p><strong>Version:</strong> 1.0.0</p>
                 </div>
 
                 
@@ -91,7 +91,7 @@ function addJsClass() {
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.gcp:micronaut-gcp-common:1.0.0.RC1'</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.gcp:micronaut-gcp-common:1.0.0'</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -99,20 +99,36 @@ function addJsClass() {
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-common&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0.RC1&lt;/version&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 </p>
 </div>
 <div class="paragraph">
-<p>Prerequisites:
-. You should have a <a href="http://console.cloud.google.com">Google Cloud Platform</a> project created
-. <a href="https://cloud.google.com/sdk/install">Install gcloud CLI</a>
-. Configure default project <code>gcloud config set project YOUR_PROJECT_ID</code>
-. Authenticate with <code>gcloud auth login</code>
-. Authenticate application default credential with <code>gcloud auth application-default login</code>
-It&#8217;s strongly recommended that you use a <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Service Account</a> for your application.</p>
+<p>Prerequisites:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You should have a <a href="http://console.cloud.google.com">Google Cloud Platform</a> project created</p>
+</li>
+<li>
+<p><a href="https://cloud.google.com/sdk/install">Install gcloud CLI</a></p>
+</li>
+<li>
+<p>Configure default project <code>gcloud config set project YOUR_PROJECT_ID</code></p>
+</li>
+<li>
+<p>Authenticate with <code>gcloud auth login</code></p>
+</li>
+<li>
+<p>Authenticate application default credential with <code>gcloud auth application-default login</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It&#8217;s strongly recommended that you use a <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Service Account</a> for your application.</p>
 </div>
 <div class="sect2">
 <h3 id="_google_project_id">Google Project ID</h3>
