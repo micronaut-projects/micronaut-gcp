@@ -12,7 +12,7 @@ group "hello.world"
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://jcenter.bintray.com" }
+    jcenter()
 }
 
 dependencyManagement {
@@ -23,7 +23,7 @@ dependencyManagement {
 
 configurations {
     // for dependencies that are needed for development only
-    developmentOnly 
+    developmentOnly
 }
 
 dependencies {

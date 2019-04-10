@@ -39,18 +39,18 @@ ext {
 subprojects { Project subproject ->
 
     version project.projectVersion
-	group "io.micronaut.gcp"
+    group "io.micronaut.gcp"
     ext {
         isConfiguration = subproject.projectDir.parentFile.name == 'configurations'
         isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
     }
 
-    
+
     repositories {
         maven { url "https://repo.grails.org/grails/core" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
-    
+
     apply plugin:"groovy"
     apply plugin:"java"
     apply plugin: "io.spring.dependency-management"
@@ -65,7 +65,7 @@ subprojects { Project subproject ->
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
     apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-core/01e2b1ef1255b584e9e5c1965d334e1190e2ade5/gradle/publishing.gradle"
-        
+
 
     jar {
         manifest {
@@ -128,7 +128,7 @@ subprojects { Project subproject ->
     task allDeps(type: DependencyReportTask) {}
 
     apply plugin: 'checkstyle'
-    
+
     checkstyle {
         toolVersion = 8.10
         configFile = rootProject.file('config/checkstyle/checkstyle.xml')
