@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factorypath>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-inject-java/1.1.0.RC2/bb611d6db11e430a5e49bc047018c0bd1f94005f/micronaut-inject-java-1.1.0.RC2.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-validation/1.1.0.RC2/22c75911c672139bda4c2af971b5704d8c42c1da/micronaut-validation-1.1.0.RC2.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-http/1.1.0.RC2/6d0c4be8b5f8665f45ee10f1797934aee54e216d/micronaut-http-1.1.0.RC2.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-inject/1.1.0.RC2/28f045e0fc574299680982320361440c38c159ec/micronaut-inject-1.1.0.RC2.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-core/1.1.0.RC2/2e6a8763c8609f5411aa8b20d8f1886c9d9b66d8/micronaut-core-1.1.0.RC2.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.m2/repository/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.m2/repository/org/yaml/snakeyaml/1.23/snakeyaml-1.23.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.m2/repository/javax/annotation/javax.annotation-api/1.3.2/javax.annotation-api-1.3.2.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.m2/repository/org/reactivestreams/reactive-streams/1.0.2/reactive-streams-1.0.2.jar" enabled="true" runInBatchMode="false"/>
+	<factorypathentry kind="EXTJAR" id="/Users/graemerocher/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>
