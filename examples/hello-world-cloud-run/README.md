@@ -29,7 +29,7 @@ Deploying container to Cloud Run service [hello-world] in project [micronaut-tes
   ✓ Creating Revision...                                                                                                                                                                                                        
   ✓ Routing traffic...                                                                                                                                                                                                          
 Done.                                                                                                                                                                                                                           
-Service [hello-world] revision [hello-world-00004] has been deployed and is serving traffic at https://hello-world-3nm7ia2ima-uc.a.run.app
+Service [hello-world] revision [hello-world-00004] has been deployed and is serving traffic at https://hello-world-9487r97234-uc.a.run.app
 ```
 
 The URL is the URL of your Cloud Run application.
