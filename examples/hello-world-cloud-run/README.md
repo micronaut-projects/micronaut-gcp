@@ -12,10 +12,15 @@ You should then modify the `googleProjectId` reference in `gradle.properties` to
 
 ## Deployment
 
-Deployment is then as simple as running:
+To push the container to Container Registry run:
 
 ```
 $ ./gradlew jib
+```
+
+Deployment is then as simple as running:
+
+```
 $ gcloud beta run deploy --image gcr.io/[PROJECT ID]/hello-world
 ```
 
@@ -23,7 +28,7 @@ Where `[PROJECT ID]` is replaced for your project ID. You should see output like
 
 ```
 Service name: (hello-world):  
-Deploying container to Cloud Run service [hello-world] in project [micronaut-test] region [us-central1]
+Deploying container to Cloud Run service [hello-world] in project [PROJECT_ID] region [us-central1]
 
 ✓ Deploying... Done.                                                                                                                                                                                                            
   ✓ Creating Revision...                                                                                                                                                                                                        

@@ -10,8 +10,6 @@ version "0.1"
 group "hello.world"
 
 repositories {
-    mavenLocal()
-    mavenCentral()
     jcenter()
 }
 

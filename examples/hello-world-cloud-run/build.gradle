@@ -6,14 +6,10 @@ plugins {
     id "net.ltgt.apt-idea" version "0.21"
 }
 
-
-
 version "0.1"
 group "hello.world"
 
 repositories {
-    mavenLocal()
-    mavenCentral()
     jcenter()
 }
 
@@ -54,10 +50,11 @@ test {
 }
 jib.to.image = "gcr.io/$googleProjectId/hello-world"
 jib.container.jvmFlags = [
-    '-XX:+UnlockExperimentalVMOptions',
-    '-XX:+UseCGroupMemoryLimitForHeap',
+    // this flag is appropriate for Serverless deployments
+    // reducing startup time by constraining the JIT
+    '-XX:TieredStopAtLevel=1', 
     '-Dcom.sun.management.jmxremote',
-    '-Xmx64m'
+    '-Xmx128m'
 ]
 tasks.withType(JavaCompile){
     options.encoding = "UTF-8"

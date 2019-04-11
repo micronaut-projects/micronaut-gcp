@@ -10,13 +10,13 @@ To get going you should have [Google Cloud SDK installed](https://cloud.google.c
 
 ## Deployment
 
-First prepare the image you Google Cloud Build:
+First prepare the image using Google Cloud Build:
 
 ```
 $ gcloud builds submit --tag gcr.io/[PROJECT-ID]/hello-world --timeout 30m
 ```
 
-This process may take some time as the GraalVM compiler is not the fastest. 
+This delegates building of the image to GCP infrastructure. The build process may take some time as the GraalVM compiler is not the fastest. 
 
 You are now ready to deploy your application:
 
@@ -28,7 +28,7 @@ Where `[PROJECT ID]` is replaced for your project ID. You should see output like
 
 ```
 Service name: (hello-world):  
-Deploying container to Cloud Run service [hello-world] in project [micronaut-test] region [us-central1]
+Deploying container to Cloud Run service [hello-world] in project [PROJECT_ID] region [us-central1]
 
 ✓ Deploying... Done.                                                                                                                                                                                                            
   ✓ Creating Revision...                                                                                                                                                                                                        
