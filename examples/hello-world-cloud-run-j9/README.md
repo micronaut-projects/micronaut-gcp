@@ -4,7 +4,7 @@ This example demonstrates Micronaut and Google Cloud Run using OpenJDK J9 shared
 
 ## Setup
 
-The example uses a `Dockerfile` that will build the native image.
+The example uses a `Dockerfile` that run the tests to produce the J9 shared classes to be included in the final Docker image.
 
 To get going you should have [Google Cloud SDK installed](https://cloud.google.com/sdk/install) and follow the [Setup Instructions](https://cloud.google.com/run/docs/setup) for Google Cloud Run.
 
