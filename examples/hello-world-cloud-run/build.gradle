@@ -48,14 +48,23 @@ mainClassName = "hello.world.Application"
 test {
     useJUnitPlatform()
 }
-jib.to.image = "gcr.io/$googleProjectId/hello-world"
-jib.container.jvmFlags = [
-    // this flag is appropriate for Serverless deployments
-    // reducing startup time by constraining the JIT
-    '-XX:TieredStopAtLevel=1', 
-    '-Dcom.sun.management.jmxremote',
-    '-Xmx128m'
-]
+jib {
+    to {
+        image = "gcr.io/$googleProjectId/hello-world"
+    }
+    from {
+        image = "adoptopenjdk/openjdk11-openj9:jdk-11.0.1.13-alpine-slim"
+    }
+    container {
+        jvmFlags = [
+            // this flag is appropriate for Serverless deployments
+            // reducing startup time by constraining the JIT
+            '-XX:TieredStopAtLevel=1', 
+            '-XX:MaxRAM=256m'
+        ]
+    }
+}
+
 tasks.withType(JavaCompile){
     options.encoding = "UTF-8"
     options.compilerArgs.add('-parameters')
