@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Micronaut Picocli Configuration</title>
+    <title>Micronaut GCP</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
     <link rel="stylesheet" href="../css/custom.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
@@ -45,7 +45,9 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>2</strong><span>Setting up Picocli</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
                                 
                             </div>
                         </div>
@@ -79,62 +81,218 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-introduction"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>2</strong><span>Setting up Picocli</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
         
         </div>
     </div>
     
     <div class="docs-content">
     <div class="project">
-        <h1>Micronaut Picocli Configuration</h1>
+        <h1>Micronaut GCP</h1>
         <p></p>
-        <p>Provides integration between Micronaut and Picocli</p>
-        <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
+        <p>Provides integration between Micronaut and Google Cloud Platform (GCP)</p>
+        <p><strong>Version:</strong> 1.0.1.BUILD-SNAPSHOT</p>
     </div>
     
 
 <h1 id="introduction">1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-picocli/edit/master/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>The <code>micronaut-picocli</code> module includes support for creating Micronaut Picocli applications.</p>
-</div>
-<div class="paragraph">
-<p>See <a href="https://docs.micronaut.io/latest/guide/index.html#picocli">Micronaut Picocli</a> docs details.</p>
+<p>This project provides various extensions to Micronaut to integrate Micronaut with Google Cloud Platform (GCP).</p>
 </div>
 
 
-<h1 id="setup">2 Setting up Picocli</h1>
+<h1 id="setup">2 Setting up GCP Support</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-picocli/edit/master/src/main/docs/guide/setup.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/setup.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
+<div class="paragraph">
+<p>The <code>micronaut-gcp-common</code> module includes basic setup for running applications on Google Cloud.</p>
+</div>
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut:micronaut-picocli:1.2.0.BUILD-SNAPSHOT'</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.gcp:micronaut-gcp-common:1.0.1.BUILD-SNAPSHOT'</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
-    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
-    &lt;artifactId&gt;micronaut-picocli&lt;/artifactId&gt;
-    &lt;version&gt;1.2.0.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-common&lt;/artifactId&gt;
+    &lt;version&gt;1.0.1.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 </p>
+</div>
+<div class="paragraph">
+<p>Prerequisites:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You should have a <a href="http://console.cloud.google.com">Google Cloud Platform</a> project created</p>
+</li>
+<li>
+<p><a href="https://cloud.google.com/sdk/install">Install gcloud CLI</a></p>
+</li>
+<li>
+<p>Configure default project <code>gcloud config set project YOUR_PROJECT_ID</code></p>
+</li>
+<li>
+<p>Authenticate with <code>gcloud auth login</code></p>
+</li>
+<li>
+<p>Authenticate application default credential with <code>gcloud auth application-default login</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It&#8217;s strongly recommended that you use a <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Service Account</a> for your application.</p>
+</div>
+<div class="sect2">
+<h3 id="_google_project_id">Google Project ID</h3>
+<div class="paragraph">
+<p>The module features a base <a href="../api/io/micronaut/gcp/GoogleCloudConfiguration.html">GoogleCloudConfiguration</a> which you can use to configure or retrieve the GCP Project ID:</p>
+</div>
+<a id="io.micronaut.gcp.GoogleCloudConfiguration" href="#io.micronaut.gcp.GoogleCloudConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/gcp/GoogleCloudConfiguration.html">GoogleCloudConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.project-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the project id to use.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can inject this bean and use the <code>getProjectId()</code> method to retrieve the configured or detected project ID.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_google_credentials">Google Credentials</h3>
+<div class="paragraph">
+<p>The module will setup a bean of exposing the <code>com.google.auth.oauth2.GoogleCredentials</code> instance that are either detected from the local environment or configured by <a href="../api/io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html">GoogleCredentialsConfiguration</a>:</p>
+</div>
+<a id="io.micronaut.gcp.credentials.GoogleCredentialsConfiguration" href="#io.micronaut.gcp.credentials.GoogleCredentialsConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html">GoogleCredentialsConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.scopes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default scopes to associate with the application to access specific APIs.
+ See &lt;a href="https://developers.google.com/identity/protocols/googlescopes"&gt;Google Scopes&lt;/a&gt; for a complete list.
+ Leave this empty if you don&#8217;t need additional API access.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.encoded-key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Base64 encoded service account key content..</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the location to the service account credential key file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h1 id="tracing">3 Stackdriver Trace</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/tracing.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <code>micronaut-gcp-tracing</code> integrates Micronaut with <a href="https://cloud.google.com/trace">Stackdriver Trace</a>.</p>
+</div>
+<div class="paragraph">
+<p>To enable it add the following dependency:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.gcp:micronaut-gcp-tracing:1.0.1.BUILD-SNAPSHOT'</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-tracing&lt;/artifactId&gt;
+    &lt;version&gt;1.0.1.BUILD-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Then enabling Zipkin tracing in your configuration <code>application.yml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Enabling Stackdriver Trace</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">tracing:
+    zipkin:
+        enabled: true
+        # [Optional] Set sampling probability to 100% for dev/testing purposes to observe traces.
+        #
+        # sampler:
+        #    probability=1.0
+
+# [Optional] configuration to enable/disable Stackdriver Trace configuration.
+# This is defaulted to true.
+#
+# gcp:
+#    tracing:
+#        enabled: true</code></pre>
+</div>
 </div>
 
     </div>
