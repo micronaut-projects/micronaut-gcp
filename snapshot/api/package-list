@@ -1,4 +1,2 @@
-io.micronaut.gcp
-io.micronaut.gcp.condition
-io.micronaut.gcp.credentials
-io.micronaut.gcp.tracing.zipkin
+io.micronaut.configuration.picocli
+io.micronaut.configuration.picocli.annotation
