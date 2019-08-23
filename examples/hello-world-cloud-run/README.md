@@ -43,5 +43,5 @@ The URL is the URL of your Cloud Run application.
 
 Simply click the button below to deploy the service.
 
-[![Run on Google Cloud](https://storage.googleapis.com/cloudrun/button.svg)](https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/micronaut-projects/micronaut-gcp.git&cloudshell_dir=examples/hello-world-cloud-run/)
+[![Run on Google Cloud](https://storage.googleapis.com/cloudrun/button.svg)](https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/micronaut-projects/micronaut-gcp.git&cloudshell_working_dir=examples/hello-world-cloud-run/)
 
