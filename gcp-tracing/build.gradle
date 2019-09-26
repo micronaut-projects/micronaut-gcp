@@ -9,7 +9,7 @@ dependencies {
     compile 'io.zipkin.gcp:zipkin-sender-stackdriver:0.14.0'
     compile 'io.zipkin.gcp:brave-propagation-stackdriver:0.14.0'
     compile 'io.grpc:grpc-auth:1.24.0'
-    compile 'io.grpc:grpc-netty-shaded:1.23.0'
+    compile 'io.grpc:grpc-netty-shaded:1.24.0'
     compile "io.opentracing.brave:brave-opentracing:0.34.2"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-inject-java"
