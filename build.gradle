@@ -64,7 +64,7 @@ subprojects { Project subproject ->
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-    apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-core/01e2b1ef1255b584e9e5c1965d334e1190e2ade5/gradle/publishing.gradle"
+    apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/3ca806eb776b72483a4c0fda5ff1a5caebe0c281/publishing.gradle"
 
 
     jar {
@@ -131,7 +131,7 @@ subprojects { Project subproject ->
 
     checkstyle {
         toolVersion = 8.10
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
         // Per submodule
         maxErrors = 1
@@ -141,18 +141,8 @@ subprojects { Project subproject ->
     }
 
     checkstyleTest.enabled = false
+
+    apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/3ca806eb776b72483a4c0fda5ff1a5caebe0c281/license.gradle"  
 }
 
-apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v1.0.0.M4/gradle/docs.gradle"
-
-allprojects {
-    apply plugin: 'idea'
-
-    idea {
-        module {
-            outputDir file('build/classes/java/main')
-            testOutputDir file('build/classes/groovy/test')
-        }
-    }
-    apply from: rootProject.file('gradle/license.gradle')
-}
+apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v${micronautDocsVersion}/gradle/docs.gradle"
