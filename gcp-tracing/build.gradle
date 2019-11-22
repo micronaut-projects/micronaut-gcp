@@ -6,13 +6,13 @@ dependencies {
     compile project(":gcp-common")
     compile "io.micronaut:micronaut-tracing:$micronautVersion"
     compile "io.micronaut:micronaut-inject:$micronautVersion"
-    compile 'io.zipkin.gcp:zipkin-sender-stackdriver:0.10.1'
-    compile 'io.zipkin.gcp:brave-propagation-stackdriver:0.10.1'
-    compile 'io.grpc:grpc-auth:1.18.0'
-    compile 'io.grpc:grpc-netty-shaded:1.18.0'
-    compile "io.opentracing.brave:brave-opentracing:0.33.10"
+    compile 'io.zipkin.gcp:zipkin-sender-stackdriver:0.15.1'
+    compile 'io.zipkin.gcp:brave-propagation-stackdriver:0.15.0'
+    compile 'io.grpc:grpc-auth:1.24.0'
+    compile 'io.grpc:grpc-netty-shaded:1.24.0'
+    compile "io.opentracing.brave:brave-opentracing:0.35.0"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-inject-groovy"
-    testCompile "io.micronaut.test:micronaut-test-spock:1.0.2"
+    testCompile "io.micronaut.test:micronaut-test-spock:1.1.1"
 }
