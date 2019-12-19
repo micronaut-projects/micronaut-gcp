@@ -6,7 +6,7 @@ dependencies {
     compile project(":gcp-common")
     compile "io.micronaut:micronaut-tracing:$micronautVersion"
     compile "io.micronaut:micronaut-inject:$micronautVersion"
-    compile 'io.zipkin.gcp:zipkin-sender-stackdriver:0.15.1'
+    compile 'io.zipkin.gcp:zipkin-sender-stackdriver:0.15.2'
     compile 'io.zipkin.gcp:brave-propagation-stackdriver:0.15.2'
     compile 'io.grpc:grpc-auth:1.26.0'
     compile 'io.grpc:grpc-netty-shaded:1.25.0'
