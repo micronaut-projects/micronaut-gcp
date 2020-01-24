@@ -4,7 +4,7 @@ dependencies {
 
     compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
     compile "io.micronaut:micronaut-inject:$micronautVersion"
-    compile 'com.google.auth:google-auth-library-oauth2-http:0.19.0'
+    compile 'com.google.auth:google-auth-library-oauth2-http:0.20.0'
     compile 'com.google.cloud:google-cloud-core:1.92.0'
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-inject-java"
