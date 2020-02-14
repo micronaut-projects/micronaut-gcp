@@ -40,6 +40,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.2.0
  */
 public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitializer implements AutoCloseable {
+    /**
+     * Logger to be used by subclasses for logging.
+     */
     protected static final Logger LOG = LoggerFactory.getLogger(ServerlessHttpHandler.class);
     private final Router router;
     private final RequestArgumentSatisfier requestArgumentSatisfier;
@@ -51,7 +54,38 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
         this.mediaTypeCodecRegistry = applicationContext.getBean(MediaTypeCodecRegistry.class);
     }
 
+    /**
+     * @return The router
+     */
+    public Router getRouter() {
+        return router;
+    }
+
+    /**
+     * @return The request argument satisfier
+     */
+    public RequestArgumentSatisfier getRequestArgumentSatisfier() {
+        return requestArgumentSatisfier;
+    }
+
+    /**
+     * @return The media type codec registry
+     */
+    public MediaTypeCodecRegistry getMediaTypeCodecRegistry() {
+        return mediaTypeCodecRegistry;
+    }
+
     public void service(Req request, Res response) {
+        try {
+
+            ServerlessExchange exchange = createExchange(request, response);
+            service(exchange);
+        } finally {
+            applicationContext.close();
+        }
+    }
+
+    public void service(HttpRequest<? super Object> request, Res response) {
         try {
 
             ServerlessExchange exchange = createExchange(request, response);
@@ -207,6 +241,24 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
         }
     }
 
+    /**
+     * Creates the {@link ServerlessExchange} object.
+     *
+     * @param request  The request
+     * @param response The response
+     * @return The exchange object
+     */
+    protected abstract ServerlessExchange createExchange(Req request, Res response);
+
+    /**
+     * Creates the {@link ServerlessExchange} object.
+     *
+     * @param request  The request
+     * @param response The response
+     * @return The exchange object
+     */
+    protected abstract ServerlessExchange createExchange(HttpRequest<? super Object> request, Res response);
+
     private RouteMatch<Object> lookupErrorRoute(RouteMatch<?> route, Throwable e) {
         return router.route(route.getDeclaringType(), e)
                 .orElseGet(() -> router.route(e).orElse(null));
@@ -218,15 +270,6 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                         router.route(status).orElse(null)
                 );
     }
-
-    /**
-     * Creates the {@link ServerlessExchange} object.
-     *
-     * @param request  The request
-     * @param response The response
-     * @return The exchange object
-     */
-    protected abstract ServerlessExchange createExchange(Req request, Res response);
 
     private Publisher<? extends MutableHttpResponse<?>> filterPublisher(
             AtomicReference<io.micronaut.http.HttpRequest<?>> requestReference,

@@ -9,12 +9,17 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.codec.CodecException;
+import io.micronaut.http.codec.MediaTypeCodec;
+import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.exceptions.HttpStatusException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 /**
@@ -28,13 +33,15 @@ import java.util.*;
 final class GoogleFunctionHttpResponse<B> implements MutableHttpResponse<B> {
 
     private final HttpResponse response;
+    private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
     private MutableConvertibleValues<Object> attributes;
     private B body;
     private HttpStatus status;
     private Map<String, Cookie> cookieMap = null;
 
-    GoogleFunctionHttpResponse(HttpResponse response) {
+    GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
         this.response = response;
+        this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
     }
 
     @Override
@@ -92,16 +99,44 @@ final class GoogleFunctionHttpResponse<B> implements MutableHttpResponse<B> {
                 contentType(MediaType.TEXT_PLAIN_TYPE);
             }
             try {
-                response.getWriter().write(body.toString());
+                final BufferedWriter writer = response.getWriter();
+                writer.write(body.toString());
+                writer.flush();
             } catch (IOException e) {
                 throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
         } else if (body instanceof byte[]) {
             try {
-                response.getOutputStream().write((byte[]) body);
+                final OutputStream outputStream = response.getOutputStream();
+                outputStream.write((byte[]) body);
+                outputStream.flush();
             } catch (IOException e) {
                 throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 
+            }
+        } else if (body != null) {
+            final MediaType ct = getContentType().orElse(null);
+            final MediaTypeCodec codec = ct != null ? mediaTypeCodecRegistry.findCodec(ct, body.getClass()).orElse(null) : null;
+            if (codec != null) {
+                try {
+                    final OutputStream outputStream = response.getOutputStream();
+                    codec.encode(body, outputStream);
+                    outputStream.flush();
+                } catch (Throwable e) {
+                    throw new CodecException("Failed to encode object [" + body + "] to content type [" + ct + "]: " + e.getMessage(), e);
+                }
+            } else {
+                if (ct == null) {
+                    try {
+                        final BufferedWriter writer = response.getWriter();
+                        writer.write(body.toString());
+                        writer.flush();
+                    } catch (IOException e) {
+                        throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                    }
+                } else {
+                    throw new CodecException("No codec present capable of encoding object [" + body + "] to content type [" + ct + "]");
+                }
             }
         }
         this.body = body;

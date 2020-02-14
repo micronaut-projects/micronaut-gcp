@@ -14,7 +14,7 @@ class MockGoogleResponse implements HttpResponse {
 
     @Override
     void setStatusCode(int code, String message) {
-        this.code = statusCode
+        this.statusCode = code
         this.message = message
     }
 
