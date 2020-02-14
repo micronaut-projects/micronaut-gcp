@@ -75,6 +75,11 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
         return mediaTypeCodecRegistry;
     }
 
+    /**
+     * Handle the give native request and response.
+     * @param request The request
+     * @param response The response
+     */
     public void service(Req request, Res response) {
         try {
 
@@ -85,9 +90,13 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
         }
     }
 
+    /**
+     * Handle the given Micronaut request and native response.
+     * @param request The request
+     * @param response The response
+     */
     public void service(HttpRequest<? super Object> request, Res response) {
         try {
-
             ServerlessExchange exchange = createExchange(request, response);
             service(exchange);
         } finally {
