@@ -29,9 +29,11 @@ class GoogleMultiValueMap implements ConvertibleMultiValues<String> {
         ArgumentUtils.requireNonNull("name", name);
 
         final List<String> values = map.get(name.toString());
-        final Iterator<String> i = values.iterator();
-        if (i.hasNext()) {
-            return i.next();
+        if (values != null) {
+            final Iterator<String> i = values.iterator();
+            if (i.hasNext()) {
+                return i.next();
+            }
         }
         return null;
     }

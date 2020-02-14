@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets
 
 class MockGoogleResponse implements HttpResponse {
 
-    int statusCode
+    int statusCode = 200
     String message
     Map<String, List<String>> headers = [:]
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream()

@@ -234,7 +234,14 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                     res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
                 } else {
                     final RouteMatch<Object> errorRoute = lookupErrorRoute(route, e);
-                    invokeRouteMatch(req, res, errorRoute, true);
+                    if (errorRoute != null) {
+                        invokeRouteMatch(req, res, errorRoute, true);
+                    } else {
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("Error occurred executing Error route [" + route + "]: " + e.getMessage(), e);
+                        }
+                        res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                    }
                 }
             }
         } else {
