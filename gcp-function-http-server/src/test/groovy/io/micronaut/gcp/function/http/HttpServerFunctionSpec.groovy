@@ -19,4 +19,16 @@ class HttpServerFunctionSpec extends Specification {
         googleResponse.text == 'good'
     }
 
+    void "test simple JSON POJO response"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        new HttpServerFunction()
+                .service(HttpRequest.GET("/simple/simplePojo"), googleResponse)
+
+        expect:
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
+        googleResponse.text == '{"name":"good"}'
+    }
+
 }

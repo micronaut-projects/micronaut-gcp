@@ -12,4 +12,10 @@ public class SimpleController {
     String text() {
         return "good";
     }
+
+    @Produces("application/json")
+    @Get("/simplePojo")
+    SimplePojo simplePojo() {
+        return new SimplePojo("good");
+    }
 }
