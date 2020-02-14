@@ -1,18 +1,14 @@
-name-template: Micronaut Data $NEXT_PATCH_VERSION
-tag-template: v$NEXT_PATCH_VERSION
-categories:
-  - title: 🚀 Features
-    label: "enhancement"
-  - title: 🐛 Bug Fixes
-    label: "bug"
-  - title: 🛠 Dependency upgrades
-    label: "dependencies"
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-template: |
-  ## Changes
+name: Release Drafter
 
-  $CHANGES
+on:
+  push:
+    branches:
+      - master
 
-  ## Contributors
-
-  $CONTRIBUTORS
+jobs:
+  update_release_draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
