@@ -3,16 +3,16 @@ dependencies {
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"    
 
     compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
-    compile project(":gcp-common")
-    compile "io.micronaut:micronaut-tracing:$micronautVersion"
-    compile "io.micronaut:micronaut-inject:$micronautVersion"
-    compile 'io.zipkin.gcp:zipkin-sender-stackdriver:0.15.2'
-    compile 'io.zipkin.gcp:brave-propagation-stackdriver:0.15.2'
-    compile 'io.grpc:grpc-auth:1.27.1'
-    compile 'io.grpc:grpc-netty-shaded:1.27.1'
-    compile "io.opentracing.brave:brave-opentracing:0.35.1"
+    api project(":gcp-common")
+    api "io.micronaut:micronaut-tracing:$micronautVersion"
+    api "io.micronaut:micronaut-inject:$micronautVersion"
+    implementation'io.zipkin.gcp:zipkin-sender-stackdriver:0.15.2'
+    implementation 'io.zipkin.gcp:brave-propagation-stackdriver:0.15.2'
+    implementation 'io.grpc:grpc-auth:1.27.1'
+    implementation 'io.grpc:grpc-netty-shaded:1.27.1'
+    implementation "io.opentracing.brave:brave-opentracing:0.35.1"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testCompile "io.micronaut:micronaut-inject-java"
-    testCompile "io.micronaut:micronaut-inject-groovy"
-    testCompile "io.micronaut.test:micronaut-test-spock:1.1.2"
+    testImplementation "io.micronaut:micronaut-inject-java"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
+    testImplementation "io.micronaut.test:micronaut-test-spock:1.1.2"
 }
