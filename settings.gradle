@@ -2,4 +2,6 @@ rootProject.name = 'gcp'
 
 include 'gcp-common'
 include 'gcp-tracing'
+include 'gcp-function'
+include 'gcp-function-http-server'
 
