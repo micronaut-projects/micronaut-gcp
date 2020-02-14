@@ -190,16 +190,13 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
             final AnnotationMetadata annotationMetadata = finalRoute.getAnnotationMetadata();
             Publisher<? extends MutableHttpResponse<?>> responsePublisher
                     = Flowable.defer(() -> {
-                annotationMetadata.stringValue(Produces.class).ifPresent(res::contentType);
+                annotationMetadata.stringValue(Produces.class)
+                        .ifPresent(res::contentType);
+                annotationMetadata.enumValue(Status.class, HttpStatus.class)
+                        .ifPresent(s -> res.status(s));
                 final Object result = finalRoute.execute();
                 if (result == null) {
-
-                    final HttpStatus httpStatus = annotationMetadata
-                            .enumValue(Status.class, HttpStatus.class)
-                            .orElse(HttpStatus.OK);
-                    return Publishers.just(res.status(
-                            httpStatus
-                    ));
+                    return Publishers.just(res);
                 }
                 if (Publishers.isConvertibleToPublisher(result)) {
                     final Publisher<?> publisher = Publishers.convertPublisher(result, Publisher.class);
