@@ -10,7 +10,7 @@ import io.micronaut.http.MutableHttpResponse;
  * @author graemerocher
  * @since 1.2.0
  */
-public class ServerlessExchange implements ServerlessRequest{
+public class ServerlessExchange implements ServerlessRequest {
 
     private final HttpRequest<? super Object> request;
     private final MutableHttpResponse<? super Object> response;

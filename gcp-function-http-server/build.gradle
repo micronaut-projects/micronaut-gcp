@@ -7,5 +7,7 @@ dependencies {
     implementation "io.micronaut:micronaut-http-netty:$micronautVersion"
     implementation "io.micronaut:micronaut-router:$micronautVersion"
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc3'
+
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc3'
 }
