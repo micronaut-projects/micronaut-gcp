@@ -22,7 +22,7 @@ public class HttpServerFunction extends ServerlessHttpHandler<HttpRequest, HttpR
     @Override
     protected ServerlessExchange createExchange(HttpRequest request, HttpResponse response) {
         final GoogleFunctionHttpResponse<Object> res = new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry());
-        final GoogleFunctionHttpRequest<Object> req = new GoogleFunctionHttpRequest<>(request, res);
+        final GoogleFunctionHttpRequest<Object> req = new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry());
 
         return new ServerlessExchange(req, res);
     }

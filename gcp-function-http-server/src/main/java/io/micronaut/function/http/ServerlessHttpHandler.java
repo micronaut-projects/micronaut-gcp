@@ -4,6 +4,8 @@ package io.micronaut.function.http;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.core.convert.value.ConvertibleValues;
+import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.function.executor.FunctionInitializer;
 import io.micronaut.http.*;
@@ -27,8 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -172,7 +173,7 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         if (applicationContext.isRunning()) {
             applicationContext.close();
         }
@@ -185,6 +186,26 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
             boolean isErrorRoute) {
         if (!route.isExecutable()) {
             route = requestArgumentSatisfier.fulfillArgumentRequirements(route, req, false);
+        }
+        if (!route.isExecutable() && HttpMethod.permitsRequestBody(req.getMethod()) && !route.getBodyArgument().isPresent()) {
+            final ConvertibleValues<?> convertibleValues = req.getBody(ConvertibleValues.class).orElse(null);
+            if (convertibleValues != null) {
+
+                final Collection<Argument> requiredArguments = route.getRequiredArguments();
+                Map<String, Object> newValues = new HashMap<>(requiredArguments.size());
+                for (Argument requiredArgument : requiredArguments) {
+                    final String name = requiredArgument.getName();
+                    final Object v = convertibleValues.get(name, requiredArgument).orElse(null);
+                    if (v != null) {
+                        newValues.put(name, v);
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(newValues)) {
+                    route = route.fulfill(
+                        newValues
+                    );
+                }
+            }
         }
         RouteMatch<?> finalRoute = route;
         final AnnotationMetadata annotationMetadata = finalRoute.getAnnotationMetadata();

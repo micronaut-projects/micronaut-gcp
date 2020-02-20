@@ -2,14 +2,15 @@ package io.micronaut.gcp.function.http;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
-import io.micronaut.http.HttpHeaders;
-import io.micronaut.http.HttpMethod;
-import io.micronaut.http.HttpParameters;
-import io.micronaut.http.HttpRequest;
+import io.micronaut.http.*;
+import io.micronaut.http.codec.CodecException;
+import io.micronaut.http.codec.MediaTypeCodec;
+import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookies;
 import io.micronaut.http.simple.cookies.SimpleCookie;
 import io.micronaut.http.simple.cookies.SimpleCookies;
@@ -35,12 +36,14 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
     private final HttpMethod method;
     private final GoogleFunctionHeaders headers;
     private final GoogleFunctionHttpResponse<?> googleResponse;
+    private final MediaTypeCodecRegistry codecRegistry;
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
 
     GoogleFunctionHttpRequest(
             com.google.cloud.functions.HttpRequest googleRequest,
-            GoogleFunctionHttpResponse<?> googleResponse) {
+            GoogleFunctionHttpResponse<?> googleResponse,
+            MediaTypeCodecRegistry codecRegistry) {
         this.googleRequest = googleRequest;
         this.googleResponse = googleResponse;
         this.uri = URI.create(googleRequest.getUri());
@@ -52,6 +55,7 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
         }
         this.method = method;
         this.headers = new GoogleFunctionHeaders();
+        this.codecRegistry = codecRegistry;
     }
 
     /**
@@ -68,6 +72,13 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
      */
     GoogleFunctionHttpResponse<?> getGoogleResponse() {
         return googleResponse;
+    }
+
+    /**
+     * @return The google request
+     */
+    com.google.cloud.functions.HttpRequest getGoogleRequest() {
+        return googleRequest;
     }
 
     @Nonnull
@@ -145,7 +156,26 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
 
     @Nonnull
     @Override
-    public <T> Optional<T> getBody(@Nonnull Argument<T> type) {
+    public <T> Optional<T> getBody(@Nonnull Argument<T> arg) {
+        if (arg != null) {
+            final Class<T> type = arg.getType();
+            final MediaType contentType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
+            final MediaTypeCodec codec = codecRegistry.findCodec(contentType, type).orElse(null);
+            if (codec != null) {
+                try (InputStream inputStream = googleRequest.getInputStream()) {
+                    if (ConvertibleValues.class == type) {
+                        final Map map = codec.decode(Map.class, inputStream);
+                        return (Optional<T>) Optional.of(ConvertibleValues.of(map));
+                    } else {
+                        final T value = codec.decode(arg, inputStream);
+                        return Optional.ofNullable(value);
+                    }
+                } catch (IOException e) {
+                    throw new CodecException("Error decoding request body: " + e.getMessage(), e);
+                }
+
+            }
+        }
         return Optional.empty();
     }
 

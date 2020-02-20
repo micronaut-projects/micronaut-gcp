@@ -44,6 +44,13 @@ final class GoogleFunctionHttpResponse<B> implements MutableHttpResponse<B> {
         this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
     }
 
+    /**
+     * @return The response
+     */
+    HttpResponse getResponse() {
+        return response;
+    }
+
     @Override
     public MutableHttpResponse<B> cookie(Cookie cookie) {
         if (cookie != null) {

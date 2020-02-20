@@ -52,6 +52,20 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == 'Hello text/plain;q=1.0'
     }
 
+    void "test request and response"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/reqAndRes")
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.ACCEPTED.code
+        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.text == 'Good'
+    }
+
     void "test string body"() {
 
         given:
@@ -67,11 +81,28 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == 'Hello Foo'
     }
 
+
     void "test JSON POJO body"() {
 
         given:
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", '{"name":"bar"}')
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
+        googleResponse.text == '{"name":"bar"}'
+    }
+
+
+    void "test JSON POJO body with no @Body binds to arguments"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBodySpread", '{"name":"bar"}')
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpServerFunction()
                 .service(googleRequest, googleResponse)

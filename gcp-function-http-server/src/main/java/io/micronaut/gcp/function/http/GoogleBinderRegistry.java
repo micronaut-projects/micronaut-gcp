@@ -26,6 +26,7 @@ class GoogleBinderRegistry implements RequestBinderRegistry {
     private static final String BINDABLE_ANN = Bindable.class.getName();
     private final DefaultRequestBinderRegistry defaultRegistry;
     private final Map<Class<? extends Annotation>, RequestArgumentBinder> byAnnotation = new LinkedHashMap<>(5);
+    private final Map<Class<?>, RequestArgumentBinder> byType = new LinkedHashMap<>(5);
 
     public GoogleBinderRegistry(
             MediaTypeCodecRegistry mediaTypeCodecRegistry,
@@ -33,6 +34,8 @@ class GoogleBinderRegistry implements RequestBinderRegistry {
             List<RequestArgumentBinder> binders) {
         this.defaultRegistry = new DefaultRequestBinderRegistry(conversionService, binders);
         this.byAnnotation.put(Body.class, new GoogleBodyBinder(conversionService, mediaTypeCodecRegistry));
+        this.byType.put(com.google.cloud.functions.HttpRequest.class, new GoogleRequestBinder());
+        this.byType.put(com.google.cloud.functions.HttpResponse.class, new GoogleResponseBinder());
     }
 
     @Override
@@ -44,6 +47,12 @@ class GoogleBinderRegistry implements RequestBinderRegistry {
                 return Optional.of(binder);
             }
         }
-        return this.defaultRegistry.findArgumentBinder(argument, source);
+
+        final RequestArgumentBinder requestArgumentBinder = byType.get(argument.getType());
+        if (requestArgumentBinder != null) {
+            return Optional.of(requestArgumentBinder);
+        } else {
+            return this.defaultRegistry.findArgumentBinder(argument, source);
+        }
     }
 }
