@@ -66,4 +66,19 @@ class ParameterBindingSpec extends Specification {
         googleResponse.contentType.get() == MediaType.TEXT_PLAIN
         googleResponse.text == 'Hello Foo'
     }
+
+    void "test JSON POJO body"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", '{"name":"bar"}')
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
+        googleResponse.text == '{"name":"bar"}'
+    }
 }

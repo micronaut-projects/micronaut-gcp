@@ -6,9 +6,11 @@ import io.micronaut.core.convert.ConversionError;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.io.IOUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.bind.binders.AnnotatedRequestArgumentBinder;
 import io.micronaut.http.bind.binders.DefaultBodyAnnotationBinder;
+import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 
 import java.io.BufferedReader;
@@ -35,9 +37,9 @@ class GoogleBodyBinder<T> extends DefaultBodyAnnotationBinder<T> implements Anno
 
     @Override
     public BindingResult<T> bind(ArgumentConversionContext<T> context, HttpRequest<?> source) {
+        final Class<T> type = context.getArgument().getType();
         if (source instanceof GoogleFunctionHttpRequest) {
             GoogleFunctionHttpRequest<?> functionHttpRequest = (GoogleFunctionHttpRequest<?>) source;
-            final Class<T> type = context.getArgument().getType();
             if (CharSequence.class.isAssignableFrom(type)) {
                 try (InputStream inputStream = functionHttpRequest.getInputStream()) {
                     final String content = IOUtils.readText(new BufferedReader(new InputStreamReader(inputStream, source.getCharacterEncoding())));
@@ -56,6 +58,31 @@ class GoogleBodyBinder<T> extends DefaultBodyAnnotationBinder<T> implements Anno
                             );
                         }
                     };
+                }
+
+            } else {
+                final MediaTypeCodec codec = mediaTypeCodeRegistry.findCodec(source.getContentType().orElse(MediaType.APPLICATION_JSON_TYPE), type)
+                        .orElse(null);
+
+                if (codec != null) {
+                    try (InputStream inputStream = functionHttpRequest.getInputStream()) {
+                        T content = codec.decode(type, inputStream);
+                        return () -> Optional.of(content);
+                    } catch (IOException e) {
+                        return new BindingResult<T>() {
+                            @Override
+                            public Optional<T> getValue() {
+                                return Optional.empty();
+                            }
+
+                            @Override
+                            public List<ConversionError> getConversionErrors() {
+                                return Collections.singletonList(
+                                        () -> e
+                                );
+                            }
+                        };
+                    }
                 }
 
             }

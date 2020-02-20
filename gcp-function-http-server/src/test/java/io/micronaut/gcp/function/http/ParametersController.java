@@ -26,4 +26,9 @@ public class ParametersController {
     String stringBody(@Body String body) {
         return "Hello " + body;
     }
+
+    @Post(value = "/jsonBody", processes = "application/json")
+    SimplePojo jsonBody(@Body SimplePojo body) {
+        return body;
+    }
 }
