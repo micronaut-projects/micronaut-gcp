@@ -16,6 +16,8 @@ import io.micronaut.http.simple.cookies.SimpleCookies;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.*;
 
@@ -50,6 +52,14 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
         }
         this.method = method;
         this.headers = new GoogleFunctionHeaders();
+    }
+
+    /**
+     * @return Gets the input stream
+     * @throws IOException If an error occurs
+     */
+    InputStream getInputStream() throws IOException {
+        return googleRequest.getInputStream();
     }
 
     /**

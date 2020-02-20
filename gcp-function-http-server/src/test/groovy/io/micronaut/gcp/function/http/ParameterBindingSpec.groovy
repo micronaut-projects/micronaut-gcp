@@ -1,5 +1,6 @@
 package io.micronaut.gcp.function.http
 
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
@@ -27,6 +28,36 @@ class ParameterBindingSpec extends Specification {
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/query")
         googleRequest.addParameter("q", "Foo")
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.text == 'Hello Foo'
+    }
+
+    void "test header value"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/header")
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain;q=1.0")
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.text == 'Hello text/plain;q=1.0'
+    }
+
+    void "test string body"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/stringBody", "Foo")
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
         new HttpServerFunction()
                 .service(googleRequest, googleResponse)
 

@@ -20,6 +20,7 @@ import io.micronaut.web.router.RouteMatch;
 import io.micronaut.web.router.Router;
 import io.micronaut.web.router.UriRouteMatch;
 import io.micronaut.web.router.exceptions.DuplicateRouteException;
+import io.micronaut.web.router.exceptions.UnsatisfiedRouteException;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -185,54 +186,62 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
         if (!route.isExecutable()) {
             route = requestArgumentSatisfier.fulfillArgumentRequirements(route, req, false);
         }
-        if (route.isExecutable()) {
-            RouteMatch<?> finalRoute = route;
-            final AnnotationMetadata annotationMetadata = finalRoute.getAnnotationMetadata();
-            Publisher<? extends MutableHttpResponse<?>> responsePublisher
-                    = Flowable.defer(() -> {
-                annotationMetadata.stringValue(Produces.class)
-                        .ifPresent(res::contentType);
-                annotationMetadata.enumValue(Status.class, HttpStatus.class)
-                        .ifPresent(s -> res.status(s));
-                final Object result = finalRoute.execute();
-                if (result == null) {
-                    return Publishers.just(res);
-                }
-                if (Publishers.isConvertibleToPublisher(result)) {
-                    final Publisher<?> publisher = Publishers.convertPublisher(result, Publisher.class);
-                    return Publishers.map(publisher, o -> {
-                        if (o instanceof MutableHttpResponse) {
-                            return (MutableHttpResponse<?>) o;
-                        } else {
-                            res.body(o);
-                            return res;
-                        }
-                    });
-                } else if (result instanceof MutableHttpResponse) {
-                    return Publishers.just((MutableHttpResponse<?>) result);
-                } else {
-                    return Publishers.just(
-                            res.body(result)
-                    );
-                }
-            });
-            final List<HttpFilter> filters = router.findFilters(req);
-            if (CollectionUtils.isNotEmpty(filters)) {
-                responsePublisher =
-                        filterPublisher(new AtomicReference<>(req), responsePublisher, isErrorRoute);
+        RouteMatch<?> finalRoute = route;
+        final AnnotationMetadata annotationMetadata = finalRoute.getAnnotationMetadata();
+        Publisher<? extends MutableHttpResponse<?>> responsePublisher
+                = Flowable.defer(() -> {
+            annotationMetadata.stringValue(Produces.class)
+                    .ifPresent(res::contentType);
+            annotationMetadata.enumValue(Status.class, HttpStatus.class)
+                    .ifPresent(s -> res.status(s));
+            final Object result = finalRoute.execute();
+            if (result == null) {
+                return Publishers.just(res);
             }
-
-            try {
-                Flowable.fromPublisher(responsePublisher)
-                        .blockingSubscribe();
-            } catch (Throwable e) {
-                if (isErrorRoute) {
-                    // handle error default
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Error occurred executing Error route [" + route + "]: " + e.getMessage(), e);
+            if (Publishers.isConvertibleToPublisher(result)) {
+                final Publisher<?> publisher = Publishers.convertPublisher(result, Publisher.class);
+                return Publishers.map(publisher, o -> {
+                    if (o instanceof MutableHttpResponse) {
+                        return (MutableHttpResponse<?>) o;
+                    } else {
+                        res.body(o);
+                        return res;
                     }
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                });
+            } else if (result instanceof MutableHttpResponse) {
+                return Publishers.just((MutableHttpResponse<?>) result);
+            } else {
+                return Publishers.just(
+                        res.body(result)
+                );
+            }
+        });
+        final List<HttpFilter> filters = router.findFilters(req);
+        if (CollectionUtils.isNotEmpty(filters)) {
+            responsePublisher =
+                    filterPublisher(new AtomicReference<>(req), responsePublisher, isErrorRoute);
+        }
+
+        try {
+            Flowable.fromPublisher(responsePublisher)
+                    .blockingSubscribe();
+        } catch (Throwable e) {
+            if (isErrorRoute) {
+                // handle error default
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Error occurred executing Error route [" + route + "]: " + e.getMessage(), e);
+                }
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            } else {
+                if (e instanceof UnsatisfiedRouteException) {
+                    final RouteMatch<Object> badRequestRoute = lookupStatusRoute(route, HttpStatus.BAD_REQUEST);
+                    if (badRequestRoute != null) {
+                        invokeRouteMatch(req, res, badRequestRoute, true);
+                    } else {
+                        res.status(HttpStatus.BAD_REQUEST, e.getMessage());
+                    }
                 } else {
+
                     final RouteMatch<Object> errorRoute = lookupErrorRoute(route, e);
                     if (errorRoute != null) {
                         invokeRouteMatch(req, res, errorRoute, true);
@@ -243,13 +252,6 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                         res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
                     }
                 }
-            }
-        } else {
-            final RouteMatch<Object> badRequestRoute = lookupStatusRoute(route, HttpStatus.BAD_REQUEST);
-            if (badRequestRoute != null) {
-                invokeRouteMatch(req, res, badRequestRoute, true);
-            } else {
-                res.status(HttpStatus.BAD_REQUEST);
             }
         }
     }

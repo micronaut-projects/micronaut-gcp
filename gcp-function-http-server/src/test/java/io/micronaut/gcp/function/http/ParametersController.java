@@ -1,8 +1,7 @@
 package io.micronaut.gcp.function.http;
 
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.annotation.*;
 
 @Controller("/parameters")
 public class ParametersController {
@@ -17,5 +16,14 @@ public class ParametersController {
         return "Hello " + name;
     }
 
+    @Get("/header")
+    String headerValue(@Header(HttpHeaders.CONTENT_TYPE) String contentType) {
+        return "Hello " + contentType;
+    }
 
+    @Post("/stringBody")
+    @Consumes("text/plain")
+    String stringBody(@Body String body) {
+        return "Hello " + body;
+    }
 }
