@@ -114,6 +114,21 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == json
     }
 
+    void "test JSON POJO body - invalid JSON"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def json = '{"name":"bar","age":30'
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", json)
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.BAD_REQUEST.code
+        googleResponse.message.contains("Unable to decode request body")
+    }
+
 
     void "test JSON POJO body with no @Body binds to arguments"() {
 

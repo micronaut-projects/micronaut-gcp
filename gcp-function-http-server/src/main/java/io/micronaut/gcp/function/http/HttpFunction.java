@@ -33,7 +33,7 @@ public class HttpFunction extends ServerlessHttpHandler<HttpRequest, HttpRespons
     protected ApplicationContextBuilder newApplicationContextBuilder() {
         final ApplicationContextBuilder builder = super.newApplicationContextBuilder();
         builder.deduceEnvironment(false);
-        builder.environments(Environment.GOOGLE_COMPUTE);
+        builder.environments(Environment.FUNCTION, Environment.GOOGLE_COMPUTE);
         return builder;
     }
 }
