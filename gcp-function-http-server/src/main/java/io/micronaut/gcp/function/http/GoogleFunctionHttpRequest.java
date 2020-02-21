@@ -1,12 +1,17 @@
 package io.micronaut.gcp.function.http;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.convert.ArgumentConversionContext;
+import io.micronaut.core.convert.ConversionContext;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.function.http.ServerlessExchange;
+import io.micronaut.function.http.ServerlessHttpRequest;
+import io.micronaut.function.http.ServerlessHttpResponse;
 import io.micronaut.http.*;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
@@ -17,6 +22,7 @@ import io.micronaut.http.simple.cookies.SimpleCookies;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -29,7 +35,7 @@ import java.util.*;
  * @since 1.2.0
  */
 @Internal
-final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
+final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.google.cloud.functions.HttpRequest, B>, ServerlessExchange<com.google.cloud.functions.HttpRequest, com.google.cloud.functions.HttpResponse> {
     private static final String HEADER_KEY_VALUE_SEPARATOR = "=";
     private final com.google.cloud.functions.HttpRequest googleRequest;
     private final URI uri;
@@ -39,6 +45,7 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
     private final MediaTypeCodecRegistry codecRegistry;
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
+    private Object body;
 
     GoogleFunctionHttpRequest(
             com.google.cloud.functions.HttpRequest googleRequest,
@@ -58,12 +65,19 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
         this.codecRegistry = codecRegistry;
     }
 
-    /**
-     * @return Gets the input stream
-     * @throws IOException If an error occurs
-     */
-    InputStream getInputStream() throws IOException {
+    @Override
+    public InputStream getInputStream() throws IOException {
         return googleRequest.getInputStream();
+    }
+
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return googleRequest.getReader();
+    }
+
+    @Override
+    public com.google.cloud.functions.HttpRequest getNativeRequest() {
+        return googleRequest;
     }
 
     /**
@@ -72,13 +86,6 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
      */
     GoogleFunctionHttpResponse<?> getGoogleResponse() {
         return googleResponse;
-    }
-
-    /**
-     * @return The google request
-     */
-    com.google.cloud.functions.HttpRequest getGoogleRequest() {
-        return googleRequest;
     }
 
     @Nonnull
@@ -159,24 +166,49 @@ final class GoogleFunctionHttpRequest<B> implements HttpRequest<B> {
     public <T> Optional<T> getBody(@Nonnull Argument<T> arg) {
         if (arg != null) {
             final Class<T> type = arg.getType();
-            final MediaType contentType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
-            final MediaTypeCodec codec = codecRegistry.findCodec(contentType, type).orElse(null);
-            if (codec != null) {
-                try (InputStream inputStream = googleRequest.getInputStream()) {
-                    if (ConvertibleValues.class == type) {
-                        final Map map = codec.decode(Map.class, inputStream);
-                        return (Optional<T>) Optional.of(ConvertibleValues.of(map));
-                    } else {
-                        final T value = codec.decode(arg, inputStream);
-                        return Optional.ofNullable(value);
+            if (body == null) {
+
+                final MediaType contentType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
+                final MediaTypeCodec codec = codecRegistry.findCodec(contentType, type).orElse(null);
+                if (codec != null) {
+                    try (InputStream inputStream = googleRequest.getInputStream()) {
+                        if (ConvertibleValues.class == type) {
+                            final Map map = codec.decode(Map.class, inputStream);
+                            body = ConvertibleValues.of(map);
+                            return (Optional<T>) Optional.of(body);
+                        } else {
+                            final T value = codec.decode(arg, inputStream);
+                            body = value;
+                            return Optional.ofNullable(value);
+                        }
+                    } catch (IOException e) {
+                        throw new CodecException("Error decoding request body: " + e.getMessage(), e);
                     }
-                } catch (IOException e) {
-                    throw new CodecException("Error decoding request body: " + e.getMessage(), e);
+
+                }
+            } else {
+                if (type.isInstance(body)) {
+                    return (Optional<T>) Optional.of(body);
+                } else {
+                    final T result = ConversionService.SHARED.convertRequired(body, arg);
+                    return Optional.ofNullable(result);
                 }
 
             }
         }
         return Optional.empty();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ServerlessHttpRequest<com.google.cloud.functions.HttpRequest, ? super Object> getRequest() {
+        return (ServerlessHttpRequest) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ServerlessHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object> getResponse() {
+        return (ServerlessHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object>) googleResponse;
     }
 
     private final class GoogleFunctionParameters extends GoogleMultiValueMap implements HttpParameters {

@@ -21,7 +21,7 @@ class GoogleResponseBinder implements TypedRequestArgumentBinder<HttpResponse> {
     public BindingResult<HttpResponse> bind(ArgumentConversionContext<HttpResponse> context, HttpRequest<?> source) {
         if (source instanceof GoogleFunctionHttpRequest) {
             GoogleFunctionHttpRequest googleFunctionHttpRequest = (GoogleFunctionHttpRequest) source;
-            return () -> Optional.of(googleFunctionHttpRequest.getGoogleResponse().getResponse());
+            return () -> Optional.of(googleFunctionHttpRequest.getGoogleResponse().getNativeResponse());
         }
         return BindingResult.UNSATISFIED;
     }

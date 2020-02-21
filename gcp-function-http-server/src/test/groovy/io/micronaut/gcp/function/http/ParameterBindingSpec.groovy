@@ -37,6 +37,22 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == 'Hello Foo'
     }
 
+    void "test all parameters"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/allParams")
+        googleRequest.addParameter("name", "Foo")
+        googleRequest.addParameter("age", "20")
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.text == 'Hello Foo 20'
+    }
+
     void "test header value"() {
 
         given:
@@ -86,7 +102,8 @@ class ParameterBindingSpec extends Specification {
 
         given:
         def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", '{"name":"bar"}')
+        def json = '{"name":"bar","age":30}'
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpServerFunction()
                 .service(googleRequest, googleResponse)
@@ -94,7 +111,7 @@ class ParameterBindingSpec extends Specification {
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
         googleResponse.contentType.get() == MediaType.APPLICATION_JSON
-        googleResponse.text == '{"name":"bar"}'
+        googleResponse.text == json
     }
 
 
@@ -102,7 +119,8 @@ class ParameterBindingSpec extends Specification {
 
         given:
         def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBodySpread", '{"name":"bar"}')
+        def json = '{"name":"bar","age":20}'
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBodySpread", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpServerFunction()
                 .service(googleRequest, googleResponse)
@@ -110,6 +128,22 @@ class ParameterBindingSpec extends Specification {
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
         googleResponse.contentType.get() == MediaType.APPLICATION_JSON
-        googleResponse.text == '{"name":"bar"}'
+        googleResponse.text == json
+    }
+
+    void "full Micronaut request and response"() {
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def json = '{"name":"bar","age":20}'
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
+        googleResponse.text == json
+        googleResponse.headers["Foo"] == ['Bar']
     }
 }

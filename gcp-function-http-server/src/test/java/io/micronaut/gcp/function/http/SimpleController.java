@@ -15,7 +15,7 @@ public class SimpleController {
 
     @Produces("application/json")
     @Get("/simplePojo")
-    SimplePojo simplePojo() {
-        return new SimplePojo("good");
+    Person simplePojo() {
+        return new Person("good");
     }
 }

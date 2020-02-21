@@ -1,4 +1,4 @@
-package io.micronaut.gcp.function.http;
+package io.micronaut.function.http;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ArgumentConversionContext;
@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Internal
-class GoogleBodyBinder<T> extends DefaultBodyAnnotationBinder<T> implements AnnotatedRequestArgumentBinder<Body, T> {
+class ServerlessBodyBinder<T> extends DefaultBodyAnnotationBinder<T> implements AnnotatedRequestArgumentBinder<Body, T> {
     private final MediaTypeCodecRegistry mediaTypeCodeRegistry;
 
-    GoogleBodyBinder(ConversionService<?> conversionService, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
+    ServerlessBodyBinder(ConversionService<?> conversionService, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
         super(conversionService);
         this.mediaTypeCodeRegistry = mediaTypeCodecRegistry;
     }
@@ -38,8 +38,8 @@ class GoogleBodyBinder<T> extends DefaultBodyAnnotationBinder<T> implements Anno
     @Override
     public BindingResult<T> bind(ArgumentConversionContext<T> context, HttpRequest<?> source) {
         final Class<T> type = context.getArgument().getType();
-        if (source instanceof GoogleFunctionHttpRequest) {
-            GoogleFunctionHttpRequest<?> functionHttpRequest = (GoogleFunctionHttpRequest<?>) source;
+        if (source instanceof ServerlessHttpRequest) {
+            ServerlessHttpRequest<?, ?> functionHttpRequest = (ServerlessHttpRequest<?, ?>) source;
             if (CharSequence.class.isAssignableFrom(type)) {
                 try (InputStream inputStream = functionHttpRequest.getInputStream()) {
                     final String content = IOUtils.readText(new BufferedReader(new InputStreamReader(inputStream, source.getCharacterEncoding())));

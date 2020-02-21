@@ -28,7 +28,6 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -85,7 +84,7 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
     public void service(Req request, Res response) {
         try {
 
-            ServerlessExchange exchange = createExchange(request, response);
+            ServerlessExchange<Req, Res> exchange = createExchange(request, response);
             service(exchange);
         } finally {
             applicationContext.close();
@@ -93,24 +92,10 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
     }
 
     /**
-     * Handle the given Micronaut request and native response.
-     * @param request The request
-     * @param response The response
-     */
-    public void service(HttpRequest<? super Object> request, Res response) {
-        try {
-            ServerlessExchange exchange = createExchange(request, response);
-            service(exchange);
-        } finally {
-            applicationContext.close();
-        }
-    }
-
-    /**
-     * Handles a {@link ServerlessExchange}.
+     * Handles a {@link DefaultServerlessExchange}.
      * @param exchange The exchange
      */
-    public void service(ServerlessExchange exchange) {
+    public void service(ServerlessExchange<Req, Res> exchange) {
         final long time = System.currentTimeMillis();
         try {
             final MutableHttpResponse<Object> res = exchange.getResponse();
@@ -278,22 +263,14 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
     }
 
     /**
-     * Creates the {@link ServerlessExchange} object.
+     * Creates the {@link DefaultServerlessExchange} object.
      *
      * @param request  The request
      * @param response The response
      * @return The exchange object
      */
-    protected abstract ServerlessExchange createExchange(Req request, Res response);
+    protected abstract ServerlessExchange<Req, Res> createExchange(Req request, Res response);
 
-    /**
-     * Creates the {@link ServerlessExchange} object.
-     *
-     * @param request  The request
-     * @param response The response
-     * @return The exchange object
-     */
-    protected abstract ServerlessExchange createExchange(HttpRequest<? super Object> request, Res response);
 
     private RouteMatch<Object> lookupErrorRoute(RouteMatch<?> route, Throwable e) {
         return router.route(route.getDeclaringType(), e)

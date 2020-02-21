@@ -5,6 +5,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.function.http.ServerlessHttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
@@ -30,7 +31,7 @@ import java.util.*;
  * @author graemerocher
  */
 @Internal
-final class GoogleFunctionHttpResponse<B> implements MutableHttpResponse<B> {
+final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<HttpResponse, B> {
 
     private final HttpResponse response;
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
@@ -42,13 +43,6 @@ final class GoogleFunctionHttpResponse<B> implements MutableHttpResponse<B> {
     GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
         this.response = response;
         this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
-    }
-
-    /**
-     * @return The response
-     */
-    HttpResponse getResponse() {
-        return response;
     }
 
     @Override
@@ -161,6 +155,11 @@ final class GoogleFunctionHttpResponse<B> implements MutableHttpResponse<B> {
     @Override
     public HttpStatus getStatus() {
         return this.status;
+    }
+
+    @Override
+    public HttpResponse getNativeResponse() {
+        return response;
     }
 
     private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements MutableHttpHeaders {

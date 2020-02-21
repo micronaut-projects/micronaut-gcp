@@ -2,9 +2,7 @@ package io.micronaut.gcp.function.http;
 
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
-import io.micronaut.http.HttpHeaders;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
+import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
 
 import java.io.BufferedWriter;
@@ -21,6 +19,11 @@ public class ParametersController {
     @Get("/query")
     String queryValue(@QueryValue("q") String name) {
         return "Hello " + name;
+    }
+
+    @Get("/allParams")
+    String allParams(HttpParameters parameters) {
+        return "Hello " + parameters.get("name") + " " + parameters.get("age", int.class).orElse(null);
     }
 
     @Get("/header")
@@ -51,12 +54,21 @@ public class ParametersController {
     }
 
     @Post(value = "/jsonBody", processes = "application/json")
-    SimplePojo jsonBody(@Body SimplePojo body) {
+    Person jsonBody(@Body Person body) {
         return body;
     }
 
     @Post(value = "/jsonBodySpread", processes = "application/json")
-    SimplePojo jsonBody(String name) {
-        return new SimplePojo(name);
+    Person jsonBody(String name, int age) {
+        return new Person(name, age);
     }
+
+    @Post(value = "/fullRequest", processes = "application/json")
+    io.micronaut.http.HttpResponse<Person> fullReq(io.micronaut.http.HttpRequest<Person> request) {
+        final Person person = request.getBody().orElseThrow(() -> new RuntimeException("No body"));
+        final MutableHttpResponse<Person> response = io.micronaut.http.HttpResponse.ok(person);
+        response.header("Foo", "Bar");
+        return response;
+    }
+
 }

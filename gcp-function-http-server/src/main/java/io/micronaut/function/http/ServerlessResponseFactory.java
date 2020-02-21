@@ -29,8 +29,8 @@ public class ServerlessResponseFactory implements HttpResponseFactory{
     @Override
     public <T> MutableHttpResponse<T> ok(T body) {
         final HttpRequest<Object> req = ServerRequestContext.currentRequest().orElse(null);
-        if (req instanceof ServerlessRequest) {
-            final MutableHttpResponse response = ((ServerlessRequest) req).getResponse();
+        if (req instanceof ServerlessExchange) {
+            final MutableHttpResponse response = ((ServerlessExchange) req).getResponse();
             return response.status(HttpStatus.OK).body(body);
         } else {
             if (ALTERNATE != null) {
@@ -45,8 +45,8 @@ public class ServerlessResponseFactory implements HttpResponseFactory{
     @Override
     public <T> MutableHttpResponse<T> status(HttpStatus status, String reason) {
         final HttpRequest<Object> req = ServerRequestContext.currentRequest().orElse(null);
-        if (req instanceof ServerlessRequest) {
-            final MutableHttpResponse response = ((ServerlessRequest) req).getResponse();
+        if (req instanceof ServerlessExchange) {
+            final MutableHttpResponse response = ((ServerlessExchange) req).getResponse();
             return response.status(status, reason);
         } else {
             if (ALTERNATE != null) {
@@ -61,8 +61,8 @@ public class ServerlessResponseFactory implements HttpResponseFactory{
     @Override
     public <T> MutableHttpResponse<T> status(HttpStatus status, T body) {
         final HttpRequest<Object> req = ServerRequestContext.currentRequest().orElse(null);
-        if (req instanceof ServerlessRequest) {
-            final MutableHttpResponse response = ((ServerlessRequest) req).getResponse();
+        if (req instanceof ServerlessExchange) {
+            final MutableHttpResponse response = ((ServerlessExchange) req).getResponse();
             return response.body(body).status(status);
         } else {
             if (ALTERNATE != null) {

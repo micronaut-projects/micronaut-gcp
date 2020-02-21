@@ -20,7 +20,7 @@ public class GoogleRequestBinder implements TypedRequestArgumentBinder<HttpReque
     public BindingResult<HttpRequest> bind(ArgumentConversionContext<HttpRequest> context, io.micronaut.http.HttpRequest<?> source) {
         if (source instanceof GoogleFunctionHttpRequest) {
             GoogleFunctionHttpRequest googleFunctionHttpRequest = (GoogleFunctionHttpRequest) source;
-            return () -> Optional.of(googleFunctionHttpRequest.getGoogleRequest());
+            return () -> Optional.of(googleFunctionHttpRequest.getNativeRequest());
         }
         return BindingResult.UNSATISFIED;
     }
