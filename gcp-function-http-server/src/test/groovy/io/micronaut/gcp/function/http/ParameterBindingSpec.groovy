@@ -22,6 +22,19 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == 'Hello Foo'
     }
 
+    void "test invalid HTTP method"() {
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/uri/Foo")
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.METHOD_NOT_ALLOWED.code
+        def allow = googleResponse.headers[HttpHeaders.ALLOW]
+        allow == ["HEAD,GET"]
+    }
+
     void "test query value"() {
 
         given:

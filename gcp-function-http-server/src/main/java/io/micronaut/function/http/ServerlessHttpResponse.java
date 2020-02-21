@@ -1,6 +1,5 @@
 package io.micronaut.function.http;
 
-import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
 
 import java.io.BufferedWriter;
@@ -29,6 +28,7 @@ public interface ServerlessHttpResponse<N, B> extends MutableHttpResponse<B> {
      *
      * @throws IOException if a valid {@link OutputStream} cannot be returned for some reason.
      * @throws IllegalStateException if {@link #getWriter} has already been called on this instance.
+     * @return The output stream
      */
     OutputStream getOutputStream() throws IOException;
 
@@ -40,6 +40,7 @@ public interface ServerlessHttpResponse<N, B> extends MutableHttpResponse<B> {
      * @throws IOException if a valid {@link BufferedWriter} cannot be returned for some reason.
      * @throws IllegalStateException if {@link #getOutputStream} has already been called on this
      *     instance.
+     * @return The writer
      */
     BufferedWriter getWriter() throws IOException;
 }

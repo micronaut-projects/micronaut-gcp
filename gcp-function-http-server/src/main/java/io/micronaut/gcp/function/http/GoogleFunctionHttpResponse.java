@@ -113,7 +113,7 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
                 throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
         } else if (body instanceof byte[]) {
-            try (final OutputStream outputStream = response.getOutputStream()) {
+            try (OutputStream outputStream = response.getOutputStream()) {
                 outputStream.write((byte[]) body);
                 outputStream.flush();
             } catch (IOException e) {
@@ -121,7 +121,7 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
             }
         } else if (body instanceof Writable) {
             Writable writable = (Writable) body;
-            try (final OutputStream outputStream = response.getOutputStream()) {
+            try (OutputStream outputStream = response.getOutputStream()) {
                 writable.writeTo(outputStream, getCharacterEncoding());
                 outputStream.flush();
             } catch (IOException e) {

@@ -24,6 +24,7 @@ import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.web.router.RouteMatch;
 import io.micronaut.web.router.Router;
+import io.micronaut.web.router.UriRoute;
 import io.micronaut.web.router.UriRouteMatch;
 import io.micronaut.web.router.exceptions.DuplicateRouteException;
 import io.micronaut.web.router.exceptions.UnsatisfiedRouteException;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * An HTTP handler that can deal with Serverless requests.
@@ -57,6 +59,8 @@ public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
 
     /**
      * Default constructor.
+     *
+     * @param applicationContext The application context
      */
     public ServerlessHttpHandler(ApplicationContext applicationContext) {
         this.applicationContext = Objects.requireNonNull(applicationContext, "The application context cannot be null");
@@ -73,7 +77,7 @@ public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
     }
 
     /**
-     * @return The media type codec registry
+     * @return The media type codec registry.
      */
     public MediaTypeCodecRegistry getMediaTypeCodecRegistry() {
         return mediaTypeCodecRegistry;
@@ -126,19 +130,39 @@ public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
                 invokeRouteMatch(req, res, route, false);
 
             } else {
-                final RouteMatch<Object> notFoundRoute =
-                        router.route(HttpStatus.NOT_FOUND).orElse(null);
+                Set<String> existingRouteMethods = router
+                        .findAny(req.getUri().toString(), req)
+                        .map(UriRouteMatch::getRoute)
+                        .map(UriRoute::getHttpMethodName)
+                        .collect(Collectors.toSet());
 
-                if (notFoundRoute != null) {
-                    invokeRouteMatch(req, res, notFoundRoute, true);
+                if (CollectionUtils.isNotEmpty(existingRouteMethods)) {
+                    final RouteMatch<Object> notAllowedRoute =
+                            router.route(HttpStatus.METHOD_NOT_ALLOWED).orElse(null);
+
+                    if (notAllowedRoute != null) {
+                        invokeRouteMatch(req, res, notAllowedRoute, true);
+                    } else {
+                        res.getHeaders().allowGeneric(existingRouteMethods);
+                        res.status(HttpStatus.METHOD_NOT_ALLOWED);
+                    }
                 } else {
-                    res.status(HttpStatus.NOT_FOUND);
+                    final RouteMatch<Object> notFoundRoute =
+                            router.route(HttpStatus.NOT_FOUND).orElse(null);
+
+                    if (notFoundRoute != null) {
+                        invokeRouteMatch(req, res, notFoundRoute, true);
+                    } else {
+                        res.status(HttpStatus.NOT_FOUND);
+                    }
                 }
+
+
             }
         } finally {
-            if (LOG.isInfoEnabled()) {
+            if (LOG.isTraceEnabled()) {
                 final HttpRequest<? super Object> r = exchange.getRequest();
-                LOG.info("Executed HTTP Function [{} {}] in: {}ms",
+                LOG.trace("Executed HTTP Request [{} {}] in: {}ms",
                         r.getMethod(),
                         r.getPath(),
                         (System.currentTimeMillis() - time)
@@ -343,6 +367,7 @@ public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
         }
         if (!filters.isEmpty()) {
             // make the action executor the last filter in the chain
+            //noinspection unchecked
             filters.add((HttpServerFilter) (req, chain) -> (Publisher<MutableHttpResponse<?>>) routePublisher);
 
             AtomicInteger integer = new AtomicInteger();
@@ -361,6 +386,7 @@ public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
             };
             HttpFilter httpFilter = filters.get(0);
             Publisher<? extends io.micronaut.http.HttpResponse<?>> resultingPublisher = httpFilter.doFilter(requestReference.get(), filterChain);
+            //noinspection unchecked
             finalPublisher = (Publisher<? extends MutableHttpResponse<?>>) resultingPublisher;
         } else {
             finalPublisher = routePublisher;
