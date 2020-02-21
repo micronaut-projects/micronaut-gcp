@@ -28,7 +28,6 @@ import io.micronaut.web.router.UriRouteMatch;
 import io.micronaut.web.router.exceptions.DuplicateRouteException;
 import io.micronaut.web.router.exceptions.UnsatisfiedRouteException;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +61,13 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
         this.router = applicationContext.getBean(Router.class);
         this.requestArgumentSatisfier = applicationContext.getBean(RequestArgumentSatisfier.class);
         this.mediaTypeCodecRegistry = applicationContext.getBean(MediaTypeCodecRegistry.class);
+    }
+
+    /**
+     * @return The application context for the function.
+     */
+    public ApplicationContext getApplicationContext() {
+        return this.applicationContext;
     }
 
     /**
@@ -215,7 +221,13 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                     return Publishers.just(res);
                 }
                 if (Publishers.isConvertibleToPublisher(result)) {
-                    final Publisher<?> publisher = Publishers.convertPublisher(result, Publisher.class);
+                    final Publisher<?> publisher;
+                    if (!Publishers.isSingle(result.getClass())) {
+                        final Flowable flowable = Publishers.convertPublisher(result, Flowable.class);
+                        publisher = Publishers.convertPublisher(flowable.toList(), Publisher.class);
+                    } else {
+                        publisher = Publishers.convertPublisher(result, Publisher.class);
+                    }
                     return Publishers.map(publisher, o -> {
                         if (o instanceof MutableHttpResponse) {
                             return (MutableHttpResponse<?>) o;

@@ -1,10 +1,12 @@
 package io.micronaut.function.http;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.convert.ConversionError;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.io.IOUtils;
+import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -15,6 +17,8 @@ import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.exceptions.HttpStatusException;
+import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +58,8 @@ final class ServerlessBodyBinder<T> extends DefaultBodyAnnotationBinder<T> imple
 
     @Override
     public BindingResult<T> bind(ArgumentConversionContext<T> context, HttpRequest<?> source) {
-        final Class<T> type = context.getArgument().getType();
+        final Argument<T> argument = context.getArgument();
+        final Class<T> type = argument.getType();
         if (source instanceof ServerlessHttpRequest) {
             ServerlessHttpRequest<?, ?> functionHttpRequest = (ServerlessHttpRequest<?, ?>) source;
             if (CharSequence.class.isAssignableFrom(type)) {
@@ -78,13 +83,32 @@ final class ServerlessBodyBinder<T> extends DefaultBodyAnnotationBinder<T> imple
                 }
 
             } else {
-                final MediaTypeCodec codec = mediaTypeCodeRegistry.findCodec(source.getContentType().orElse(MediaType.APPLICATION_JSON_TYPE), type)
+                final MediaType mediaType = source.getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
+                final MediaTypeCodec codec = mediaTypeCodeRegistry
+                        .findCodec(mediaType, type)
                         .orElse(null);
 
                 if (codec != null) {
+
                     try (InputStream inputStream = functionHttpRequest.getInputStream()) {
-                        T content = codec.decode(type, inputStream);
-                        return () -> Optional.of(content);
+                        if (Publishers.isConvertibleToPublisher(type)) {
+                            final Argument<?> typeArg = argument.getFirstTypeVariable().orElse(Argument.OBJECT_ARGUMENT);
+                            if (Publishers.isSingle(type)) {
+                                T content = (T) codec.decode(typeArg, inputStream);
+                                final Publisher<T> publisher = Publishers.just(content);
+                                final T converted = conversionService.convertRequired(publisher, type);
+                                return () -> Optional.of(converted);
+                            } else {
+                                final Argument<? extends List<?>> containerType = Argument.listOf(typeArg.getType());
+                                T content = (T) codec.decode(containerType, inputStream);
+                                final Flowable flowable = Flowable.fromIterable((Iterable) content);
+                                final T converted = conversionService.convertRequired(flowable, type);
+                                return () -> Optional.of(converted);
+                            }
+                        } else {
+                            T content = codec.decode(argument, inputStream);
+                            return () -> Optional.of(content);
+                        }
                     } catch (CodecException | IOException e) {
                         throw new HttpStatusException(HttpStatus.BAD_REQUEST, "Unable to decode request body: " + e.getMessage());
                     }
