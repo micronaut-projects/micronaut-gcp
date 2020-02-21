@@ -273,6 +273,7 @@ public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
     }
 
     private void handleException(HttpRequest<Object> req, MutableHttpResponse<Object> res, RouteMatch<?> route, boolean isErrorRoute, Throwable e) {
+        req.setAttribute(HttpAttributes.ERROR, e);
         if (isErrorRoute) {
             // handle error default
             if (LOG.isErrorEnabled()) {
