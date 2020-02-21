@@ -17,13 +17,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * A {@link RequestBinderRegistry} implementation specifically for Serverless functions over HTTP.
+ *
+ * @author graemerocher
+ * @since 2.0.0
+ */
 public abstract class ServerlessBinderRegistry implements RequestBinderRegistry {
 
     private static final String BINDABLE_ANN = Bindable.class.getName();
-    private final DefaultRequestBinderRegistry defaultRegistry;
     protected final Map<Class<? extends Annotation>, RequestArgumentBinder> byAnnotation = new LinkedHashMap<>(5);
     protected final Map<Class<?>, RequestArgumentBinder> byType = new LinkedHashMap<>(5);
+    private final DefaultRequestBinderRegistry defaultRegistry;
 
+    /**
+     * Default constructor.
+     *
+     * @param mediaTypeCodecRegistry The media type codec registry
+     * @param conversionService      The conversion service
+     * @param binders                Any registered binders
+     */
     public ServerlessBinderRegistry(
             MediaTypeCodecRegistry mediaTypeCodecRegistry,
             ConversionService conversionService,

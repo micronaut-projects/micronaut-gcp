@@ -1,5 +1,6 @@
 package io.micronaut.function.http;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.io.IOUtils;
 import io.micronaut.core.type.Argument;
@@ -17,11 +18,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
-public class ServerlessRequestBinder implements TypedRequestArgumentBinder<HttpRequest> {
+/**
+ * A {@link io.micronaut.http.bind.binders.RequestArgumentBinder} that can bind the HTTP request
+ * for a {@link ServerlessHttpRequest} including resolving any type arguments for the body.
+ *
+ * @author graemerocher
+ * @since 2.0.0
+ */
+@Internal
+class ServerlessRequestBinder implements TypedRequestArgumentBinder<HttpRequest> {
 
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
 
-    public ServerlessRequestBinder(MediaTypeCodecRegistry mediaTypeCodecRegistry) {
+    /**
+     * Default constructor.
+     *
+     * @param mediaTypeCodecRegistry The media type code registry
+     */
+    ServerlessRequestBinder(MediaTypeCodecRegistry mediaTypeCodecRegistry) {
         this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
     }
 

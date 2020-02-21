@@ -19,7 +19,7 @@ $ cd build/libs
 To deploy the function make sure you have `gcloud` CLI then run:
 
 ```bash
-$ gcloud alpha functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpServerFunction --runtime java11 --trigger-http
+$ gcloud alpha functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http
 ```
 
 The `myfunction` bit can be changed to whatever you want to name your function.

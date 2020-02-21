@@ -9,7 +9,14 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.http.server.exceptions.InternalServerException;
 
-public class ServerlessResponseFactory implements HttpResponseFactory{
+/**
+ * An implementation of the {@link HttpResponseFactory} case that retrieves the
+ * response object from the current request bound to the current thread.
+ *
+ * @author graemerocher
+ * @since 2.0.0
+ */
+public class ServerlessResponseFactory implements HttpResponseFactory {
     private static final HttpResponseFactory ALTERNATE;
 
     static {

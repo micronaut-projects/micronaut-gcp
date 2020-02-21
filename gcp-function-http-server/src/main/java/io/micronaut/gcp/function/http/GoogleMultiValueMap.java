@@ -9,12 +9,22 @@ import io.micronaut.core.util.ArgumentUtils;
 import javax.annotation.Nullable;
 import java.util.*;
 
+/**
+ * Implementation of {@link ConvertibleMultiValues} for Google.
+ *
+ * @author graemerocher
+ * @since 1.2.0
+ */
 @Internal
 class GoogleMultiValueMap implements ConvertibleMultiValues<String> {
-    final Map<String, List<String>> map;
+    private final Map<String, List<String>> map;
 
+    /**
+     * Default constructor.
+     * @param map The target map. Never null
+     */
     GoogleMultiValueMap(Map<String, List<String>> map) {
-        this.map = map;
+        this.map = Objects.requireNonNull(map, "Passed map cannot be null");
     }
 
     @Override

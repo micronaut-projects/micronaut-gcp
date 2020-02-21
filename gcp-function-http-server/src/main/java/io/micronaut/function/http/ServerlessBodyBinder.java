@@ -21,11 +21,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Allows binding the body from a {@link ServerlessHttpRequest}.
+ *
+ * @param <T> The body type
+ * @author graemerocher
+ * @since 2.0.0
+ */
 @Internal
-class ServerlessBodyBinder<T> extends DefaultBodyAnnotationBinder<T> implements AnnotatedRequestArgumentBinder<Body, T> {
+final class ServerlessBodyBinder<T> extends DefaultBodyAnnotationBinder<T> implements AnnotatedRequestArgumentBinder<Body, T> {
     private final MediaTypeCodecRegistry mediaTypeCodeRegistry;
 
-    ServerlessBodyBinder(ConversionService<?> conversionService, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
+    /**
+     * Default constructor.
+     * @param conversionService The conversion service
+     * @param mediaTypeCodecRegistry The codec registry
+     */
+    ServerlessBodyBinder(
+            ConversionService<?> conversionService,
+            MediaTypeCodecRegistry mediaTypeCodecRegistry) {
         super(conversionService);
         this.mediaTypeCodeRegistry = mediaTypeCodecRegistry;
     }

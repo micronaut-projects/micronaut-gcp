@@ -1,14 +1,14 @@
 package io.micronaut.function.http;
 
 import io.micronaut.core.util.ArgumentUtils;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
 
 /**
  * Represents an HTTP exchange in a Serverless context.
  *
+ * @param <Req> The native request type
+ * @param <Res> The native response type
  * @author graemerocher
- * @since 1.2.0
+ * @since 2.0.0
  */
 public class DefaultServerlessExchange<Req, Res> implements ServerlessExchange<Req, Res> {
 
@@ -17,10 +17,13 @@ public class DefaultServerlessExchange<Req, Res> implements ServerlessExchange<R
 
     /**
      * Default constructor.
-     * @param request The request
+     *
+     * @param request  The request
      * @param response The response
      */
-    public DefaultServerlessExchange(ServerlessHttpRequest<Req, ? super Object> request, ServerlessHttpResponse<Res, ? super Object> response) {
+    public DefaultServerlessExchange(
+            ServerlessHttpRequest<Req, ? super Object> request,
+            ServerlessHttpResponse<Res, ? super Object> response) {
         ArgumentUtils.requireNonNull("request", request);
         ArgumentUtils.requireNonNull("response", response);
         this.request = request;

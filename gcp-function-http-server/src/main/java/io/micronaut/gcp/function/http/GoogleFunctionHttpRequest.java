@@ -1,8 +1,6 @@
 package io.micronaut.gcp.function.http;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.convert.ArgumentConversionContext;
-import io.micronaut.core.convert.ConversionContext;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
@@ -29,8 +27,9 @@ import java.net.URI;
 import java.util.*;
 
 /**
- * Implementation of the {@link HttpRequest} interface for Google Cloud Function.
+ * Implementation of the {@link ServerlessHttpRequest} interface for Google Cloud Function.
  *
+ * @param <B> The body type
  * @author graemerocher
  * @since 1.2.0
  */
@@ -47,6 +46,13 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
     private MutableConvertibleValues<Object> attributes;
     private Object body;
 
+    /**
+     * Default constructor.
+     *
+     * @param googleRequest  The native google request
+     * @param googleResponse The {@link GoogleFunctionHttpResponse} object
+     * @param codecRegistry  The codec registry
+     */
     GoogleFunctionHttpRequest(
             com.google.cloud.functions.HttpRequest googleRequest,
             GoogleFunctionHttpResponse<?> googleResponse,
@@ -82,6 +88,7 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
 
     /**
      * Reference to the response object.
+     *
      * @return The response.
      */
     GoogleFunctionHttpResponse<?> getGoogleResponse() {
@@ -211,30 +218,6 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
         return (ServerlessHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object>) googleResponse;
     }
 
-    private final class GoogleFunctionParameters extends GoogleMultiValueMap implements HttpParameters {
-        GoogleFunctionParameters() {
-            super(googleRequest.getQueryParameters());
-        }
-
-        @Override
-        public Optional<String> getFirst(CharSequence name) {
-            ArgumentUtils.requireNonNull("name", name);
-            return googleRequest.getFirstQueryParameter(name.toString());
-        }
-
-        @Nullable
-        @Override
-        public String get(CharSequence name) {
-            return getFirst(name).orElse(null);
-        }
-    }
-
-    private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements HttpHeaders {
-        GoogleFunctionHeaders() {
-            super(googleRequest.getHeaders());
-        }
-    }
-
     /*
      * TODO: Copied from Micronaut AWS. Find a way to share this code
      */
@@ -316,6 +299,36 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
             return -1;
         });
         return values;
+    }
+
+    /**
+     * Models the http parameters.
+     */
+    private final class GoogleFunctionParameters extends GoogleMultiValueMap implements HttpParameters {
+        GoogleFunctionParameters() {
+            super(googleRequest.getQueryParameters());
+        }
+
+        @Override
+        public Optional<String> getFirst(CharSequence name) {
+            ArgumentUtils.requireNonNull("name", name);
+            return googleRequest.getFirstQueryParameter(name.toString());
+        }
+
+        @Nullable
+        @Override
+        public String get(CharSequence name) {
+            return getFirst(name).orElse(null);
+        }
+    }
+
+    /**
+     * Models the headers.
+     */
+    private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements HttpHeaders {
+        GoogleFunctionHeaders() {
+            super(googleRequest.getHeaders());
+        }
     }
 
     /**

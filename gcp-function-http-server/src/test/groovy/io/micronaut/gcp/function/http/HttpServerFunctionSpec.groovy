@@ -1,7 +1,6 @@
 package io.micronaut.gcp.function.http
 
 import io.micronaut.http.HttpMethod
-import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import spock.lang.Specification
 
@@ -13,7 +12,7 @@ class HttpServerFunctionSpec extends Specification {
         given:
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/simple/text")
         def googleResponse = new MockGoogleResponse()
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -26,7 +25,7 @@ class HttpServerFunctionSpec extends Specification {
         given:
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/simple/simplePojo")
         def googleResponse = new MockGoogleResponse()
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:

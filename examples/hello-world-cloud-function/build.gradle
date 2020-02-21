@@ -49,7 +49,7 @@ test {
 shadowJar {
     mergeServiceFiles()
     manifest {
-        attributes 'Main-Class': 'io.micronaut.gcp.function.http.HttpServerFunction'
+        attributes 'Main-Class': 'io.micronaut.gcp.function.http.HttpFunction'
     }
 }
 

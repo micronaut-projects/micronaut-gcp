@@ -27,8 +27,8 @@ import java.util.*;
  * The response object for Google Cloud Function.
  *
  * @param <B> The body type
- * @since 1.2.0
  * @author graemerocher
+ * @since 1.2.0
  */
 @Internal
 final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<HttpResponse, B> {
@@ -40,6 +40,12 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
     private HttpStatus status;
     private Map<String, Cookie> cookieMap = null;
 
+    /**
+     * Default constructor.
+     *
+     * @param response               The Google response object
+     * @param mediaTypeCodecRegistry The media type codec registry
+     */
     GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
         this.response = response;
         this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
@@ -55,15 +61,6 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
             cookieMap.put(cookie.getName(), cookie);
         }
         return this;
-    }
-
-    public Map<String, Cookie> getCookies() {
-        if (cookieMap != null) {
-            return cookieMap;
-        } else {
-            //noinspection unchecked
-            return Collections.EMPTY_MAP;
-        }
     }
 
     @Override
@@ -162,13 +159,13 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
         return response;
     }
 
+    /**
+     * Models the headers.
+     */
     private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements MutableHttpHeaders {
-
-        private final Map<String, List<String>> headers;
 
         GoogleFunctionHeaders() {
             super(response.getHeaders());
-            this.headers = response.getHeaders();
         }
 
         @Override

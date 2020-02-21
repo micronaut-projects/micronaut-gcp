@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 /**
  * An HTTP handler that can deal with Serverless requests.
@@ -51,6 +50,9 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
     private final RequestArgumentSatisfier requestArgumentSatisfier;
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
 
+    /**
+     * Default constructor.
+     */
     public ServerlessHttpHandler() {
         this.router = applicationContext.getBean(Router.class);
         this.requestArgumentSatisfier = applicationContext.getBean(RequestArgumentSatisfier.class);
@@ -80,7 +82,8 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
 
     /**
      * Handle the give native request and response.
-     * @param request The request
+     *
+     * @param request  The request
      * @param response The response
      */
     public void service(Req request, Res response) {
@@ -95,6 +98,7 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
 
     /**
      * Handles a {@link DefaultServerlessExchange}.
+     *
      * @param exchange The exchange
      */
     public void service(ServerlessExchange<Req, Res> exchange) {
@@ -143,7 +147,6 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
             }
         }
     }
-
 
     @Override
     protected void startThis(ApplicationContext applicationContext) {
@@ -281,7 +284,6 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
      * @return The exchange object
      */
     protected abstract ServerlessExchange<Req, Res> createExchange(Req request, Res response);
-
 
     private RouteMatch<Object> lookupErrorRoute(RouteMatch<?> route, Throwable e) {
         return router.route(route.getDeclaringType(), e)

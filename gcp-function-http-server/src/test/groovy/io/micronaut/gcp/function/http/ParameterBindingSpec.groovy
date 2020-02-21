@@ -13,7 +13,7 @@ class ParameterBindingSpec extends Specification {
         given:
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/uri/Foo")
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -28,7 +28,7 @@ class ParameterBindingSpec extends Specification {
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/query")
         googleRequest.addParameter("q", "Foo")
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -44,7 +44,7 @@ class ParameterBindingSpec extends Specification {
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/allParams")
         googleRequest.addParameter("name", "Foo")
         googleRequest.addParameter("age", "20")
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -59,7 +59,7 @@ class ParameterBindingSpec extends Specification {
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/header")
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain;q=1.0")
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -73,7 +73,7 @@ class ParameterBindingSpec extends Specification {
         given:
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/reqAndRes")
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -88,7 +88,7 @@ class ParameterBindingSpec extends Specification {
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/stringBody", "Foo")
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -105,7 +105,7 @@ class ParameterBindingSpec extends Specification {
         def json = '{"name":"bar","age":30}'
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -122,7 +122,7 @@ class ParameterBindingSpec extends Specification {
         def json = '{"name":"bar","age":20}'
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBodySpread", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -137,7 +137,7 @@ class ParameterBindingSpec extends Specification {
         def json = '{"name":"bar","age":20}'
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:
@@ -154,7 +154,7 @@ class ParameterBindingSpec extends Specification {
         def json = '{"name":"bar","age":20'
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-        new HttpServerFunction()
+        new HttpFunction()
                 .service(googleRequest, googleResponse)
 
         expect:

@@ -1,6 +1,5 @@
 package io.micronaut.gcp.function.http;
 
-import com.google.cloud.functions.HttpFunction;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
 import io.micronaut.context.ApplicationContextBuilder;
@@ -17,8 +16,7 @@ import javax.annotation.Nonnull;
  * @author graemerocher
  * @since 1.2.0
  */
-public class HttpServerFunction extends ServerlessHttpHandler<HttpRequest, HttpResponse> implements HttpFunction {
-
+public class HttpFunction extends ServerlessHttpHandler<HttpRequest, HttpResponse> implements com.google.cloud.functions.HttpFunction {
 
     @Override
     protected ServerlessExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
@@ -29,7 +27,6 @@ public class HttpServerFunction extends ServerlessHttpHandler<HttpRequest, HttpR
 
         return new DefaultServerlessExchange<>(req, res);
     }
-
 
     @Nonnull
     @Override
