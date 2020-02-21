@@ -73,20 +73,6 @@ public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
     }
 
     /**
-     * @return The router
-     */
-    public Router getRouter() {
-        return router;
-    }
-
-    /**
-     * @return The request argument satisfier
-     */
-    public RequestArgumentSatisfier getRequestArgumentSatisfier() {
-        return requestArgumentSatisfier;
-    }
-
-    /**
      * @return The media type codec registry
      */
     public MediaTypeCodecRegistry getMediaTypeCodecRegistry() {
