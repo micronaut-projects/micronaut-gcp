@@ -2,11 +2,15 @@ package io.micronaut.gcp.function.http;
 
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.env.Environment;
+import io.micronaut.function.executor.FunctionInitializer;
 import io.micronaut.function.http.DefaultServerlessExchange;
 import io.micronaut.function.http.ServerlessExchange;
 import io.micronaut.function.http.ServerlessHttpHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 
@@ -16,16 +20,39 @@ import javax.annotation.Nonnull;
  * @author graemerocher
  * @since 1.2.0
  */
-public class HttpFunction extends ServerlessHttpHandler<HttpRequest, HttpResponse> implements com.google.cloud.functions.HttpFunction {
+public class HttpFunction extends FunctionInitializer implements com.google.cloud.functions.HttpFunction {
+
+    protected static final Logger LOG = LoggerFactory.getLogger(HttpFunction.class);
+
+    private final ServerlessHttpHandler<HttpRequest, HttpResponse> httpHandler;
+
+    /**
+     * Default constructor.
+     */
+    public HttpFunction() {
+        this.httpHandler = new ServerlessHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
+            @Override
+            protected ServerlessExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
+                final GoogleFunctionHttpResponse<Object> res =
+                        new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry());
+                final GoogleFunctionHttpRequest<Object> req =
+                        new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry());
+
+                return new DefaultServerlessExchange<>(req, res);
+            }
+        };
+    }
 
     @Override
-    protected ServerlessExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
-        final GoogleFunctionHttpResponse<Object> res =
-                new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry());
-        final GoogleFunctionHttpRequest<Object> req =
-                new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry());
-
-        return new DefaultServerlessExchange<>(req, res);
+    protected void startThis(ApplicationContext applicationContext) {
+        final long time = System.currentTimeMillis();
+        try {
+            super.startThis(applicationContext);
+        } finally {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Initialized function in: " + (System.currentTimeMillis() - time) + "ms");
+            }
+        }
     }
 
     @Nonnull
@@ -35,5 +62,10 @@ public class HttpFunction extends ServerlessHttpHandler<HttpRequest, HttpRespons
         builder.deduceEnvironment(false);
         builder.environments(Environment.FUNCTION, Environment.GOOGLE_COMPUTE);
         return builder;
+    }
+
+    @Override
+    public void service(HttpRequest request, HttpResponse response) throws Exception {
+        httpHandler.service(request, response);
     }
 }

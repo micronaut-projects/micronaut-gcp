@@ -1,6 +1,5 @@
 package io.micronaut.function.http;
 
-
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.AnnotationValue;
@@ -9,7 +8,6 @@ import io.micronaut.core.convert.exceptions.ConversionErrorException;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.CollectionUtils;
-import io.micronaut.function.executor.FunctionInitializer;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.annotation.Produces;
@@ -46,7 +44,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author graemerocher
  * @since 1.2.0
  */
-public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitializer implements AutoCloseable {
+public abstract class ServerlessHttpHandler<Req, Res> implements AutoCloseable {
     /**
      * Logger to be used by subclasses for logging.
      */
@@ -55,11 +53,13 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
     private final Router router;
     private final RequestArgumentSatisfier requestArgumentSatisfier;
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
+    private final ApplicationContext applicationContext;
 
     /**
      * Default constructor.
      */
-    public ServerlessHttpHandler() {
+    public ServerlessHttpHandler(ApplicationContext applicationContext) {
+        this.applicationContext = Objects.requireNonNull(applicationContext, "The application context cannot be null");
         this.router = applicationContext.getBean(Router.class);
         this.requestArgumentSatisfier = applicationContext.getBean(RequestArgumentSatisfier.class);
         this.mediaTypeCodecRegistry = applicationContext.getBean(MediaTypeCodecRegistry.class);
@@ -157,18 +157,6 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                         r.getPath(),
                         (System.currentTimeMillis() - time)
                 );
-            }
-        }
-    }
-
-    @Override
-    protected void startThis(ApplicationContext applicationContext) {
-        final long time = System.currentTimeMillis();
-        try {
-            super.startThis(applicationContext);
-        } finally {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Initialized function in: " + (System.currentTimeMillis() - time) + "ms");
             }
         }
     }
