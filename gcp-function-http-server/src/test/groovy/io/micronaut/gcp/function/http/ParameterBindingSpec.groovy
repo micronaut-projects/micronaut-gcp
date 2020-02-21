@@ -176,4 +176,23 @@ class ParameterBindingSpec extends Specification {
         googleResponse.statusCode == HttpStatus.BAD_REQUEST.code
         googleResponse.message.contains("Error decoding request body")
     }
+
+    void "test multipart binding"() {
+        given:
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart")
+        googleRequest.addParameter("foo", "bar")
+        googleRequest.parts.put("one", new MockGoogleHttpPart("one.json", '{"name":"bar","age":20}', "application/json"))
+        googleRequest.parts.put("two", new MockGoogleHttpPart("two.txt", 'Whatever', "text/plain"))
+        googleRequest.parts.put("three", new MockGoogleHttpPart("some.doc", 'My Doc', "application/octet-stream"))
+        googleRequest.parts.put("four", new MockGoogleHttpPart("raw.doc", 'Another Doc', "application/octet-stream"))
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+        def googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'Good: true'
+
+    }
 }

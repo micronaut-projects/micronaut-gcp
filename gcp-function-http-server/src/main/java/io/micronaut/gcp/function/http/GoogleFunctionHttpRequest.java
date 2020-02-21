@@ -173,37 +173,53 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
     public <T> Optional<T> getBody(@Nonnull Argument<T> arg) {
         if (arg != null) {
             final Class<T> type = arg.getType();
+            final MediaType contentType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
             if (body == null) {
 
-                final MediaType contentType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
-                final MediaTypeCodec codec = codecRegistry.findCodec(contentType, type).orElse(null);
-                if (codec != null) {
-                    try (InputStream inputStream = googleRequest.getInputStream()) {
-                        if (ConvertibleValues.class == type) {
-                            final Map map = codec.decode(Map.class, inputStream);
-                            body = ConvertibleValues.of(map);
-                            return (Optional<T>) Optional.of(body);
-                        } else {
-                            final T value = codec.decode(arg, inputStream);
-                            body = value;
-                            return Optional.ofNullable(value);
-                        }
-                    } catch (IOException e) {
-                        throw new CodecException("Error decoding request body: " + e.getMessage(), e);
+                if (isFormSubmission(contentType)) {
+                    body = getParameters();
+                    if (ConvertibleValues.class == type) {
+                        return (Optional<T>) Optional.of(body);
+                    } else {
+                        return Optional.empty();
                     }
+                } else {
 
+                    final MediaTypeCodec codec = codecRegistry.findCodec(contentType, type).orElse(null);
+                    if (codec != null) {
+                        try (InputStream inputStream = googleRequest.getInputStream()) {
+                            if (ConvertibleValues.class == type) {
+                                final Map map = codec.decode(Map.class, inputStream);
+                                body = ConvertibleValues.of(map);
+                                return (Optional<T>) Optional.of(body);
+                            } else {
+                                final T value = codec.decode(arg, inputStream);
+                                body = value;
+                                return Optional.ofNullable(value);
+                            }
+                        } catch (IOException e) {
+                            throw new CodecException("Error decoding request body: " + e.getMessage(), e);
+                        }
+
+                    }
                 }
             } else {
                 if (type.isInstance(body)) {
                     return (Optional<T>) Optional.of(body);
                 } else {
-                    final T result = ConversionService.SHARED.convertRequired(body, arg);
-                    return Optional.ofNullable(result);
+                    if (body != httpParameters) {
+                        final T result = ConversionService.SHARED.convertRequired(body, arg);
+                        return Optional.ofNullable(result);
+                    }
                 }
 
             }
         }
         return Optional.empty();
+    }
+
+    private boolean isFormSubmission(MediaType contentType) {
+        return MediaType.MULTIPART_FORM_DATA_TYPE.equals(contentType) || MediaType.MULTIPART_FORM_DATA_TYPE.equals(contentType);
     }
 
     @SuppressWarnings("unchecked")

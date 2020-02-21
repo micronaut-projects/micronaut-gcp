@@ -2,6 +2,7 @@ package io.micronaut.gcp.function.http;
 
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
+import io.micronaut.core.io.IOUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
 
@@ -69,6 +70,20 @@ public class ParametersController {
         final MutableHttpResponse<Person> response = io.micronaut.http.HttpResponse.ok(person);
         response.header("Foo", "Bar");
         return response;
+    }
+
+    @Post(value = "/multipart", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String multipart(
+            String foo,
+            @Part("one") Person person,
+            @Part("two") String text,
+            @Part("three") byte[] bytes,
+            @Part("four") HttpRequest.HttpPart raw) throws IOException {
+        return "Good: " + (foo.equals("bar") &&
+                person.getName().equals("bar") &&
+                text.equals("Whatever") &&
+                new String(bytes).equals("My Doc") &&
+                IOUtils.readText(raw.getReader()).equals("Another Doc"));
     }
 
 }

@@ -4,6 +4,7 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.function.http.ServerlessBinderRegistry;
+import io.micronaut.http.annotation.Part;
 import io.micronaut.http.bind.DefaultRequestBinderRegistry;
 import io.micronaut.http.bind.binders.RequestArgumentBinder;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
@@ -36,5 +37,6 @@ class GoogleBinderRegistry extends ServerlessBinderRegistry {
         super(mediaTypeCodecRegistry, conversionService, binders);
         this.byType.put(com.google.cloud.functions.HttpRequest.class, new GoogleRequestBinder());
         this.byType.put(com.google.cloud.functions.HttpResponse.class, new GoogleResponseBinder());
+        this.byAnnotation.put(Part.class, new GooglePartBinder(mediaTypeCodecRegistry));
     }
 }
