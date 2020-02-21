@@ -5,6 +5,7 @@ import com.google.cloud.functions.HttpResponse;
 import io.micronaut.core.io.IOUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
+import io.micronaut.http.cookie.Cookie;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -30,6 +31,12 @@ public class ParametersController {
     @Get("/header")
     String headerValue(@Header(HttpHeaders.CONTENT_TYPE) String contentType) {
         return "Hello " + contentType;
+    }
+
+    @Get("/cookies")
+    io.micronaut.http.HttpResponse<String> cookies(@CookieValue String myCookie) {
+        return io.micronaut.http.HttpResponse.ok(myCookie)
+                    .cookie(Cookie.of("foo", "bar").httpOnly(true).domain("http://foo.com"));
     }
 
     @Get("/reqAndRes")

@@ -6,15 +6,14 @@ import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.function.http.ServerlessHttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
-import io.micronaut.http.MutableHttpHeaders;
-import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.*;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.exceptions.HttpStatusException;
+import io.micronaut.http.netty.cookies.NettyCookie;
+import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +37,6 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
     private MutableConvertibleValues<Object> attributes;
     private B body;
     private HttpStatus status;
-    private Map<String, Cookie> cookieMap = null;
 
     /**
      * Default constructor.
@@ -53,12 +51,10 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
 
     @Override
     public MutableHttpResponse<B> cookie(Cookie cookie) {
-        if (cookie != null) {
-
-            if (cookieMap == null) {
-                cookieMap = new LinkedHashMap<>(5);
-            }
-            cookieMap.put(cookie.getName(), cookie);
+        if (cookie instanceof NettyCookie) {
+            NettyCookie nettyCookie = (NettyCookie) cookie;
+            final String encoded = ServerCookieEncoder.LAX.encode(nettyCookie.getNettyCookie());
+            header(HttpHeaders.SET_COOKIE, encoded);
         }
         return this;
     }

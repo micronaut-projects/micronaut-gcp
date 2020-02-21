@@ -7,6 +7,7 @@ import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.function.http.ServerlessCookies;
 import io.micronaut.function.http.ServerlessExchange;
 import io.micronaut.function.http.ServerlessHttpRequest;
 import io.micronaut.function.http.ServerlessHttpResponse;
@@ -15,9 +16,6 @@ import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookies;
-import io.micronaut.http.simple.cookies.SimpleCookie;
-import io.micronaut.http.simple.cookies.SimpleCookies;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -45,6 +43,7 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private Object body;
+    private ServerlessCookies cookies;
 
     /**
      * Default constructor.
@@ -98,17 +97,16 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
     @Nonnull
     @Override
     public Cookies getCookies() {
-        final SimpleCookies cookies = new SimpleCookies(ConversionService.SHARED);
-        getHeaders().getAll(HttpHeaders.COOKIE).forEach(cookieValue -> {
-            List<HeaderValue> parsedHeaders = parseHeaderValue(cookieValue, ";", ",");
-
-
-            parsedHeaders.stream()
-                    .filter(e -> e.getKey() != null)
-                    .map(e -> new SimpleCookie(crlf(e.getKey()), crlf(e.getValue())))
-                    .forEach(simpleCookie ->
-                            cookies.put(simpleCookie.getName(), simpleCookie));
-        });
+        ServerlessCookies cookies = this.cookies;
+        if (cookies == null) {
+            synchronized (this) { // double check
+                cookies = this.cookies;
+                if (cookies == null) {
+                    cookies = new ServerlessCookies(getPath(), getHeaders(), ConversionService.SHARED);
+                    this.cookies = cookies;
+                }
+            }
+        }
         return cookies;
     }
 
