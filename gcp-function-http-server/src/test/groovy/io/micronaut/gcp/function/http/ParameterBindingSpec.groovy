@@ -98,6 +98,23 @@ class ParameterBindingSpec extends Specification {
     }
 
 
+    void "test writable"() {
+
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/writable", "Foo")
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.CREATED.code
+        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.text == 'Hello Foo'
+        googleResponse.headers["Foo"] == ['Bar']
+    }
+
+
     void "test JSON POJO body"() {
 
         given:

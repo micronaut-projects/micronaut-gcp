@@ -3,6 +3,7 @@ package io.micronaut.function.http;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.AnnotationMetadata;
+import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.convert.exceptions.ConversionErrorException;
 import io.micronaut.core.convert.value.ConvertibleValues;
@@ -10,6 +11,7 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.function.executor.FunctionInitializer;
 import io.micronaut.http.*;
+import io.micronaut.http.annotation.Header;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
@@ -216,6 +218,14 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                         .ifPresent(res::contentType);
                 annotationMetadata.enumValue(Status.class, HttpStatus.class)
                         .ifPresent(s -> res.status(s));
+                final List<AnnotationValue<Header>> headers = annotationMetadata.getAnnotationValuesByType(Header.class);
+                for (AnnotationValue<Header> header : headers) {
+                    final String value = header.stringValue().orElse(null);
+                    final String name = header.stringValue("name").orElse(null);
+                    if (name != null && value != null) {
+                        res.header(name, value);
+                    }
+                }
                 final Object result = finalRoute.execute();
                 if (result == null) {
                     return Publishers.just(res);

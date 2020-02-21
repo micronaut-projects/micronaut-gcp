@@ -3,12 +3,14 @@ package io.micronaut.gcp.function.http;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
 import io.micronaut.core.io.IOUtils;
+import io.micronaut.core.io.Writable;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.cookie.Cookie;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 @Controller("/parameters")
 public class ParametersController {
@@ -78,6 +80,14 @@ public class ParametersController {
         response.header("Foo", "Bar");
         return response;
     }
+
+    @Post(value = "/writable", processes = "text/plain")
+    @Header(name = "Foo", value = "Bar")
+    @Status(HttpStatus.CREATED)
+    Writable fullReq(@Body String text) {
+        return out -> out.append("Hello ").append(text);
+    }
+
 
     @Post(value = "/multipart", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
     String multipart(

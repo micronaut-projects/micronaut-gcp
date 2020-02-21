@@ -30,7 +30,7 @@ class GoogleMultiValueMap implements ConvertibleMultiValues<String> {
     @Override
     public List<String> getAll(CharSequence name) {
         ArgumentUtils.requireNonNull("name", name);
-        return map.getOrDefault(name, Collections.emptyList());
+        return map.getOrDefault(name.toString(), Collections.emptyList());
     }
 
     @Nullable

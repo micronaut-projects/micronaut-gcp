@@ -1,0 +1,70 @@
+Micronaut GCP offers two ways to write cloud functions with Micronaut.
+
+=== Simple HTTP Functions
+
+The first way is more low level and involves using Micronaut's built in support for functions. Simply add the following dependency to your classpath:
+
+dependency:io.micronaut:micronaut-function[]
+
+Then add the Cloud Function API as a `compileOnly` dependency (`provided` with Maven):
+
+dependency:com.google.cloud.functions:functions-framework-api[version="1.0.0-alpha-2-rc3", scope="compileOnly"]
+
+Now define a class that implements `com.google.cloud.functions.HttpFunction` and extends from `io.micronaut.function.executor.FunctionInitializer`:
+
+[source,java]
+----
+TODO: Example
+----
+
+When you extend from `FunctionInitializer` the Micronaut `ApplicationContext` will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using `javax.inject.Inject` as usual.
+
+=== Cloud Functions from Regular Micronaut Applications
+
+It is common to want to take just a slice of a regular Micronaut HTTP server application and deploy it as a function.
+
+To facilitate this model, Micronaut GCP includes an additional module that allows you to use regular Micronaut annotations like `@Controller` and `@Get` to define your functions that can be deployed to cloud function.
+
+With this model you need to add the `micronaut-gcp-function-http-server` dependency to your application:
+
+dependency:io.micronaut.gcp:micronaut-gcp-function-http-server[version="{version}"]
+
+You should then make the regular Micronaut server a `developmentOnly` dependency since it is not necessary to include it in the JAR file that will be deployed to Cloud Function:
+
+dependency:io.micronaut:micronaut-http-server-netty[scope="developmentOnly"]
+
+When deploying the function to Cloud Function you should use the api:.gcp.function.http.HttpFunction[] class as the handler reference.
+
+First build the function with:
+
+```bash
+$ ./gradlew clean shadowJar
+```
+
+Then `cd` into the `build/libs` directory (deployment has to be done from the location where the JAR file resides):
+
+```bash
+$ cd build/libs
+```
+
+To deploy the function make sure you have `gcloud` CLI then run:
+
+```bash
+$ gcloud alpha functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http
+```
+
+In the example above `myfunction` refers to the name of your function and can be changed to whatever name you prefer to name your function.
+
+To obtain the trigger URL you can use the following command:
+
+```bash
+$ YOUR_HTTP_TRIGGER_URL=$(gcloud alpha functions describe myfunction --format='value(httpsTrigger.url)')
+```
+
+You can then use this variable to test the function invocation:
+
+```bash
+$ curl -i $YOUR_HTTP_TRIGGER_URL/hello/John
+```
+
+

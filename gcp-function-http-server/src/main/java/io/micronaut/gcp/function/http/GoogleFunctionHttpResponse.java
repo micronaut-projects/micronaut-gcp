@@ -4,6 +4,7 @@ import com.google.cloud.functions.HttpResponse;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
+import io.micronaut.core.io.Writable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.function.http.ServerlessHttpResponse;
@@ -49,6 +50,16 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
     GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
         this.response = response;
         this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        return response.getOutputStream();
+    }
+
+    @Override
+    public BufferedWriter getWriter() throws IOException {
+        return response.getWriter();
     }
 
     @Override
@@ -102,13 +113,19 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
                 throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
         } else if (body instanceof byte[]) {
-            try {
-                final OutputStream outputStream = response.getOutputStream();
+            try (final OutputStream outputStream = response.getOutputStream()) {
                 outputStream.write((byte[]) body);
                 outputStream.flush();
             } catch (IOException e) {
                 throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-
+            }
+        } else if (body instanceof Writable) {
+            Writable writable = (Writable) body;
+            try (final OutputStream outputStream = response.getOutputStream()) {
+                writable.writeTo(outputStream, getCharacterEncoding());
+                outputStream.flush();
+            } catch (IOException e) {
+                throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
         } else if (body != null) {
             final MediaType ct = getContentType().orElseGet(() -> {

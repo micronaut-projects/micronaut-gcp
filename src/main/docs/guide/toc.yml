@@ -1,3 +1,7 @@
 introduction: Introduction
 setup: Setting up GCP Support
 tracing: Stackdriver Trace
+cloudFunction:
+  title: Cloud Function Support
+  httpFunctions:
+    title: HTTP Functions

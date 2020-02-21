@@ -231,16 +231,6 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
         return (ServerlessHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object>) googleResponse;
     }
 
-    /*
-     * TODO: Copied from Micronaut AWS. Find a way to share this code
-     */
-    private static String crlf(String s) {
-        if (s == null) {
-            return null;
-        }
-        return s.replaceAll("[\r\n]", "");
-    }
-
     /**
      * Models the http parameters.
      */
