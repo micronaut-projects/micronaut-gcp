@@ -20,6 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
+/**
+ * Handles binding multipart requests using {@link Part}.
+ *
+ * @author graemerocher
+ * @since 1.2.0
+ * @param <T> The argument type
+ */
 @Internal
 final class GooglePartBinder<T> implements AnnotatedRequestArgumentBinder<Part, T> {
 
@@ -58,7 +65,7 @@ final class GooglePartBinder<T> implements AnnotatedRequestArgumentBinder<Part, 
                     } catch (IOException e) {
                         throw new HttpStatusException(
                                 HttpStatus.BAD_REQUEST,
-                                "Unable to read part [" + partName+ "]: " + e.getMessage()
+                                "Unable to read part [" + partName + "]: " + e.getMessage()
                         );
                     }
                 } else if (byte[].class.isAssignableFrom(type)) {
@@ -76,7 +83,7 @@ final class GooglePartBinder<T> implements AnnotatedRequestArgumentBinder<Part, 
                     } catch (IOException e) {
                         throw new HttpStatusException(
                                 HttpStatus.BAD_REQUEST,
-                                "Unable to read part [" + partName+ "]: " + e.getMessage()
+                                "Unable to read part [" + partName + "]: " + e.getMessage()
                         );
                     }
 
@@ -92,7 +99,7 @@ final class GooglePartBinder<T> implements AnnotatedRequestArgumentBinder<Part, 
                             } catch (IOException e) {
                                 throw new HttpStatusException(
                                         HttpStatus.BAD_REQUEST,
-                                        "Unable to read part [" + partName+ "]: " + e.getMessage()
+                                        "Unable to read part [" + partName + "]: " + e.getMessage()
                                 );
                             }
                         }
