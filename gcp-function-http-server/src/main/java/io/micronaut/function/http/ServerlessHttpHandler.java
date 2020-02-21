@@ -4,6 +4,7 @@ package io.micronaut.function.http;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.core.convert.exceptions.ConversionErrorException;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.CollectionUtils;
@@ -12,18 +13,22 @@ import io.micronaut.http.*;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
+import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.http.filter.HttpFilter;
 import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.server.binding.RequestArgumentSatisfier;
+import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.web.router.RouteMatch;
 import io.micronaut.web.router.Router;
 import io.micronaut.web.router.UriRouteMatch;
 import io.micronaut.web.router.exceptions.DuplicateRouteException;
 import io.micronaut.web.router.exceptions.UnsatisfiedRouteException;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -233,47 +238,81 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                         filterPublisher(new AtomicReference<>(req), responsePublisher, isErrorRoute);
             }
             Flowable.fromPublisher(responsePublisher)
-                    .blockingSubscribe();
-        } catch (Throwable e) {
-            if (isErrorRoute) {
-                // handle error default
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Error occurred executing Error route [" + route + "]: " + e.getMessage(), e);
-                }
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-            } else {
-                if (e instanceof UnsatisfiedRouteException) {
-                    final RouteMatch<Object> badRequestRoute = lookupStatusRoute(route, HttpStatus.BAD_REQUEST);
-                    if (badRequestRoute != null) {
-                        invokeRouteMatch(req, res, badRequestRoute, true);
-                    } else {
-                        res.status(HttpStatus.BAD_REQUEST, e.getMessage());
-                    }
-                } else if (e instanceof HttpStatusException) {
-                    HttpStatusException statusException = (HttpStatusException) e;
-                    final HttpStatus status = statusException.getStatus();
-                    final RouteMatch<Object> statusRoute = status.getCode() >= 400 ? lookupStatusRoute(route, status) : null;
-                    if (statusRoute != null) {
-                        invokeRouteMatch(req, res, statusRoute, true);
-                    } else {
-                        res.status(status.getCode(), statusException.getMessage());
-                        statusException.getBody().ifPresent(res::body);
-                    }
-
-                } else {
-
-                    final RouteMatch<Object> errorRoute = lookupErrorRoute(route, e);
-                    if (errorRoute != null) {
-                        invokeRouteMatch(req, res, errorRoute, true);
-                    } else {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Error occurred executing route [" + route + "]: " + e.getMessage(), e);
+                    .blockingSubscribe(response -> {
+                        final HttpStatus status = response.status();
+                        if (!isErrorRoute && status.getCode() >= 400) {
+                            final RouteMatch<Object> errorRoute = lookupStatusRoute(finalRoute, status);
+                            if (errorRoute != null) {
+                                invokeRouteMatch(req, res, errorRoute, true);
+                            }
                         }
-                        res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-                    }
+                    }, error -> handleException(req, res, finalRoute, isErrorRoute, error));
+        } catch (Throwable e) {
+            handleException(req, res, route, isErrorRoute, e);
+        }
+    }
+
+    private void handleException(HttpRequest<Object> req, MutableHttpResponse<Object> res, RouteMatch<?> route, boolean isErrorRoute, Throwable e) {
+        if (isErrorRoute) {
+            // handle error default
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error occurred executing Error route [" + route + "]: " + e.getMessage(), e);
+            }
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        } else {
+            if (e instanceof UnsatisfiedRouteException || e instanceof ConversionErrorException) {
+                final RouteMatch<Object> badRequestRoute = lookupStatusRoute(route, HttpStatus.BAD_REQUEST);
+                if (badRequestRoute != null) {
+                    invokeRouteMatch(req, res, badRequestRoute, true);
+                } else {
+                    invokeExceptionHandlerIfPossible(req, res, e, HttpStatus.BAD_REQUEST);
+                }
+            } else if (e instanceof HttpStatusException) {
+                HttpStatusException statusException = (HttpStatusException) e;
+                final HttpStatus status = statusException.getStatus();
+                final RouteMatch<Object> statusRoute = status.getCode() >= 400 ? lookupStatusRoute(route, status) : null;
+                if (statusRoute != null) {
+                    invokeRouteMatch(req, res, statusRoute, true);
+                } else {
+                    res.status(status.getCode(), statusException.getMessage());
+                    statusException.getBody().ifPresent(res::body);
+                }
+
+            } else {
+
+                final RouteMatch<Object> errorRoute = lookupErrorRoute(route, e);
+                if (errorRoute != null) {
+                    invokeRouteMatch(req, res, errorRoute, true);
+                } else {
+                    invokeExceptionHandlerIfPossible(req, res, e, HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
         }
+    }
+
+    private void invokeExceptionHandlerIfPossible(HttpRequest<Object> req, MutableHttpResponse<Object> res, Throwable e, HttpStatus defaultStatus) {
+        final ExceptionHandler<Throwable, ?> exceptionHandler = lookupExceptionHandler(e);
+        if (exceptionHandler != null) {
+            try {
+                ServerRequestContext.with(req, () -> {
+                    exceptionHandler.handle(req, e);
+                });
+            } catch (Throwable ex) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Error occurred executing exception handler [" + exceptionHandler.getClass() + "]: " + e.getMessage(), e);
+                }
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            }
+        } else {
+            res.status(defaultStatus, e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private ExceptionHandler<Throwable, ?> lookupExceptionHandler(Throwable e) {
+        final Class<? extends Throwable> type = e.getClass();
+        return applicationContext.findBean(ExceptionHandler.class, Qualifiers.byTypeArgumentsClosest(type, HttpResponse.class))
+                .orElse(null);
     }
 
     /**

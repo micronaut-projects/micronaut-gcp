@@ -5,8 +5,10 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.function.http.ServerlessHttpResponse;
 import io.micronaut.http.*;
+import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
@@ -36,7 +38,7 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
     private MutableConvertibleValues<Object> attributes;
     private B body;
-    private HttpStatus status;
+    private HttpStatus status = HttpStatus.OK;
 
     /**
      * Default constructor.
@@ -109,7 +111,18 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
 
             }
         } else if (body != null) {
-            final MediaType ct = getContentType().orElse(null);
+            final MediaType ct = getContentType().orElseGet(() -> {
+                final Produces ann = body.getClass().getAnnotation(Produces.class);
+                if (ann != null) {
+                    final String[] v = ann.value();
+                    if (ArrayUtils.isNotEmpty(v)) {
+                        final MediaType mediaType = new MediaType(v[0]);
+                        contentType(mediaType);
+                        return mediaType;
+                    }
+                }
+                return null;
+            });
             final MediaTypeCodec codec = ct != null ? mediaTypeCodecRegistry.findCodec(ct, body.getClass()).orElse(null) : null;
             if (codec != null) {
                 try {
