@@ -4,11 +4,13 @@ import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.io.IOUtils;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.bind.binders.TypedRequestArgumentBinder;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
+import io.micronaut.http.exceptions.HttpStatusException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,8 +60,11 @@ public class ServerlessRequestBinder implements TypedRequestArgumentBinder<HttpR
                             return () -> Optional.of(
                                     new ServerlessRequestAndBody(serverlessHttpRequest, result)
                             );
-                        } catch (IOException e) {
-                            throw new CodecException("Error decoding request body: " + e.getMessage(), e);
+                        } catch (IOException | CodecException e) {
+                            if (ServerlessHttpHandler.LOG.isDebugEnabled()) {
+                                ServerlessHttpHandler.LOG.debug("Error decoding media type: " + mediaType, e);
+                            }
+                            throw new HttpStatusException(HttpStatus.BAD_REQUEST, "Error decoding request body: " + e.getMessage());
                         }
                     }
                 }

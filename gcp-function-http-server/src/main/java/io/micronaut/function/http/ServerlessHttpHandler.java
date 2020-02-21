@@ -12,7 +12,7 @@ import io.micronaut.http.*;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
-import io.micronaut.http.context.ServerRequestContext;
+import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.http.filter.HttpFilter;
 import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * An HTTP handler that can deal with Serverless requests.
@@ -44,7 +45,8 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
     /**
      * Logger to be used by subclasses for logging.
      */
-    protected static final Logger LOG = LoggerFactory.getLogger(ServerlessHttpHandler.class);
+    static final Logger LOG = LoggerFactory.getLogger(ServerlessHttpHandler.class);
+
     private final Router router;
     private final RequestArgumentSatisfier requestArgumentSatisfier;
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
@@ -100,38 +102,36 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
         try {
             final MutableHttpResponse<Object> res = exchange.getResponse();
             final HttpRequest<Object> req = exchange.getRequest();
-            ServerRequestContext.with(req, () -> {
-                final List<UriRouteMatch<Object, Object>> matchingRoutes = router.findAllClosest(req);
-                if (CollectionUtils.isNotEmpty(matchingRoutes)) {
-                    RouteMatch<Object> route;
-                    if (matchingRoutes.size() > 1) {
-                        throw new DuplicateRouteException(req.getPath(), matchingRoutes);
-                    } else {
-                        UriRouteMatch<Object, Object> establishedRoute = matchingRoutes.get(0);
-                        req.setAttribute(HttpAttributes.ROUTE, establishedRoute.getRoute());
-                        req.setAttribute(HttpAttributes.ROUTE_MATCH, establishedRoute);
-                        req.setAttribute(HttpAttributes.URI_TEMPLATE, establishedRoute.getRoute().getUriMatchTemplate().toString());
-                        route = establishedRoute;
-                    }
-
-
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Matched route {} - {} to controller {}", req.getMethodName(), req.getPath(), route.getDeclaringType());
-                    }
-
-                    invokeRouteMatch(req, res, route, false);
-
+            final List<UriRouteMatch<Object, Object>> matchingRoutes = router.findAllClosest(req);
+            if (CollectionUtils.isNotEmpty(matchingRoutes)) {
+                RouteMatch<Object> route;
+                if (matchingRoutes.size() > 1) {
+                    throw new DuplicateRouteException(req.getPath(), matchingRoutes);
                 } else {
-                    final RouteMatch<Object> notFoundRoute =
-                            router.route(HttpStatus.NOT_FOUND).orElse(null);
-
-                    if (notFoundRoute != null) {
-                        invokeRouteMatch(req, res, notFoundRoute, true);
-                    } else {
-                        res.status(HttpStatus.NOT_FOUND);
-                    }
+                    UriRouteMatch<Object, Object> establishedRoute = matchingRoutes.get(0);
+                    req.setAttribute(HttpAttributes.ROUTE, establishedRoute.getRoute());
+                    req.setAttribute(HttpAttributes.ROUTE_MATCH, establishedRoute);
+                    req.setAttribute(HttpAttributes.URI_TEMPLATE, establishedRoute.getRoute().getUriMatchTemplate().toString());
+                    route = establishedRoute;
                 }
-            });
+
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Matched route {} - {} to controller {}", req.getMethodName(), req.getPath(), route.getDeclaringType());
+                }
+
+                invokeRouteMatch(req, res, route, false);
+
+            } else {
+                final RouteMatch<Object> notFoundRoute =
+                        router.route(HttpStatus.NOT_FOUND).orElse(null);
+
+                if (notFoundRoute != null) {
+                    invokeRouteMatch(req, res, notFoundRoute, true);
+                } else {
+                    res.status(HttpStatus.NOT_FOUND);
+                }
+            }
         } finally {
             if (LOG.isInfoEnabled()) {
                 final HttpRequest<? super Object> r = exchange.getRequest();
@@ -169,66 +169,66 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
             MutableHttpResponse<Object> res,
             RouteMatch<?> route,
             boolean isErrorRoute) {
-        if (!route.isExecutable()) {
-            route = requestArgumentSatisfier.fulfillArgumentRequirements(route, req, false);
-        }
-        if (!route.isExecutable() && HttpMethod.permitsRequestBody(req.getMethod()) && !route.getBodyArgument().isPresent()) {
-            final ConvertibleValues<?> convertibleValues = req.getBody(ConvertibleValues.class).orElse(null);
-            if (convertibleValues != null) {
-
-                final Collection<Argument> requiredArguments = route.getRequiredArguments();
-                Map<String, Object> newValues = new HashMap<>(requiredArguments.size());
-                for (Argument requiredArgument : requiredArguments) {
-                    final String name = requiredArgument.getName();
-                    final Object v = convertibleValues.get(name, requiredArgument).orElse(null);
-                    if (v != null) {
-                        newValues.put(name, v);
-                    }
-                }
-                if (CollectionUtils.isNotEmpty(newValues)) {
-                    route = route.fulfill(
-                        newValues
-                    );
-                }
-            }
-        }
-        RouteMatch<?> finalRoute = route;
-        final AnnotationMetadata annotationMetadata = finalRoute.getAnnotationMetadata();
-        Publisher<? extends MutableHttpResponse<?>> responsePublisher
-                = Flowable.defer(() -> {
-            annotationMetadata.stringValue(Produces.class)
-                    .ifPresent(res::contentType);
-            annotationMetadata.enumValue(Status.class, HttpStatus.class)
-                    .ifPresent(s -> res.status(s));
-            final Object result = finalRoute.execute();
-            if (result == null) {
-                return Publishers.just(res);
-            }
-            if (Publishers.isConvertibleToPublisher(result)) {
-                final Publisher<?> publisher = Publishers.convertPublisher(result, Publisher.class);
-                return Publishers.map(publisher, o -> {
-                    if (o instanceof MutableHttpResponse) {
-                        return (MutableHttpResponse<?>) o;
-                    } else {
-                        res.body(o);
-                        return res;
-                    }
-                });
-            } else if (result instanceof MutableHttpResponse) {
-                return Publishers.just((MutableHttpResponse<?>) result);
-            } else {
-                return Publishers.just(
-                        res.body(result)
-                );
-            }
-        });
-        final List<HttpFilter> filters = router.findFilters(req);
-        if (CollectionUtils.isNotEmpty(filters)) {
-            responsePublisher =
-                    filterPublisher(new AtomicReference<>(req), responsePublisher, isErrorRoute);
-        }
 
         try {
+            if (!route.isExecutable()) {
+                route = requestArgumentSatisfier.fulfillArgumentRequirements(route, req, false);
+            }
+            if (!route.isExecutable() && HttpMethod.permitsRequestBody(req.getMethod()) && !route.getBodyArgument().isPresent()) {
+                final ConvertibleValues<?> convertibleValues = req.getBody(ConvertibleValues.class).orElse(null);
+                if (convertibleValues != null) {
+
+                    final Collection<Argument> requiredArguments = route.getRequiredArguments();
+                    Map<String, Object> newValues = new HashMap<>(requiredArguments.size());
+                    for (Argument requiredArgument : requiredArguments) {
+                        final String name = requiredArgument.getName();
+                        final Object v = convertibleValues.get(name, requiredArgument).orElse(null);
+                        if (v != null) {
+                            newValues.put(name, v);
+                        }
+                    }
+                    if (CollectionUtils.isNotEmpty(newValues)) {
+                        route = route.fulfill(
+                                newValues
+                        );
+                    }
+                }
+            }
+            RouteMatch<?> finalRoute = route;
+            final AnnotationMetadata annotationMetadata = finalRoute.getAnnotationMetadata();
+            Publisher<? extends MutableHttpResponse<?>> responsePublisher
+                    = Flowable.defer(() -> {
+                annotationMetadata.stringValue(Produces.class)
+                        .ifPresent(res::contentType);
+                annotationMetadata.enumValue(Status.class, HttpStatus.class)
+                        .ifPresent(s -> res.status(s));
+                final Object result = finalRoute.execute();
+                if (result == null) {
+                    return Publishers.just(res);
+                }
+                if (Publishers.isConvertibleToPublisher(result)) {
+                    final Publisher<?> publisher = Publishers.convertPublisher(result, Publisher.class);
+                    return Publishers.map(publisher, o -> {
+                        if (o instanceof MutableHttpResponse) {
+                            return (MutableHttpResponse<?>) o;
+                        } else {
+                            res.body(o);
+                            return res;
+                        }
+                    });
+                } else if (result instanceof MutableHttpResponse) {
+                    return Publishers.just((MutableHttpResponse<?>) result);
+                } else {
+                    return Publishers.just(
+                            res.body(result)
+                    );
+                }
+            });
+            final List<HttpFilter> filters = router.findFilters(req);
+            if (CollectionUtils.isNotEmpty(filters)) {
+                responsePublisher =
+                        filterPublisher(new AtomicReference<>(req), responsePublisher, isErrorRoute);
+            }
             Flowable.fromPublisher(responsePublisher)
                     .blockingSubscribe();
         } catch (Throwable e) {
@@ -246,6 +246,17 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                     } else {
                         res.status(HttpStatus.BAD_REQUEST, e.getMessage());
                     }
+                } else if (e instanceof HttpStatusException) {
+                    HttpStatusException statusException = (HttpStatusException) e;
+                    final HttpStatus status = statusException.getStatus();
+                    final RouteMatch<Object> statusRoute = status.getCode() >= 400 ? lookupStatusRoute(route, status) : null;
+                    if (statusRoute != null) {
+                        invokeRouteMatch(req, res, statusRoute, true);
+                    } else {
+                        res.status(status.getCode(), statusException.getMessage());
+                        statusException.getBody().ifPresent(res::body);
+                    }
+
                 } else {
 
                     final RouteMatch<Object> errorRoute = lookupErrorRoute(route, e);
@@ -253,7 +264,7 @@ public abstract class ServerlessHttpHandler<Req, Res> extends FunctionInitialize
                         invokeRouteMatch(req, res, errorRoute, true);
                     } else {
                         if (LOG.isErrorEnabled()) {
-                            LOG.error("Error occurred executing Error route [" + route + "]: " + e.getMessage(), e);
+                            LOG.error("Error occurred executing route [" + route + "]: " + e.getMessage(), e);
                         }
                         res.status(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
                     }

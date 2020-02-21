@@ -146,4 +146,19 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == json
         googleResponse.headers["Foo"] == ['Bar']
     }
+
+
+    void "full Micronaut request and response - invalid JSON"() {
+        given:
+        def googleResponse = new MockGoogleResponse()
+        def json = '{"name":"bar","age":20'
+        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        new HttpServerFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.BAD_REQUEST.code
+        googleResponse.message.contains("Error decoding request body")
+    }
 }
