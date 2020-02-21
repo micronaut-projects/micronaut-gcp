@@ -1,0 +1,23 @@
+Micronaut GCP offers two ways to write cloud functions with Micronaut. The first way is more low level and involves using Micronaut's built in support for functions. Simply add the following dependency to your classpath:
+
+dependency:io.micronaut:micronaut-function[]
+
+Then add the Cloud Function API as a `compileOnly` dependency (`provided` with Maven):
+
+dependency:com.google.cloud.functions:functions-framework-api[version="1.0.0-alpha-2-rc3", scope="compileOnly"]
+
+Now define a class that implements one of Google Cloud Found's interfaces, for example `com.google.cloud.functions.BackgroundFunction`, and extends from `io.micronaut.function.executor.FunctionInitializer`.
+
+The following is an example of a `BackgroundFunction` that uses Micronaut and Google Cloud Function:
+
+snippet::example.background.Example[project-base="doc-examples/example", source="main"]
+
+<1> The function extends from `io.micronaut.function.executor.FunctionInitializer`
+<2> The function implements `com.google.cloud.functions.BackgroundFunction`
+<3> Dependency injection can be used on the fields
+
+When you extend from `FunctionInitializer` the Micronaut `ApplicationContext` will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using `javax.inject.Inject` as usual.
+
+WARNING: Functions require a no argument constructor hence you must use field injection (which requires `lateinit` in Kotlin) when injecting dependencies into the function itself.
+
+The `FunctionInitializer` super class provides numerous methods that you can override to customize how the `ApplicationContext` is built if desired.

@@ -1,26 +1,3 @@
-Micronaut GCP offers two ways to write cloud functions with Micronaut.
-
-=== Simple HTTP Functions
-
-The first way is more low level and involves using Micronaut's built in support for functions. Simply add the following dependency to your classpath:
-
-dependency:io.micronaut:micronaut-function[]
-
-Then add the Cloud Function API as a `compileOnly` dependency (`provided` with Maven):
-
-dependency:com.google.cloud.functions:functions-framework-api[version="1.0.0-alpha-2-rc3", scope="compileOnly"]
-
-Now define a class that implements `com.google.cloud.functions.HttpFunction` and extends from `io.micronaut.function.executor.FunctionInitializer`:
-
-[source,java]
-----
-TODO: Example
-----
-
-When you extend from `FunctionInitializer` the Micronaut `ApplicationContext` will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using `javax.inject.Inject` as usual.
-
-=== Cloud Functions from Regular Micronaut Applications
-
 It is common to want to take just a slice of a regular Micronaut HTTP server application and deploy it as a function.
 
 To facilitate this model, Micronaut GCP includes an additional module that allows you to use regular Micronaut annotations like `@Controller` and `@Get` to define your functions that can be deployed to cloud function.
