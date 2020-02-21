@@ -31,7 +31,7 @@ public class ServerlessCookies implements Cookies {
         String value = headers.get(HttpHeaders.COOKIE);
         if (value != null) {
             cookies = new LinkedHashMap<>(10);
-            Set<io.netty.handler.codec.http.cookie.Cookie> nettyCookies = ServerCookieDecoder.LAX.decode(value);
+            Set<io.netty.handler.codec.http.cookie.Cookie> nettyCookies = ServerCookieDecoder.STRICT.decode(value);
             for (io.netty.handler.codec.http.cookie.Cookie nettyCookie : nettyCookies) {
                 String cookiePath = nettyCookie.path();
                 if (cookiePath != null) {

@@ -66,7 +66,7 @@ final class GoogleFunctionHttpResponse<B> implements ServerlessHttpResponse<Http
     public MutableHttpResponse<B> cookie(Cookie cookie) {
         if (cookie instanceof NettyCookie) {
             NettyCookie nettyCookie = (NettyCookie) cookie;
-            final String encoded = ServerCookieEncoder.LAX.encode(nettyCookie.getNettyCookie());
+            final String encoded = ServerCookieEncoder.STRICT.encode(nettyCookie.getNettyCookie());
             header(HttpHeaders.SET_COOKIE, encoded);
         }
         return this;
