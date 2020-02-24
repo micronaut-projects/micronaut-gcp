@@ -25,24 +25,15 @@ repositories {
 version project.projectVersion
 
 
-ext {
-    distInstallDir = file("$buildDir/dist-tmp")
-    homeBinDir = file("bin")
-    homeLibDir = file("lib")
-    homeSrcDir = file("src")
-}
-
-
-
 subprojects { Project subproject ->
 
     version project.projectVersion
     group "io.micronaut.gcp"
+
     ext {
         isConfiguration = subproject.projectDir.parentFile.name == 'configurations'
         isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
     }
-
 
     repositories {
         maven { url "https://repo.grails.org/grails/core" }
@@ -111,9 +102,6 @@ subprojects { Project subproject ->
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
-        testImplementation "cglib:cglib-nodep:3.3.0"
-        testImplementation "org.objenesis:objenesis:3.1"
-
         testRuntimeOnly "ch.qos.logback:logback-classic:1.2.3"
         testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
     }
