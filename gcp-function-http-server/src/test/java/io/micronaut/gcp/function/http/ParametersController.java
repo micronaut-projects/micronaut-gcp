@@ -10,7 +10,7 @@ import io.micronaut.http.cookie.Cookie;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Writer;
+
 
 @Controller("/parameters")
 public class ParametersController {

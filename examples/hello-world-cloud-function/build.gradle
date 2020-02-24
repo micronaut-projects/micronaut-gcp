@@ -15,6 +15,7 @@ repositories {
 configurations {
     // for dependencies that are needed for development only
     developmentOnly
+    invoker
 }
 
 dependencies {
@@ -36,6 +37,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-alpha-2-rc3'
 }
 
 test.classpath += configurations.developmentOnly
@@ -60,3 +62,12 @@ tasks.withType(JavaCompile){
     options.compilerArgs.add('-parameters')
 }
 
+task('runFunction', type: JavaExec, dependsOn: classes) {
+    main = 'com.google.cloud.functions.invoker.runner.Invoker'
+    classpath(configurations.invoker)
+    args(
+            '--target', 'io.micronaut.gcp.function.http.HttpFunction',
+            '--classpath', (configurations.runtimeClasspath + sourceSets.main.output).asPath,
+
+    )
+}
