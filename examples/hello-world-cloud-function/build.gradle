@@ -68,6 +68,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
     args(
             '--target', 'io.micronaut.gcp.function.http.HttpFunction',
             '--classpath', (configurations.runtimeClasspath + sourceSets.main.output).asPath,
+            '--port', 8081
 
     )
 }
