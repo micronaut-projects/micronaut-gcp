@@ -3,6 +3,6 @@ apply plugin:"groovy"
 dependencies {
     compileOnly "io.micronaut:micronaut-inject-groovy"
 
-    implementation project(":gcp-function-http-server")
+    implementation project(":gcp-function-http")
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc3'
 }

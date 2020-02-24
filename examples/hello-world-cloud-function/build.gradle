@@ -23,7 +23,7 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut:micronaut-validation"
     implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-    implementation "io.micronaut.gcp:micronaut-gcp-function-http-server:1.2.0.BUILD-SNAPSHOT"
+    implementation "io.micronaut.gcp:micronaut-gcp-function-http:1.2.0.BUILD-SNAPSHOT"
     implementation "io.micronaut:micronaut-http-client"
     implementation "io.micronaut:micronaut-inject"
     implementation "io.micronaut:micronaut-validation"

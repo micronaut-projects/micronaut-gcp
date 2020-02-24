@@ -3,7 +3,7 @@ rootProject.name = 'gcp'
 include 'gcp-common'
 include 'gcp-tracing'
 include 'gcp-function'
-include 'gcp-function-http-server'
+include 'gcp-function-http'
 
 include 'doc-examples:example-java'
 include 'doc-examples:example-groovy'

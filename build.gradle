@@ -44,8 +44,9 @@ subprojects { Project subproject ->
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-    
-    if (!subproject.name.contains("example")) {
+
+    def isExample = subproject.name.contains("example")
+    if (!isExample) {
 
         apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/v${micronautBuildVersion}/publishing.gradle"
 
@@ -112,20 +113,22 @@ subprojects { Project subproject ->
 
     task allDeps(type: DependencyReportTask) {}
 
-    apply plugin: 'checkstyle'
+    if (!isExample) {
+        apply plugin: 'checkstyle'
 
-    checkstyle {
-        toolVersion = 8.10
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        checkstyle {
+            toolVersion = 8.10
+            configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 
-        // Per submodule
-        maxErrors = 1
-        maxWarnings = 10
+            // Per submodule
+            maxErrors = 1
+            maxWarnings = 10
 
-        showViolations = true
+            showViolations = true
+        }
+
+        checkstyleTest.enabled = false
     }
-
-    checkstyleTest.enabled = false
 }
 
 apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v${micronautDocsVersion}/gradle/docs.gradle"
