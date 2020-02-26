@@ -1,1 +1,1 @@
-io.micronaut.function.http.ServerlessResponseFactory
+io.micronaut.servlet.http.ServletResponseFactory

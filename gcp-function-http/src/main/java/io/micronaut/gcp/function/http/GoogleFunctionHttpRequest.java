@@ -7,10 +7,10 @@ import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
-import io.micronaut.function.http.ServerlessCookies;
-import io.micronaut.function.http.ServerlessExchange;
-import io.micronaut.function.http.ServerlessHttpRequest;
-import io.micronaut.function.http.ServerlessHttpResponse;
+import io.micronaut.servlet.http.ServletCookies;
+import io.micronaut.servlet.http.ServletExchange;
+import io.micronaut.servlet.http.ServletHttpRequest;
+import io.micronaut.servlet.http.ServletHttpResponse;
 import io.micronaut.http.*;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
@@ -25,14 +25,14 @@ import java.net.URI;
 import java.util.*;
 
 /**
- * Implementation of the {@link ServerlessHttpRequest} interface for Google Cloud Function.
+ * Implementation of the {@link ServletHttpRequest} interface for Google Cloud Function.
  *
  * @param <B> The body type
  * @author graemerocher
  * @since 1.2.0
  */
 @Internal
-final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.google.cloud.functions.HttpRequest, B>, ServerlessExchange<com.google.cloud.functions.HttpRequest, com.google.cloud.functions.HttpResponse> {
+final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.google.cloud.functions.HttpRequest, B>, ServletExchange<com.google.cloud.functions.HttpRequest, com.google.cloud.functions.HttpResponse> {
     private final com.google.cloud.functions.HttpRequest googleRequest;
     private final URI uri;
     private final HttpMethod method;
@@ -42,7 +42,7 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private Object body;
-    private ServerlessCookies cookies;
+    private ServletCookies cookies;
 
     /**
      * Default constructor.
@@ -96,12 +96,12 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
     @Nonnull
     @Override
     public Cookies getCookies() {
-        ServerlessCookies cookies = this.cookies;
+        ServletCookies cookies = this.cookies;
         if (cookies == null) {
             synchronized (this) { // double check
                 cookies = this.cookies;
                 if (cookies == null) {
-                    cookies = new ServerlessCookies(getPath(), getHeaders(), ConversionService.SHARED);
+                    cookies = new ServletCookies(getPath(), getHeaders(), ConversionService.SHARED);
                     this.cookies = cookies;
                 }
             }
@@ -221,14 +221,14 @@ final class GoogleFunctionHttpRequest<B> implements ServerlessHttpRequest<com.go
 
     @SuppressWarnings("unchecked")
     @Override
-    public ServerlessHttpRequest<com.google.cloud.functions.HttpRequest, ? super Object> getRequest() {
-        return (ServerlessHttpRequest) this;
+    public ServletHttpRequest<com.google.cloud.functions.HttpRequest, ? super Object> getRequest() {
+        return (ServletHttpRequest) this;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public ServerlessHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object> getResponse() {
-        return (ServerlessHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object>) googleResponse;
+    public ServletHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object> getResponse() {
+        return (ServletHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object>) googleResponse;
     }
 
     /**

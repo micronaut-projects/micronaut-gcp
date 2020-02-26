@@ -3,7 +3,7 @@ package io.micronaut.gcp.function.http;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
-import io.micronaut.function.http.ServerlessBinderRegistry;
+import io.micronaut.servlet.http.ServletBinderRegistry;
 import io.micronaut.http.annotation.Part;
 import io.micronaut.http.bind.DefaultRequestBinderRegistry;
 import io.micronaut.http.bind.binders.RequestArgumentBinder;
@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 /**
- * Implementation of {@link ServerlessBinderRegistry} for Google.
+ * Implementation of {@link ServletBinderRegistry} for Google.
  *
  * @author graemerocher
  * @since 1.2.0
@@ -21,7 +21,7 @@ import java.util.List;
 @Singleton
 @Replaces(DefaultRequestBinderRegistry.class)
 @Internal
-class GoogleBinderRegistry extends ServerlessBinderRegistry {
+class GoogleBinderRegistry extends ServletBinderRegistry {
 
     /**
      * Defautl constructor.

@@ -63,7 +63,7 @@ jib {
     }
     container {
         jvmFlags = [
-                // this flag is appropriate for Serverless deployments
+                // this flag is appropriate for Servlet deployments
                 // reducing startup time by constraining the JIT
                 '-XX:TieredStopAtLevel=1',
                 '-XX:MaxRAM=256m'

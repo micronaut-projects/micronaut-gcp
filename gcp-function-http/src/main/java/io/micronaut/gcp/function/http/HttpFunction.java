@@ -6,9 +6,9 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.env.Environment;
 import io.micronaut.function.executor.FunctionInitializer;
-import io.micronaut.function.http.DefaultServerlessExchange;
-import io.micronaut.function.http.ServerlessExchange;
-import io.micronaut.function.http.ServerlessHttpHandler;
+import io.micronaut.servlet.http.DefaultServletExchange;
+import io.micronaut.servlet.http.ServletExchange;
+import io.micronaut.servlet.http.ServletHttpHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,21 +24,21 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
     protected static final Logger LOG = LoggerFactory.getLogger(HttpFunction.class);
 
-    private final ServerlessHttpHandler<HttpRequest, HttpResponse> httpHandler;
+    private final ServletHttpHandler<HttpRequest, HttpResponse> httpHandler;
 
     /**
      * Default constructor.
      */
     public HttpFunction() {
-        this.httpHandler = new ServerlessHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
+        this.httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
             @Override
-            protected ServerlessExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
+            protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
                         new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry());
                 final GoogleFunctionHttpRequest<Object> req =
                         new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry());
 
-                return new DefaultServerlessExchange<>(req, res);
+                return new DefaultServletExchange<>(req, res);
             }
         };
     }
