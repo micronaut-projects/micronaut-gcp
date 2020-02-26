@@ -145,3 +145,7 @@ allprojects {
     }
     apply from: rootProject.file('gradle/license.gradle')
 }
+
+javadoc {
+    exclude "example/**"
+}
