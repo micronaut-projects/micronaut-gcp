@@ -1,4 +1,5 @@
 io.micronaut.gcp
 io.micronaut.gcp.condition
 io.micronaut.gcp.credentials
+io.micronaut.gcp.function.http
 io.micronaut.gcp.tracing.zipkin
