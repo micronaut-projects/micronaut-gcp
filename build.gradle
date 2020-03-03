@@ -25,24 +25,15 @@ repositories {
 version project.projectVersion
 
 
-ext {
-    distInstallDir = file("$buildDir/dist-tmp")
-    homeBinDir = file("bin")
-    homeLibDir = file("lib")
-    homeSrcDir = file("src")
-}
-
-
-
 subprojects { Project subproject ->
 
     version project.projectVersion
     group "io.micronaut.gcp"
+
     ext {
         isConfiguration = subproject.projectDir.parentFile.name == 'configurations'
         isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
     }
-
 
     repositories {
         maven { url "https://repo.grails.org/grails/core" }
@@ -53,18 +44,23 @@ subprojects { Project subproject ->
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-    apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/v${micronautBuildVersion}/publishing.gradle"
+
+    def isExample = subproject.name.contains("example")
+    if (!isExample) {
+
+        apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/v${micronautBuildVersion}/publishing.gradle"
 
 
-    jar {
-        manifest {
-            attributes('Automatic-Module-Name': "${subproject.group}.${subproject.name}".replaceAll('[^\\w\\.\\$_]', "_"))
-            attributes('Implementation-Version': projectVersion)
-            attributes('Implementation-Title': title)
+        jar {
+            manifest {
+                attributes('Automatic-Module-Name': "${subproject.group}.${subproject.name}".replaceAll('[^\\w\\.\\$_]', "_"))
+                attributes('Implementation-Version': projectVersion)
+                attributes('Implementation-Title': title)
+            }
         }
-    }
 
-    bintray.publish = true
+        bintray.publish = true
+    }
 
     tasks.withType(Test) {
         jvmArgs '-Duser.country=US'
@@ -107,9 +103,6 @@ subprojects { Project subproject ->
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
-        testImplementation "cglib:cglib-nodep:3.3.0"
-        testImplementation "org.objenesis:objenesis:3.1"
-
         testRuntimeOnly "ch.qos.logback:logback-classic:1.2.3"
         testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
     }
@@ -120,20 +113,22 @@ subprojects { Project subproject ->
 
     task allDeps(type: DependencyReportTask) {}
 
-    apply plugin: 'checkstyle'
+    if (!isExample) {
+        apply plugin: 'checkstyle'
 
-    checkstyle {
-        toolVersion = 8.10
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        checkstyle {
+            toolVersion = 8.10
+            configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 
-        // Per submodule
-        maxErrors = 1
-        maxWarnings = 10
+            // Per submodule
+            maxErrors = 1
+            maxWarnings = 10
 
-        showViolations = true
+            showViolations = true
+        }
+
+        checkstyleTest.enabled = false
     }
-
-    checkstyleTest.enabled = false
 }
 
 apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v${micronautDocsVersion}/gradle/docs.gradle"
@@ -148,4 +143,8 @@ allprojects {
         }
     }
     apply from: rootProject.file('gradle/license.gradle')
+}
+
+javadoc {
+    exclude "example/**"
 }

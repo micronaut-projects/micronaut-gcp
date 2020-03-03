@@ -2,7 +2,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.0.0"
     id "application"
     id "net.ltgt.apt-eclipse" version "0.21"
-    id "com.google.cloud.tools.jib" version "1.0.2"
 }
 
 version "0.1"
@@ -10,11 +9,13 @@ group "hello.world"
 
 repositories {
     jcenter()
+    mavenLocal()
 }
 
 configurations {
     // for dependencies that are needed for development only
-    developmentOnly 
+    developmentOnly
+    invoker
 }
 
 dependencies {
@@ -22,22 +23,26 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut:micronaut-validation"
     implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    implementation "io.micronaut.gcp:micronaut-gcp-function-http:1.2.0.BUILD-SNAPSHOT"
     implementation "io.micronaut:micronaut-http-client"
     implementation "io.micronaut:micronaut-inject"
     implementation "io.micronaut:micronaut-validation"
     implementation "io.micronaut:micronaut-runtime"
-    implementation "io.micronaut:micronaut-http-server-netty"
+    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc3'
+    developmentOnly 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc3'
+    developmentOnly "io.micronaut:micronaut-http-server-netty:$micronautVersion"
     runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
     testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-alpha-2-rc3'
 }
 
 test.classpath += configurations.developmentOnly
 
-mainClassName = "hello.world.Application"
+mainClassName = "example.Application"
 // use JUnit 5 platform
 test {
     useJUnitPlatform()
@@ -45,28 +50,25 @@ test {
 
 shadowJar {
     mergeServiceFiles()
+    manifest {
+        attributes 'Main-Class': 'io.micronaut.gcp.function.http.HttpFunction'
+    }
 }
 
 run.classpath += configurations.developmentOnly
-run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
+run.jvmArgs('-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
 tasks.withType(JavaCompile){
     options.encoding = "UTF-8"
     options.compilerArgs.add('-parameters')
 }
 
-jib {
-    to {
-        image = "gcr.io/$googleProjectId/hello-world"
-    }
-    from {
-        image = "adoptopenjdk/openjdk11-openj9:jdk-11.0.1.13-alpine-slim"
-    }
-    container {
-        jvmFlags = [
-                // this flag is appropriate for Servlet deployments
-                // reducing startup time by constraining the JIT
-                '-XX:TieredStopAtLevel=1',
-                '-XX:MaxRAM=256m'
-        ]
-    }
+task('runFunction', type: JavaExec, dependsOn: classes) {
+    main = 'com.google.cloud.functions.invoker.runner.Invoker'
+    classpath(configurations.invoker)
+    args(
+            '--target', 'io.micronaut.gcp.function.http.HttpFunction',
+            '--classpath', (configurations.runtimeClasspath + sourceSets.main.output).asPath,
+            '--port', 8081
+
+    )
 }
