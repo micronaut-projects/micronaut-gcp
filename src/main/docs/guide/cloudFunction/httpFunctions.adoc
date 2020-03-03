@@ -20,7 +20,7 @@ dependency:io.micronaut:micronaut-http-server-netty[scope="developmentOnly"]
 
 You can then use `./gradlew run` or `./mvnw compile exec:exec` to run the function locally using Micronaut's Netty-based server.
 
-Alternatively, you could configure the https://github.com/GoogleCloudPlatform/functions-framework-java[]Google Function Framework for Java] which includes a Maven plugin, or for Gradle include the following:
+Alternatively, you could configure the https://github.com/GoogleCloudPlatform/functions-framework-java[Google Function Framework for Java] which includes a Maven plugin, or for Gradle include the following:
 
 .Configuring the Function framework in Gradle
 [source,groovy]
