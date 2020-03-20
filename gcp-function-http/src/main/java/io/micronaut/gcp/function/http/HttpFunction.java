@@ -9,6 +9,8 @@ import io.micronaut.function.executor.FunctionInitializer;
 import io.micronaut.servlet.http.DefaultServletExchange;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpHandler;
+import io.netty.util.internal.MacAddressUtil;
+import io.netty.util.internal.PlatformDependent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,12 @@ import javax.annotation.Nonnull;
  * @since 1.2.0
  */
 public class HttpFunction extends FunctionInitializer implements com.google.cloud.functions.HttpFunction {
+
+    static {
+        byte[] bestMacAddr = new byte[8];
+        PlatformDependent.threadLocalRandom().nextBytes(bestMacAddr);
+        System.setProperty("io.netty.machineId", MacAddressUtil.formatAddress(bestMacAddr));
+    }
 
     protected static final Logger LOG = LoggerFactory.getLogger(HttpFunction.class);
 
