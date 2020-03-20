@@ -40,7 +40,17 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
                 return new DefaultServletExchange<>(req, res);
             }
+
+            @Override
+            public void service(HttpRequest request, HttpResponse response) {
+                ServletExchange<HttpRequest, HttpResponse> exchange = createExchange(request, response);
+                service(exchange);
+            }
         };
+
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(httpHandler::close)
+        );
     }
 
     @Override
