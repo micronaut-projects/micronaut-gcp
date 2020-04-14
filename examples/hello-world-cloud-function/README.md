@@ -2,6 +2,16 @@
 
 This example demonstrates writing an application that can be deployed to Google Cloud Function.
 
+## Running Locally
+
+To run the application locally you can use the `runFunction` Gradle task:
+
+```
+$ ./gradlew runFunction
+```
+
+And then visit http://localhost:8081/pets 
+
 ## Deployment
 
 First build the function with:
