@@ -10,7 +10,7 @@ dependency:io.micronaut.gcp:micronaut-gcp-function-http[version="{version}"]
 
 And define the Google Function API as a development only dependency:
 
-dependency:com.google.cloud.functions:functions-framework-api[version="1.0.0-alpha-2-rc3", scope="developmentOnly"]
+dependency:com.google.cloud.functions:functions-framework-api[version="1.0.1", scope="developmentOnly"]
 
 === Running Functions Locally
 

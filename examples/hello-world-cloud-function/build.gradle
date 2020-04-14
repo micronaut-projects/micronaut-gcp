@@ -28,8 +28,8 @@ dependencies {
     implementation "io.micronaut:micronaut-inject"
     implementation "io.micronaut:micronaut-validation"
     implementation "io.micronaut:micronaut-runtime"
-    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc3'
-    developmentOnly 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc4'
+    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.1'
+    developmentOnly 'com.google.cloud.functions:functions-framework-api:1.0.1'
     developmentOnly "io.micronaut:micronaut-http-server-netty:$micronautVersion"
     runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
     testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
