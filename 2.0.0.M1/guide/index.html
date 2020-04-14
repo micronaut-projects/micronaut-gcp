@@ -1,0 +1,690 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Micronaut GCP</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+    <link rel="stylesheet" href="../css/custom.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    <link rel="stylesheet" href="../css/highlight/agate.css">
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../js/guide.js"></script>
+    <script src="../js/multi-language-sample.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <link rel="stylesheet" href="../css/multi-language-sample.css"/>
+    <script src="../js/docs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
+    <script type="text/javascript">
+        function addJsClass(el) {
+            var classes = document.body.className.split(" ");
+            classes.push("js");
+            document.body.className = classes.join(" ");
+        }
+    </script>
+
+</head>
+
+<body class="body" id="docs" onload="addJsClass();" onhashchange="highlightMenu()">
+
+<div id="table-of-content-nav-link" class="desktop">
+    <a id="theme-switcher" title="Switch to dark theme" href="javascript:switchTheme(true)"><i class="fa fa-moon-o"></i></a>
+    <a title="Collapse/Open Table of contents" title="Hide Table of Contents" href="javascript:hideTableOfContents();" class="button">[ + ]</a>
+</div>
+
+<div id="main">
+    <div id="navigation" class="no-print">
+        <div class="navTitle">
+            <span id="logo"><a href="http://micronaut.io" title="Go to Micronaut Website"><img src="../img/micronaut-logo-white.svg" alt="Micronaut"/></a></span>
+        </div>
+        <div class="navLinks">
+            <ul>
+                    <li><div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)" class="desktop">
+                            <a href="../guide/index.html" class="button">Table of contents</a>
+                            <div id="nav-summary-childs" style="display:none;">
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>4</strong><span>Cloud Function Support</span></a></div>
+                                
+                            </div>
+                        </div>
+                    </li>
+
+                <li id="table-of-content-nav-link-mobile" class="mobile">
+                    <a title="Scroll to Table of contents" href="javascript:scrollToTop();" class="button">Toc</a>
+                </li>
+                <li class="desktop">
+                    <a title="Go to API documentation" href="../api/index.html" class="button">API Reference</a>
+                </li>
+                <li class="mobile">
+                    <a title="Go to API documentation" href="../api/index.html" class="button">API</a>
+                </li>
+                <li class="desktop">
+                    <a title="Go to Configuration Reference documentation" href="../guide/configurationreference.html" class="button">Configuration Reference</a>
+                </li>
+                <li class="mobile">
+                    <a title="Go to Configuration Reference documentation" href="../guide/configurationreference.html" class="button">Conf</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    
+    <div id="table-of-content">
+        <div class="toc-content">
+
+        <h2>Table of Contents</h2>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-introduction"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>4</strong><span>Cloud Function Support</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>4.1</strong><span>Simple Functions</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>4.2</strong><span>HTTP Functions</span></a></div>
+        
+        </div>
+    </div>
+    
+    <div class="docs-content">
+    <div class="project">
+        <h1>Micronaut GCP</h1>
+        <p></p>
+        <p>Provides integration between Micronaut and Google Cloud Platform (GCP)</p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-gcp/snapshot/guide/index.html'>2.0.0.M1</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M1/guide/index.html'>2.0.0.M1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0.RC1/guide/index.html'>1.0.0.RC1</option></select></p>
+    </div>
+    
+<h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/introduction.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This project provides various extensions to Micronaut to integrate Micronaut with Google Cloud Platform (GCP).</p>
+</div>
+
+<h1 id="setup"><a class="anchor" href="#setup"></a>2 Setting up GCP Support</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/setup.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <code>micronaut-gcp-common</code> module includes basic setup for running applications on Google Cloud.</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common:2.0.0.M1")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-common&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0.M1&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Prerequisites:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You should have a <a href="http://console.cloud.google.com">Google Cloud Platform</a> project created</p>
+</li>
+<li>
+<p><a href="https://cloud.google.com/sdk/install">Install gcloud CLI</a></p>
+</li>
+<li>
+<p>Configure default project <code>gcloud config set project YOUR_PROJECT_ID</code></p>
+</li>
+<li>
+<p>Authenticate with <code>gcloud auth login</code></p>
+</li>
+<li>
+<p>Authenticate application default credential with <code>gcloud auth application-default login</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It&#8217;s strongly recommended that you use a <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Service Account</a> for your application.</p>
+</div>
+<div class="sect2">
+<h3 id="_google_project_id">Google Project ID</h3>
+<div class="paragraph">
+<p>The module features a base <a href="../api/io/micronaut/gcp/GoogleCloudConfiguration.html">GoogleCloudConfiguration</a> which you can use to configure or retrieve the GCP Project ID:</p>
+</div>
+<a id="io.micronaut.gcp.GoogleCloudConfiguration" href="#io.micronaut.gcp.GoogleCloudConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/gcp/GoogleCloudConfiguration.html">GoogleCloudConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.project-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the project id to use.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can inject this bean and use the <code>getProjectId()</code> method to retrieve the configured or detected project ID.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_google_credentials">Google Credentials</h3>
+<div class="paragraph">
+<p>The module will setup a bean of exposing the <code>com.google.auth.oauth2.GoogleCredentials</code> instance that are either detected from the local environment or configured by <a href="../api/io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html">GoogleCredentialsConfiguration</a>:</p>
+</div>
+<a id="io.micronaut.gcp.credentials.GoogleCredentialsConfiguration" href="#io.micronaut.gcp.credentials.GoogleCredentialsConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html">GoogleCredentialsConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.scopes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default scopes to associate with the application to access specific APIs.
+ See &lt;a href="https://developers.google.com/identity/protocols/googlescopes"&gt;Google Scopes&lt;/a&gt; for a complete list.
+ Leave this empty if you don&#8217;t need additional API access.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.encoded-key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Base64 encoded service account key content..</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the location to the service account credential key file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h1 id="tracing"><a class="anchor" href="#tracing"></a>3 Stackdriver Trace</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/tracing.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <code>micronaut-gcp-tracing</code> integrates Micronaut with <a href="https://cloud.google.com/trace">Stackdriver Trace</a>.</p>
+</div>
+<div class="paragraph">
+<p>To enable it add the following dependency:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing:2.0.0.M1")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-tracing&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0.M1&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Then enabling Zipkin tracing in your configuration <code>application.yml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Enabling Stackdriver Trace</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">tracing:
+    zipkin:
+        enabled: true
+        # [Optional] Set sampling probability to 100% for dev/testing purposes to observe traces.
+        #
+        # sampler:
+        #    probability=1.0
+
+# [Optional] configuration to enable/disable Stackdriver Trace configuration.
+# This is defaulted to true.
+#
+# gcp:
+#    tracing:
+#        enabled: true</code></pre>
+</div>
+</div>
+
+<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>4 Cloud Function Support</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut GCP includes extended support for Google Cloud Function - designed for serverless workloads.</p>
+</div>
+
+<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>4.1 Simple Functions</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/simpleFunctions.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut GCP offers two ways to write cloud functions with Micronaut. The first way is more low level and involves using Micronaut&#8217;s built in support for functions. Simply add the following dependency to your classpath:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut:micronaut-function")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-function&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Then add the Cloud Function API as a <code>compileOnly</code> dependency (<code>provided</code> with Maven):</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">compileOnly(<span class="hljs-string">"com.google.cloud.functions:functions-framework-api:1.0.1")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;com.google.cloud.functions&lt;/groupId&gt;
+    &lt;artifactId&gt;functions-framework-api&lt;/artifactId&gt;
+    &lt;version&gt;1.0.1&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Now define a class that implements one of Google Cloud Found&#8217;s interfaces, for example <code>com.google.cloud.functions.BackgroundFunction</code>, and extends from <code>io.micronaut.function.executor.FunctionInitializer</code>.</p>
+</div>
+<div class="paragraph">
+<p>The following is an example of a <code>BackgroundFunction</code> that uses Micronaut and Google Cloud Function:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package example.background;
+
+import com.google.cloud.functions.*;
+import io.micronaut.function.executor.FunctionInitializer;
+import javax.inject.*;
+import java.util.*;
+
+public class Example extends FunctionInitializer <b class="conum">(1)</b>
+        implements BackgroundFunction&lt;PubSubMessage&gt; { <b class="conum">(2)</b>
+
+    @Inject LoggingService loggingService; <b class="conum">(3)</b>
+
+    @Override
+    public void accept(PubSubMessage message, Context context) {
+        loggingService.logMessage(message);
+    }
+}
+
+class PubSubMessage {
+    String data;
+    Map&lt;String, String&gt; attributes;
+    String messageId;
+    String publishTime;
+}
+
+@Singleton
+class LoggingService {
+
+    void logMessage(PubSubMessage message) {
+        // log the message
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">package example.background
+
+import com.google.cloud.functions.*
+import io.micronaut.function.executor.FunctionInitializer
+import javax.inject.*
+
+class Example extends FunctionInitializer <b class="conum">(1)</b>
+        implements BackgroundFunction&lt;PubSubMessage&gt; { <b class="conum">(2)</b>
+
+    @Inject LoggingService loggingService <b class="conum">(3)</b>
+
+    @Override
+    void accept(PubSubMessage message, Context context) {
+        loggingService.logMessage(message)
+    }
+}
+
+class PubSubMessage {
+    String data
+    Map&lt;String, String&gt; attributes
+    String messageId
+    String publishTime
+}
+
+@Singleton
+class LoggingService {
+
+    void logMessage(PubSubMessage message) {
+        // log the message
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">package example.background
+
+import com.google.cloud.functions.BackgroundFunction
+import com.google.cloud.functions.Context
+import io.micronaut.function.executor.FunctionInitializer
+import javax.inject.*
+
+class Example : FunctionInitializer(), <b class="conum">(1)</b>
+        BackgroundFunction&lt;PubSubMessage&gt; { <b class="conum">(2)</b>
+    @Inject
+    lateinit var loggingService: LoggingService <b class="conum">(3)</b>
+
+    override fun accept(message: PubSubMessage, context: Context) {
+        loggingService.logMessage(message)
+    }
+}
+
+class PubSubMessage {
+    var data: String? = null
+    var attributes: Map&lt;String, String&gt;? = null
+    var messageId: String? = null
+    var publishTime: String? = null
+}
+
+@Singleton
+class LoggingService {
+
+    fun logMessage(message: PubSubMessage) {
+        // log the message
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The function extends from <code>io.micronaut.function.executor.FunctionInitializer</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The function implements <code>com.google.cloud.functions.BackgroundFunction</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Dependency injection can be used on the fields</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When you extend from <code>FunctionInitializer</code> the Micronaut <code>ApplicationContext</code> will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using <code>javax.inject.Inject</code> as usual.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Functions require a no argument constructor hence you must use field injection (which requires <code>lateinit</code> in Kotlin) when injecting dependencies into the function itself.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>FunctionInitializer</code> super class provides numerous methods that you can override to customize how the <code>ApplicationContext</code> is built if desired.</p>
+</div>
+
+<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>4.2 HTTP Functions</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/httpFunctions.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>It is common to want to take just a slice of a regular Micronaut HTTP server application and deploy it as a function.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="paragraph">
+<p>To facilitate this model, Micronaut GCP includes an additional module that allows you to use regular Micronaut annotations like <code>@Controller</code> and <code>@Get</code> to define your functions that can be deployed to cloud function.</p>
+</div>
+<div class="paragraph">
+<p>With this model you need to add the <code>micronaut-gcp-function-http</code> dependency to your application:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http:2.0.0.M1")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-function-http&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0.M1&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>And define the Google Function API as a development only dependency:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">developmentOnly(<span class="hljs-string">"com.google.cloud.functions:functions-framework-api:1.0.1")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;com.google.cloud.functions&lt;/groupId&gt;
+    &lt;artifactId&gt;functions-framework-api&lt;/artifactId&gt;
+    &lt;version&gt;1.0.1&lt;/version&gt;
+    &lt;scope&gt;developmentOnly&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_running_functions_locally">Running Functions Locally</h3>
+<div class="paragraph">
+<p>First to run the function locally you should then make the regular Micronaut server a <code>developmentOnly</code> dependency since it is not necessary to include it in the JAR file that will be deployed to Cloud Function:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">developmentOnly(<span class="hljs-string">"io.micronaut:micronaut-http-server-netty")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-http-server-netty&lt;/artifactId&gt;
+    &lt;scope&gt;developmentOnly&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>You can then use <code>./gradlew run</code> or <code>./mvnw compile exec:exec</code> to run the function locally using Micronaut&#8217;s Netty-based server.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you could configure the <a href="https://github.com/GoogleCloudPlatform/functions-framework-java">Google Function Framework for Java</a> which includes a Maven plugin, or for Gradle include the following:</p>
+</div>
+<div class="listingblock">
+<div class="title">Configuring the Function framework in Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">configurations {
+    invoker
+}
+
+dependencies {
+    invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-alpha-2-rc3'
+}
+
+
+task('runFunction', type: JavaExec, dependsOn: classes) {
+    main = 'com.google.cloud.functions.invoker.runner.Invoker'
+    classpath(configurations.invoker)
+    args(
+            '--target', 'io.micronaut.gcp.function.http.HttpFunction',
+            '--classpath', (configurations.runtimeClasspath + sourceSets.main.output).asPath,
+            '--port', 8081
+
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this in place you can run <code>./gradlew runFunction</code> to run the function locally.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deployment">Deployment</h3>
+<div class="paragraph">
+<p>When deploying the function to Cloud Function you should use the <a href="../api/io/micronaut/gcp/function/http/HttpFunction.html">HttpFunction</a> class as the handler reference.</p>
+</div>
+<div class="paragraph">
+<p>First build the function with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ ./gradlew clean shadowJar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then <code>cd</code> into the <code>build/libs</code> directory (deployment has to be done from the location where the JAR file resides):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd build/libs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy the function make sure you have <code>gcloud</code> CLI then run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ gcloud alpha functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above <code>myfunction</code> refers to the name of your function and can be changed to whatever name you prefer to name your function.</p>
+</div>
+<div class="paragraph">
+<p>To obtain the trigger URL you can use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ YOUR_HTTP_TRIGGER_URL=$(gcloud alpha functions describe myfunction --format='value(httpsTrigger.url)')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then use this variable to test the function invocation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -i $YOUR_HTTP_TRIGGER_URL/hello/John</code></pre>
+</div>
+</div>
+</div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>
