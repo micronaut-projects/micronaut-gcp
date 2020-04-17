@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev&nbsp;Class</li>
+<li><a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
@@ -213,28 +213,55 @@ implements com.google.cloud.functions.HttpFunction</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#buildApplicationContext-C-">buildApplicationContext</a></span>(C&nbsp;arg0)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#invoke-io.micronaut.http.HttpMethod-java.lang.String-">invoke</a></span>(io.micronaut.http.HttpMethod&nbsp;method,
+      java.lang.String&nbsp;uri)</code>
+<div class="block">Invoke the function directly with the given request object.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#invoke-io.micronaut.http.HttpMethod-java.lang.String-java.lang.Object-">invoke</a></span>(io.micronaut.http.HttpMethod&nbsp;method,
+      java.lang.String&nbsp;uri,
+      java.lang.Object&nbsp;body)</code>
+<div class="block">Invoke the function directly with the given request object.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#invoke-com.google.cloud.functions.HttpRequest-">invoke</a></span>(com.google.cloud.functions.HttpRequest&nbsp;request)</code>
+<div class="block">Invoke the function directly with the given request object.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#invoke-io.micronaut.http.HttpRequest-">invoke</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>
+<div class="block">Invoke the function directly with the given request object.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>protected io.micronaut.context.ApplicationContextBuilder</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#newApplicationContextBuilder--">newApplicationContextBuilder</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected io.micronaut.inject.ExecutableMethod&lt;java.lang.Object,java.lang.Object&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#resolveFunction-io.micronaut.function.LocalFunctionRegistry-java.lang.String-">resolveFunction</a></span>(io.micronaut.function.LocalFunctionRegistry&nbsp;arg0,
                java.lang.String&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#resolveFunctionName-io.micronaut.context.env.Environment-">resolveFunctionName</a></span>(io.micronaut.context.env.Environment&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#service-com.google.cloud.functions.HttpRequest-com.google.cloud.functions.HttpResponse-">service</a></span>(com.google.cloud.functions.HttpRequest&nbsp;request,
        com.google.cloud.functions.HttpResponse&nbsp;response)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected io.micronaut.context.env.Environment</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#startEnvironment-io.micronaut.context.ApplicationContext-">startEnvironment</a></span>(io.micronaut.context.ApplicationContext&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/gcp/function/http/HttpFunction.html#startThis-io.micronaut.context.ApplicationContext-">startThis</a></span>(io.micronaut.context.ApplicationContext&nbsp;applicationContext)</code>&nbsp;</td>
 </tr>
@@ -351,6 +378,76 @@ protected&nbsp;io.micronaut.context.ApplicationContextBuilder&nbsp;newApplicatio
 </dl>
 </li>
 </ul>
+<a name="invoke-com.google.cloud.functions.HttpRequest-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>public&nbsp;<a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a>&nbsp;invoke(com.google.cloud.functions.HttpRequest&nbsp;request)</pre>
+<div class="block">Invoke the function directly with the given request object.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>request</code> - The request object</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The response object</dd>
+</dl>
+</li>
+</ul>
+<a name="invoke-io.micronaut.http.HttpMethod-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>public&nbsp;<a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a>&nbsp;invoke(io.micronaut.http.HttpMethod&nbsp;method,
+                                 java.lang.String&nbsp;uri)</pre>
+<div class="block">Invoke the function directly with the given request object.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>method</code> - The method</dd>
+<dd><code>uri</code> - The URI</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The response object</dd>
+</dl>
+</li>
+</ul>
+<a name="invoke-io.micronaut.http.HttpMethod-java.lang.String-java.lang.Object-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>public&nbsp;<a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a>&nbsp;invoke(io.micronaut.http.HttpMethod&nbsp;method,
+                                 java.lang.String&nbsp;uri,
+                                 java.lang.Object&nbsp;body)</pre>
+<div class="block">Invoke the function directly with the given request object.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>method</code> - The method</dd>
+<dd><code>uri</code> - The URI</dd>
+<dd><code>body</code> - The body</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The response object</dd>
+</dl>
+</li>
+</ul>
+<a name="invoke-io.micronaut.http.HttpRequest-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>public&nbsp;<a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a>&nbsp;invoke(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
+<div class="block">Invoke the function directly with the given request object.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>request</code> - The request object</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The response object</dd>
+</dl>
+</li>
+</ul>
 <a name="resolveFunction-io.micronaut.function.LocalFunctionRegistry-java.lang.String-">
 <!--   -->
 </a>
@@ -418,7 +515,7 @@ protected&nbsp;io.micronaut.context.ApplicationContextBuilder&nbsp;newApplicatio
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev&nbsp;Class</li>
+<li><a href="../../../../../io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">

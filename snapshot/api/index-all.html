@@ -96,6 +96,10 @@
 </a>
 <h2 class="title">G</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html#getBody-io.micronaut.core.type.Argument-">getBody(Argument&lt;T&gt;)</a></span> - Method in interface io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html#getBodyAsText--">getBodyAsText()</a></span> - Method in interface io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html#getEncodedKey--">getEncodedKey()</a></span> - Method in class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html" title="class in io.micronaut.gcp.credentials">GoogleCredentialsConfiguration</a></dt>
 <dd>
 <div class="block">The Base64 encoded service account key content.</div>
@@ -104,10 +108,14 @@
 <dd>
 <div class="block">Returns the "User-Agent" header whose value should be added to the google-cloud-java REST API calls.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html#getHttpHeaders--">getHttpHeaders()</a></span> - Method in interface io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html#getLocation--">getLocation()</a></span> - Method in class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html" title="class in io.micronaut.gcp.credentials">GoogleCredentialsConfiguration</a></dt>
 <dd>
 <div class="block">The location of the service account credential key file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html#getMessage--">getMessage()</a></span> - Method in interface io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/gcp/GoogleCloudConfiguration.html#getProjectId--">getProjectId()</a></span> - Method in class io.micronaut.gcp.<a href="io/micronaut/gcp/GoogleCloudConfiguration.html" title="class in io.micronaut.gcp">GoogleCloudConfiguration</a></dt>
 <dd>
 <div class="block">Returns the Google project ID for the project.</div>
@@ -116,6 +124,10 @@
 <dd>
 <div class="block">The scopes to use.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html#getStatus--">getStatus()</a></span> - Method in interface io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html#getStatusCode--">getStatusCode()</a></span> - Method in interface io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http">GoogleHttpResponse</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/gcp/UserAgentHeaderProvider.html#getUserAgent--">getUserAgent()</a></span> - Method in class io.micronaut.gcp.<a href="io/micronaut/gcp/UserAgentHeaderProvider.html" title="class in io.micronaut.gcp">UserAgentHeaderProvider</a></dt>
 <dd>
 <div class="block">Returns the "User-Agent" header value which should be added to the google-cloud-java REST API calls.</div>
@@ -139,6 +151,10 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/gcp/credentials/GoogleCredentialsFactory.html#GoogleCredentialsFactory-io.micronaut.gcp.credentials.GoogleCredentialsConfiguration-">GoogleCredentialsFactory(GoogleCredentialsConfiguration)</a></span> - Constructor for class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/GoogleCredentialsFactory.html" title="class in io.micronaut.gcp.credentials">GoogleCredentialsFactory</a></dt>
 <dd>
 <div class="block">Default constructor.</div>
+</dd>
+<dt><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http"><span class="typeNameLink">GoogleHttpResponse</span></a> - Interface in <a href="io/micronaut/gcp/function/http/package-summary.html">io.micronaut.gcp.function.http</a></dt>
+<dd>
+<div class="block">Extended interface used for testing.</div>
 </dd>
 <dt><a href="io/micronaut/gcp/function/http/jackson/GoogleJacksonConfiguration.html" title="class in io.micronaut.gcp.function.http.jackson"><span class="typeNameLink">GoogleJacksonConfiguration</span></a> - Class in <a href="io/micronaut/gcp/function/http/jackson/package-summary.html">io.micronaut.gcp.function.http.jackson</a></dt>
 <dd>
@@ -170,6 +186,22 @@
 </a>
 <h2 class="title">I</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/HttpFunction.html#invoke-com.google.cloud.functions.HttpRequest-">invoke(HttpRequest)</a></span> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
+<dd>
+<div class="block">Invoke the function directly with the given request object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/HttpFunction.html#invoke-io.micronaut.http.HttpMethod-java.lang.String-">invoke(HttpMethod, String)</a></span> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
+<dd>
+<div class="block">Invoke the function directly with the given request object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/HttpFunction.html#invoke-io.micronaut.http.HttpMethod-java.lang.String-java.lang.Object-">invoke(HttpMethod, String, Object)</a></span> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
+<dd>
+<div class="block">Invoke the function directly with the given request object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/HttpFunction.html#invoke-io.micronaut.http.HttpRequest-">invoke(HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
+<dd>
+<div class="block">Invoke the function directly with the given request object.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/package-summary.html">io.micronaut.gcp</a> - package io.micronaut.gcp</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/condition/package-summary.html">io.micronaut.gcp.condition</a> - package io.micronaut.gcp.condition</dt>
