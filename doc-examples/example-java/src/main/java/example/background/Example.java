@@ -16,11 +16,12 @@
 package example.background;
 
 import com.google.cloud.functions.*;
-import io.micronaut.function.executor.FunctionInitializer;
+import io.micronaut.gcp.function.GoogleFunctionInitializer;
+
 import javax.inject.*;
 import java.util.*;
 
-public class Example extends FunctionInitializer // <1>
+public class Example extends GoogleFunctionInitializer // <1>
         implements BackgroundFunction<PubSubMessage> { // <2>
 
     @Inject LoggingService loggingService; // <3>

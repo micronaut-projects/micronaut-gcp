@@ -17,10 +17,11 @@ package example.background
 
 import com.google.cloud.functions.BackgroundFunction
 import com.google.cloud.functions.Context
-import io.micronaut.function.executor.FunctionInitializer
-import javax.inject.*
+import io.micronaut.gcp.function.GoogleFunctionInitializer
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Example : FunctionInitializer(), // <1>
+class Example : GoogleFunctionInitializer(), // <1>
         BackgroundFunction<PubSubMessage> { // <2>
     @Inject
     lateinit var loggingService: LoggingService // <3>

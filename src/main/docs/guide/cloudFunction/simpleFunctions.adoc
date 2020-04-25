@@ -1,6 +1,6 @@
 Micronaut GCP offers two ways to write cloud functions with Micronaut. The first way is more low level and involves using Micronaut's built in support for functions. Simply add the following dependency to your classpath:
 
-dependency:io.micronaut:micronaut-function[]
+dependency:io.micronaut.gcp:micronaut-gcp-function[]
 
 Then add the Cloud Function API as a `compileOnly` dependency (`provided` with Maven):
 

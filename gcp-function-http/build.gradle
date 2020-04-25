@@ -2,7 +2,7 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     api "io.micronaut:micronaut-inject:$micronautVersion"
     api "io.micronaut:micronaut-http-server:$micronautVersion"
-    api "io.micronaut:micronaut-function:$micronautVersion"
+    api project(":gcp-function")
     implementation "io.micronaut:micronaut-http-netty:$micronautVersion"
     implementation "io.micronaut:micronaut-http-server:$micronautVersion"
     implementation "io.micronaut.servlet:micronaut-servlet-core:1.0.0.M3"
