@@ -13,35 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.background;
+package io.micronaut.gcp.function;
 
-import com.google.cloud.functions.*;
+import io.micronaut.context.ApplicationContextBuilder;
+import io.micronaut.context.env.Environment;
 import io.micronaut.function.executor.FunctionInitializer;
-import javax.inject.*;
-import java.util.*;
 
-public class Example extends FunctionInitializer // <1>
-        implements BackgroundFunction<PubSubMessage> { // <2>
+import javax.annotation.Nonnull;
 
-    @Inject LoggingService loggingService; // <3>
-
+/**
+ * Extended version of {@link FunctionInitializer} that configures the GCP environment.
+ *
+ * @author graemerocher
+ * @since 2.0.0
+ */
+public class GoogleFunctionInitializer extends FunctionInitializer {
+    @Nonnull
     @Override
-    public void accept(PubSubMessage message, Context context) {
-        loggingService.logMessage(message);
-    }
-}
-
-class PubSubMessage {
-    String data;
-    Map<String, String> attributes;
-    String messageId;
-    String publishTime;
-}
-
-@Singleton
-class LoggingService {
-
-    void logMessage(PubSubMessage message) {
-        // log the message
+    protected ApplicationContextBuilder newApplicationContextBuilder() {
+        ApplicationContextBuilder builder = super.newApplicationContextBuilder();
+        builder.deduceEnvironment(false);
+        builder.environments(Environment.GOOGLE_COMPUTE);
+        return builder;
     }
 }

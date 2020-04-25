@@ -2,7 +2,6 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"    
 
-    compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
     api project(":gcp-common")
     api "io.micronaut:micronaut-tracing:$micronautVersion"
     api "io.micronaut:micronaut-inject:$micronautVersion"
