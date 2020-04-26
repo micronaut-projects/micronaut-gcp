@@ -67,7 +67,7 @@
 <!--   -->
 </a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
-<div class="contentContainer"><a href="#I:B">B</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a name="I:B">
+<div class="contentContainer"><a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a name="I:B">
 <!--   -->
 </a>
 <h2 class="title">B</h2>
@@ -76,6 +76,14 @@
 <dd>
 <div class="block">A <code>BeanCreatedEventListener</code> that modifies the brave trace configuration for Stackdriver compatibility.</div>
 </dd>
+</dl>
+<a name="I:C">
+<!--   -->
+</a>
+<h2 class="title">C</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/http/client/GoogleAuthFilter.html#close--">close()</a></span> - Method in class io.micronaut.gcp.http.client.<a href="io/micronaut/gcp/http/client/GoogleAuthFilter.html" title="class in io.micronaut.gcp.http.client">GoogleAuthFilter</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:D">
 <!--   -->
@@ -90,6 +98,8 @@
 <dd>
 <div class="block">Method used to return the default <code>GoogleCredentials</code> and provide it as a bean.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/http/client/GoogleAuthFilter.html#doFilter-io.micronaut.http.MutableHttpRequest-io.micronaut.http.filter.ClientFilterChain-">doFilter(MutableHttpRequest&lt;?&gt;, ClientFilterChain)</a></span> - Method in class io.micronaut.gcp.http.client.<a href="io/micronaut/gcp/http/client/GoogleAuthFilter.html" title="class in io.micronaut.gcp.http.client">GoogleAuthFilter</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:G">
 <!--   -->
@@ -132,6 +142,14 @@
 <dd>
 <div class="block">Returns the "User-Agent" header value which should be added to the google-cloud-java REST API calls.</div>
 </dd>
+<dt><a href="io/micronaut/gcp/http/client/GoogleAuthFilter.html" title="class in io.micronaut.gcp.http.client"><span class="typeNameLink">GoogleAuthFilter</span></a> - Class in <a href="io/micronaut/gcp/http/client/package-summary.html">io.micronaut.gcp.http.client</a></dt>
+<dd>
+<div class="block">A filter that allows service to service communication in GCP (https://cloud.google.com/run/docs/authenticating/service-to-service).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/http/client/GoogleAuthFilter.html#GoogleAuthFilter--">GoogleAuthFilter()</a></span> - Constructor for class io.micronaut.gcp.http.client.<a href="io/micronaut/gcp/http/client/GoogleAuthFilter.html" title="class in io.micronaut.gcp.http.client">GoogleAuthFilter</a></dt>
+<dd>
+<div class="block">Default constructor.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/GoogleCloudConfiguration.html" title="class in io.micronaut.gcp"><span class="typeNameLink">GoogleCloudConfiguration</span></a> - Class in <a href="io/micronaut/gcp/package-summary.html">io.micronaut.gcp</a></dt>
 <dd>
 <div class="block">General Google cloud configuration.</div>
@@ -152,6 +170,12 @@
 <dd>
 <div class="block">Default constructor.</div>
 </dd>
+<dt><a href="io/micronaut/gcp/function/GoogleFunctionInitializer.html" title="class in io.micronaut.gcp.function"><span class="typeNameLink">GoogleFunctionInitializer</span></a> - Class in <a href="io/micronaut/gcp/function/package-summary.html">io.micronaut.gcp.function</a></dt>
+<dd>
+<div class="block">Extended version of <code>FunctionInitializer</code> that configures the GCP environment.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/GoogleFunctionInitializer.html#GoogleFunctionInitializer--">GoogleFunctionInitializer()</a></span> - Constructor for class io.micronaut.gcp.function.<a href="io/micronaut/gcp/function/GoogleFunctionInitializer.html" title="class in io.micronaut.gcp.function">GoogleFunctionInitializer</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/function/http/GoogleHttpResponse.html" title="interface in io.micronaut.gcp.function.http"><span class="typeNameLink">GoogleHttpResponse</span></a> - Interface in <a href="io/micronaut/gcp/function/http/package-summary.html">io.micronaut.gcp.function.http</a></dt>
 <dd>
 <div class="block">Extended interface used for testing.</div>
@@ -208,9 +232,13 @@
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/credentials/package-summary.html">io.micronaut.gcp.credentials</a> - package io.micronaut.gcp.credentials</dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/function/package-summary.html">io.micronaut.gcp.function</a> - package io.micronaut.gcp.function</dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/function/http/package-summary.html">io.micronaut.gcp.function.http</a> - package io.micronaut.gcp.function.http</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/function/http/jackson/package-summary.html">io.micronaut.gcp.function.http.jackson</a> - package io.micronaut.gcp.function.http.jackson</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/http/client/package-summary.html">io.micronaut.gcp.http.client</a> - package io.micronaut.gcp.http.client</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/tracing/zipkin/package-summary.html">io.micronaut.gcp.tracing.zipkin</a> - package io.micronaut.gcp.tracing.zipkin</dt>
 <dd>&nbsp;</dd>
@@ -236,6 +264,8 @@
 </a>
 <h2 class="title">N</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/GoogleFunctionInitializer.html#newApplicationContextBuilder--">newApplicationContextBuilder()</a></span> - Method in class io.micronaut.gcp.function.<a href="io/micronaut/gcp/function/GoogleFunctionInitializer.html" title="class in io.micronaut.gcp.function">GoogleFunctionInitializer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/gcp/function/http/HttpFunction.html#newApplicationContextBuilder--">newApplicationContextBuilder()</a></span> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/gcp/GoogleCloudConfiguration.html#NO_PROJECT_ID_MESSAGE">NO_PROJECT_ID_MESSAGE</a></span> - Static variable in class io.micronaut.gcp.<a href="io/micronaut/gcp/GoogleCloudConfiguration.html" title="class in io.micronaut.gcp">GoogleCloudConfiguration</a></dt>
@@ -368,7 +398,7 @@
 <div class="block">Default constructor.</div>
 </dd>
 </dl>
-<a href="#I:B">B</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;</div>
+<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;</div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar.bottom">
 <!--   -->

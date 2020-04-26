@@ -49,7 +49,9 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>4</strong><span>Cloud Function Support</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#authorizingClients"><strong>4</strong><span>Authorizing HTTP Clients</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>5</strong><span>Cloud Function Support</span></a></div>
                                 
                             </div>
                         </div>
@@ -86,11 +88,13 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>4</strong><span>Cloud Function Support</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-authorizingClients"><a href="#authorizingClients"><strong>4</strong><span>Authorizing HTTP Clients</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>4.1</strong><span>Simple Functions</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>5</strong><span>Cloud Function Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>4.2</strong><span>HTTP Functions</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>5.1</strong><span>Simple Functions</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>5.2</strong><span>HTTP Functions</span></a></div>
         
         </div>
     </div>
@@ -301,7 +305,51 @@
 </div>
 </div>
 
-<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>4 Cloud Function Support</h1>
+<h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>4 Authorizing HTTP Clients</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/authorizingClients.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <code>micronaut-gcp-http-client</code> module can be used to help authorize service-to-service communication. To get started add the following module:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-http-client")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-http-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>You should then configure the service accounts as per the <a href="https://cloud.google.com/run/docs/authenticating/service-to-service">documentation on service-to-service</a> communication and the enable the filter for the outgoing URI paths you wish to include the Google-signed OAuth ID token:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">gcp:
+  http:
+    client:
+      auth:
+        patterns:
+          - /foo/**
+          - /bar/**</code></pre>
+</div>
+</div>
+
+<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>5 Cloud Function Support</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction.adoc"'>
@@ -314,7 +362,7 @@
 <p>Micronaut GCP includes extended support for Google Cloud Function - designed for serverless workloads.</p>
 </div>
 
-<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>4.1 Simple Functions</h2>
+<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>5.1 Simple Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/simpleFunctions.adoc"'>
@@ -330,14 +378,14 @@
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut:micronaut-function")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
-    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
-    &lt;artifactId&gt;micronaut-function&lt;/artifactId&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-function&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -373,14 +421,30 @@
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package example.background;
+<pre class="highlight"><code class="language-java" data-lang="java">/*
+ * Copyright 2017-2019 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package example.background;
 
 import com.google.cloud.functions.*;
-import io.micronaut.function.executor.FunctionInitializer;
+import io.micronaut.gcp.function.GoogleFunctionInitializer;
+
 import javax.inject.*;
 import java.util.*;
 
-public class Example extends FunctionInitializer <b class="conum">(1)</b>
+public class Example extends GoogleFunctionInitializer <b class="conum">(1)</b>
         implements BackgroundFunction&lt;PubSubMessage&gt; { <b class="conum">(2)</b>
 
     @Inject LoggingService loggingService; <b class="conum">(3)</b>
@@ -409,13 +473,29 @@ class LoggingService {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">package example.background
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">/*
+ * Copyright 2017-2019 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package example.background
 
 import com.google.cloud.functions.*
-import io.micronaut.function.executor.FunctionInitializer
+import io.micronaut.gcp.function.GoogleFunctionInitializer
+
 import javax.inject.*
 
-class Example extends FunctionInitializer <b class="conum">(1)</b>
+class Example extends GoogleFunctionInitializer <b class="conum">(1)</b>
         implements BackgroundFunction&lt;PubSubMessage&gt; { <b class="conum">(2)</b>
 
     @Inject LoggingService loggingService <b class="conum">(3)</b>
@@ -444,14 +524,30 @@ class LoggingService {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">package example.background
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">/*
+ * Copyright 2017-2019 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package example.background
 
 import com.google.cloud.functions.BackgroundFunction
 import com.google.cloud.functions.Context
-import io.micronaut.function.executor.FunctionInitializer
-import javax.inject.*
+import io.micronaut.gcp.function.GoogleFunctionInitializer
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Example : FunctionInitializer(), <b class="conum">(1)</b>
+class Example : GoogleFunctionInitializer(), <b class="conum">(1)</b>
         BackgroundFunction&lt;PubSubMessage&gt; { <b class="conum">(2)</b>
     @Inject
     lateinit var loggingService: LoggingService <b class="conum">(3)</b>
@@ -512,7 +608,7 @@ Functions require a no argument constructor hence you must use field injection (
 <p>The <code>FunctionInitializer</code> super class provides numerous methods that you can override to customize how the <code>ApplicationContext</code> is built if desired.</p>
 </div>
 
-<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>4.2 HTTP Functions</h2>
+<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>5.2 HTTP Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/httpFunctions.adoc"'>
