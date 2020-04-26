@@ -45,7 +45,8 @@ class GoogleAuthFilterSpec extends Specification {
 
         then:
         def e = thrown(HttpClientException)
-        e.message.contains 'metadata: nodename nor servname provided'
+        e.message.contains('metadata: nodename nor servname provided')
+                || e.message.contains('metadata: Temporary failure in name resolution')
     }
 
 

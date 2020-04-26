@@ -74,15 +74,15 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
         return token.flatMap(t -> chain.proceed(request.bearerAuth(t)));
     }
 
-    protected String encodeURI(MutableHttpRequest<?> request) throws UnsupportedEncodingException {
-        URI fullURI = request.getUri();
-        String receivingURI = fullURI.getScheme() + "://" + fullURI.getHost();
-        return AUDIENCE + URLEncoder.encode(receivingURI, "UTF-8");
-    }
-
     @Override
     @PreDestroy
     public void close() {
         authClient.close();
+    }
+
+    private String encodeURI(MutableHttpRequest<?> request) throws UnsupportedEncodingException {
+        URI fullURI = request.getUri();
+        String receivingURI = fullURI.getScheme() + "://" + fullURI.getHost();
+        return AUDIENCE + URLEncoder.encode(receivingURI, "UTF-8");
     }
 }
