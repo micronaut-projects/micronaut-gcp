@@ -45,7 +45,6 @@ subprojects { Project subproject ->
     apply plugin:"groovy"
     apply plugin:"java-library"
     apply plugin: 'idea'
-    apply plugin: 'checkstyle'
     apply plugin: "com.github.ben-manes.versions"
 
     sourceCompatibility = '1.8'
@@ -149,7 +148,7 @@ subprojects { Project subproject ->
         apply plugin: 'checkstyle'
 
         checkstyle {
-            toolVersion = 8.10
+            toolVersion = 8.32
             configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 
             // Per submodule

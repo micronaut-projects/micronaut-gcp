@@ -136,7 +136,6 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         return response;
     }
 
-
     /**
      * Invoke the function directly with the given request object.
      * @param method The method
