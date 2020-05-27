@@ -104,7 +104,7 @@
         <h1>Micronaut GCP</h1>
         <p></p>
         <p>Provides integration between Micronaut and Google Cloud Platform (GCP)</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-gcp/snapshot/guide/index.html'>2.0.0.BUILD-SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M2/guide/index.html'>2.0.0.M2</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M1/guide/index.html'>2.0.0.M1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0.RC1/guide/index.html'>1.0.0.RC1</option></select></p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-gcp/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M3/guide/index.html'>2.0.0.M3</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M2/guide/index.html'>2.0.0.M2</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M1/guide/index.html'>2.0.0.M1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0.RC1/guide/index.html'>1.0.0.RC1</option></select></p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -259,7 +259,7 @@
 
 
 <div class="paragraph">
-<p>The <code>micronaut-gcp-tracing</code> integrates Micronaut with <a href="https://cloud.google.com/trace">Stackdriver Trace</a>.</p>
+<p>The <code>micronaut-gcp-tracing</code> integrates Micronaut with <a href="https://cloud.google.com/trace">Cloud Trace</a> from Google Cloud Operations (formerly Stackdriver).</p>
 </div>
 <div class="paragraph">
 <p>To enable it add the following dependency:</p>
@@ -706,7 +706,7 @@ Functions require a no argument constructor hence you must use field injection (
 }
 
 dependencies {
-    invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-alpha-2-rc3'
+    invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-beta1'
 }
 
 
