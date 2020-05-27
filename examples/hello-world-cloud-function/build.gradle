@@ -36,7 +36,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-alpha-2-rc4'
+    invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-beta1'
 }
 
 test.classpath += configurations.developmentOnly
