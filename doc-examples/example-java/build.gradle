@@ -1,0 +1,10 @@
+apply plugin:"java"
+
+ext.skipDocumentation=true
+
+dependencies {
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+
+    implementation project(":gcp-function-http")
+    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.1'
+}

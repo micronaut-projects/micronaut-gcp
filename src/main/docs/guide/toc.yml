@@ -1,3 +1,9 @@
 introduction: Introduction
 setup: Setting up GCP Support
 tracing: Stackdriver Trace
+authorizingClients: Authorizing HTTP Clients
+cloudFunction:
+  title: Cloud Function Support
+  simpleFunctions: Simple Functions
+  httpFunctions:
+    title: HTTP Functions

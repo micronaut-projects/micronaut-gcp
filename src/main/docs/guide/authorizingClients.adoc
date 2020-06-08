@@ -1,0 +1,16 @@
+The `micronaut-gcp-http-client` module can be used to help authorize service-to-service communication. To get started add the following module:
+
+dependency:io.micronaut.gcp:micronaut-gcp-http-client[]
+
+You should then configure the service accounts as per the https://cloud.google.com/run/docs/authenticating/service-to-service[documentation on service-to-service] communication and the enable the filter for the outgoing URI paths you wish to include the Google-signed OAuth ID token:
+
+[source,yaml]
+----
+gcp:
+  http:
+    client:
+      auth:
+        patterns:
+          - /foo/**
+          - /bar/**
+----
