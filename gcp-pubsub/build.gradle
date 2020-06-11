@@ -1,0 +1,13 @@
+dependencies {
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
+    compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
+
+    api "io.micronaut:micronaut-inject:$micronautVersion"
+    api "io.micronaut:micronaut-messaging:$micronautVersion"
+    api project(":gcp-common")
+
+    testImplementation "io.micronaut:micronaut-inject-java"
+    testImplementation "io.micronaut.test:micronaut-test-spock:1.1.5"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
+}
