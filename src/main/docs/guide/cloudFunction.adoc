@@ -1,0 +1,2 @@
+Micronaut GCP includes extended support for Google Cloud Function - designed for serverless workloads.
+

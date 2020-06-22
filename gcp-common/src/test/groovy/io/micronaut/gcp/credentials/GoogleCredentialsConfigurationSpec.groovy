@@ -18,12 +18,15 @@ package io.micronaut.gcp.credentials
 import com.google.api.gax.core.GoogleCredentialsProvider
 import com.google.auth.oauth2.GoogleCredentials
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
+import io.micronaut.context.env.Environment
 import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 @MicronautTest
+@Requires(env = Environment.GOOGLE_COMPUTE)
 class GoogleCredentialsConfigurationSpec extends Specification {
 
     @Inject GoogleCredentialsConfiguration configuration
