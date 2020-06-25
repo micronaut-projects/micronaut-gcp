@@ -5,6 +5,14 @@
 
 This project includes integration between [Micronaut](http://micronaut.io) and Google Cloud Platform (GCP).
 
+
+## Examples
+
+You can generate example GCP Function applications at https://launch.micronaut.io:
+
+* GCP Simple Function - Select Application Type `Serverless Function` and the `gcp-function` feature and generate!
+* GCP HTTP Function - Select Application Type `Application` and the `gcp-function` feature and generate!
+
 ## Documentation
 
 See the [Documentation](https://micronaut-projects.github.io/micronaut-gcp/latest/guide) for more information. 
