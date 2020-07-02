@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017-2020 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.micronaut.gcp.pubsub.support;
 
 import com.google.api.gax.batching.BatchingSettings;
@@ -42,7 +57,7 @@ public class PubSubConfigurationFactory {
      */
     @Singleton
     protected RetrySettings retrySettings() {
-        PubSubConfigurationProperties.Retry retryProperties = this.pubSubConfigurationProperties.getPublisher().getRetry();
+        PubSubConfigurationProperties.Publisher.Retry retryProperties = this.pubSubConfigurationProperties.getPublisher().getRetry();
         RetrySettings.Builder builder = RetrySettings.newBuilder();
         RetrySettings settings = ifNotNull(retryProperties.getInitialRetryDelaySeconds(),
                 (x) -> builder.setInitialRetryDelay(Duration.ofSeconds(x)))
@@ -70,7 +85,7 @@ public class PubSubConfigurationFactory {
     public BatchingSettings publisherBatchSettings() {
         BatchingSettings.Builder builder = BatchingSettings.newBuilder();
 
-        PubSubConfigurationProperties.Batching batching = this.pubSubConfigurationProperties.getPublisher()
+        PubSubConfigurationProperties.Publisher.Batching batching = this.pubSubConfigurationProperties.getPublisher()
                 .getBatching();
 
         FlowControlSettings flowControlSettings = buildFlowControlSettings(batching.getFlowControl());
@@ -107,7 +122,7 @@ public class PubSubConfigurationFactory {
                 .build();
     }
 
-    private FlowControlSettings buildFlowControlSettings(PubSubConfigurationProperties.FlowControl flowControl) {
+    private FlowControlSettings buildFlowControlSettings(PubSubConfigurationProperties.Publisher.Batching.FlowControl flowControl) {
         FlowControlSettings.Builder builder = FlowControlSettings.newBuilder();
 
         return ifNotNull(flowControl.getLimitExceededBehavior(), builder::setLimitExceededBehavior)
