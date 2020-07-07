@@ -36,12 +36,7 @@ import java.lang.annotation.RetentionPolicy;
 @Type(PubSubClientIntroductionAdvice.class)
 @Singleton
 public @interface PubSubClient {
-    /**
-     * @return Topic name to publish
-     */
-    String topic();
-
-    /**
+     /**
      * @return GCP Project Id, if null it will be inferred from the environment via {@link io.micronaut.gcp.GoogleCloudConfiguration}
      */
     String project();

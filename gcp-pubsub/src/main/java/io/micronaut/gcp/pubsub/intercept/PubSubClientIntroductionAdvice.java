@@ -18,6 +18,7 @@ package io.micronaut.gcp.pubsub.intercept;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
+import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
 
 import javax.inject.Singleton;
@@ -39,7 +40,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     @Override
     public Object intercept(MethodInvocationContext<Object, Object> context) {
 
-        if (context.hasAnnotation(PubSubClient.class)) {
+        if (context.hasAnnotation(Topic.class)) {
             //Publisher publisher = publisherFactory.createPublisher()
             return null;
         } else {

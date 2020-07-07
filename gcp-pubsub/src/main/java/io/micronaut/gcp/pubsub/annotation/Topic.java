@@ -16,4 +16,9 @@
 package io.micronaut.gcp.pubsub.annotation;
 
 public @interface Topic {
+	/**
+	 *
+	 * @return the name of the topic to publish messages to
+	 */
+	String value();
 }
