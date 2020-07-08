@@ -15,10 +15,15 @@
  */
 package io.micronaut.gcp.pubsub.annotation;
 
+import io.micronaut.http.MediaType;
+
 public @interface Topic {
-	/**
-	 *
-	 * @return the name of the topic to publish messages to
-	 */
-	String value();
+
+    /**
+     *
+     * @return The name of the topic to publish messages to
+     */
+    String value();
+
+    String contentType() default MediaType.APPLICATION_JSON;
 }
