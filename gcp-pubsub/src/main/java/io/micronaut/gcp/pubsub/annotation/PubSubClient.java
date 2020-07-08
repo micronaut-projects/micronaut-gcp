@@ -18,6 +18,7 @@ package io.micronaut.gcp.pubsub.annotation;
 import io.micronaut.aop.Introduction;
 import io.micronaut.context.annotation.Type;
 import io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice;
+import io.micronaut.messaging.annotation.Header;
 
 import javax.inject.Scope;
 import javax.inject.Singleton;
@@ -39,5 +40,6 @@ public @interface PubSubClient {
      /**
      * @return GCP Project Id, if null it will be inferred from the environment via {@link io.micronaut.gcp.GoogleCloudConfiguration}
      */
-    String project();
+    String project() default "";
+
 }

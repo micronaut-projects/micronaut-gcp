@@ -15,8 +15,10 @@
  */
 package io.micronaut.gcp.pubsub.intercept;
 
+import com.google.cloud.pubsub.v1.Publisher;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
+import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
@@ -41,7 +43,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     public Object intercept(MethodInvocationContext<Object, Object> context) {
 
         if (context.hasAnnotation(Topic.class)) {
-            //Publisher publisher = publisherFactory.createPublisher()
+            AnnotationValue<Topic> topic = context.getAnnotation(Topic.class);
             return null;
         } else {
             return context.proceed();
