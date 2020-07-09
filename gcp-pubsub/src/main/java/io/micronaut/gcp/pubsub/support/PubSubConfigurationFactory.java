@@ -38,6 +38,8 @@ import java.util.function.Function;
  * Factory class to create default settings for PubSub Publisher and subscriber beans.
  *
  * @author Vinicius Carvalho
+ * @since 2.0
+ *
  */
 @Factory
 @Requires(classes = Publisher.class)

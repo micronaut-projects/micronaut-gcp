@@ -17,6 +17,12 @@ package io.micronaut.gcp.pubsub.annotation;
 
 import io.micronaut.http.MediaType;
 
+/**
+ * Represents a pubsub topic to be used by classes annotated with {@link PubSubClient}.
+ *
+ * @author Vinicius Carvalho
+ * @since 2.0
+ */
 public @interface Topic {
 
     /**

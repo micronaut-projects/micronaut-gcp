@@ -33,8 +33,11 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>Creates {@link Publisher}s for topics once, caches and reuses them.
  *
+ * Original source at : https://github.com/spring-cloud/spring-cloud-gcp/blob/master/spring-cloud-gcp-pubsub/src/main/java/org/springframework/cloud/gcp/pubsub/support/DefaultPublisherFactory.java
+ *
  * @author João André Martins
  * @author Chengyuan Zhao
+ * @author Vinicius Carvalho
  */
 @Factory
 public class DefaultPublisherFactory implements PublisherFactory {

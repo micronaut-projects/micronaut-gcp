@@ -46,6 +46,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
+ * Implementation of {@link io.micronaut.gcp.pubsub.annotation.PubSubClient} advice annotation.
  *
  * @author Vinicius Carvalho
  * @since 2.0
@@ -97,7 +98,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             Object body = parameterValues.get(bodyArgument.getName());
             ReturnType<Object> returnType = context.getReturnType();
             Class<?> javaReturnType = returnType.getType();
-
+            //if target type is byte[] we bypass serdes completely
             byte[] serialized = (body.getClass() == byte[].class) ? (byte[]) body : serDes.serialize(body);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
                     .setData(ByteString.copyFrom(serialized))

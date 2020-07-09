@@ -21,6 +21,12 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import javax.annotation.Nullable;
 
+/**
+ * Configuration properties for PubSub support.
+ *
+ * @author Vinicius Carvalho
+ * @since 2.0
+ */
 @ConfigurationProperties(PubSubConfigurationProperties.PREFIX)
 @Context
 public class PubSubConfigurationProperties {
