@@ -26,6 +26,7 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.ReturnType;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
@@ -33,6 +34,7 @@ import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.Body;
+import io.micronaut.messaging.annotation.Header;
 import io.micronaut.scheduling.TaskExecutors;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
@@ -40,10 +42,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -73,15 +72,27 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     public Object intercept(MethodInvocationContext<Object, Object> context) {
 
         if (context.hasAnnotation(Topic.class)) {
-            AnnotationValue<Topic> topic = context.getAnnotation(Topic.class);
+           AnnotationValue<Topic> topic = context.getAnnotation(Topic.class);
             String contentType = topic.get("contentType", String.class).orElse("");
+            List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
+
+
             PubSubMessageSerDes serDes = serDesRegistry.find(contentType)
                     .orElseThrow(() -> new PubSubClientException("Could not locate a valid SerDes implementation for type: " + contentType));
             Publisher publisher = publisherFactory.createPublisher(topic.getValue(String.class).orElse(""));
             Argument<?> bodyArgument = findBodyArgument(context.getExecutableMethod())
                     .orElseThrow(() -> new PubSubClientException("No valid message body argument found for method: " + context.getExecutableMethod()));
+            Argument[] arguments = context.getArguments();
             Map<String, Object> parameterValues = context.getParameterValueMap();
             Map<String, String> messageAttributes = new HashMap<>();
+            headerAnnotations.forEach((header) -> {
+                String name = header.get("name", String.class).orElse(null);
+                String value = header.getValue(String.class).orElse(null);
+
+                if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(value)) {
+                    messageAttributes.put(name, value);
+                }
+            });
             messageAttributes.put("Content-Type", contentType);
             Object body = parameterValues.get(bodyArgument.getName());
             ReturnType<Object> returnType = context.getReturnType();
@@ -92,6 +103,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                     .setData(ByteString.copyFrom(serialized))
                     .putAllAttributes(messageAttributes)
                     .build();
+
             ApiFuture<String> future = publisher.publish(pubsubMessage);
             Single<String> reactiveResult = Single.fromFuture(future).subscribeOn(this.scheduler);
             boolean isReactive = Publishers.isConvertibleToPublisher(javaReturnType);
