@@ -26,6 +26,7 @@ import com.google.cloud.pubsub.v1.Publisher;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.UserAgentHeaderProvider;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import org.threeten.bp.Duration;
 
@@ -120,6 +121,7 @@ public class PubSubConfigurationFactory {
     @Singleton
     public TransportChannelProvider transportChannelProvider() {
         return InstantiatingGrpcChannelProvider.newBuilder()
+                .setHeaderProvider(new UserAgentHeaderProvider("pubsub"))
                 .setKeepAliveTime(Duration.ofMinutes(this.pubSubConfigurationProperties.getKeepAliveIntervalMinutes()))
                 .build();
     }
