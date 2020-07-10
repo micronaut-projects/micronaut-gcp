@@ -8,7 +8,7 @@ class PublisherFactorySpec extends Specification{
 
     void "test factory exists"() {
         given:
-            ApplicationContext context = ApplicationContext.run(["spec.name" : getClass().simpleName], "test")
+            ApplicationContext context = ApplicationContext.run(["spec.name" : getClass().simpleName, "gcp.projectId" : "test-project"], "test")
             context.start()
         expect: "publisher factory is available"
             context.containsBean(DefaultPublisherFactory)
@@ -23,7 +23,8 @@ class PublisherFactorySpec extends Specification{
         given:
             ApplicationContext context = ApplicationContext.run([
                     "gcp.pubsub.keepAliveIntervalMinutes" : 2,
-                    "gcp.pubsub.publisher.retry.maxAttempts" : 3
+                    "gcp.pubsub.publisher.retry.maxAttempts" : 3,
+                    "gcp.projectId" : "test-project"
             ], "test")
             context.start()
         expect: "retrySettings bean to be present"

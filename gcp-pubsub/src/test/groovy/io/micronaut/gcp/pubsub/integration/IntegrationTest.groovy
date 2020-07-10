@@ -20,11 +20,13 @@ import io.micronaut.test.annotation.MicronautTest
 import io.micronaut.test.annotation.MockBean
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
+import spock.lang.Requires
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 @MicronautTest
+@Requires({ env.get("tests.integration") == "enabled" })
 class IntegrationTest extends Specification{
     @Inject
     PubSubTestClient client

@@ -73,6 +73,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     public Object intercept(MethodInvocationContext<Object, Object> context) {
 
         if (context.hasAnnotation(Topic.class)) {
+            Map<String, String> messageAttributes = new HashMap<>();
             AnnotationValue<Topic> topic = context.getAnnotation(Topic.class);
             String contentType = topic.get("contentType", String.class).orElse("");
             List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
@@ -82,9 +83,9 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             Publisher publisher = publisherFactory.createPublisher(topic.getValue(String.class).orElse(""));
             Argument<?> bodyArgument = findBodyArgument(context.getExecutableMethod())
                     .orElseThrow(() -> new PubSubClientException("No valid message body argument found for method: " + context.getExecutableMethod()));
-            Argument[] arguments = context.getArguments();
+
             Map<String, Object> parameterValues = context.getParameterValueMap();
-            Map<String, String> messageAttributes = new HashMap<>();
+
             headerAnnotations.forEach((header) -> {
                 String name = header.get("name", String.class).orElse(null);
                 String value = header.getValue(String.class).orElse(null);
@@ -93,10 +94,21 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 }
             });
             messageAttributes.put("Content-Type", contentType);
-            Object body = parameterValues.get(bodyArgument.getName());
             ReturnType<Object> returnType = context.getReturnType();
             Class<?> javaReturnType = returnType.getType();
             //if target type is byte[] we bypass serdes completely
+
+            Argument[] arguments = context.getArguments();
+            for(Argument arg : arguments) {
+                AnnotationValue<Header> headerAnn = arg.getAnnotation(Header.class);
+                if (headerAnn != null) {
+                    Map.Entry<String, String> entry = getNameAndValue(arg, headerAnn, parameterValues);
+                    messageAttributes.put(entry.getKey(), entry.getValue());
+                }
+            }
+            Object body = parameterValues.get(bodyArgument.getName());
+
+
             byte[] serialized = (body.getClass() == byte[].class) ? (byte[]) body : serDes.serialize(body);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
                     .setData(ByteString.copyFrom(serialized))
@@ -135,5 +147,13 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                                 .orElse(null)
                 )
         );
+    }
+
+    private Map.Entry<String, String> getNameAndValue(Argument argument, AnnotationValue<?> annotationValue, Map<String, Object> parameterValues) {
+        String argumentName = argument.getName();
+        String name = annotationValue.get("name", String.class).orElse(annotationValue.getValue(String.class).orElse(argumentName));
+        String value = String.valueOf(parameterValues.get(argumentName));
+
+        return new AbstractMap.SimpleEntry<>(name, value);
     }
 }

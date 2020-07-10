@@ -1,4 +1,4 @@
-package io.micronaut.gcp.pubsub.support;
+package io.micronaut.gcp.pubsub;
 
 public class DataHolder {
 
