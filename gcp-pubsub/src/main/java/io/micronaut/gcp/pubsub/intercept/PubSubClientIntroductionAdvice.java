@@ -73,10 +73,9 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     public Object intercept(MethodInvocationContext<Object, Object> context) {
 
         if (context.hasAnnotation(Topic.class)) {
-           AnnotationValue<Topic> topic = context.getAnnotation(Topic.class);
+            AnnotationValue<Topic> topic = context.getAnnotation(Topic.class);
             String contentType = topic.get("contentType", String.class).orElse("");
             List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
-
 
             PubSubMessageSerDes serDes = serDesRegistry.find(contentType)
                     .orElseThrow(() -> new PubSubClientException("Could not locate a valid SerDes implementation for type: " + contentType));
@@ -89,7 +88,6 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             headerAnnotations.forEach((header) -> {
                 String name = header.get("name", String.class).orElse(null);
                 String value = header.getValue(String.class).orElse(null);
-
                 if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(value)) {
                     messageAttributes.put(name, value);
                 }
@@ -133,8 +131,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 .findFirst()
                 .orElseGet(
                         () -> Arrays.stream(method.getArguments())
-                        .findFirst()
-                        .orElse(null)
+                                .findFirst()
+                                .orElse(null)
                 )
         );
     }
