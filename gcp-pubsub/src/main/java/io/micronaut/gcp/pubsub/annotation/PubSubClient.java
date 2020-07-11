@@ -21,9 +21,7 @@ import io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice;
 
 import javax.inject.Scope;
 import javax.inject.Singleton;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.*;
 
 /**
  * @author Vinicius Carvalho
@@ -31,6 +29,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
 @Scope
 @Introduction
 @Type(PubSubClientIntroductionAdvice.class)
@@ -40,5 +39,7 @@ public @interface PubSubClient {
      * @return GCP Project Id, if null it will be inferred from the environment via {@link io.micronaut.gcp.GoogleCloudConfiguration}
      */
     String project() default "";
+
+
 
 }

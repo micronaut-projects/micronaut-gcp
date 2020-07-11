@@ -16,12 +16,13 @@
 package io.micronaut.gcp.pubsub.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
-import io.micronaut.http.MediaType;
 
 import java.lang.annotation.*;
 
 /**
- * Represents a pubsub topic to be used by classes annotated with {@link PubSubClient}.
+ * Represents a PubSub subscription. Methods annotated with this annotation
+ * will be invoked when a new message is received by a {@link com.google.cloud.pubsub.v1.MessageReceiver}
+ * that is bound to the annotated method.
  *
  * @author Vinicius Carvalho
  * @since 2.0
@@ -29,16 +30,12 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface Topic {
+public @interface Subscription {
 
-    /**
-     *
-     * @return The name of the topic to publish messages to
-     */
-    @AliasFor(member = "name")
-    String value();
+	@AliasFor(member = "name")
+	String value();
 
-    String name();
+	String name();
 
-    String contentType() default MediaType.APPLICATION_JSON;
+	String contentType() default "";
 }

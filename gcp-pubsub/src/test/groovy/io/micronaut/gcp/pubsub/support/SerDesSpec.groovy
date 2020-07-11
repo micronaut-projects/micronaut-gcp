@@ -5,6 +5,7 @@ import io.micronaut.core.type.Argument
 import io.micronaut.gcp.pubsub.AbstractPublisherSpec
 import io.micronaut.gcp.pubsub.DataHolder
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
+import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.exception.PubSubClientException
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes
