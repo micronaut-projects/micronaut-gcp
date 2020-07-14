@@ -17,7 +17,6 @@ package io.micronaut.gcp.pubsub.bind;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.pubsub.v1.PubsubMessage;
-import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 
 /**
  * Stores the context of a PubSubMessage that is received. Contains all the necessary information
@@ -30,13 +29,21 @@ import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 public class PubSubConsumerState {
 
     private final PubsubMessage pubsubMessage;
-    private final PubSubMessageSerDes serDes;
     private final AckReplyConsumer ackReplyConsumer;
+    private final String contentType;
 
-    public PubSubConsumerState(PubsubMessage pubsubMessage, PubSubMessageSerDes serDes, AckReplyConsumer ackReplyConsumer) {
+    public PubSubConsumerState(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer, String contentType) {
         this.pubsubMessage = pubsubMessage;
-        this.serDes = serDes;
         this.ackReplyConsumer = ackReplyConsumer;
+        this.contentType = contentType;
+    }
+
+    /**
+     *
+     * @return Content-Type associated to this context
+     */
+    public String getContentType() {
+        return contentType;
     }
 
     /**
@@ -45,14 +52,6 @@ public class PubSubConsumerState {
      */
     public PubsubMessage getPubsubMessage() {
         return pubsubMessage;
-    }
-
-    /**
-     *
-     * @return Specific {@link PubSubMessageSerDes} that can handle serialization to the target type
-     */
-    public PubSubMessageSerDes getSerDes() {
-        return serDes;
     }
 
     /**

@@ -23,11 +23,15 @@ import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.bind.BoundExecutable;
+import io.micronaut.core.bind.DefaultExecutableBinder;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement;
+import io.micronaut.gcp.pubsub.bind.PubSubBinderRegistry;
+import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
 import io.micronaut.gcp.pubsub.bind.SubscriberFactory;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
@@ -35,8 +39,13 @@ import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.gcp.pubsub.support.PubSubSubscriptionUtils;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
+import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.messaging.Acknowledgement;
+import io.micronaut.messaging.exceptions.MessageListenerException;
 
+import javax.inject.Qualifier;
 import javax.inject.Singleton;
+import java.util.Arrays;
 import java.util.Optional;
 
 
@@ -59,19 +68,36 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
     private final PubSubMessageSerDesRegistry serDesRegistry;
     private final SubscriberFactory subscriberFactory;
     private final GoogleCloudConfiguration googleCloudConfiguration;
+    private final PubSubBinderRegistry binderRegistry;
 
 
-    public PubSubConsumerAdvice(BeanContext beanContext, ConversionService<?> conversionService, PubSubMessageSerDesRegistry serDesRegistry, SubscriberFactory subscriberFactory, GoogleCloudConfiguration googleCloudConfiguration) {
+    public PubSubConsumerAdvice(BeanContext beanContext,
+                                ConversionService<?> conversionService,
+                                PubSubMessageSerDesRegistry serDesRegistry,
+                                SubscriberFactory subscriberFactory,
+                                GoogleCloudConfiguration googleCloudConfiguration,
+                                PubSubBinderRegistry binderRegistry) {
         this.beanContext = beanContext;
         this.conversionService = conversionService;
         this.serDesRegistry = serDesRegistry;
         this.subscriberFactory = subscriberFactory;
         this.googleCloudConfiguration = googleCloudConfiguration;
+        this.binderRegistry = binderRegistry;
     }
 
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
         AnnotationValue<Subscription> subscriptionAnnotation = method.getAnnotation(Subscription.class);
+        io.micronaut.context.Qualifier<Object> qualifer = beanDefinition
+                .getAnnotationTypeByStereotype(Qualifier.class)
+                .map(type -> Qualifiers.byAnnotation(beanDefinition, type))
+                .orElse(null);
+        boolean hasAckArg = Arrays.stream(method.getArguments())
+                .anyMatch(arg -> Acknowledgement.class.isAssignableFrom(arg.getType()));
+
+        Class<Object> beanType = (Class<Object>) beanDefinition.getBeanType();
+        Object bean = beanContext.findBean(beanType, qualifer).orElseThrow(() -> new MessageListenerException("Could not find the bean to execute the method " + method));
+        DefaultExecutableBinder<PubSubConsumerState> binder = new DefaultExecutableBinder<>();
 
         if (subscriptionAnnotation != null) {
             String subscriptionName = subscriptionAnnotation.getRequiredValue(String.class);
@@ -79,15 +105,19 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
             String defaultContentType = subscriptionAnnotation.get("contentType", String.class).orElse("");
             MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer consumer) -> {
                 String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
-                if (defaultContentType.isEmpty() && messageContentType.isEmpty()) {
-                    throw new PubSubListenerException(String.format("Could not determine Content-Type for message id" +
-                            " %s. Annotated method is missing ContentType declaration and no Content-Type header" +
-                            " found in message attributes", message.getMessageId()));
-                }
                 String contentType = Optional.of(messageContentType).orElse(defaultContentType);
                 DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(consumer);
-                PubSubMessageSerDes serDes = serDesRegistry.find(contentType)
-                        .orElseThrow(() -> new PubSubListenerException("Could not locate a valid SerDes implementation for type: " + contentType));
+
+                PubSubConsumerState consumerState = new PubSubConsumerState(message, consumer, contentType);
+                try {
+                    BoundExecutable executable = binder.bind(method, binderRegistry, consumerState);
+                    executable.invoke(bean); // Discard result
+                    if (!hasAckArg) {
+                        consumerState.getAckReplyConsumer().ack();
+                    }
+                } catch (Exception e) {
+                    throw new PubSubListenerException("");
+                }
             };
             Subscriber subscriber = this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
         }

@@ -96,7 +96,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             messageAttributes.put("Content-Type", contentType);
             ReturnType<Object> returnType = context.getReturnType();
             Class<?> javaReturnType = returnType.getType();
-            //if target type is byte[] we bypass serdes completely
+
 
             Argument[] arguments = context.getArguments();
             for (Argument arg : arguments) {
@@ -107,14 +107,17 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 }
             }
             Object body = parameterValues.get(bodyArgument.getName());
-
-
-            byte[] serialized = (body.getClass() == byte[].class) ? (byte[]) body : serDes.serialize(body);
-            PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
-                    .setData(ByteString.copyFrom(serialized))
-                    .putAllAttributes(messageAttributes)
-                    .build();
-
+            PubsubMessage pubsubMessage = null;
+            if (body.getClass() == PubsubMessage.class) {
+                pubsubMessage = (PubsubMessage) body;
+            } else {
+                //if target type is byte[] we bypass serdes completely
+                byte[] serialized = (body.getClass() == byte[].class) ? (byte[]) body : serDes.serialize(body);
+                pubsubMessage = PubsubMessage.newBuilder()
+                        .setData(ByteString.copyFrom(serialized))
+                        .putAllAttributes(messageAttributes)
+                        .build();
+            }
             ApiFuture<String> future = publisher.publish(pubsubMessage);
             Single<String> reactiveResult = Single.fromFuture(future).subscribeOn(this.scheduler);
             boolean isReactive = Publishers.isConvertibleToPublisher(javaReturnType);
