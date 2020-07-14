@@ -13,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.gcp.pubsub.bind;
+
+import io.micronaut.core.bind.annotation.AnnotatedArgumentBinder;
+
+import java.lang.annotation.Annotation;
+
 /**
- * Support classes for PubSub integration.
+ * An interface for PubSub argument binding based on an annotation.
  *
+ * @param <A> The annotation that must exist on the argument
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-package io.micronaut.gcp.pubsub.support;
+public interface PubSubAnnotatedArgumentBinder<A extends Annotation> extends AnnotatedArgumentBinder<A, Object, PubSubConsumerState>, PubSubArgumentBinder<Object> {
+}

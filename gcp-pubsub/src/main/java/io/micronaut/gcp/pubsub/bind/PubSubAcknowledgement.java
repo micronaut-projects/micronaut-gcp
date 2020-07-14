@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.gcp.pubsub.bind;
+
+import io.micronaut.messaging.Acknowledgement;
+
 /**
- * Support classes for PubSub integration.
+ * Marker interface for PubSub Acknowledgement.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-package io.micronaut.gcp.pubsub.support;
+public interface PubSubAcknowledgement extends Acknowledgement {
+}

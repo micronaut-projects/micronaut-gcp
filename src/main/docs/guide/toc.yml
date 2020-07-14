@@ -7,3 +7,9 @@ cloudFunction:
   simpleFunctions: Simple Functions
   httpFunctions:
     title: HTTP Functions
+pubsub:
+  title: Google Cloud PubSub Support
+  producer:
+    title: Configuring PubSub Publishers
+  pullConsumer:
+    title: Receiving messages via @PubSubListener methods

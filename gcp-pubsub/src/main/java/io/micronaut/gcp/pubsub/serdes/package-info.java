@@ -17,6 +17,6 @@
  * Serialization / Deserialization (SerDes) support for PubSub.
  *
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.
  */
 package io.micronaut.gcp.pubsub.serdes;

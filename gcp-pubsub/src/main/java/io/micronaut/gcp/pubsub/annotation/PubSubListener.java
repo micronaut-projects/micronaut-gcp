@@ -15,11 +15,19 @@
  */
 package io.micronaut.gcp.pubsub.annotation;
 
+import io.micronaut.messaging.annotation.MessageListener;
+
+import java.lang.annotation.*;
+
 /**
- *
+ * Indicates that a bean will be consuming PubSub Messages.
  *
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@MessageListener
 public @interface PubSubListener {
 }

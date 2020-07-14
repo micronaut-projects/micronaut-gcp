@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.gcp.pubsub.exception;
+
+import io.micronaut.messaging.exceptions.MessageListenerException;
+
 /**
- * Support classes for PubSub integration.
+ * Represents an error when consuming messages.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
+ *
  */
-package io.micronaut.gcp.pubsub.support;
+public class PubSubListenerException extends MessageListenerException {
+    public PubSubListenerException(String message) {
+        super(message);
+    }
+
+    public PubSubListenerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

@@ -22,11 +22,11 @@ import javax.annotation.Nonnull;
 /**
  * Various utility methods for dealing with Pub/Sub topics.
  *
- * https://github.com/spring-cloud/spring-cloud-gcp/blob/master/spring-cloud-gcp-pubsub/src/main/java/org/springframework/cloud/gcp/pubsub/support/PubSubTopicUtils.java
+ * Original source at : https://github.com/spring-cloud/spring-cloud-gcp/blob/master/spring-cloud-gcp-pubsub/src/main/java/org/springframework/cloud/gcp/pubsub/support/PubSubTopicUtils.java
  *
  * @author Mike Eltsufin
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  */
 public final class PubSubTopicUtils {
 

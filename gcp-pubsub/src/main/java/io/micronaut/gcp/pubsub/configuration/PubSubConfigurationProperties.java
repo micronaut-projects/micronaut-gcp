@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * Configuration properties for PubSub support.
  *
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  */
 @ConfigurationProperties(PubSubConfigurationProperties.PREFIX)
 @Context

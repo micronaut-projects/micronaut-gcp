@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.gcp.pubsub.bind;
+
+import io.micronaut.core.bind.ArgumentBinder;
 /**
- * Support classes for PubSub integration.
+ * An interface for PubSub argument binding.
  *
+ * @param <T> The type of argument to be bound
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-package io.micronaut.gcp.pubsub.support;
+public interface PubSubArgumentBinder<T> extends ArgumentBinder<T, PubSubConsumerState> {
+}

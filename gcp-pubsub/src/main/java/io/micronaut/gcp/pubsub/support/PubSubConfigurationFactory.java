@@ -39,7 +39,7 @@ import java.util.function.Function;
  * Factory class to create default settings for PubSub Publisher and subscriber beans.
  *
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  *
  */
 @Factory

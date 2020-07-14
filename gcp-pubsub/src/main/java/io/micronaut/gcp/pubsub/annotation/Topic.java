@@ -15,7 +15,6 @@
  */
 package io.micronaut.gcp.pubsub.annotation;
 
-import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.http.MediaType;
 
 import java.lang.annotation.*;
@@ -24,7 +23,7 @@ import java.lang.annotation.*;
  * Represents a pubsub topic to be used by classes annotated with {@link PubSubClient}.
  *
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -35,10 +34,7 @@ public @interface Topic {
      *
      * @return The name of the topic to publish messages to
      */
-    @AliasFor(member = "name")
     String value();
-
-    String name();
 
     String contentType() default MediaType.APPLICATION_JSON;
 }

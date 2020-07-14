@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
- * Support classes for PubSub integration.
+ * Contains binders @see {@link io.micronaut.core.bind.TypeArgumentBinder} and consumer classes for PubSub support.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-package io.micronaut.gcp.pubsub.support;
+package io.micronaut.gcp.pubsub.bind;

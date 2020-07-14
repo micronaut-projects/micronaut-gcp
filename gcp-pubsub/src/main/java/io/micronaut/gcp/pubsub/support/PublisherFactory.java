@@ -20,11 +20,13 @@ import com.google.cloud.pubsub.v1.Publisher;
 /**
  * The publisher factory interface that can create publishers.
  *
- * https://github.com/spring-cloud/spring-cloud-gcp/blob/master/spring-cloud-gcp-pubsub/src/main/java/org/springframework/cloud/gcp/pubsub/support/PublisherFactory.java
+ * Original source at : https://github.com/spring-cloud/spring-cloud-gcp/blob/master/spring-cloud-gcp-pubsub/src/main/java/org/springframework/cloud/gcp/pubsub/support/PublisherFactory.java
  *
  * @author João André Martins
  * @author Chengyuan Zhao
  * @author Vinicius Carvalho
+ *
+ * @since 2.0.0
  */
 public interface PublisherFactory {
 

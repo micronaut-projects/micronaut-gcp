@@ -24,7 +24,7 @@ import java.util.Optional;
  * SerDes for the given {@link io.micronaut.http.MediaType}
  *
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  */
 public interface PubSubMessageSerDesRegistry {
     default Optional<PubSubMessageSerDes> find(MediaType type) {

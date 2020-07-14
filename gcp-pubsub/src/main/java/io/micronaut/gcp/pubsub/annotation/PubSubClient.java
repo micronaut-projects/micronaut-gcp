@@ -25,7 +25,7 @@ import java.lang.annotation.*;
 
 /**
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

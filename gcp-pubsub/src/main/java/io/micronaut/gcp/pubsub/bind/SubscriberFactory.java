@@ -13,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.gcp.pubsub.bind;
+
+import com.google.cloud.pubsub.v1.MessageReceiver;
+import com.google.cloud.pubsub.v1.Subscriber;
+import com.google.pubsub.v1.ProjectSubscriptionName;
+
 /**
- * Support classes for PubSub integration.
+ * Factory to create {@link Subscriber} using default configurations.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-package io.micronaut.gcp.pubsub.support;
+public interface SubscriberFactory {
+    Subscriber createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver);
+}

@@ -20,11 +20,11 @@ import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
-import io.micronaut.context.annotation.Factory;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,8 +38,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author João André Martins
  * @author Chengyuan Zhao
  * @author Vinicius Carvalho
+ *
+ * @since 2.0.0
+ *
  */
-@Factory
+@Singleton
 public class DefaultPublisherFactory implements PublisherFactory {
 
     private final ConcurrentHashMap<String, Publisher> publishers = new ConcurrentHashMap<>();

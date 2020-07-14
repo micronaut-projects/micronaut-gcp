@@ -49,7 +49,7 @@ import java.util.concurrent.ExecutorService;
  * Implementation of {@link io.micronaut.gcp.pubsub.annotation.PubSubClient} advice annotation.
  *
  * @author Vinicius Carvalho
- * @since 2.0
+ * @since 2.0.0
  */
 @Singleton
 public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object, Object> {
@@ -99,7 +99,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             //if target type is byte[] we bypass serdes completely
 
             Argument[] arguments = context.getArguments();
-            for(Argument arg : arguments) {
+            for (Argument arg : arguments) {
                 AnnotationValue<Header> headerAnn = arg.getAnnotation(Header.class);
                 if (headerAnn != null) {
                     Map.Entry<String, String> entry = getNameAndValue(arg, headerAnn, parameterValues);

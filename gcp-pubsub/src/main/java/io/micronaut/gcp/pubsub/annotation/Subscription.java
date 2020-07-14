@@ -32,10 +32,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 public @interface Subscription {
 
-	@AliasFor(member = "name")
-	String value();
+    String value();
 
-	String name();
-
-	String contentType() default "";
+    String contentType() default "";
 }
