@@ -13,5 +13,5 @@ dependencies {
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "io.micronaut.test:micronaut-test-spock:1.2.0"
+    testImplementation "io.micronaut.test:micronaut-test-spock:1.2.1"
 }
