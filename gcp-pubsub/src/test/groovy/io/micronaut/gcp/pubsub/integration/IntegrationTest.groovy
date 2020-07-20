@@ -15,6 +15,7 @@ import io.grpc.ManagedChannelBuilder
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.support.Person
 import io.micronaut.gcp.pubsub.support.PublisherFactory
 import io.micronaut.test.annotation.MicronautTest
 import io.micronaut.test.annotation.MockBean
@@ -85,6 +86,4 @@ interface PubSubTestClient {
     String send(Person person)
 }
 
-class Person {
-    public String name;
-}
+

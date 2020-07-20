@@ -7,6 +7,8 @@ import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.support.Person
+import io.micronaut.messaging.annotation.Header
 import io.micronaut.test.annotation.MicronautTest
 import spock.util.concurrent.PollingConditions
 import javax.inject.Inject
@@ -25,9 +27,9 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
         when:
             pubSubClient.publish("foo".getBytes())
         then:
-        conditions.eventually {
-            receiver.dataHolder == "foo".getBytes()
-        }
+            conditions.eventually {
+                receiver.dataHolder["test-topic"] == "foo".getBytes()
+            }
     }
 
     void "send and receive PubSubMessage"() {
@@ -39,9 +41,27 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
         when:
             pubSubClient.publish(message)
         then:
-        conditions.eventually {
-            receiver.dataHolder == message
-        }
+            conditions.eventually {
+                receiver.dataHolder["test-pubsubmessage"] == message
+            }
+    }
+
+    void "send and receive with headers"() {
+        PollingConditions conditions = new PollingConditions(timeout: 3)
+        def person = new Person()
+        person.name = "alf"
+        when:
+            pubSubClient.publishPojo(person, 42)
+        then:
+            conditions.eventually {
+                def map = (Map<String,Object>)receiver.dataHolder["test-headers"]
+                if(map != null){
+                    def payload = (Person)map.get("body")
+                    payload.name == person.name
+                    def answer = (Integer)map.get("header")
+                    answer == 42
+                }
+            }
     }
 }
 
@@ -53,20 +73,30 @@ interface SimplePubSubClient {
     @Topic("test-pubsubmessage")
     String publish(PubsubMessage message)
 
+    @Topic("test-headers")
+    String publishPojo(Person person, @Header("X-Answer-For-Everything") Integer answer)
 
 }
 
 @PubSubListener
 class SimpleReceiver {
-    public Object dataHolder;
+    public Map<String, Object> dataHolder = new HashMap<>()
 
     @Subscription("test-topic")
     void receive(byte[] data){
-        this.dataHolder = data
+        this.dataHolder["test-topic"] = data
     }
 
     @Subscription("test-pubsubmessage")
     void receive(PubsubMessage message){
-        this.dataHolder = message
+        this.dataHolder["test-pubsubmessage"] = message
+    }
+
+    @Subscription("test-headers")
+    void receiveWithHeaders(Person person, @Header("X-Answer-For-Everything") Integer answer) {
+        Map<String, Object> holder = new HashMap<>()
+        holder.put("body", person)
+        holder.put("header", answer)
+        dataHolder["test-headers"] = holder
     }
 }
