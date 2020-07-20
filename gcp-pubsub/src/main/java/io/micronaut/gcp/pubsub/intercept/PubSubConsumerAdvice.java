@@ -42,6 +42,8 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
@@ -63,6 +65,7 @@ import java.util.Optional;
 @Singleton
 public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubListener> {
 
+    private final Logger logger = LoggerFactory.getLogger(PubSubConsumerAdvice.class);
     private final BeanContext beanContext;
     private final ConversionService<?> conversionService;
     private final PubSubMessageSerDesRegistry serDesRegistry;
@@ -112,8 +115,12 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                 try {
                     BoundExecutable executable = binder.bind(method, binderRegistry, consumerState);
                     executable.invoke(bean); // Discard result
-                    if (!hasAckArg) {
-                        consumerState.getAckReplyConsumer().ack();
+                    if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
+                        pubSubAcknowledgement.ack();
+                    } else {
+                        if (!pubSubAcknowledgement.isMessageAcked()) {
+                            logger.warn("Method {} was executed and no message acknowledge detected, message will be redelivered.", method.getName());
+                        }
                     }
                 } catch (Exception e) {
                     throw new PubSubListenerException("");

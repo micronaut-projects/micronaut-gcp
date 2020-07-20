@@ -32,6 +32,7 @@ import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
+import io.micronaut.http.MediaType;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.Body;
 import io.micronaut.messaging.annotation.Header;
@@ -39,6 +40,8 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -54,6 +57,7 @@ import java.util.concurrent.ExecutorService;
 @Singleton
 public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object, Object> {
 
+    private final Logger logger = LoggerFactory.getLogger(PubSubClientIntroductionAdvice.class);
     private final PublisherFactory publisherFactory;
     private final PubSubMessageSerDesRegistry serDesRegistry;
     private final Scheduler scheduler;
@@ -93,7 +97,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                     messageAttributes.put(name, value);
                 }
             });
-            messageAttributes.put("Content-Type", contentType);
+
             ReturnType<Object> returnType = context.getReturnType();
             Class<?> javaReturnType = returnType.getType();
 
@@ -112,7 +116,14 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 pubsubMessage = (PubsubMessage) body;
             } else {
                 //if target type is byte[] we bypass serdes completely
-                byte[] serialized = (body.getClass() == byte[].class) ? (byte[]) body : serDes.serialize(body);
+                byte[] serialized = null;
+                if (body.getClass() == byte[].class) {
+                    serialized = (byte[]) body;
+                    messageAttributes.put("Content-Type", MediaType.APPLICATION_OCTET_STREAM);
+                } else {
+                    serialized = serDes.serialize(body);
+                    messageAttributes.put("Content-Type", contentType);
+                }
                 pubsubMessage = PubsubMessage.newBuilder()
                         .setData(ByteString.copyFrom(serialized))
                         .putAllAttributes(messageAttributes)

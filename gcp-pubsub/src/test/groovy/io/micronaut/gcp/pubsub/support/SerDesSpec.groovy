@@ -1,5 +1,6 @@
 package io.micronaut.gcp.pubsub.support
 
+import com.google.protobuf.ByteString
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.core.type.Argument
 import io.micronaut.gcp.pubsub.AbstractPublisherSpec
@@ -41,6 +42,31 @@ class SerDesSpec extends AbstractPublisherSpec {
             pubSubMessage.getData().toByteArray() == expected
     }
 
+    void "bypass serdes with raw bytes"(){
+        byte[] expected = [42]
+        when:
+            testClient.bypassSerDes(expected)
+        then:
+            PubsubMessage pubSubMessage = (PubsubMessage) DataHolder.getInstance().getData()
+            pubSubMessage.getAttributesMap().get("Content-Type") == MediaType.APPLICATION_OCTET_STREAM
+            pubSubMessage.getData().toByteArray() == expected
+    }
+
+    void "bypass serdes with pubsub type"() {
+        PubsubMessage message = PubsubMessage
+                .newBuilder()
+                    .putAttributes("Custom-Attr", "foo")
+                    .setData(ByteString.copyFrom("foo".getBytes()))
+                .build()
+        when:
+            testClient.bypassSerDes(message)
+        then:
+            PubsubMessage pubSubMessage = (PubsubMessage) DataHolder.getInstance().getData()
+            pubSubMessage.containsAttributes("Content-Type") == false
+            pubSubMessage.getAttributesMap().get("Custom-Attr") == "foo"
+            pubSubMessage.getData().toByteArray() == "foo".getBytes()
+    }
+
 }
 
 @PubSubClient
@@ -50,6 +76,12 @@ interface SerDesTestClient {
 
     @Topic(value = "test-topic", contentType = "application/x-custom")
     String customType(Object data)
+
+    @Topic(value = "test-topic")
+    String bypassSerDes(byte[] data)
+
+    @Topic("test-topic")
+    String bypassSerDes(PubsubMessage message)
 }
 
 @Singleton

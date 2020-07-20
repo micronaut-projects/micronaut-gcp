@@ -1,0 +1,16 @@
+Pub/Sub support in micronaut follows the same pattern used for other types of clients such as --the HTTP Client.
+By annotating an interface with `@PubSubclient` the framework will create an implementation bean that handles
+communication with PubSub for you.
+
+== Topics
+
+In order to publish messages to Pub/Sub you need a method annotated with `@Topic` annotation. For each annotated method
+the framework will create a dedicated `Publisher` with its own configuration for `RetrySettings`, `BatchSettings` and
+its own `Executor`. All settings can be overridden via properties file or via method annotation.
+
+snippet::io.micronaut.gcp.pubsub.client.AnimalClient[tags="imports, clazz", source="main", project-base="docs-examples/example"]
+
+<1> The `PubSubClient` marks this interface to be a valid Publisher
+<2> Headers can be passed and will be added to the `attributesMap` of the `PubSubMessage`
+
+IMPORTANT: If a body argument cannot be found, an exception will be thrown.
