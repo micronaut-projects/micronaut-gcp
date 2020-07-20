@@ -48,7 +48,7 @@ public class GoogleCredentialsConfiguration {
 
     private List<URI> scopes = DEFAULT_SCOPES;
 
-    private String path;
+    private String location;
 
     private String encodedKey;
 
@@ -78,7 +78,7 @@ public class GoogleCredentialsConfiguration {
      * @return The location
      */
     public @Nonnull Optional<String> getLocation() {
-        return Optional.ofNullable(path);
+        return Optional.ofNullable(location);
     }
 
     /**
@@ -86,7 +86,7 @@ public class GoogleCredentialsConfiguration {
      * @param location The location
      */
     public void setLocation(@Nullable String location) {
-        this.path = path;
+        this.location = location;
     }
 
     /**
