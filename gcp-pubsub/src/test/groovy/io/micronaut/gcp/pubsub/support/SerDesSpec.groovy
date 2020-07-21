@@ -19,6 +19,7 @@ import javax.inject.Singleton
 
 @MicronautTest
 @Property(name = "spec.name", value = "SerDesSpec")
+@Property(name = "gcp.projectId", value = "test-project")
 class SerDesSpec extends AbstractPublisherSpec {
 
     @Inject

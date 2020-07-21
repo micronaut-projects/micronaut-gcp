@@ -17,6 +17,7 @@ import javax.inject.Inject
 
 @MicronautTest
 @Property(name = "spec.name", value = "SimpleConsumerSpec")
+@Property(name = "gcp.projectId", value = "test-project")
 class SimpleConsumerSpec extends AbstractConsumerSpec {
 
     @Inject

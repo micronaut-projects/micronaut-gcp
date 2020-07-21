@@ -21,6 +21,7 @@ import javax.inject.Singleton
 
 @MicronautTest
 @Property(name = "spec.name", value = "ExceptionHandlerSpec")
+@Property(name = "gcp.projectId", value = "test-project")
 class ExceptionHandlerSpec extends AbstractConsumerSpec{
 
     @Inject

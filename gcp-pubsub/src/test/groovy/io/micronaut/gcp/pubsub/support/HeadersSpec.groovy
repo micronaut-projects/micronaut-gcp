@@ -15,6 +15,7 @@ import javax.inject.Inject
 
 @MicronautTest
 @Property(name = "spec.name", value = "HeadersSpec")
+@Property(name = "gcp.projectId", value = "test-project")
 class HeadersSpec extends AbstractPublisherSpec {
 
     @Inject

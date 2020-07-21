@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 @MicronautTest
 @Property(name = "spec.name", value = "PublisherIntroductionAdviceSpec")
+@Property(name = "gcp.projectId", value = "test-project")
 class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
 
     @Inject
