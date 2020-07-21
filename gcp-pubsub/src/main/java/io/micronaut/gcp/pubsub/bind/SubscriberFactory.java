@@ -16,15 +16,15 @@
 package io.micronaut.gcp.pubsub.bind;
 
 import com.google.cloud.pubsub.v1.MessageReceiver;
-import com.google.cloud.pubsub.v1.Subscriber;
+import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 
 /**
- * Factory to create {@link Subscriber} using default configurations.
+ * Factory to create {@link SubscriberInterface} using default configurations.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
 public interface SubscriberFactory {
-    Subscriber createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver);
+    SubscriberInterface createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver);
 }

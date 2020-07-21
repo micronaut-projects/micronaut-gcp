@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
-import com.google.cloud.pubsub.v1.Publisher;
+import com.google.cloud.pubsub.v1.PublisherInterface;
 
 /**
  * The publisher factory interface that can create publishers.
@@ -30,6 +30,6 @@ import com.google.cloud.pubsub.v1.Publisher;
  */
 public interface PublisherFactory {
 
-    Publisher createPublisher(String topic);
+    PublisherInterface createPublisher(String topic);
 
 }

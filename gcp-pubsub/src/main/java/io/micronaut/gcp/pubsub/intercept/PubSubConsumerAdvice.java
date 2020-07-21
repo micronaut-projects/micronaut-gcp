@@ -17,7 +17,7 @@ package io.micronaut.gcp.pubsub.intercept;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
-import com.google.cloud.pubsub.v1.Subscriber;
+import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
@@ -78,7 +78,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubBinderRegistry binderRegistry;
     private final PubSubMessageReceiverExceptionHandler exceptionHandler;
-    private final Map<String, Subscriber> registeredSubscribers = new HashMap<>();
+    private final Map<String, SubscriberInterface> registeredSubscribers = new HashMap<>();
     private final Lock lock = new ReentrantLock();
 
     public PubSubConsumerAdvice(BeanContext beanContext,
@@ -146,7 +146,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                 if (registeredSubscribers.containsKey(projectSubscriptionName.toString())) {
                    throw new IllegalStateException("Subscriber already registered for subscription " + projectSubscriptionName);
                 }
-                Subscriber subscriber = this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
+                SubscriberInterface subscriber = this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
                 subscriber.startAsync();
                 registeredSubscribers.put(projectSubscriptionName.toString(), subscriber);
             } catch (Exception e) {

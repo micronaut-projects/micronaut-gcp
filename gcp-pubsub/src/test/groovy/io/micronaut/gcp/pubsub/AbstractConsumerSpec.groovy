@@ -3,7 +3,9 @@ package io.micronaut.gcp.pubsub
 import com.google.api.core.SettableApiFuture
 import com.google.cloud.pubsub.v1.MessageReceiver
 import com.google.cloud.pubsub.v1.Publisher
+import com.google.cloud.pubsub.v1.PublisherInterface
 import com.google.cloud.pubsub.v1.Subscriber
+import com.google.cloud.pubsub.v1.SubscriberInterface
 import com.google.pubsub.v1.ProjectSubscriptionName
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Replaces
@@ -20,15 +22,14 @@ abstract class AbstractConsumerSpec extends Specification{
     @Replaces(PublisherFactory)
     PublisherFactory publisherFactory(MockPubSubEngine pubSubEngine){
         def factory = Mock(PublisherFactory)
-        def publisher = Mock(Publisher)
+        def publisher = Mock(MockPublisher)
+
         def future = new SettableApiFuture<String>()
         future.set("1234")
         factory.createPublisher(_) >> { String topicName ->
-            Publisher pub = Publisher.newBuilder(topicName).build()
-            def spy = Spy(pub)
-            spy.getTopicNameString() >> topicName
-            spy.publish(_) >> { PubsubMessage message -> pubSubEngine.publish(message, spy.getTopicNameString()); return future }
-            return spy
+            publisher.getTopicNameString() >> topicName
+            publisher.publish(_) >> { PubsubMessage message -> pubSubEngine.publish(message, publisher.getTopicNameString()); return future }
+            return publisher
         }
         return factory
     }
@@ -37,11 +38,15 @@ abstract class AbstractConsumerSpec extends Specification{
     @Replaces(SubscriberFactory)
     SubscriberFactory subscriberFactory(MockPubSubEngine pubSubEngine) {
         def factory = Mock(SubscriberFactory)
-        def subscriber = Mock(Subscriber)
+        def subscriber = Mock(SubscriberInterface)
         factory.createSubscriber(_ as ProjectSubscriptionName, _ as MessageReceiver)  >> { ProjectSubscriptionName name, MessageReceiver receiver ->
             pubSubEngine.registerReceiver(receiver, name.getSubscription())
             return subscriber
         }
         return factory
     }
+}
+
+interface MockPublisher extends PublisherInterface {
+    String getTopicNameString()
 }

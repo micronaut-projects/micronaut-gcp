@@ -17,6 +17,7 @@ package io.micronaut.gcp.pubsub.intercept;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.Publisher;
+import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.aop.MethodInterceptor;
@@ -84,7 +85,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
 
             PubSubMessageSerDes serDes = serDesRegistry.find(contentType)
                     .orElseThrow(() -> new PubSubClientException("Could not locate a valid SerDes implementation for type: " + contentType));
-            Publisher publisher = publisherFactory.createPublisher(topic.getValue(String.class).orElse(""));
+            PublisherInterface publisher = publisherFactory.createPublisher(topic.getValue(String.class).orElse(""));
             Argument<?> bodyArgument = findBodyArgument(context.getExecutableMethod())
                     .orElseThrow(() -> new PubSubClientException("No valid message body argument found for method: " + context.getExecutableMethod()));
 
