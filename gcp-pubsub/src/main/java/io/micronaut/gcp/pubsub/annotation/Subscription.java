@@ -15,8 +15,6 @@
  */
 package io.micronaut.gcp.pubsub.annotation;
 
-import io.micronaut.context.annotation.AliasFor;
-
 import java.lang.annotation.*;
 
 /**

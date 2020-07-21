@@ -1,56 +1,46 @@
-package io.micronaut.gcp.pubsub;
+package io.micronaut.gcp.pubsub
 
-import com.google.cloud.pubsub.v1.AckReplyConsumer;
-import com.google.cloud.pubsub.v1.MessageReceiver;
-import com.google.protobuf.Message;
-import com.google.pubsub.v1.PubsubMessage;
+import com.google.cloud.pubsub.v1.AckReplyConsumer
+import com.google.cloud.pubsub.v1.MessageReceiver
+import com.google.pubsub.v1.PubsubMessage
 
-import javax.annotation.PreDestroy;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import javax.annotation.PreDestroy
+import javax.inject.Singleton
+import java.util.concurrent.ConcurrentHashMap
+import java.util.stream.Collectors
 
-/**
- * A simple Producer/Consumer to mock interaction between {@link com.google.cloud.pubsub.v1.Publisher}
- * and {@link com.google.cloud.pubsub.v1.MessageReceiver}.
- * Users an internal BlockinQueue to store messages.
- */
 @Singleton
-public class MockPubSubEngine implements AutoCloseable {
+class MockPubSubEngine implements AutoCloseable {
 
     private final List<PublisherMessage> messages = new ArrayList<>(100);
     private final Map<String, MessageReceiver> receivers = new ConcurrentHashMap<>();
     private Worker worker = new Worker();
     private Thread workerThread;
 
-    public MockPubSubEngine() {
+    MockPubSubEngine() {
         this.workerThread = new Thread(this.worker);
         this.workerThread.start();
     }
 
-    public void publish(PubsubMessage pubsubMessage) {
+    void publish(PubsubMessage pubsubMessage) {
         publish(pubsubMessage, "DEFAULT_TOPIC");
     }
 
-    public void publish(PubsubMessage pubsubMessage, String topic) {
+    void publish(PubsubMessage pubsubMessage, String topic) {
         messages.add(new PublisherMessage(pubsubMessage, topic));
     }
 
-    public void registerReceiver(MessageReceiver receiver){
+    void registerReceiver(MessageReceiver receiver){
         registerReceiver(receiver, "DEFAULT_TOPIC");
     }
 
-    public void registerReceiver(MessageReceiver receiver, String topic){
+    void registerReceiver(MessageReceiver receiver, String topic){
         receivers.put(topic, receiver);
     }
 
     @Override
     @PreDestroy
-    public void close() throws Exception {
+    void close() throws Exception {
         this.worker.running = false;
     }
 
@@ -61,11 +51,11 @@ public class MockPubSubEngine implements AutoCloseable {
         //instead of using a BlockingQueue and run into issues of ordering of producer/consumer just use a plain list
         //and rely on polling every 200ms for available messages if a receiver is registered
         @Override
-        public void run() {
+        void run() {
             try {
                 while (running) {
                     for(Map.Entry<String, MessageReceiver> entry : receivers.entrySet()) {
-                        List<PublisherMessage> availableMessages = messages.stream().filter(publisherMessage -> publisherMessage.topic == entry.getKey() && !publisherMessage.published).collect(Collectors.toList());
+                        List<PublisherMessage> availableMessages = messages.stream().filter({ publisherMessage -> publisherMessage.topic == entry.getKey() && !publisherMessage.published }).collect(Collectors.toList())
                         for (PublisherMessage availableMessage : availableMessages) {
                             entry.getValue().receiveMessage(availableMessage.message, new AckReplyConsumer() {
                                 @Override

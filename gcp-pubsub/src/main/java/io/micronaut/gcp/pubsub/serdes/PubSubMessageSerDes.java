@@ -30,7 +30,7 @@ public interface PubSubMessageSerDes {
      * Deserializes data into a target type.
      * @param data byte data to deserialize
      * @param type target type
-     * @return
+     * @return the deserialized java type
      */
     Object deserialize(byte[] data, Argument<?> type);
 

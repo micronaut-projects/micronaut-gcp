@@ -18,7 +18,6 @@ package io.micronaut.gcp.pubsub.bind;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.type.Argument;
 import io.micronaut.messaging.Acknowledgement;
-import io.micronaut.messaging.exceptions.MessageAcknowledgementException;
 
 import java.util.Optional;
 

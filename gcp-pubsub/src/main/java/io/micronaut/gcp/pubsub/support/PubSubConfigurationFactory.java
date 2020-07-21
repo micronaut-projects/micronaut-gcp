@@ -136,6 +136,7 @@ public class PubSubConfigurationFactory {
                         builder::setMaxOutstandingRequestBytes)
                 .apply(false))) ? builder.build() : null;
     }
+
     /**
      * A helper method for applying properties to settings builders for purpose of seeing if at least
      * one setting was set.
@@ -147,6 +148,7 @@ public class PubSubConfigurationFactory {
      * propety was set
      */
     private <T> Function<Boolean, Boolean> ifNotNull(T prop, Consumer<T> consumer) {
+
         return (next) -> {
             boolean wasSet = next;
             if (prop != null) {

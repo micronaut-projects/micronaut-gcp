@@ -66,7 +66,6 @@ public class PubSubConsumerState {
         return ackReplyConsumer;
     }
 
-
     /**
      *
      * @return Subscription name.
