@@ -1,17 +1,22 @@
 package io.micronaut.gcp.pubsub.support
 
+import com.google.api.core.SettableApiFuture
 import com.google.api.gax.retrying.RetrySettings
+import com.google.cloud.pubsub.v1.Publisher
+import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Replaces
+import io.micronaut.gcp.pubsub.DataHolder
 import spock.lang.Specification
 
-class PublisherFactorySpec extends Specification{
+class PublisherFactorySpec extends Specification {
 
     void "test factory exists"() {
         given:
             ApplicationContext context = ApplicationContext.run(["spec.name" : getClass().simpleName, "gcp.projectId" : "test-project"], "test")
             context.start()
         expect: "publisher factory is available"
-            context.containsBean(DefaultPublisherFactory)
+            context.containsBean(PublisherFactory)
         when: "a factory is available"
             PublisherFactory publisherFactory = context.getBean(PublisherFactory)
 
@@ -34,5 +39,16 @@ class PublisherFactorySpec extends Specification{
         then:
             retrySettings != null
 
+    }
+
+    @Replaces(PublisherFactory)
+    PublisherFactory publisherFactory() {
+        def factory = Mock(PublisherFactory)
+        def publisher = Mock(Publisher)
+        def future = new SettableApiFuture<String>()
+        future.set("1234")
+        publisher.publish(_) >> { PubsubMessage message -> DataHolder.getInstance().setData(message); return future; }
+        factory.createPublisher(_) >> publisher
+        return factory
     }
 }
