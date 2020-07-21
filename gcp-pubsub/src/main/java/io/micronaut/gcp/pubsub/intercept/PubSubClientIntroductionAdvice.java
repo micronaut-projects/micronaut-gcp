@@ -120,11 +120,10 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 byte[] serialized = null;
                 if (body.getClass() == byte[].class) {
                     serialized = (byte[]) body;
-                    messageAttributes.put("Content-Type", MediaType.APPLICATION_OCTET_STREAM);
                 } else {
                     serialized = serDes.serialize(body);
-                    messageAttributes.put("Content-Type", contentType);
                 }
+                messageAttributes.put("Content-Type", contentType);
                 pubsubMessage = PubsubMessage.newBuilder()
                         .setData(ByteString.copyFrom(serialized))
                         .putAllAttributes(messageAttributes)

@@ -51,7 +51,7 @@ class SerDesSpec extends AbstractPublisherSpec {
             testClient.bypassSerDes(expected)
         then:
             PubsubMessage pubSubMessage = (PubsubMessage) DataHolder.getInstance().getData()
-            pubSubMessage.getAttributesMap().get("Content-Type") == MediaType.APPLICATION_OCTET_STREAM
+            pubSubMessage.getAttributesMap().get("Content-Type") == MediaType.APPLICATION_JSON
             pubSubMessage.getData().toByteArray() == expected
     }
 

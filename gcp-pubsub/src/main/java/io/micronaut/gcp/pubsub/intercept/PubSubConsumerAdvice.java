@@ -52,8 +52,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
@@ -79,7 +77,6 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
     private final PubSubBinderRegistry binderRegistry;
     private final PubSubMessageReceiverExceptionHandler exceptionHandler;
     private final Map<String, SubscriberInterface> registeredSubscribers = new HashMap<>();
-    private final Lock lock = new ReentrantLock();
 
     public PubSubConsumerAdvice(BeanContext beanContext,
                                 ConversionService<?> conversionService,
@@ -142,17 +139,10 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                 }
             };
             try {
-                lock.lock();
-                if (registeredSubscribers.containsKey(projectSubscriptionName.toString())) {
-                   throw new IllegalStateException("Subscriber already registered for subscription " + projectSubscriptionName);
-                }
                 SubscriberInterface subscriber = this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
-                subscriber.startAsync();
                 registeredSubscribers.put(projectSubscriptionName.toString(), subscriber);
             } catch (Exception e) {
                 throw new PubSubListenerException("Failed to create subscriber", e);
-            } finally {
-                lock.unlock();
             }
 
         }
