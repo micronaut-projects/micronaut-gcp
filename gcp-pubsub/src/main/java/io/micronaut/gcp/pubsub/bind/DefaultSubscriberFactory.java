@@ -22,11 +22,8 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
- *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
@@ -34,22 +31,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DefaultSubscriberFactory implements SubscriberFactory {
 
     private final ConcurrentHashMap<String, Subscriber> subscribers = new ConcurrentHashMap<>();
-    private final Lock lock = new ReentrantLock();
 
     @Override
     public Subscriber createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver) {
-        try {
-            lock.lock();
-            if (subscribers.containsKey(projectSubscriptionName.toString())) {
-                throw new PubSubListenerException(String.format("Subscription %s is already registered for another" +
-                        " method", projectSubscriptionName));
+        Subscriber subscriber = subscribers.compute(projectSubscriptionName.toString(), (k, v) -> {
+            if (v == null) {
+                return Subscriber.newBuilder(projectSubscriptionName, receiver).build();
             }
-            Subscriber subscriber = Subscriber.newBuilder(projectSubscriptionName, receiver).build();
-            subscribers.put(projectSubscriptionName.toString(), subscriber);
-            subscriber.startAsync();
-            return subscriber;
-        } finally {
-            lock.unlock();
-        }
+            throw new PubSubListenerException(String.format("Subscription %s is already registered for another" +
+                    " method", projectSubscriptionName));
+        });
+        subscriber.startAsync();
+        return subscriber;
     }
 }
