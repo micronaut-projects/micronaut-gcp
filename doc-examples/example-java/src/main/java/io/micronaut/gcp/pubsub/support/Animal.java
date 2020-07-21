@@ -15,14 +15,14 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
-public class Animal {
+public final class Animal {
     private String name;
 
     public Animal(String name) {
         this.name = name;
     }
 
-    public Animal() {}
+    public Animal() { }
 
     public String getName() {
         return name;
