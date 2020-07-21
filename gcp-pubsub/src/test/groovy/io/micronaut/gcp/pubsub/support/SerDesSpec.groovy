@@ -2,11 +2,12 @@ package io.micronaut.gcp.pubsub.support
 
 import com.google.protobuf.ByteString
 import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Property
+import io.micronaut.context.annotation.Requires
 import io.micronaut.core.type.Argument
 import io.micronaut.gcp.pubsub.AbstractPublisherSpec
 import io.micronaut.gcp.pubsub.DataHolder
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
-import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.exception.PubSubClientException
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes
@@ -17,6 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @MicronautTest
+@Property(name = "spec.name", value = "SerDesSpec")
 class SerDesSpec extends AbstractPublisherSpec {
 
     @Inject
@@ -70,6 +72,7 @@ class SerDesSpec extends AbstractPublisherSpec {
 }
 
 @PubSubClient
+@Requires(property = "spec.name", value = "SerDesSpec")
 interface SerDesTestClient {
     @Topic(value = "testTopic", contentType = MediaType.APPLICATION_ATOM_XML)
     void invalidMimeType(Object data)
@@ -85,6 +88,7 @@ interface SerDesTestClient {
 }
 
 @Singleton
+@Requires(property = "spec.name", value = "SerDesSpec")
 class CustomSerializer implements PubSubMessageSerDes {
 
     @Override

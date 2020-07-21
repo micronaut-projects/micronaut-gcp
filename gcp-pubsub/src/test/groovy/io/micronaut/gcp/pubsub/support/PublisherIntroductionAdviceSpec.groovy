@@ -3,6 +3,8 @@ package io.micronaut.gcp.pubsub.support
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.aop.MethodInvocationContext
+import io.micronaut.context.annotation.Property
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.AbstractPublisherSpec
 import io.micronaut.gcp.pubsub.DataHolder
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
@@ -17,6 +19,7 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 @MicronautTest
+@Property(name = "spec.name", value = "PublisherIntroductionAdviceSpec")
 class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
 
     @Inject
@@ -75,6 +78,7 @@ class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
 
 @PubSubClient
 @Headers(  @Header(name = "x-client-type", value = "test")  )
+@Requires(property = "spec.name", value = "PublisherIntroductionAdviceSpec")
 interface TestPubSubClient {
     @Topic(value = "testTopic", contentType = "application/json")
     void send(Object data)

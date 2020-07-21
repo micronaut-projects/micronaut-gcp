@@ -2,6 +2,8 @@ package io.micronaut.gcp.pubsub.bind
 
 import com.google.protobuf.ByteString
 import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Property
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.AbstractConsumerSpec
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
@@ -14,6 +16,7 @@ import spock.util.concurrent.PollingConditions
 import javax.inject.Inject
 
 @MicronautTest
+@Property(name = "spec.name", value = "SimpleConsumerSpec")
 class SimpleConsumerSpec extends AbstractConsumerSpec {
 
     @Inject
@@ -66,6 +69,7 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
 }
 
 @PubSubClient
+@Requires(property = "spec.name", value = "SimpleConsumerSpec")
 interface SimplePubSubClient {
     @Topic("test-topic")
     String publish(byte[] data)
@@ -79,6 +83,7 @@ interface SimplePubSubClient {
 }
 
 @PubSubListener
+@Requires(property = "spec.name", value = "SimpleConsumerSpec")
 class SimpleReceiver {
     public Map<String, Object> dataHolder = new HashMap<>()
 

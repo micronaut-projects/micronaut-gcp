@@ -34,7 +34,8 @@ import io.micronaut.gcp.pubsub.bind.PubSubBinderRegistry;
 import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
 import io.micronaut.gcp.pubsub.bind.SubscriberFactory;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
-import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
+import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
+import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.gcp.pubsub.support.PubSubSubscriptionUtils;
 import io.micronaut.inject.BeanDefinition;
@@ -48,7 +49,11 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
@@ -72,20 +77,24 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
     private final SubscriberFactory subscriberFactory;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubBinderRegistry binderRegistry;
-
+    private final PubSubMessageReceiverExceptionHandler exceptionHandler;
+    private final Map<String, Subscriber> registeredSubscribers = new HashMap<>();
+    private final Lock lock = new ReentrantLock();
 
     public PubSubConsumerAdvice(BeanContext beanContext,
                                 ConversionService<?> conversionService,
                                 PubSubMessageSerDesRegistry serDesRegistry,
                                 SubscriberFactory subscriberFactory,
                                 GoogleCloudConfiguration googleCloudConfiguration,
-                                PubSubBinderRegistry binderRegistry) {
+                                PubSubBinderRegistry binderRegistry,
+                                PubSubMessageReceiverExceptionHandler exceptionHandler) {
         this.beanContext = beanContext;
         this.conversionService = conversionService;
         this.serDesRegistry = serDesRegistry;
         this.subscriberFactory = subscriberFactory;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.binderRegistry = binderRegistry;
+        this.exceptionHandler = exceptionHandler;
     }
 
     @Override
@@ -111,9 +120,15 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                 String contentType = Optional.of(messageContentType).orElse(defaultContentType);
                 DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(consumer);
 
-                PubSubConsumerState consumerState = new PubSubConsumerState(message, consumer, contentType);
+                PubSubConsumerState consumerState = new PubSubConsumerState(message, consumer,
+                        projectSubscriptionName, contentType);
                 try {
-                    BoundExecutable executable = binder.bind(method, binderRegistry, consumerState);
+                    BoundExecutable executable = null;
+                    try {
+                        executable = binder.bind(method, binderRegistry, consumerState);
+                    } catch (Exception ex) {
+                        handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState));
+                    }
                     executable.invoke(bean); // Discard result
                     if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
                         pubSubAcknowledgement.ack();
@@ -123,12 +138,34 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                         }
                     }
                 } catch (Exception e) {
-                    throw new PubSubListenerException("");
+                    handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState));
                 }
             };
-            Subscriber subscriber = this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
+            try {
+                lock.lock();
+                if (registeredSubscribers.containsKey(projectSubscriptionName.toString())) {
+                   throw new IllegalStateException("Subscriber already registered for subscription " + projectSubscriptionName);
+                }
+                Subscriber subscriber = this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
+                subscriber.startAsync();
+                registeredSubscribers.put(projectSubscriptionName.toString(), subscriber);
+            } catch (Exception e) {
+                throw new PubSubListenerException("Failed to create subscriber", e);
+            } finally {
+                lock.unlock();
+            }
+
         }
 
+    }
+
+    private void handleException(PubSubMessageReceiverException ex) {
+        Object bean = ex.getListener();
+        if (bean instanceof PubSubMessageReceiverExceptionHandler) {
+            ((PubSubMessageReceiverExceptionHandler) bean).handle(ex);
+        } else {
+            exceptionHandler.handle(ex);
+        }
     }
 
 }

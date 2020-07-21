@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.bind;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
+import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 
 /**
@@ -30,11 +31,14 @@ public class PubSubConsumerState {
 
     private final PubsubMessage pubsubMessage;
     private final AckReplyConsumer ackReplyConsumer;
+    private final ProjectSubscriptionName subscriptionName;
     private final String contentType;
 
-    public PubSubConsumerState(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer, String contentType) {
+    public PubSubConsumerState(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer,
+                               ProjectSubscriptionName subscriptionName, String contentType) {
         this.pubsubMessage = pubsubMessage;
         this.ackReplyConsumer = ackReplyConsumer;
+        this.subscriptionName = subscriptionName;
         this.contentType = contentType;
     }
 
@@ -60,5 +64,14 @@ public class PubSubConsumerState {
      */
     public AckReplyConsumer getAckReplyConsumer() {
         return ackReplyConsumer;
+    }
+
+
+    /**
+     *
+     * @return Subscription name.
+     */
+    public ProjectSubscriptionName getSubscriptionName() {
+        return subscriptionName;
     }
 }

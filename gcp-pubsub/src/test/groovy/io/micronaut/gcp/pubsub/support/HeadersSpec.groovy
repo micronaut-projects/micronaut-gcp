@@ -2,6 +2,8 @@ package io.micronaut.gcp.pubsub.support
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Property
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.AbstractPublisherSpec
 import io.micronaut.gcp.pubsub.DataHolder
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
@@ -12,6 +14,7 @@ import io.micronaut.test.annotation.MicronautTest
 import javax.inject.Inject
 
 @MicronautTest
+@Property(name = "spec.name", value = "HeadersSpec")
 class HeadersSpec extends AbstractPublisherSpec {
 
     @Inject
@@ -71,6 +74,7 @@ class HeadersSpec extends AbstractPublisherSpec {
 }
 
 @PubSubClient
+@Requires(property = "spec.name", value = "HeadersSpec")
 interface ClientWithoutHeaders {
 
     @Topic("test-topic")
