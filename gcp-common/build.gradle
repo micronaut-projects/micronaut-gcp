@@ -8,6 +8,6 @@ dependencies {
     api 'com.google.cloud:google-cloud-core:1.93.7'
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut.test:micronaut-test-spock:1.2.1"
+    testImplementation "io.micronaut.test:micronaut-test-spock:1.2.2"
     testImplementation "io.micronaut:micronaut-inject-groovy"
 }
