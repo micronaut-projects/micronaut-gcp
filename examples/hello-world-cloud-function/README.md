@@ -29,7 +29,7 @@ $ cd build/libs
 To deploy the function make sure you have `gcloud` CLI then run:
 
 ```bash
-$ gcloud alpha functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http
+$ gcloud beta functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http
 ```
 
 The `myfunction` bit can be changed to whatever you want to name your function.
@@ -39,7 +39,7 @@ Choose unauthenticated access if you don't need auth.
 To obtain the trigger URL do the following:
 
 ```bash
-$ YOUR_HTTP_TRIGGER_URL=$(gcloud alpha functions describe myfunction --format='value(httpsTrigger.url)') 
+$ YOUR_HTTP_TRIGGER_URL=$(gcloud beta functions describe myfunction --format='value(httpsTrigger.url)') 
 ```
 
 You can then use this variable to test the function invocation:
