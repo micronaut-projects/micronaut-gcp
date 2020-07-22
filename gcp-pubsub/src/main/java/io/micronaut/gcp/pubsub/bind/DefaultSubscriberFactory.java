@@ -17,10 +17,16 @@ package io.micronaut.gcp.pubsub.bind;
 
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.Subscriber;
+import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -28,9 +34,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2.0.0
  */
 @Singleton
-public class DefaultSubscriberFactory implements SubscriberFactory {
+public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseable {
 
     private final ConcurrentHashMap<String, Subscriber> subscribers = new ConcurrentHashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(DefaultSubscriberFactory.class);
 
     @Override
     public Subscriber createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver) {
@@ -44,5 +51,25 @@ public class DefaultSubscriberFactory implements SubscriberFactory {
         });
         subscriber.startAsync();
         return subscriber;
+    }
+
+    @PreDestroy
+    @Override
+    public void close() throws Exception {
+        while (!subscribers.entrySet().isEmpty()) {
+            Iterator<Map.Entry<String, Subscriber>> it = subscribers.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, Subscriber> entry = it.next();
+                SubscriberInterface subscriber = entry.getValue();
+                try {
+                    subscriber.stopAsync().awaitTerminated();
+                } catch (Exception e) {
+                    logger.error("Failed stopping subscriber for " + entry.getKey(), e);
+                } finally {
+                    it.remove();
+                }
+
+            }
+        }
     }
 }

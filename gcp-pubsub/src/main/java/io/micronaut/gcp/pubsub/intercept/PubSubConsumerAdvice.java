@@ -17,8 +17,6 @@ package io.micronaut.gcp.pubsub.intercept;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
-import com.google.cloud.pubsub.v1.Subscriber;
-import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
@@ -47,7 +45,6 @@ import io.micronaut.messaging.exceptions.MessageListenerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PreDestroy;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
 import java.util.*;
@@ -65,7 +62,7 @@ import java.util.*;
  * @since 2.0.0
  */
 @Singleton
-public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubListener>, AutoCloseable {
+public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubListener> {
 
     private final Logger logger = LoggerFactory.getLogger(PubSubConsumerAdvice.class);
     private final BeanContext beanContext;
@@ -75,7 +72,6 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubBinderRegistry binderRegistry;
     private final PubSubMessageReceiverExceptionHandler exceptionHandler;
-    private final Map<String, SubscriberInterface> registeredSubscribers = new HashMap<>();
 
     public PubSubConsumerAdvice(BeanContext beanContext,
                                 ConversionService<?> conversionService,
@@ -138,8 +134,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                 }
             };
             try {
-                SubscriberInterface subscriber = this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
-                registeredSubscribers.put(projectSubscriptionName.toString(), subscriber);
+                this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
             } catch (Exception e) {
                 throw new PubSubListenerException("Failed to create subscriber", e);
             }
@@ -157,25 +152,4 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
         }
     }
 
-    @PreDestroy
-    @Override
-    public void close() throws Exception {
-        while (!registeredSubscribers.entrySet().isEmpty()) {
-            Iterator<Map.Entry<String, SubscriberInterface>> it = registeredSubscribers.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, SubscriberInterface> entry = it.next();
-                SubscriberInterface subscriber = entry.getValue();
-                try {
-                    if (subscriber instanceof Subscriber) {
-                        ((Subscriber) subscriber).stopAsync().awaitTerminated();
-                    }
-                } catch (Exception e) {
-                    logger.error("Failed stopping subscriber for " + entry.getKey(), e);
-                } finally {
-                    it.remove();
-                }
-
-            }
-        }
-    }
 }
