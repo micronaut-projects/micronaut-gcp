@@ -20,6 +20,7 @@ import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
+import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
@@ -51,15 +52,18 @@ public class DefaultPublisherFactory implements PublisherFactory {
 
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
 
+    private final PublisherConfigurationProperties publisherConfigurationProperties;
     private final GoogleCloudConfiguration googleCloudConfiguration;
 
     public DefaultPublisherFactory(ExecutorProvider executorProvider,
                                    TransportChannelProvider transportChannelProvider,
                                    PubSubConfigurationProperties pubSubConfigurationProperties,
+                                   PublisherConfigurationProperties publisherConfigurationProperties,
                                    GoogleCloudConfiguration googleCloudConfiguration) {
         this.executorProvider = executorProvider;
         this.transportChannelProvider = transportChannelProvider;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
+        this.publisherConfigurationProperties = publisherConfigurationProperties;
         this.googleCloudConfiguration = googleCloudConfiguration;
     }
 
@@ -76,12 +80,8 @@ public class DefaultPublisherFactory implements PublisherFactory {
                 if (this.executorProvider != null) {
                     publisherBuilder.setExecutorProvider(this.executorProvider);
                 }
-                if (this.pubSubConfigurationProperties.getPublisher().getRetrySettings() != null) {
-                    publisherBuilder.setRetrySettings(this.pubSubConfigurationProperties.getPublisher().getRetrySettings());
-                }
-                if (this.pubSubConfigurationProperties.getPublisher().getBatchingSettings() != null) {
-                    publisherBuilder.setBatchingSettings(this.pubSubConfigurationProperties.getPublisher().getBatchingSettings());
-                }
+                publisherBuilder.setRetrySettings(publisherConfigurationProperties.getRetrySettings().build());
+                publisherBuilder.setBatchingSettings(publisherConfigurationProperties.getBatchingSettings().build());
                 return publisherBuilder.build();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
