@@ -357,6 +357,61 @@ Functions require a no argument constructor hence you must use field injection (
 <div class="paragraph">
 <p>The <code>FunctionInitializer</code> super class provides numerous methods that you can override to customize how the <code>ApplicationContext</code> is built if desired.</p>
 </div>
+<div class="sect2">
+<h3 id="_running_functions_locally">Running Functions Locally</h3>
+<div class="paragraph">
+<p>Raw functions cannot be executed locally. They can be tested by instantiating the function and inspecting any side effects by providing mock arguments or mocking dependent beans.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deployment">Deployment</h3>
+<div class="paragraph">
+<p>When deploying the function to Cloud Function you should use the fully qualified name of the function class as the handler reference.</p>
+</div>
+<div class="paragraph">
+<p>First build the function with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ ./gradlew clean shadowJar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then <code>cd</code> into the <code>build/libs</code> directory (deployment has to be done from the location where the JAR file resides):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd build/libs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy the function make sure you have <code>gcloud</code> CLI then run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ gcloud beta functions deploy myfunction --entry-point example.function.Function --runtime java11 --trigger-http</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above <code>myfunction</code> refers to the name of your function and can be changed to whatever name you prefer to name your function. <code>example.function.Function</code> refers to the fully qualified name of your function class.</p>
+</div>
+<div class="paragraph">
+<p>To obtain the trigger URL you can use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ YOUR_HTTP_TRIGGER_URL=$(gcloud beta functions describe myfunction --format='value(httpsTrigger.url)')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then use this variable to test the function invocation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -i $YOUR_HTTP_TRIGGER_URL</code></pre>
+</div>
+</div>
+</div>
 
 <h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>5.2 HTTP Functions</h2>
 
@@ -502,7 +557,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ gcloud alpha functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ gcloud beta functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -513,7 +568,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ YOUR_HTTP_TRIGGER_URL=$(gcloud alpha functions describe myfunction --format='value(httpsTrigger.url)')</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ YOUR_HTTP_TRIGGER_URL=$(gcloud beta functions describe myfunction --format='value(httpsTrigger.url)')</code></pre>
 </div>
 </div>
 <div class="paragraph">
