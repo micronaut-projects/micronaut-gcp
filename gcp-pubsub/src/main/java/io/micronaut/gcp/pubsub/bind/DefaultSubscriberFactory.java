@@ -18,16 +18,16 @@ package io.micronaut.gcp.pubsub.bind;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.pubsub.v1.ProjectSubscriptionName;
-import io.micronaut.context.annotation.Factory;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 
+import javax.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-@Factory
+@Singleton
 public class DefaultSubscriberFactory implements SubscriberFactory {
 
     private final ConcurrentHashMap<String, Subscriber> subscribers = new ConcurrentHashMap<>();
