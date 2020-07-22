@@ -15,15 +15,13 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
-import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.core.ExecutorProvider;
-import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,20 +49,17 @@ public class DefaultPublisherFactory implements PublisherFactory {
 
     private final TransportChannelProvider transportChannelProvider;
 
-    private final RetrySettings retrySettings;
-
-    private final BatchingSettings batchingSettings;
+    private final PubSubConfigurationProperties pubSubConfigurationProperties;
 
     private final GoogleCloudConfiguration googleCloudConfiguration;
 
     public DefaultPublisherFactory(ExecutorProvider executorProvider,
-                                   TransportChannelProvider transportChannelProvider, @Nullable RetrySettings retrySettings,
-                                   @Nullable BatchingSettings batchingSettings,
+                                   TransportChannelProvider transportChannelProvider,
+                                   PubSubConfigurationProperties pubSubConfigurationProperties,
                                    GoogleCloudConfiguration googleCloudConfiguration) {
         this.executorProvider = executorProvider;
         this.transportChannelProvider = transportChannelProvider;
-        this.retrySettings = retrySettings;
-        this.batchingSettings = batchingSettings;
+        this.pubSubConfigurationProperties = pubSubConfigurationProperties;
         this.googleCloudConfiguration = googleCloudConfiguration;
     }
 
@@ -81,11 +76,11 @@ public class DefaultPublisherFactory implements PublisherFactory {
                 if (this.executorProvider != null) {
                     publisherBuilder.setExecutorProvider(this.executorProvider);
                 }
-                if (this.retrySettings != null) {
-                    publisherBuilder.setRetrySettings(this.retrySettings);
+                if (this.pubSubConfigurationProperties.getPublisher().getRetrySettings() != null) {
+                    publisherBuilder.setRetrySettings(this.pubSubConfigurationProperties.getPublisher().getRetrySettings());
                 }
-                if (this.batchingSettings != null) {
-                    publisherBuilder.setBatchingSettings(this.batchingSettings);
+                if (this.pubSubConfigurationProperties.getPublisher().getBatchingSettings() != null) {
+                    publisherBuilder.setBatchingSettings(this.pubSubConfigurationProperties.getPublisher().getBatchingSettings());
                 }
                 return publisherBuilder.build();
             } catch (IOException ex) {

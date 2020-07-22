@@ -55,54 +55,7 @@ public class PubSubConfigurationFactory {
         this.googleCloudConfiguration = googleCloudConfiguration;
     }
 
-    /**
-     * @return Default retrySettings
-     */
-    @Singleton
-    protected RetrySettings retrySettings() {
-        PubSubConfigurationProperties.Publisher.Retry retryProperties = this.pubSubConfigurationProperties.getPublisher().getRetry();
-        RetrySettings.Builder builder = RetrySettings.newBuilder();
-        RetrySettings settings = ifNotNull(retryProperties.getInitialRetryDelaySeconds(),
-                (x) -> builder.setInitialRetryDelay(Duration.ofSeconds(x)))
-                .apply(ifNotNull(retryProperties.getInitialRpcTimeoutSeconds(),
-                        (x) -> builder.setInitialRpcTimeout(Duration.ofSeconds(x)))
-                .apply(ifNotNull(retryProperties.getJittered(), builder::setJittered)
-                .apply(ifNotNull(retryProperties.getMaxAttempts(), builder::setMaxAttempts)
-                .apply(ifNotNull(retryProperties.getMaxRetryDelaySeconds(),
-                        (x) -> builder.setMaxRetryDelay(Duration.ofSeconds(x)))
-                .apply(ifNotNull(retryProperties.getMaxRpcTimeoutSeconds(),
-                        (x) -> builder.setMaxRpcTimeout(Duration.ofSeconds(x)))
-                .apply(ifNotNull(retryProperties.getRetryDelayMultiplier(), builder::setRetryDelayMultiplier)
-                .apply(ifNotNull(retryProperties.getTotalTimeoutSeconds(),
-                        (x) -> builder.setTotalTimeout(Duration.ofSeconds(x)))
-                .apply(ifNotNull(retryProperties.getRpcTimeoutMultiplier(), builder::setRpcTimeoutMultiplier)
-                .apply(false))))))))) ? builder.build() : null;
-        return settings;
-    }
 
-    /**
-     *
-     * @return batchSettings
-     */
-    @Singleton
-    public BatchingSettings publisherBatchSettings() {
-        BatchingSettings.Builder builder = BatchingSettings.newBuilder();
-
-        PubSubConfigurationProperties.Publisher.Batching batching = this.pubSubConfigurationProperties.getPublisher()
-                .getBatching();
-
-        FlowControlSettings flowControlSettings = buildFlowControlSettings(batching.getFlowControl());
-        if (flowControlSettings != null) {
-            builder.setFlowControlSettings(flowControlSettings);
-        }
-
-        return ifNotNull(batching.getDelayThresholdSeconds(),
-                (x) -> builder.setDelayThreshold(Duration.ofSeconds(x)))
-                .apply(ifNotNull(batching.getElementCountThreshold(), builder::setElementCountThreshold)
-                 .apply(ifNotNull(batching.getEnabled(), builder::setIsEnabled)
-                 .apply(ifNotNull(batching.getRequestByteThreshold(), builder::setRequestByteThreshold)
-                 .apply(false)))) ? builder.build() : null;
-    }
 
     /**
      *
@@ -124,17 +77,6 @@ public class PubSubConfigurationFactory {
                 .setHeaderProvider(new UserAgentHeaderProvider("pubsub"))
                 .setKeepAliveTime(Duration.ofMinutes(this.pubSubConfigurationProperties.getKeepAliveIntervalMinutes()))
                 .build();
-    }
-
-    private FlowControlSettings buildFlowControlSettings(PubSubConfigurationProperties.Publisher.Batching.FlowControl flowControl) {
-        FlowControlSettings.Builder builder = FlowControlSettings.newBuilder();
-
-        return ifNotNull(flowControl.getLimitExceededBehavior(), builder::setLimitExceededBehavior)
-                .apply(ifNotNull(flowControl.getMaxOutstandingElementCount(),
-                        builder::setMaxOutstandingElementCount)
-                .apply(ifNotNull(flowControl.getMaxOutstandingRequestBytes(),
-                        builder::setMaxOutstandingRequestBytes)
-                .apply(false))) ? builder.build() : null;
     }
 
     /**
