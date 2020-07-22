@@ -36,8 +36,6 @@ public class PubSubConfigurationProperties {
 
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".pubsub";
 
-    private  Publisher publisher = new Publisher();
-
     private int keepAliveIntervalMinutes = 5;
 
     /**
@@ -54,80 +52,6 @@ public class PubSubConfigurationProperties {
      */
     public void setKeepAliveIntervalMinutes(int keepAliveIntervalMinutes) {
         this.keepAliveIntervalMinutes = keepAliveIntervalMinutes;
-    }
-
-    /**
-     *
-     * @return publisher configuration
-     */
-    public Publisher getPublisher() {
-        return publisher;
-    }
-
-    /**
-     *
-     * @param publisher configuration
-     */
-    public void setPublisher(Publisher publisher) {
-        this.publisher = publisher;
-    }
-
-    /**
-     * Publisher settings.
-     */
-    @ConfigurationProperties("publisher")
-    public static class Publisher {
-
-        private int executorThreads = 4;
-
-        @ConfigurationBuilder(prefixes = "set", configurationPrefix = "retry")
-        private RetrySettings.Builder retrySettings;
-
-        @ConfigurationBuilder(prefixes = "set", configurationPrefix = "batching")
-        private BatchingSettings.Builder batchingSettings;
-
-        @ConfigurationBuilder(prefixes = "set", configurationPrefix = "flow-control")
-        private FlowControlSettings.Builder flowControlSettings;
-
-        /**
-         * Number of threads used by every publisher.
-         * @return executorThreads
-         */
-        public int getExecutorThreads() {
-            return this.executorThreads;
-        }
-
-        /**
-         * Number of threads used by every publisher.
-         * @param executorThreads
-         */
-        public void setExecutorThreads(int executorThreads) {
-            this.executorThreads = executorThreads;
-        }
-
-        public RetrySettings getRetrySettings() {
-            return retrySettings.build();
-        }
-
-        public void setRetrySettings(RetrySettings.Builder retrySettings) {
-            this.retrySettings = retrySettings;
-        }
-
-        public BatchingSettings getBatchingSettings() {
-            return batchingSettings.build();
-        }
-
-        public void setBatchingSettings(BatchingSettings.Builder batchingSettings) {
-            this.batchingSettings = batchingSettings;
-        }
-
-        public FlowControlSettings getFlowControlSettings() {
-            return flowControlSettings.build();
-        }
-
-        public void setFlowControlSettings(FlowControlSettings.Builder flowControlSettings) {
-            this.flowControlSettings = flowControlSettings;
-        }
     }
 
 }
