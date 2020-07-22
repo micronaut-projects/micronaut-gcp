@@ -19,17 +19,20 @@ import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowControlSettings;
 import com.google.api.gax.retrying.RetrySettings;
 import io.micronaut.context.annotation.ConfigurationBuilder;
-import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.EachProperty;
+import io.micronaut.context.annotation.Parameter;
 
 /**
- * Configuration properties for PubSub Publishers.
+ * Configuration properties for PubSub Publishers. Each topic has its own configuration if set by the user.
+ * for example gcp.pubsub.publisher.animals and gcp.pubsub.publisher.cars would define publishers with different
+ * configurations for each topic.
  *
  * @author Vinicius Carvalho
  * @author James Kleeh
  *
  * @since 2.0.0
  */
-@ConfigurationProperties(PubSubConfigurationProperties.PREFIX + ".publisher")
+@EachProperty(PubSubConfigurationProperties.PREFIX + ".publisher")
 public class PublisherConfigurationProperties {
 
     private int executorThreads = 4;
@@ -42,6 +45,12 @@ public class PublisherConfigurationProperties {
 
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "flow-control")
     private FlowControlSettings.Builder flowControlSettings = FlowControlSettings.newBuilder();
+
+    private final String name;
+
+    public PublisherConfigurationProperties(@Parameter String name) {
+        this.name = name;
+    }
 
     /**
      * Number of threads used by every publisher.
@@ -105,5 +114,13 @@ public class PublisherConfigurationProperties {
      */
     public void setFlowControlSettings(FlowControlSettings.Builder flowControlSettings) {
         this.flowControlSettings = flowControlSettings;
+    }
+
+    /**
+     *
+     * @return the name of this configuration
+     */
+    public String getName() {
+        return name;
     }
 }

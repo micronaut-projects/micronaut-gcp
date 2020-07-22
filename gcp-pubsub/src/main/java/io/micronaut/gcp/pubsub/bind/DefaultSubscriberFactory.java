@@ -36,6 +36,7 @@ public class DefaultSubscriberFactory implements SubscriberFactory {
     public Subscriber createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver) {
         Subscriber subscriber = subscribers.compute(projectSubscriptionName.toString(), (k, v) -> {
             if (v == null) {
+
                 return Subscriber.newBuilder(projectSubscriptionName, receiver).build();
             }
             throw new PubSubListenerException(String.format("Subscription %s is already registered for another" +

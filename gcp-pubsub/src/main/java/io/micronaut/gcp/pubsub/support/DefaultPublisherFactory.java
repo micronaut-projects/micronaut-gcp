@@ -16,8 +16,10 @@
 package io.micronaut.gcp.pubsub.support;
 
 import com.google.api.gax.core.ExecutorProvider;
+import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
+import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
@@ -25,6 +27,8 @@ import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -45,24 +49,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultPublisherFactory implements PublisherFactory {
 
     private final ConcurrentHashMap<String, Publisher> publishers = new ConcurrentHashMap<>();
-
     private final ExecutorProvider executorProvider;
-
     private final TransportChannelProvider transportChannelProvider;
-
-    private final PubSubConfigurationProperties pubSubConfigurationProperties;
-
-    private final PublisherConfigurationProperties publisherConfigurationProperties;
+    private final Collection<PublisherConfigurationProperties> publisherConfigurationProperties;
     private final GoogleCloudConfiguration googleCloudConfiguration;
 
     public DefaultPublisherFactory(ExecutorProvider executorProvider,
                                    TransportChannelProvider transportChannelProvider,
-                                   PubSubConfigurationProperties pubSubConfigurationProperties,
-                                   PublisherConfigurationProperties publisherConfigurationProperties,
+                                   Collection<PublisherConfigurationProperties> publisherConfigurationProperties,
                                    GoogleCloudConfiguration googleCloudConfiguration) {
         this.executorProvider = executorProvider;
         this.transportChannelProvider = transportChannelProvider;
-        this.pubSubConfigurationProperties = pubSubConfigurationProperties;
         this.publisherConfigurationProperties = publisherConfigurationProperties;
         this.googleCloudConfiguration = googleCloudConfiguration;
     }
@@ -76,12 +73,17 @@ public class DefaultPublisherFactory implements PublisherFactory {
     public Publisher createPublisher(@Nonnull String topic) {
         return this.publishers.computeIfAbsent(topic, (key) -> {
             try {
-                Publisher.Builder publisherBuilder = Publisher.newBuilder(PubSubTopicUtils.toProjectTopicName(topic, googleCloudConfiguration.getProjectId()));
+                ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, googleCloudConfiguration.getProjectId());
+                Publisher.Builder publisherBuilder = Publisher.newBuilder(projectTopicName);
                 if (this.executorProvider != null) {
                     publisherBuilder.setExecutorProvider(this.executorProvider);
                 }
-                publisherBuilder.setRetrySettings(publisherConfigurationProperties.getRetrySettings().build());
-                publisherBuilder.setBatchingSettings(publisherConfigurationProperties.getBatchingSettings().build());
+                Optional<PublisherConfigurationProperties> publisherConfiguration = publisherConfigurationProperties.stream().filter(p -> p.getName().equals(projectTopicName.getTopic())).findFirst();
+                if (publisherConfiguration.isPresent()) {
+                    publisherBuilder.setRetrySettings(publisherConfiguration.get().getRetrySettings().build());
+                    publisherBuilder.setBatchingSettings(publisherConfiguration.get().getBatchingSettings().build());
+                }
+
                 return publisherBuilder.build();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

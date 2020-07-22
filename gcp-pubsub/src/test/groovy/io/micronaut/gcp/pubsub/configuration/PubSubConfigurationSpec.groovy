@@ -1,6 +1,7 @@
 package io.micronaut.gcp.pubsub.configuration
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.inject.qualifiers.Qualifiers
 import spock.lang.Specification
 
 
@@ -17,13 +18,28 @@ class PubSubConfigurationSpec extends Specification {
 
     void "test publisher configuration binding"() {
         ApplicationContext ctx = ApplicationContext.run([
-                "gcp.pubsub.publisher.retry.initial-retry-delay" : "10s",
-                "gcp.pubsub.publisher.executorThreads" : "2"])
-        PublisherConfigurationProperties properties = ctx.getBean(PublisherConfigurationProperties)
+                "gcp.pubsub.publisher.animals.retry.initial-retry-delay" : "10s",
+                "gcp.pubsub.publisher.animals.executorThreads" : "2"])
+        PublisherConfigurationProperties properties = ctx.getBean(PublisherConfigurationProperties, Qualifiers.byName("animals"))
 
         expect:
         properties.retrySettings.initialRetryDelay.seconds == 10
         properties.executorThreads == 2
+    }
+
+    void "test multiple publisher configurations"() {
+        ApplicationContext ctx = ApplicationContext.run([
+                "gcp.pubsub.publisher.animals.retry.initial-retry-delay" : "10s",
+                "gcp.pubsub.publisher.animals.executorThreads" : "2",
+                "gcp.pubsub.publisher.cars.retry.initial-retry-delay" : "20s",
+                "gcp.pubsub.publisher.cars.executorThreads" : "4",
+        ])
+        Collection<PublisherConfigurationProperties> properties = ctx.getBeansOfType(PublisherConfigurationProperties)
+        PublisherConfigurationProperties animals = properties.stream().filter({ p -> (p.getName() == "animals") }).findFirst().get()
+        expect:
+            properties.size() == 2
+            animals.retrySettings.initialRetryDelay.seconds == 10
+
     }
 
 }
