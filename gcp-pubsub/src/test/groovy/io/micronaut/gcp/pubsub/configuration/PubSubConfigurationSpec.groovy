@@ -3,7 +3,6 @@ package io.micronaut.gcp.pubsub.configuration
 import io.micronaut.context.ApplicationContext
 import spock.lang.Specification
 
-import java.time.Duration
 
 class PubSubConfigurationSpec extends Specification {
 

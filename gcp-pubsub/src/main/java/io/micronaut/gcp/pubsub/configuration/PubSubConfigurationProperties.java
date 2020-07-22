@@ -15,15 +15,8 @@
  */
 package io.micronaut.gcp.pubsub.configuration;
 
-import com.google.api.gax.batching.BatchingSettings;
-import com.google.api.gax.batching.FlowControlSettings;
-import com.google.api.gax.batching.FlowController;
-import com.google.api.gax.retrying.RetrySettings;
-import io.micronaut.context.annotation.ConfigurationBuilder;
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.context.annotation.Context;
 import io.micronaut.gcp.GoogleCloudConfiguration;
-import javax.annotation.Nullable;
 
 /**
  * Configuration properties for PubSub support.

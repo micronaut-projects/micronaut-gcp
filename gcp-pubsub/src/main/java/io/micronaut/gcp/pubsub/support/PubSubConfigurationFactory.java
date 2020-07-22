@@ -15,12 +15,9 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
-import com.google.api.gax.batching.BatchingSettings;
-import com.google.api.gax.batching.FlowControlSettings;
 import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
-import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import io.micronaut.context.annotation.Factory;
@@ -54,8 +51,6 @@ public class PubSubConfigurationFactory {
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
         this.googleCloudConfiguration = googleCloudConfiguration;
     }
-
-
 
     /**
      *
