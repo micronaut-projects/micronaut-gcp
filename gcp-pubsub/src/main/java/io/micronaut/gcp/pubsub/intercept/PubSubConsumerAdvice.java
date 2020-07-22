@@ -17,6 +17,7 @@ package io.micronaut.gcp.pubsub.intercept;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
+import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
@@ -46,19 +47,17 @@ import io.micronaut.messaging.exceptions.MessageListenerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PreDestroy;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
  * Implementation of an {@link ExecutableMethodProcessor} that creates
  * {@link com.google.cloud.pubsub.v1.MessageReceiver} that subscribes to the PubSub subscription
  * and invoke methods annotated by @{@link io.micronaut.gcp.pubsub.annotation.Subscription}.
- *
+ * <p>
  * There can be only one subscriber for any given subscription (in order to avoid issues with message
  * Ack control). Having more than one method using the same subscription raises a {@link io.micronaut.gcp.pubsub.exception.PubSubListenerException}.
  *
@@ -66,7 +65,7 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Singleton
-public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubListener> {
+public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubListener>, AutoCloseable {
 
     private final Logger logger = LoggerFactory.getLogger(PubSubConsumerAdvice.class);
     private final BeanContext beanContext;
@@ -158,4 +157,25 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
         }
     }
 
+    @PreDestroy
+    @Override
+    public void close() throws Exception {
+        while (!registeredSubscribers.entrySet().isEmpty()) {
+            Iterator<Map.Entry<String, SubscriberInterface>> it = registeredSubscribers.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, SubscriberInterface> entry = it.next();
+                SubscriberInterface subscriber = entry.getValue();
+                try {
+                    if (subscriber instanceof Subscriber) {
+                        ((Subscriber) subscriber).stopAsync().awaitTerminated();
+                    }
+                } catch (Exception e) {
+                    logger.error("Failed stopping subscriber for " + entry.getKey());
+                } finally {
+                    it.remove();
+                }
+
+            }
+        }
+    }
 }

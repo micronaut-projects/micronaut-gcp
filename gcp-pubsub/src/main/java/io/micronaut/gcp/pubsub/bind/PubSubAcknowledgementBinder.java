@@ -22,7 +22,7 @@ import io.micronaut.messaging.Acknowledgement;
 import java.util.Optional;
 
 /**
- * Binds {@link PubSubAcknowledgement} arguments.
+ * Binds {@link Acknowledgement} arguments.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
@@ -36,7 +36,7 @@ public class PubSubAcknowledgementBinder implements PubSubTypeArgumentBinder<Ack
 
     @Override
     public BindingResult<Acknowledgement> bind(ArgumentConversionContext<Acknowledgement> context, PubSubConsumerState source) {
-        PubSubAcknowledgement acknowledgement = new DefaultPubSubAcknowledgement(source.getAckReplyConsumer());
+        Acknowledgement acknowledgement = new DefaultPubSubAcknowledgement(source.getAckReplyConsumer());
         return () -> Optional.of(acknowledgement);
     }
 }

@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.bind;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
+import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageAcknowledgementException;
 
 /**
@@ -23,7 +24,7 @@ import io.micronaut.messaging.exceptions.MessageAcknowledgementException;
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-public class DefaultPubSubAcknowledgement implements PubSubAcknowledgement {
+public class DefaultPubSubAcknowledgement implements Acknowledgement {
 
     private volatile boolean messageAcked = false;
     private final AckReplyConsumer ackReplyConsumer;
