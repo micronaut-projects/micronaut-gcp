@@ -26,6 +26,12 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Type converter used to convert Google's internal Duration type.
+ *
+ * @author James Kleeh
+ * @since 2.0.0
+ */
 @Singleton
 public class ThreeTenConverterRegistrar implements TypeConverterRegistrar {
 

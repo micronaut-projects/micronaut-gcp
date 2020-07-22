@@ -16,12 +16,10 @@
 package io.micronaut.gcp.pubsub.support;
 
 import com.google.api.gax.core.ExecutorProvider;
-import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.gcp.GoogleCloudConfiguration;
-import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
 
 import javax.annotation.Nonnull;

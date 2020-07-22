@@ -29,8 +29,17 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Subscription {
-
+    /**
+     * The name of the subscription, it could be a simple name such as "animals" or
+     * a FQN such as {@code projects/<project_name>/subscriptions/<subscription_name>}.
+     * @return the subscription name
+     */
     String value();
 
+    /**
+     * Defines the Content-Type to be used for message deserialization.
+     * There's no default, if not set and the message does not contain a Content-Type header deserialization will fail.
+     * @return contentType to use
+     */
     String contentType() default "";
 }

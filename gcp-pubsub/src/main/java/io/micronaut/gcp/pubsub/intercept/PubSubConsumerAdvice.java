@@ -170,7 +170,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                         ((Subscriber) subscriber).stopAsync().awaitTerminated();
                     }
                 } catch (Exception e) {
-                    logger.error("Failed stopping subscriber for " + entry.getKey());
+                    logger.error("Failed stopping subscriber for " + entry.getKey(), e);
                 } finally {
                     it.remove();
                 }

@@ -19,7 +19,6 @@ import io.micronaut.aop.Introduction;
 import io.micronaut.context.annotation.Type;
 import io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice;
 
-import javax.inject.Scope;
 import javax.inject.Singleton;
 import java.lang.annotation.*;
 
@@ -30,7 +29,6 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@Scope
 @Introduction
 @Type(PubSubClientIntroductionAdvice.class)
 @Singleton

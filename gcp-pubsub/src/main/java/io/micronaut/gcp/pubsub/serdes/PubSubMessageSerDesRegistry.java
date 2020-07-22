@@ -31,5 +31,10 @@ public interface PubSubMessageSerDesRegistry {
         return find(type.getType());
     }
 
-    Optional<PubSubMessageSerDes> find(String type);
+    /**
+     * Retrieves the appropriate PubSubMessageSerDes for the provided contentType.
+     * @param contentType The MIME type to search for a SerDes
+     * @return the registered SerDes
+     */
+    Optional<PubSubMessageSerDes> find(String contentType);
 }

@@ -31,10 +31,16 @@ import java.lang.annotation.*;
 public @interface Topic {
 
     /**
-     *
+     * Set the name of the topic used to publish messages. Valid names are simple names such as "animals" or
+     * FQN names such as {@code projects/<project_name>/topics/<topic_name>}
      * @return The name of the topic to publish messages to
      */
     String value();
 
+    /**
+     * Defines the Content-Type to be used for message serialization.
+     * Defaults to application/json if not set by the user.
+     * @return contentType to use
+     */
     String contentType() default MediaType.APPLICATION_JSON;
 }

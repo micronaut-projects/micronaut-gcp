@@ -26,5 +26,12 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
  * @since 2.0.0
  */
 public interface SubscriberFactory {
+    /**
+     * Creates an {@link SubscriberInterface} implementation and register the receiver to it. Implementations should also
+     * handle start/stop life cycle events.
+     * @param projectSubscriptionName The FQN of the project subscription.
+     * @param receiver The receiver that will handle new messages
+     * @return An implementation of SubscriberInterface
+     */
     SubscriberInterface createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver);
 }

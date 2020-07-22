@@ -40,7 +40,7 @@ public class DefaultPubSubMessageSerDesRegistry implements PubSubMessageSerDesRe
     }
 
     @Override
-    public Optional<PubSubMessageSerDes> find(String type) {
-        return Optional.ofNullable(serDesRegistry.get(type));
+    public Optional<PubSubMessageSerDes> find(String contentType) {
+        return Optional.ofNullable(serDesRegistry.get(contentType));
     }
 }
