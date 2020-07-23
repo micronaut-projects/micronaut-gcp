@@ -15,10 +15,13 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
+import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.ExecutorProvider;
+import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsub.v1.Publisher;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
@@ -72,6 +75,16 @@ public class PubSubConfigurationFactory {
                 .setHeaderProvider(new UserAgentHeaderProvider("pubsub"))
                 .setKeepAliveTime(Duration.ofMinutes(this.pubSubConfigurationProperties.getKeepAliveIntervalMinutes()))
                 .build();
+    }
+
+    /**
+     * Returns a default {@link CredentialsProvider}, allows users to override it and provide their own implementation.
+     * @param credentials default credentials, if not overriden by user should be provided by {@link io.micronaut.gcp.credentials.GoogleCredentialsFactory}
+     * @return A {@link FixedCredentialsProvider} holding the given credentials.
+     */
+    @Singleton
+    public CredentialsProvider credentialsProvider(GoogleCredentials credentials) {
+        return FixedCredentialsProvider.create(credentials);
     }
 
     /**

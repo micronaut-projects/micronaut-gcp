@@ -15,6 +15,8 @@
  */
 package io.micronaut.gcp.pubsub.bind;
 
+import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
@@ -30,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Default implementation of {@link SubscriberFactory}.
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
@@ -37,14 +40,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseable {
 
     private final ConcurrentHashMap<String, Subscriber> subscribers = new ConcurrentHashMap<>();
+    private final TransportChannelProvider transportChannelProvider;
+    private final CredentialsProvider credentialsProvider;
     private final Logger logger = LoggerFactory.getLogger(DefaultSubscriberFactory.class);
+
+    public DefaultSubscriberFactory(TransportChannelProvider transportChannelProvider, CredentialsProvider credentialsProvider) {
+        this.transportChannelProvider = transportChannelProvider;
+        this.credentialsProvider = credentialsProvider;
+    }
 
     @Override
     public Subscriber createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver) {
         Subscriber subscriber = subscribers.compute(projectSubscriptionName.toString(), (k, v) -> {
             if (v == null) {
-
-                return Subscriber.newBuilder(projectSubscriptionName, receiver).build();
+                return Subscriber.newBuilder(projectSubscriptionName, receiver)
+                        .setChannelProvider(this.transportChannelProvider)
+                        .setCredentialsProvider(this.credentialsProvider)
+                        .build();
             }
             throw new PubSubListenerException(String.format("Subscription %s is already registered for another" +
                     " method", projectSubscriptionName));

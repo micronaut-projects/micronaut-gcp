@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
+import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
@@ -49,15 +50,18 @@ public class DefaultPublisherFactory implements PublisherFactory {
     private final ConcurrentHashMap<String, Publisher> publishers = new ConcurrentHashMap<>();
     private final ExecutorProvider executorProvider;
     private final TransportChannelProvider transportChannelProvider;
+    private final CredentialsProvider credentialsProvider;
     private final Collection<PublisherConfigurationProperties> publisherConfigurationProperties;
     private final GoogleCloudConfiguration googleCloudConfiguration;
 
     public DefaultPublisherFactory(ExecutorProvider executorProvider,
                                    TransportChannelProvider transportChannelProvider,
+                                   CredentialsProvider credentialsProvider,
                                    Collection<PublisherConfigurationProperties> publisherConfigurationProperties,
                                    GoogleCloudConfiguration googleCloudConfiguration) {
         this.executorProvider = executorProvider;
         this.transportChannelProvider = transportChannelProvider;
+        this.credentialsProvider = credentialsProvider;
         this.publisherConfigurationProperties = publisherConfigurationProperties;
         this.googleCloudConfiguration = googleCloudConfiguration;
     }
@@ -81,7 +85,8 @@ public class DefaultPublisherFactory implements PublisherFactory {
                     publisherBuilder.setRetrySettings(publisherConfiguration.get().getRetrySettings().build());
                     publisherBuilder.setBatchingSettings(publisherConfiguration.get().getBatchingSettings().build());
                 }
-
+                publisherBuilder.setChannelProvider(this.transportChannelProvider);
+                publisherBuilder.setCredentialsProvider(this.credentialsProvider);
                 return publisherBuilder.build();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
