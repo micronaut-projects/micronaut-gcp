@@ -31,6 +31,44 @@ public class PubSubConfigurationProperties {
 
     private int keepAliveIntervalMinutes = 5;
 
+    private String publishingExecutor = "scheduled";
+
+    private String subscribingExecutor = "scheduled";
+
+    /**
+     *
+     * @return the name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances.
+     * Defaults to "scheduled"
+     */
+    public String getPublishingExecutor() {
+        return publishingExecutor;
+    }
+
+    /**
+     *
+     * @param publishingExecutor Name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances
+     */
+    public void setPublishingExecutor(String publishingExecutor) {
+        this.publishingExecutor = publishingExecutor;
+    }
+
+    /**
+     *
+     * @return the name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Subscriber} instances.
+     * Defaults to "scheduled"
+     */
+    public String getSubscribingExecutor() {
+        return subscribingExecutor;
+    }
+
+    /**
+     *
+     * @param subscribingExecutor Name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Subscriber} instances.
+     */
+    public void setSubscribingExecutor(String subscribingExecutor) {
+        this.subscribingExecutor = subscribingExecutor;
+    }
+
     /**
      * How often to ping the server to keep the channel alive.
      * @return interval

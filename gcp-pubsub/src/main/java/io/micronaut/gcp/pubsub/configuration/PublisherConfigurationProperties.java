@@ -35,8 +35,6 @@ import io.micronaut.context.annotation.Parameter;
 @EachProperty(PubSubConfigurationProperties.PREFIX + ".publisher")
 public class PublisherConfigurationProperties {
 
-    private int executorThreads = 4;
-
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "retry")
     private RetrySettings.Builder retrySettings = RetrySettings.newBuilder();
 
@@ -50,22 +48,6 @@ public class PublisherConfigurationProperties {
 
     public PublisherConfigurationProperties(@Parameter String name) {
         this.name = name;
-    }
-
-    /**
-     * Number of threads used by every publisher.
-     * @return executorThreads
-     */
-    public int getExecutorThreads() {
-        return this.executorThreads;
-    }
-
-    /**
-     * Number of threads used by every publisher.
-     * @param executorThreads
-     */
-    public void setExecutorThreads(int executorThreads) {
-        this.executorThreads = executorThreads;
     }
 
     /**

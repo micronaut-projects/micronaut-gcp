@@ -24,15 +24,12 @@ class PubSubConfigurationSpec extends Specification {
 
         expect:
         properties.retrySettings.initialRetryDelay.seconds == 10
-        properties.executorThreads == 2
     }
 
     void "test multiple publisher configurations"() {
         ApplicationContext ctx = ApplicationContext.run([
                 "gcp.pubsub.publisher.animals.retry.initial-retry-delay" : "10s",
-                "gcp.pubsub.publisher.animals.executorThreads" : "2",
                 "gcp.pubsub.publisher.cars.retry.initial-retry-delay" : "20s",
-                "gcp.pubsub.publisher.cars.executorThreads" : "4",
         ])
         Collection<PublisherConfigurationProperties> properties = ctx.getBeansOfType(PublisherConfigurationProperties)
         PublisherConfigurationProperties animals = properties.stream().filter({ p -> (p.getName() == "animals") }).findFirst().get()

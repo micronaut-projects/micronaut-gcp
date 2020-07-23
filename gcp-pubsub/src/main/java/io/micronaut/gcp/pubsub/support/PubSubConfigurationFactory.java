@@ -32,8 +32,6 @@ import org.threeten.bp.Duration;
 
 import javax.inject.Singleton;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Factory class to create default settings for PubSub Publisher and subscriber beans.
@@ -87,25 +85,4 @@ public class PubSubConfigurationFactory {
         return FixedCredentialsProvider.create(credentials);
     }
 
-    /**
-     * A helper method for applying properties to settings builders for purpose of seeing if at least
-     * one setting was set.
-     *
-     * @param prop     the property on which to operate
-     * @param consumer the function to give the property
-     * @param <T>      the type of the property
-     * @return a function that accepts a boolean of if there is a next property and returns a boolean indicating if the
-     * propety was set
-     */
-    private <T> Function<Boolean, Boolean> ifNotNull(T prop, Consumer<T> consumer) {
-
-        return (next) -> {
-            boolean wasSet = next;
-            if (prop != null) {
-                consumer.accept(prop);
-                wasSet = true;
-            }
-            return wasSet;
-        };
-    }
 }
