@@ -43,8 +43,10 @@ class IntegrationTest extends Specification{
 
     }
 
-    static GenericContainer pubSubContainer = new GenericContainer("karhoo/pubsub-emulator")
-            .withExposedPorts(8005)
+    static GenericContainer pubSubContainer = new GenericContainer("google/cloud-sdk:292.0.0")
+            .withCommand("gcloud", "beta", "emulators", "pubsub", "start", "--project=test-project",
+                    "--host-port=0.0.0.0:8085")
+            .withExposedPorts(8085)
 
             .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*Server started, listening on.*"))
 
@@ -55,7 +57,7 @@ class IntegrationTest extends Specification{
     @MockBean
     @Replaces(PublisherFactory)
     PublisherFactory publisherFactory() {
-        def host = "localhost:" + pubSubContainer.getMappedPort(8005)
+        def host = "localhost:" + pubSubContainer.getMappedPort(8085)
         ManagedChannel channel = ManagedChannelBuilder.forTarget(host).usePlaintext().build()
         TransportChannelProvider channelProvider =
                 FixedTransportChannelProvider.create(GrpcTransportChannel.create(channel))
@@ -67,6 +69,7 @@ class IntegrationTest extends Specification{
                                 .setCredentialsProvider(credentialsProvider)
                                 .build())
         TopicName topicName = TopicName.of("test-project", "test-topic")
+        topicClient.createTopic(topicName)
         def factory = Mock(PublisherFactory)
         def publisher =
                 Publisher.newBuilder(topicName)
