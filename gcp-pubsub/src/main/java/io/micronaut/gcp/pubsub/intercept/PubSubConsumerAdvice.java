@@ -106,7 +106,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
         if (subscriptionAnnotation != null) {
             String subscriptionName = subscriptionAnnotation.getRequiredValue(String.class);
             ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
-            String defaultContentType = subscriptionAnnotation.get("contentType", String.class).orElse("");
+            String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse("");
             MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer consumer) -> {
                 String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
                 String contentType = Optional.of(messageContentType).orElse(defaultContentType);

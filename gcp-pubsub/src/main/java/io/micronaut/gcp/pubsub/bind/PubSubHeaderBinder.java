@@ -48,7 +48,7 @@ public class PubSubHeaderBinder implements PubSubAnnotatedArgumentBinder<Header>
     @Override
     public BindingResult<Object> bind(ArgumentConversionContext<Object> context, PubSubConsumerState source) {
         String parameterName = context.getAnnotationMetadata()
-                .getValue(Header.class, String.class)
+                .stringValue(Header.class)
                 .orElse(context.getArgument().getName());
 
         Map<String, String> attributes = source.getPubsubMessage().getAttributesMap();

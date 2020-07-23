@@ -89,16 +89,16 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
 
             PubSubPublisherState publisherState = publisherStateCache.computeIfAbsent(context.getExecutableMethod(), method -> {
                 AnnotationValue<PubSubClient> client = method.findAnnotation(PubSubClient.class).orElseThrow(() -> new IllegalStateException("No @PubSubClient annotation present"));
-                String projectId = client.getValue(String.class).orElse(googleCloudConfiguration.getProjectId());
+                String projectId = client.stringValue().orElse(googleCloudConfiguration.getProjectId());
                 AnnotationValue<Topic> topicAnnotation = method.findAnnotation(Topic.class).get();
-                String topic = topicAnnotation.getValue(String.class).get();
-                String contentType = topicAnnotation.get("contentType", String.class).orElse("");
+                String topic = topicAnnotation.stringValue().get();
+                String contentType = topicAnnotation.stringValue("contentType").orElse("");
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
                 Map<String, String> staticMessageAttributes = new HashMap<>();
                 List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
                 headerAnnotations.forEach((header) -> {
-                    String name = header.get("name", String.class).orElse(null);
-                    String value = header.getValue(String.class).orElse(null);
+                    String name = header.stringValue("name").orElse(null);
+                    String value = header.stringValue().orElse(null);
                     if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(value)) {
                         staticMessageAttributes.put(name, value);
                     }
@@ -153,8 +153,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 return null;
             } else {
                 if (isReactive) {
-                    return conversionService.convert(reactiveResult, javaReturnType)
-                            .orElseThrow(() -> new PubSubClientException("Could not convert publisher result to method return type: " + javaReturnType));
+                    return Publishers.convertPublisher(reactiveResult, javaReturnType);
                 } else {
                     String result = reactiveResult.blockingGet();
                     return conversionService.convert(result, javaReturnType)
@@ -181,7 +180,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
 
     private Map.Entry<String, String> getNameAndValue(Argument argument, AnnotationValue<?> annotationValue, Map<String, Object> parameterValues) {
         String argumentName = argument.getName();
-        String name = annotationValue.get("name", String.class).orElse(annotationValue.getValue(String.class).orElse(argumentName));
+        String name = annotationValue.stringValue("name").orElse(annotationValue.getValue(String.class).orElse(argumentName));
         String value = String.valueOf(parameterValues.get(argumentName));
 
         return new AbstractMap.SimpleEntry<>(name, value);

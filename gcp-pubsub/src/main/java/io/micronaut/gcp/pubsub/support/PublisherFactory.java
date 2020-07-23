@@ -29,7 +29,12 @@ import com.google.cloud.pubsub.v1.PublisherInterface;
  * @since 2.0.0
  */
 public interface PublisherFactory {
-
+    /**
+     *
+     * @param topic Topic name to be used. Can be either a simple name such as "animals" or
+     *              a FQN {@code projects/<project_name>/topics/<topic_name>}
+     * @return an Implementation of a {@link PublisherInterface}
+     */
     PublisherInterface createPublisher(String topic);
 
 }
