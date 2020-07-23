@@ -92,7 +92,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 String projectId = client.stringValue().orElse(googleCloudConfiguration.getProjectId());
                 AnnotationValue<Topic> topicAnnotation = method.findAnnotation(Topic.class).get();
                 String topic = topicAnnotation.stringValue().get();
-                String contentType = topicAnnotation.stringValue("contentType").orElse("");
+                String contentType = topicAnnotation.get("contentType", String.class).orElse("");
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
                 Map<String, String> staticMessageAttributes = new HashMap<>();
                 List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
