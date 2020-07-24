@@ -5,7 +5,7 @@ dependencies {
     api project(":gcp-function")
     implementation "io.micronaut:micronaut-http-netty:$micronautVersion"
     implementation "io.micronaut:micronaut-http-server:$micronautVersion"
-    implementation "io.micronaut.servlet:micronaut-servlet-core:1.0.0"
+    implementation "io.micronaut.servlet:micronaut-servlet-core:1.0.1"
     implementation "io.micronaut:micronaut-router:$micronautVersion"
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.1'
 
