@@ -21,6 +21,7 @@ import com.google.api.gax.retrying.RetrySettings;
 import io.micronaut.context.annotation.ConfigurationBuilder;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.scheduling.TaskExecutors;
 
 /**
  * Configuration properties for PubSub Publishers. Each topic has its own configuration if set by the user.
@@ -45,6 +46,8 @@ public class PublisherConfigurationProperties {
     private FlowControlSettings.Builder flowControlSettings = FlowControlSettings.newBuilder();
 
     private final String name;
+
+    private String executor = TaskExecutors.SCHEDULED;
 
     public PublisherConfigurationProperties(@Parameter String name) {
         this.name = name;
@@ -104,5 +107,21 @@ public class PublisherConfigurationProperties {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     *
+     * @return executor name
+     */
+    public String getExecutor() {
+        return executor;
+    }
+
+    /**
+     *
+     * @param executor name to be set
+     */
+    public void setExecutor(String executor) {
+        this.executor = executor;
     }
 }

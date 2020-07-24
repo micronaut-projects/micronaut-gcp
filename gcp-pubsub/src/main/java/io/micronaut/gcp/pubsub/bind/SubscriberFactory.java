@@ -15,9 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.bind;
 
-import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
-import com.google.pubsub.v1.ProjectSubscriptionName;
 
 /**
  * Factory to create {@link SubscriberInterface} using default configurations.
@@ -29,9 +27,8 @@ public interface SubscriberFactory {
     /**
      * Creates an {@link SubscriberInterface} implementation and register the receiver to it. Implementations should also
      * handle start/stop life cycle events.
-     * @param projectSubscriptionName The FQN of the project subscription.
-     * @param receiver The receiver that will handle new messages
+     * @param config Configuration to create {@link com.google.cloud.pubsub.v1.Subscriber} instances.
      * @return An implementation of SubscriberInterface
      */
-    SubscriberInterface createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver);
+    SubscriberInterface createSubscriber(SubscriberFactoryConfig config);
 }

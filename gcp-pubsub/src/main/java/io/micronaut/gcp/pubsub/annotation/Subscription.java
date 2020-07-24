@@ -42,4 +42,12 @@ public @interface Subscription {
      * @return contentType to use
      */
     String contentType() default "";
+
+    /**
+     * Defines the name of a particular configuration used for a Subscriber.
+     * Configurations can be set via gcp.pubsub.subscriber.*
+     * @return configuration name to use for {@link com.google.cloud.pubsub.v1.Subscriber}
+     *
+     */
+    String configuration() default "";
 }

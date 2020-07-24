@@ -31,12 +31,14 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
+import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.gcp.pubsub.support.PubSubPublisherState;
 import io.micronaut.gcp.pubsub.support.PubSubTopicUtils;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
+import io.micronaut.gcp.pubsub.support.PublisherFactoryConfig;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.Body;
 import io.micronaut.messaging.annotation.Header;
@@ -63,23 +65,26 @@ import java.util.concurrent.ExecutorService;
 public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object, Object> {
 
     private final Logger logger = LoggerFactory.getLogger(PubSubClientIntroductionAdvice.class);
+    private final ConcurrentHashMap<ExecutableMethod, PubSubPublisherState> publisherStateCache = new ConcurrentHashMap<>();
     private final PublisherFactory publisherFactory;
     private final PubSubMessageSerDesRegistry serDesRegistry;
     private final Scheduler scheduler;
     private final ConversionService<?> conversionService;
     private final GoogleCloudConfiguration googleCloudConfiguration;
-    private final ConcurrentHashMap<ExecutableMethod, PubSubPublisherState> publisherStateCache = new ConcurrentHashMap<>();
+    private final PubSubConfigurationProperties pubSubConfigurationProperties;
 
     public PubSubClientIntroductionAdvice(PublisherFactory publisherFactory,
                                           PubSubMessageSerDesRegistry serDesRegistry,
                                           @Named(TaskExecutors.IO) ExecutorService executorService,
                                           ConversionService<?> conversionService,
-                                          GoogleCloudConfiguration googleCloudConfiguration) {
+                                          GoogleCloudConfiguration googleCloudConfiguration,
+                                          PubSubConfigurationProperties pubSubConfigurationProperties) {
         this.publisherFactory = publisherFactory;
         this.serDesRegistry = serDesRegistry;
         this.scheduler = Schedulers.from(executorService);
         this.conversionService = conversionService;
         this.googleCloudConfiguration = googleCloudConfiguration;
+        this.pubSubConfigurationProperties = pubSubConfigurationProperties;
     }
 
     @Override
@@ -92,6 +97,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 String projectId = client.stringValue().orElse(googleCloudConfiguration.getProjectId());
                 AnnotationValue<Topic> topicAnnotation = method.findAnnotation(Topic.class).get();
                 String topic = topicAnnotation.stringValue().get();
+                String configuration = topicAnnotation.get("configuration", String.class).orElse("");
                 String contentType = topicAnnotation.get("contentType", String.class).orElse("");
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
                 Map<String, String> staticMessageAttributes = new HashMap<>();
@@ -106,7 +112,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 Argument<?> bodyArgument = findBodyArgument(context.getExecutableMethod())
                         .orElseThrow(() -> new PubSubClientException("No valid message body argument found for method: " + context.getExecutableMethod()));
 
-                return new PubSubPublisherState(contentType, projectTopicName, staticMessageAttributes, bodyArgument);
+                return new PubSubPublisherState(contentType, projectTopicName, staticMessageAttributes, bodyArgument, configuration);
             });
 
             Map<String, String> messageAttributes = new HashMap<>(publisherState.getStaticMessageAttributes());
@@ -126,7 +132,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             }
             PubSubMessageSerDes serDes = serDesRegistry.find(contentType)
                     .orElseThrow(() -> new PubSubClientException("Could not locate a valid SerDes implementation for type: " + contentType));
-            PublisherInterface publisher = publisherFactory.createPublisher(publisherState.getTopicName().toString());
+            PublisherInterface publisher = publisherFactory.createPublisher(new PublisherFactoryConfig(publisherState.getTopicName(), publisherState.getConfiguration(), pubSubConfigurationProperties.getPublishingExecutor()));
             Object body = parameterValues.get(bodyArgument.getName());
             PubsubMessage pubsubMessage = null;
             if (body.getClass() == PubsubMessage.class) {

@@ -23,7 +23,7 @@ class PubSubConfigurationSpec extends Specification {
         PublisherConfigurationProperties properties = ctx.getBean(PublisherConfigurationProperties, Qualifiers.byName("animals"))
 
         expect:
-        properties.retrySettings.initialRetryDelay.seconds == 10
+            properties.retrySettings.initialRetryDelay.seconds == 10
     }
 
     void "test multiple publisher configurations"() {
@@ -39,4 +39,15 @@ class PubSubConfigurationSpec extends Specification {
 
     }
 
+    void "test subscriber configuration binding"() {
+        ApplicationContext ctx = ApplicationContext.run([
+                "gcp.pubsub.subscriber.animals.maxDurationPerAckExtension" : "100ms",
+
+        ])
+        Collection<SubscriberConfigurationProperties> properties = ctx.getBeansOfType(SubscriberConfigurationProperties)
+        SubscriberConfigurationProperties animals = properties.stream().filter({ p -> (p.getName() == "animals") }).findFirst().get()
+
+        expect:
+            animals.maxDurationPerAckExtension.toMillis() == 100
+    }
 }

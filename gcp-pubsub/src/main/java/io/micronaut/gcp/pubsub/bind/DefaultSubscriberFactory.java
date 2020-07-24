@@ -16,20 +16,27 @@
 package io.micronaut.gcp.pubsub.bind;
 
 import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
-import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
+import io.micronaut.context.BeanContext;
+import io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Default implementation of {@link SubscriberFactory}.
@@ -39,27 +46,49 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseable {
 
-    private final ConcurrentHashMap<String, Subscriber> subscribers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ProjectSubscriptionName, Subscriber> subscribers = new ConcurrentHashMap<>();
     private final TransportChannelProvider transportChannelProvider;
     private final CredentialsProvider credentialsProvider;
+    private final BeanContext beanContext;
+    private final Collection<SubscriberConfigurationProperties> subscriberConfigurationProperties;
     private final Logger logger = LoggerFactory.getLogger(DefaultSubscriberFactory.class);
 
-    public DefaultSubscriberFactory(TransportChannelProvider transportChannelProvider, CredentialsProvider credentialsProvider) {
+    public DefaultSubscriberFactory(TransportChannelProvider transportChannelProvider,
+                                    CredentialsProvider credentialsProvider,
+                                    BeanContext beanContext,
+                                    Collection<SubscriberConfigurationProperties> subscriberConfigurationProperties
+                                    ) {
         this.transportChannelProvider = transportChannelProvider;
         this.credentialsProvider = credentialsProvider;
+        this.beanContext = beanContext;
+        this.subscriberConfigurationProperties = subscriberConfigurationProperties;
     }
 
     @Override
-    public Subscriber createSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver) {
-        Subscriber subscriber = subscribers.compute(projectSubscriptionName.toString(), (k, v) -> {
+    public Subscriber createSubscriber(SubscriberFactoryConfig config) {
+        Subscriber subscriber = subscribers.compute(config.getSubscriptionName(), (k, v) -> {
             if (v == null) {
-                return Subscriber.newBuilder(projectSubscriptionName, receiver)
+                Subscriber.Builder builder = Subscriber.newBuilder(config.getSubscriptionName(), config.getReceiver())
                         .setChannelProvider(this.transportChannelProvider)
-                        .setCredentialsProvider(this.credentialsProvider)
-                        .build();
+                        .setCredentialsProvider(this.credentialsProvider);
+
+                Optional<SubscriberConfigurationProperties> subscriberConfiguration = subscriberConfigurationProperties.stream().filter(p -> p.getName().equals(config.getSubscriberConfiguration())).findFirst();
+                String executor = subscriberConfiguration.map(s -> s.getExecutor()).orElse(config.getDefaultExecutor());
+                ExecutorService executorService = beanContext.getBean(ExecutorService.class, Qualifiers.byName(executor));
+                if (!(executorService instanceof ScheduledExecutorService)) {
+                    throw new IllegalStateException("Invalid Executor type provided, please make sure you have a ScheduledExecutorService configured for Subscriber: "  + config.getSubscriptionName().getSubscription());
+                }
+                builder.setExecutorProvider(FixedExecutorProvider.create((ScheduledExecutorService) executorService));
+                if (subscriberConfiguration.isPresent()) {
+                    SubscriberConfigurationProperties properties = subscriberConfiguration.get();
+                    builder.setMaxAckExtensionPeriod(properties.getMaxAckExtensionPeriod());
+                    builder.setParallelPullCount(properties.getParallelPullCount());
+                    builder.setMaxDurationPerAckExtension(properties.getMaxDurationPerAckExtension());
+                }
+                return builder.build();
             }
             throw new PubSubListenerException(String.format("Subscription %s is already registered for another" +
-                    " method", projectSubscriptionName));
+                    " method", config.getSubscriptionName().toString()));
         });
         subscriber.startAsync();
         return subscriber;
@@ -69,9 +98,9 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
     @Override
     public void close() throws Exception {
         while (!subscribers.entrySet().isEmpty()) {
-            Iterator<Map.Entry<String, Subscriber>> it = subscribers.entrySet().iterator();
+            Iterator<Map.Entry<ProjectSubscriptionName, Subscriber>> it = subscribers.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<String, Subscriber> entry = it.next();
+                Map.Entry<ProjectSubscriptionName, Subscriber> entry = it.next();
                 SubscriberInterface subscriber = entry.getValue();
                 try {
                     subscriber.stopAsync().awaitTerminated();

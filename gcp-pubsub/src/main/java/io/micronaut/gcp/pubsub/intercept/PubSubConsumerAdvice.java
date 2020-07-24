@@ -28,10 +28,8 @@ import io.micronaut.core.convert.ConversionService;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement;
-import io.micronaut.gcp.pubsub.bind.PubSubBinderRegistry;
-import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
-import io.micronaut.gcp.pubsub.bind.SubscriberFactory;
+import io.micronaut.gcp.pubsub.bind.*;
+import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
@@ -70,6 +68,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
     private final PubSubMessageSerDesRegistry serDesRegistry;
     private final SubscriberFactory subscriberFactory;
     private final GoogleCloudConfiguration googleCloudConfiguration;
+    private final PubSubConfigurationProperties pubSubConfigurationProperties;
     private final PubSubBinderRegistry binderRegistry;
     private final PubSubMessageReceiverExceptionHandler exceptionHandler;
 
@@ -78,6 +77,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                                 PubSubMessageSerDesRegistry serDesRegistry,
                                 SubscriberFactory subscriberFactory,
                                 GoogleCloudConfiguration googleCloudConfiguration,
+                                PubSubConfigurationProperties pubSubConfigurationProperties,
                                 PubSubBinderRegistry binderRegistry,
                                 PubSubMessageReceiverExceptionHandler exceptionHandler) {
         this.beanContext = beanContext;
@@ -85,6 +85,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
         this.serDesRegistry = serDesRegistry;
         this.subscriberFactory = subscriberFactory;
         this.googleCloudConfiguration = googleCloudConfiguration;
+        this.pubSubConfigurationProperties = pubSubConfigurationProperties;
         this.binderRegistry = binderRegistry;
         this.exceptionHandler = exceptionHandler;
     }
@@ -106,7 +107,8 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
         if (subscriptionAnnotation != null) {
             String subscriptionName = subscriptionAnnotation.getRequiredValue(String.class);
             ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
-            String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse("");
+            String defaultContentType = subscriptionAnnotation.get("contentType", String.class).orElse("");
+            String configuration = subscriptionAnnotation.get("configuration", String.class).orElse("");
             MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer consumer) -> {
                 String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
                 String contentType = Optional.of(messageContentType).orElse(defaultContentType);
@@ -134,7 +136,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                 }
             };
             try {
-                this.subscriberFactory.createSubscriber(projectSubscriptionName, receiver);
+                this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
             } catch (Exception e) {
                 throw new PubSubListenerException("Failed to create subscriber", e);
             }

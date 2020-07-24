@@ -43,4 +43,12 @@ public @interface Topic {
      * @return contentType to use
      */
     String contentType() default MediaType.APPLICATION_JSON;
+
+    /**
+     * Defines the name of a particular configuration used for a Publisher.
+     * Configurations can be set via gcp.pubsub.subscriber.*
+     * @return configuration name to use for {@link com.google.cloud.pubsub.v1.Publisher}
+     *
+     */
+    String configuration() default "";
 }

@@ -31,10 +31,9 @@ import com.google.cloud.pubsub.v1.PublisherInterface;
 public interface PublisherFactory {
     /**
      *
-     * @param topic Topic name to be used. Can be either a simple name such as "animals" or
-     *              a FQN {@code projects/<project_name>/topics/<topic_name>}
+     * @param config A {@link PublisherFactoryConfig} with the necessary configuration to create a {@link com.google.cloud.pubsub.v1.Publisher}
      * @return an Implementation of a {@link PublisherInterface}
      */
-    PublisherInterface createPublisher(String topic);
+    PublisherInterface createPublisher(PublisherFactoryConfig config);
 
 }

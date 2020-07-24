@@ -16,7 +16,7 @@
 package io.micronaut.gcp.pubsub.support;
 
 
-import com.google.pubsub.v1.TopicName;
+import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.core.type.Argument;
 
 import java.util.Map;
@@ -31,18 +31,21 @@ import java.util.Map;
 public class PubSubPublisherState {
 
     private final String contentType;
-    private final TopicName topicName;
+    private final ProjectTopicName topicName;
     private final Map<String, String> staticMessageAttributes;
     private final Argument<?> bodyArgument;
+    private final String configuration;
 
     public PubSubPublisherState(String contentType,
-                                TopicName topicName,
+                                ProjectTopicName topicName,
                                 Map<String, String> staticMessageAttributes,
-                                Argument<?> bodyArgument) {
+                                Argument<?> bodyArgument,
+                                String executor) {
         this.contentType = contentType;
         this.topicName = topicName;
         this.staticMessageAttributes = staticMessageAttributes;
         this.bodyArgument = bodyArgument;
+        this.configuration = executor;
     }
 
     /**
@@ -57,7 +60,7 @@ public class PubSubPublisherState {
      *
      * @return the topic name
      */
-    public TopicName getTopicName() {
+    public ProjectTopicName getTopicName() {
         return topicName;
     }
 
@@ -75,5 +78,13 @@ public class PubSubPublisherState {
      */
     public Argument<?> getBodyArgument() {
         return bodyArgument;
+    }
+
+    /**
+     *
+     * @return the name of the {@link io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties} to be used
+     */
+    public String getConfiguration() {
+        return configuration;
     }
 }
