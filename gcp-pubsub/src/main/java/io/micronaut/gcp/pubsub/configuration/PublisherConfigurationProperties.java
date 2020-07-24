@@ -17,11 +17,13 @@ package io.micronaut.gcp.pubsub.configuration;
 
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowControlSettings;
+import com.google.api.gax.batching.FlowController;
 import com.google.api.gax.retrying.RetrySettings;
 import io.micronaut.context.annotation.ConfigurationBuilder;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.scheduling.TaskExecutors;
+import org.threeten.bp.Duration;
 
 /**
  * Configuration properties for PubSub Publishers. Each topic has its own configuration if set by the user.
@@ -36,14 +38,39 @@ import io.micronaut.scheduling.TaskExecutors;
 @EachProperty(PubSubConfigurationProperties.PREFIX + ".publisher")
 public class PublisherConfigurationProperties {
 
+    static final Duration MIN_TOTAL_TIMEOUT = Duration.ofSeconds(10);
+    static final Duration MIN_RPC_TIMEOUT = Duration.ofMillis(10);
+
+    // Meaningful defaults.
+    static final long DEFAULT_ELEMENT_COUNT_THRESHOLD = 100L;
+    static final long DEFAULT_REQUEST_BYTES_THRESHOLD = 1000L; // 1 kB
+    static final Duration DEFAULT_DELAY_THRESHOLD = Duration.ofMillis(1);
+    private static final Duration DEFAULT_INITIAL_RPC_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration DEFAULT_MAX_RPC_TIMEOUT = Duration.ofSeconds(600);
+    private static final Duration DEFAULT_TOTAL_TIMEOUT = Duration.ofSeconds(600);
+
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "retry")
-    private RetrySettings.Builder retrySettings = RetrySettings.newBuilder();
+    private RetrySettings.Builder retrySettings = RetrySettings
+            .newBuilder()
+            .setTotalTimeout(DEFAULT_TOTAL_TIMEOUT)
+            .setInitialRetryDelay(Duration.ofMillis(100))
+            .setRetryDelayMultiplier(1.3)
+            .setMaxRetryDelay(Duration.ofSeconds(60))
+            .setInitialRpcTimeout(DEFAULT_INITIAL_RPC_TIMEOUT)
+            .setRpcTimeoutMultiplier(1)
+            .setMaxRpcTimeout(DEFAULT_MAX_RPC_TIMEOUT)
+            ;
 
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "batching")
-    private BatchingSettings.Builder batchingSettings = BatchingSettings.newBuilder();
+    private BatchingSettings.Builder batchingSettings = BatchingSettings
+            .newBuilder()
+            .setDelayThreshold(DEFAULT_DELAY_THRESHOLD)
+            .setRequestByteThreshold(DEFAULT_REQUEST_BYTES_THRESHOLD)
+            .setElementCountThreshold(DEFAULT_ELEMENT_COUNT_THRESHOLD);
 
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "flow-control")
-    private FlowControlSettings.Builder flowControlSettings = FlowControlSettings.newBuilder();
+    private FlowControlSettings.Builder flowControlSettings = FlowControlSettings.newBuilder()
+            .setLimitExceededBehavior(FlowController.LimitExceededBehavior.Ignore);
 
     private final String name;
 
@@ -89,8 +116,8 @@ public class PublisherConfigurationProperties {
      * Flow Control settings.
      * @return flowControlSettings
      */
-    public FlowControlSettings getFlowControlSettings() {
-        return flowControlSettings.build();
+    public FlowControlSettings.Builder getFlowControlSettings() {
+        return flowControlSettings;
     }
 
     /**

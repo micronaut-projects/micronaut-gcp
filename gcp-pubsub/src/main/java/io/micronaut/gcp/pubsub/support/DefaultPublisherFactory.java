@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
+import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
@@ -82,8 +83,18 @@ public class DefaultPublisherFactory implements PublisherFactory {
                 String executor = publisherConfiguration.map(p -> p.getExecutor()).orElse(config.getDefaultExecutor());
                 ExecutorService executorService = beanContext.getBean(ExecutorService.class, Qualifiers.byName(executor));
                 if (publisherConfiguration.isPresent()) {
+
                     publisherBuilder.setRetrySettings(publisherConfiguration.get().getRetrySettings().build());
-                    publisherBuilder.setBatchingSettings(publisherConfiguration.get().getBatchingSettings().build());
+                    //FlowControl had to be flatten in order to be parsed
+                    BatchingSettings batchSettings = publisherConfiguration.get().getBatchingSettings().build();
+                    publisherBuilder.setBatchingSettings(BatchingSettings.newBuilder()
+                            .setDelayThreshold(batchSettings.getDelayThreshold())
+                            .setElementCountThreshold(batchSettings.getElementCountThreshold())
+                            .setIsEnabled(batchSettings.getIsEnabled())
+                            .setElementCountThreshold(batchSettings.getElementCountThreshold())
+                            .setDelayThreshold(batchSettings.getDelayThreshold())
+                            .setFlowControlSettings(publisherConfiguration.get().getFlowControlSettings().build())
+                            .build());
                 }
                 if (!(executorService instanceof ScheduledExecutorService)) {
                     throw new IllegalStateException("Invalid Executor type provided, please make sure you have a ScheduledExecutorService configured for Publisher: "  + config.getTopicName().getTopic());

@@ -44,7 +44,10 @@ public class SubscriberConfigurationProperties {
     private Duration maxDurationPerAckExtension = Duration.ofMillis(0);
 
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "flow-control")
-    private FlowControlSettings.Builder flowControlSettings = FlowControlSettings.newBuilder();
+    private FlowControlSettings.Builder flowControlSettings = FlowControlSettings
+            .newBuilder()
+            .setMaxOutstandingElementCount(1000L)
+            .setMaxOutstandingRequestBytes(100L * 1024L * 1024L);
 
     /**
      *
@@ -137,8 +140,8 @@ public class SubscriberConfigurationProperties {
      * Flow Control settings.
      * @return flowControlSettings
      */
-    public FlowControlSettings getFlowControlSettings() {
-        return flowControlSettings.build();
+    public FlowControlSettings.Builder getFlowControlSettings() {
+        return flowControlSettings;
     }
 
     /**
