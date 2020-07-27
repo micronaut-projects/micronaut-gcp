@@ -22,14 +22,12 @@ import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.context.BeanContext;
-import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -55,31 +53,27 @@ public class DefaultPublisherFactory implements PublisherFactory {
     private final ConcurrentHashMap<ProjectTopicName, Publisher> publishers = new ConcurrentHashMap<>();
     private final TransportChannelProvider transportChannelProvider;
     private final CredentialsProvider credentialsProvider;
-    private final Collection<PublisherConfigurationProperties> publisherConfigurationProperties;
     private final BeanContext beanContext;
 
     public DefaultPublisherFactory(TransportChannelProvider transportChannelProvider,
                                    CredentialsProvider credentialsProvider,
-                                   Collection<PublisherConfigurationProperties> publisherConfigurationProperties,
-                                   PubSubConfigurationProperties pubSubConfigurationProperties,
                                    BeanContext beanContext) {
         this.transportChannelProvider = transportChannelProvider;
         this.credentialsProvider = credentialsProvider;
-        this.publisherConfigurationProperties = publisherConfigurationProperties;
         this.beanContext = beanContext;
     }
 
     /**
      * Creates and caches a publisher for a given topic.
-     * @param config
-     * @return
+     * @param config {@link PublisherFactoryConfig} object containing all required properties.
+     * @return An instance of {@link Publisher} configured using the config and environment properties from `gcp.pubsub.publisher.&gt;config_name&lt;`
      */
     @Override
     public Publisher createPublisher(@Nonnull PublisherFactoryConfig config) {
         return this.publishers.computeIfAbsent(config.getTopicName(), (key) -> {
             try {
                 Publisher.Builder publisherBuilder = Publisher.newBuilder(config.getTopicName());
-                Optional<PublisherConfigurationProperties> publisherConfiguration = publisherConfigurationProperties.stream().filter(p -> p.getName().equals(config.getPublisherConfiguration())).findFirst();
+                Optional<PublisherConfigurationProperties> publisherConfiguration = beanContext.findBean(PublisherConfigurationProperties.class, Qualifiers.byName(config.getPublisherConfiguration()));
                 String executor = publisherConfiguration.map(p -> p.getExecutor()).orElse(config.getDefaultExecutor());
                 ExecutorService executorService = beanContext.getBean(ExecutorService.class, Qualifiers.byName(executor));
                 if (publisherConfiguration.isPresent()) {

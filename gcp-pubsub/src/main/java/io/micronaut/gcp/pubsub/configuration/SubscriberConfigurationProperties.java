@@ -51,6 +51,14 @@ public class SubscriberConfigurationProperties {
 
     /**
      *
+     * @param name of this configuration.
+     */
+    public SubscriberConfigurationProperties(@Parameter String name) {
+        this.name = name;
+    }
+
+    /**
+     *
      * @return number of concurrent pulls
      */
     public Integer getParallelPullCount() {
@@ -102,14 +110,6 @@ public class SubscriberConfigurationProperties {
      */
     public void setMaxDurationPerAckExtension(Duration maxDurationPerAckExtension) {
         this.maxDurationPerAckExtension = maxDurationPerAckExtension;
-    }
-
-    /**
-     *
-     * @param name of this configuration.
-     */
-    public SubscriberConfigurationProperties(@Parameter String name) {
-        this.name = name;
     }
 
     /**

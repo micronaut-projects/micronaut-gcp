@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
@@ -50,18 +49,14 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
     private final TransportChannelProvider transportChannelProvider;
     private final CredentialsProvider credentialsProvider;
     private final BeanContext beanContext;
-    private final Collection<SubscriberConfigurationProperties> subscriberConfigurationProperties;
     private final Logger logger = LoggerFactory.getLogger(DefaultSubscriberFactory.class);
 
     public DefaultSubscriberFactory(TransportChannelProvider transportChannelProvider,
                                     CredentialsProvider credentialsProvider,
-                                    BeanContext beanContext,
-                                    Collection<SubscriberConfigurationProperties> subscriberConfigurationProperties
-                                    ) {
+                                    BeanContext beanContext) {
         this.transportChannelProvider = transportChannelProvider;
         this.credentialsProvider = credentialsProvider;
         this.beanContext = beanContext;
-        this.subscriberConfigurationProperties = subscriberConfigurationProperties;
     }
 
     @Override
@@ -72,7 +67,7 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
                         .setChannelProvider(this.transportChannelProvider)
                         .setCredentialsProvider(this.credentialsProvider);
 
-                Optional<SubscriberConfigurationProperties> subscriberConfiguration = subscriberConfigurationProperties.stream().filter(p -> p.getName().equals(config.getSubscriberConfiguration())).findFirst();
+                Optional<SubscriberConfigurationProperties> subscriberConfiguration = beanContext.findBean(SubscriberConfigurationProperties.class, Qualifiers.byName(config.getSubscriberConfiguration()));
                 String executor = subscriberConfiguration.map(s -> s.getExecutor()).orElse(config.getDefaultExecutor());
                 ExecutorService executorService = beanContext.getBean(ExecutorService.class, Qualifiers.byName(executor));
                 if (!(executorService instanceof ScheduledExecutorService)) {

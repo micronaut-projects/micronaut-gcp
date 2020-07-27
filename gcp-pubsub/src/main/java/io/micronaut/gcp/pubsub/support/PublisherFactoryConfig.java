@@ -17,6 +17,12 @@ package io.micronaut.gcp.pubsub.support;
 
 import com.google.pubsub.v1.ProjectTopicName;
 
+/**
+ * Holds necessary configuration to create {@link com.google.cloud.pubsub.v1.Subscriber} instances via {@link io.micronaut.gcp.pubsub.bind.SubscriberFactory}.
+ *
+ * @author Vinicius Carvalho
+ * @since 2.0.0
+ */
 public class PublisherFactoryConfig {
 
     private final ProjectTopicName topicName;

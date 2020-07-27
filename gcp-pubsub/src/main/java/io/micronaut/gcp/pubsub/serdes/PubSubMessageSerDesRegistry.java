@@ -27,6 +27,12 @@ import java.util.Optional;
  * @since 2.0.0
  */
 public interface PubSubMessageSerDesRegistry {
+
+    /**
+     * Retrieves the appropriate PubSubMessageSerDes for the provided contentType.
+     * @param type The MIME type to search for a SerDes
+     * @return the registered SerDes
+     */
     default Optional<PubSubMessageSerDes> find(MediaType type) {
         return find(type.getType());
     }
