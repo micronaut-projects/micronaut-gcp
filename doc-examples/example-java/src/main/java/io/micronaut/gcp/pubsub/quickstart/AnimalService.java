@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 
 // tag::clazz[]
 @Singleton
-public class AnimalService {
+public final class AnimalService {
     private final AnimalClient animalClient;
 
     public AnimalService(AnimalClient animalClient) { // <1>
