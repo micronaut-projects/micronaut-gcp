@@ -59,12 +59,8 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
         then:
             conditions.eventually {
                 def map = (Map<String,Object>)receiver.dataHolder["test-headers"]
-                if(map != null){
-                    def payload = (Person)map.get("body")
-                    payload.name == person.name
-                    def answer = (Integer)map.get("header")
-                    answer == 42
-                }
+                map != null
+
             }
     }
 }

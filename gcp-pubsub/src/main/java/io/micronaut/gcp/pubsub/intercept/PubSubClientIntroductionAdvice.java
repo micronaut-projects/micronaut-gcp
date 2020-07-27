@@ -130,8 +130,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                     messageAttributes.put(entry.getKey(), entry.getValue());
                 }
             }
-            PubSubMessageSerDes serDes = serDesRegistry.find(contentType)
-                    .orElseThrow(() -> new PubSubClientException("Could not locate a valid SerDes implementation for type: " + contentType));
+
             PublisherInterface publisher = publisherFactory.createPublisher(new PublisherFactoryConfig(publisherState.getTopicName(), publisherState.getConfiguration(), pubSubConfigurationProperties.getPublishingExecutor()));
             Object body = parameterValues.get(bodyArgument.getName());
             PubsubMessage pubsubMessage = null;
@@ -143,6 +142,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 if (body.getClass() == byte[].class) {
                     serialized = (byte[]) body;
                 } else {
+                    PubSubMessageSerDes serDes = serDesRegistry.find(contentType)
+                            .orElseThrow(() -> new PubSubClientException("Could not locate a valid SerDes implementation for type: " + contentType));
                     serialized = serDes.serialize(body);
                 }
                 messageAttributes.put("Content-Type", contentType);
@@ -152,7 +153,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                         .build();
             }
             ApiFuture<String> future = publisher.publish(pubsubMessage);
-            Single<String> reactiveResult = Single.fromFuture(future).subscribeOn(this.scheduler);
+            Single<String> reactiveResult = Single.fromFuture(future);
             boolean isReactive = Publishers.isConvertibleToPublisher(javaReturnType);
             if (javaReturnType == void.class || javaReturnType == Void.class) {
                 String result = reactiveResult.blockingGet();

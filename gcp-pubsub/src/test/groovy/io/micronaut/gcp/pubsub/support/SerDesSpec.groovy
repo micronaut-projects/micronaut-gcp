@@ -55,6 +55,17 @@ class SerDesSpec extends AbstractPublisherSpec {
             pubSubMessage.getData().toByteArray() == expected
     }
 
+    void "bypass serdes and set content type"() {
+        byte[] expected = [42]
+        when:
+            testClient.bypassSerDesWithContent(expected)
+        then:
+            PubsubMessage pubSubMessage = (PubsubMessage) DataHolder.getInstance().getData()
+            pubSubMessage.getAttributesMap().get("Content-Type") == MediaType.IMAGE_JPEG
+            pubSubMessage.getData().toByteArray() == expected
+
+    }
+
     void "bypass serdes with pubsub type"() {
         PubsubMessage message = PubsubMessage
                 .newBuilder()
@@ -83,6 +94,9 @@ interface SerDesTestClient {
 
     @Topic(value = "test-topic")
     String bypassSerDes(byte[] data)
+
+    @Topic(value = "test-topic", contentType = MediaType.IMAGE_JPEG)
+    String bypassSerDesWithContent(byte[] data)
 
     @Topic("test-topic")
     String bypassSerDes(PubsubMessage message)

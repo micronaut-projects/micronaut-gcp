@@ -54,6 +54,6 @@ public class PubSubHeaderBinder implements PubSubAnnotatedArgumentBinder<Header>
         Map<String, String> attributes = source.getPubsubMessage().getAttributesMap();
         PubSubAttributesConvertibleValues convertibleValues = new PubSubAttributesConvertibleValues(attributes, conversionService);
         Optional<Object> header = convertibleValues.get(parameterName, context);
-        return null;
+        return () -> header;
     }
 }
