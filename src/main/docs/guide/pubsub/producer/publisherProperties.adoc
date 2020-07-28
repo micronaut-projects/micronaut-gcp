@@ -1,0 +1,53 @@
+PubSub allows each Publisher to have its own configuration for things such as executors or batching. This is useful sometimes when you need to publish
+messages to topic following different SLAs.
+
+The framework allows you to create configurations and then bind those configurations to each topic annotation using the `configuration` parameter.
+
+
+[%header, format=csv]
+.Configuration properties for api:configuration.PublisherConfigurationProperties[]
+|===
+Property,Type,Description
+gcp.pubsub.publisher.*.executor,java.lang.String,Name of the executor to use. Default: scheduled
+gcp.pubsub.publisher.*.retry.total-timeout,org.threeten.bp.Duration,How long the logic should keep trying the remote calluntil it gives up completely. Default 600 seconds
+gcp.pubsub.publisher.*.retry.initial-retry-delay,org.threeten.bp.Duration,Delay before the first retry. Default: 100ms
+gcp.pubsub.publisher.*.retry.retry-delay-multiplier,double,Controls the change in retry delay. The retry delay of the previous call is multiplied by the RetryDelayMultiplier to calculate the retry delay for the next call. Default: 1.3
+gcp.pubsub.publisher.*.retry.max-retry-delay,org.threeten.bp.Duration,"Puts a limit on the value of the retry delay, so that the RetryDelayMultiplier can't increase the retry delay higher than this amount. Default: 60 seconds"
+gcp.pubsub.publisher.*.retry.max-attempts,int,Defines the maximum number of attempts to perform. Default: 0
+gcp.pubsub.publisher.*.retry.jittered,boolean,Determines if the delay time should be randomized. Default: true
+gcp.pubsub.publisher.*.retry.initial-rpc-timeout,org.threeten.bp.Duration,Controls the timeout for the initial RPC. Default: 5 seconds
+gcp.pubsub.publisher.*.retry.rpc-timeout-multiplier,double,Controls the change in RPC timeout. The timeout of the previous call is multiplied by the RpcTimeoutMultiplier to calculate the timeout for the next call. Default: 1.0
+gcp.pubsub.publisher.*.retry.max-rpc-timeout,org.threeten.bp.Duration,"Puts a limit on the value of the RPC timeout, so that the RpcTimeoutMultiplier can't increase the RPC timeout higher than this amount. Default 0"
+gcp.pubsub.publisher.*.batching.element-count-threshold,java.lang.Long,"Set the element count threshold to use for batching. After this many elements are accumulated, they will be wrapped up in a batch and sent. Default: 100"
+gcp.pubsub.publisher.*.batching.request-byte-threshold,java.lang.Long,"Set the request byte threshold to use for batching. After this many bytes are accumulated, the elements will be wrapped up in a batch and sent. Default 1000 (1Kb)"
+gcp.pubsub.publisher.*.batching.delay-threshold,org.threeten.bp.Duration,"Set the delay threshold to use for batching. After this amount of time has elapsed (counting from the first element added), the elements will be wrapped up in a batch and sent. Default 1ms"
+gcp.pubsub.publisher.*.batching.is-enabled,java.lang.Boolean,Indicate if the batching is enabled. Default : true
+gcp.pubsub.publisher.*.flow-control.max-outstanding-element-count,java.lang.Long,Maximum number of outstanding elements to keep in memory before enforcing flow control.
+gcp.pubsub.publisher.*.flow-control.max-outstanding-request-bytes,java.lang.Long,Maximum number of outstanding bytes to keep in memory before enforcing flow control.
+gcp.pubsub.publisher.*.flow-control.limit-exceeded-behavior,com.google.api.gax.batching.FlowController$LimitExceededBehavior,The behavior of  FlowController when the specified limits are exceeded. Defaults to Ignore.
+|===
+
+For example suppose you have the following configuration:
+
+[source,yaml]
+----
+gcp:
+  pubsub:
+    publisher:
+      batching:
+        executor: batch-executor
+      immediate:
+        executor: immediate-executor
+        batching:
+          enabled: false
+----
+
+You can then apply it to individual methods as:
+
+snippet::io.micronaut.gcp.pubsub.publisher.CustomConfigurationClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> This topic will use configuration named `batching`
+<2> This topic will use configuration named `immediate`
+
+IMPORTANT: `FlowControlSettings` are actually configured for the `BatchingSettings` property, due the nature of Google's Builders the configuration was
+flattened at `PubSubConfigurationProperties` level, and it's injected it into the `RetrySettings` later.

@@ -1,0 +1,6 @@
+
+snippet::io.micronaut.gcp.pubsub.publisher.CustomHeadersClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> Headers specified at class level will be added to all annotated methods using `@Topic`
+<2> You can pass a static value as part of ann:io.micronaut.messaging.annotation.Header[]
+<3> Values can also be passed via arguments. A link:{apimicronaut}core/convert/ConversionService.html[ConversionService] will try to convert them into a `String` value.
