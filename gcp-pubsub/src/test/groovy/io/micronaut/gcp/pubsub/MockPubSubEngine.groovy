@@ -27,7 +27,8 @@ class MockPubSubEngine implements AutoCloseable {
     }
 
     void publish(PubsubMessage pubsubMessage, String topic) {
-        messages.add(new PublisherMessage(pubsubMessage, topic));
+        PubsubMessage messageWithId = PubsubMessage.newBuilder(pubsubMessage).setMessageId("1234").build() //fake 1234 as ID for all messages for testing
+        messages.add(new PublisherMessage(messageWithId, topic))
     }
 
     void registerReceiver(MessageReceiver receiver){
@@ -71,7 +72,7 @@ class MockPubSubEngine implements AutoCloseable {
                             availableMessage.published = true;
                         }
                     }
-                    Thread.sleep(250);
+                    Thread.sleep(200)
                 }
             } catch (InterruptedException ex) {
 

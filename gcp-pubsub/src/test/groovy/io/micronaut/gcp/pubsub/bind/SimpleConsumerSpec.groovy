@@ -5,6 +5,7 @@ import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.AbstractConsumerSpec
+import io.micronaut.gcp.pubsub.annotation.MessageId
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
@@ -46,7 +47,7 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
             pubSubClient.publish(message)
         then:
             conditions.eventually {
-                receiver.dataHolder["test-pubsubmessage"] == message
+                receiver.dataHolder["test-pubsubmessage"].data == message.data
             }
     }
 
@@ -60,7 +61,19 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
             conditions.eventually {
                 def map = (Map<String,Object>)receiver.dataHolder["test-headers"]
                 map != null
+            }
+    }
 
+    void "receive messageId"() {
+        PollingConditions conditions = new PollingConditions(timeout: 3)
+        def person = new Person()
+        person.name = "alf"
+        when:
+            pubSubClient.publishPojoMessageId(person)
+        then:
+            conditions.eventually {
+                def map = (Map<String,Object>)receiver.dataHolder["test-with-message-id"]
+                map != null && map.get("id") == "1234"
             }
     }
 }
@@ -77,6 +90,9 @@ interface SimplePubSubClient {
     @Topic("test-headers")
     String publishPojo(Person person, @Header("X-Answer-For-Everything") Integer answer)
 
+    @Topic("test-with-message-id")
+    String publishPojoMessageId(Person person)
+
 }
 
 @PubSubListener
@@ -92,6 +108,14 @@ class SimpleReceiver {
     @Subscription("test-pubsubmessage")
     void receive(PubsubMessage message){
         this.dataHolder["test-pubsubmessage"] = message
+    }
+
+    @Subscription("test-with-message-id")
+    void receive(Person person, @MessageId String id){
+        Map<String, Object> holder = new HashMap<>()
+        holder.put("body", person)
+        holder.put("id", id)
+        dataHolder["test-with-message-id"] = holder
     }
 
     @Subscription("test-headers")
