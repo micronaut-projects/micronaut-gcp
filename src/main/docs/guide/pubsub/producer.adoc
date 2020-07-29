@@ -1,13 +1,11 @@
 Pub/Sub support in micronaut follows the same pattern used for other types of clients such as the HTTP Client.
-By annotating an interface with ann:configuration.gcp.pubsub.annotation.PubSubClient[] the framework will create an implementation bean that handles
-communication with Pub/Sub for you.
+By annotating an interface with ann:configuration.gcp.pubsub.annotation.PubSubClient[] the framework will create an implementation bean that handles communication with Pub/Sub for you.
 
 == Topics
 
-In order to publish messages to Pub/Sub you need a method annotated with a `@Topic` annotation. For each annotated method
-the framework will create a dedicated `Publisher` with its own configuration for `RetrySettings`, `BatchSettings` and
-its own `Executor`. All settings can be overridden via configuration properties and the appropriate configuration can be passed
-via the `configuration` attribute of the `@Topic` annotation.
+In order to publish messages to Pub/Sub you need a method annotated with a `@Topic` annotation.
+For each annotated method the framework will create a dedicated link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publisher]  with its own configuration for `RetrySettings`, `BatchSettings` and its own `Executor`.
+All settings can be overridden via configuration properties and the appropriate configuration can be passed via the `configuration` attribute of the `@Topic` annotation.
 
 snippet::io.micronaut.gcp.pubsub.client.SimpleClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
 
@@ -20,12 +18,9 @@ IMPORTANT: If a body argument cannot be found, an exception will be thrown.
 
 == Resource naming
 
-On the previous examples you noticed we used a simple naming for the topic such as `animals`. Inside Google Cloud however resources are
-only accessible via their FQN. In PubSub case topics are named as `projects/$PROJECT_ID/topics/$TOPIC_NAME`. Micronaut integration with GCP
-will automatically grab the default project id available (please refer to the section <<setup, Google Project Id>> ) and convert the simple naming
-into a FQN.
-You can also support a FQN that uses a different project name, that is useful when your project has to publish message to more than the default project
-configured for the Service Account.
+On the previous examples you noticed we used a simple naming for the topic such as `animals`. Inside Google Cloud however resources are only accessible via their FQN. In PubSub case topics are named as `projects/$PROJECT_ID/topics/$TOPIC_NAME`.
+Micronaut integration with GCP will automatically grab the default project id available (please refer to the section <<setup, Google Project Id>> ) and convert the simple naming of the resource into a FQN.
+You can also support a FQN that uses a different project name, that is useful when your project has to publish message to more than the default project configured for the Service Account.
 
 NOTE: When publishing to a different project, make sure your service account has the proper access to the resource.
 

@@ -1,0 +1,24 @@
+To start receiving messages you annotate a class with ann:configuration.gcp.pubsub.annotation.PubSubListener[], the framework will then use AOP to deliver messages to methods annotated with ann:configuration.gcp.pubsub.annotation.Subbscription[].
+
+== Subscriptions
+
+All methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] will be invoked by the framework.
+Each annotated method creates an individual https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber],
+that can be configured using the `configuration` parameter of the ann:configuration.gcp.pubsub.annotation.Subscription[] annotation.
+
+IMPORTANT: If a body argument cannot be found, an exception will be thrown.
+
+== Resource naming
+
+Just as described on the <<producer, PubSub Publisher>> section, subscriptions examples are also using simple names such as `animals`.
+Inside Google Cloud however resources are only accessible via their FQN. A Subscription name follows the pattern: `projects/$PROJECT_ID/subscriptions/$SUBSCRIPTION_NAME`.
+Micronaut integration with GCP will automatically grab the default project id available (please refer to the section <<setup, Google Project Id>> ) and convert the simple naming of the resource into a FQN.
+You can also support a FQN that uses a different project name, that is useful when your project has to publish message to more than the default project configured for the Service Account.
+
+snippet::io.micronaut.gcp.pubsub.subscriber.SimpleSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> ann:configuration.gcp.pubsub.annotation.PubSubListener[] marks this class to be a Message Listener
+<2> Methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] will receive messages from that subscription
+<3> You can also use a FQN for the subscription, specially when you need to access a resource on a different project
+
+NOTE: When publishing to a different project, make sure your service account has the proper access to the resource.
