@@ -1,5 +1,5 @@
-PubSub allows each Publisher to have its own configuration for things such as executors or batching. This is useful sometimes when you need to publish
-messages to topic following different SLAs.
+Pub/Sub allows each link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publisher] to have its own configuration for things such as executors or batching settings.
+This is useful when you need to publish messages to topic that uses different SLAs.
 
 The framework allows you to create configurations and then bind those configurations to each topic annotation using the `configuration` parameter.
 
@@ -46,8 +46,8 @@ You can then apply it to individual methods as:
 
 snippet::io.micronaut.gcp.pubsub.publisher.CustomConfigurationClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
 
-<1> This topic will use configuration named `batching`
-<2> This topic will use configuration named `immediate`
+<1> The link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publisher] will be configured using a configuration named `batching`
+<2> The link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publisher] will be configured using a configuration named `immediate`
 
 IMPORTANT: `FlowControlSettings` are actually configured for the `BatchingSettings` property, due the nature of Google's Builders the configuration was
 flattened at `PubSubConfigurationProperties` level, and it's injected it into the `RetrySettings` later.

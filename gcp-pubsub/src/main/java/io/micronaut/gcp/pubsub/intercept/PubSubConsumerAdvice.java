@@ -127,8 +127,8 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                     if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
                         pubSubAcknowledgement.ack();
                     } else {
-                        if (!pubSubAcknowledgement.isMessageAcked()) {
-                            logger.warn("Method {} was executed and no message acknowledge detected, message will be redelivered.", method.getName());
+                        if (!pubSubAcknowledgement.isClientAck()) {
+                            logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", method.getName());
                         }
                     }
                 } catch (Exception e) {

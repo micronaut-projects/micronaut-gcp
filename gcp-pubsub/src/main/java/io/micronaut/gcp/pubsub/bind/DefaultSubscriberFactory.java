@@ -79,6 +79,7 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
                     builder.setMaxAckExtensionPeriod(properties.getMaxAckExtensionPeriod());
                     builder.setParallelPullCount(properties.getParallelPullCount());
                     builder.setMaxDurationPerAckExtension(properties.getMaxDurationPerAckExtension());
+                    builder.setFlowControlSettings(properties.getFlowControlSettings().build());
                 }
                 return builder.build();
             }

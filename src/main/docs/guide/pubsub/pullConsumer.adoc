@@ -2,18 +2,25 @@ To start receiving messages you annotate a class with ann:configuration.gcp.pubs
 
 == Subscriptions
 
+
 All methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] will be invoked by the framework.
 Each annotated method creates an individual https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber],
 that can be configured using the `configuration` parameter of the ann:configuration.gcp.pubsub.annotation.Subscription[] annotation.
 
-IMPORTANT: If a body argument cannot be found, an exception will be thrown.
+IMPORTANT: Methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] must be unique on your application.
+If two distinct methods try to subscribe to the same `Subscription` an error is thrown.
+This is intended to avoid issues with message Acknowledgement control.
+
+IMPORTANT: The annotated method must have at least one argument that is bound to the body of the message or an exception is thrown.
+
 
 == Resource naming
 
-Just as described on the <<producer, PubSub Publisher>> section, subscriptions examples are also using simple names such as `animals`.
+Just as described on the <<producer, Pub/Sub Publisher>> section, subscriptions examples are also using simple names such as `animals`.
 Inside Google Cloud however resources are only accessible via their FQN. A Subscription name follows the pattern: `projects/$PROJECT_ID/subscriptions/$SUBSCRIPTION_NAME`.
 Micronaut integration with GCP will automatically grab the default project id available (please refer to the section <<setup, Google Project Id>> ) and convert the simple naming of the resource into a FQN.
-You can also support a FQN that uses a different project name, that is useful when your project has to publish message to more than the default project configured for the Service Account.
+You can also pass a FQN as the subscription name.
+This is helpful when you need to listen to subscriptions from different projects.
 
 snippet::io.micronaut.gcp.pubsub.subscriber.SimpleSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
 

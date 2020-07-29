@@ -1,5 +1,4 @@
-This project provides integration between Micronaut and Google Cloud PubSub. It uses the official google cloud pubsub link:https://cloud.google.com/pubsub/docs/quickstart-client-libraries[client java libraries]
-to create Publisher and Subscribers while keeping a similar programming model for messaging as the ones defined in  link:https://micronaut-projects.github.io/micronaut-rabbitmq/latest/guide/[Micronaut RabbitMQ]
-and link:https://micronaut-projects.github.io/micronaut-kafka/latest/guide/[Micronaut Kafka].
+This project provides integration between Micronaut and Google Cloud PubSub.
+It uses the official Google Cloud Pub/Sub link:https://cloud.google.com/pubsub/docs/quickstart-client-libraries[client java libraries] to create Publisher and Subscribers while keeping a similar programming model for messaging as the ones defined in  link:https://micronaut-projects.github.io/micronaut-rabbitmq/latest/guide/[Micronaut RabbitMQ] and link:https://micronaut-projects.github.io/micronaut-kafka/latest/guide/[Micronaut Kafka].
 
 IMPORTANT: The project does not attempt to create any of the resources in Google Cloud such as Topics and Subscription. Make sure your project has the correct resources and the https://cloud.google.com/iam/docs/understanding-service-accounts[Service Account] being used has proper permissions.

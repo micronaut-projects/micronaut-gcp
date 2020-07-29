@@ -1,11 +1,11 @@
 All the examples so far have been using `void` on the method signature. However getting a message acknowledge from the broker is usually required.
 
-PubSub returns a `String` object that contains the message id that the broker generated. Your methods can also be defined using either `String` or `Single<String>` (for reactive support).
+Pub/Sub returns a `String` object that contains the message id that the broker generated. Your methods can also be defined using either `String` or `Single<String>` (for reactive support).
 
-When you define your client you can actually choose between a few different method signatures. Depending on your choice you may get the message
-acknowledge back and control if the method is blocking or reactive.
+When you define your client you can actually choose between a few different method signatures.
+Depending on your choice you may get the message acknowledge back and control if the method is blocking or reactive.
 
-1. If your method has `void` as a return, then a blocking call to publish the message is made and you don't get the message id returned by the PubSub broker.
+1. If your method has `void` as a return, then a blocking call to publish the message is made and you don't get the message id returned by the Pub/Sub broker.
 2. If your method return a `String` then a blocking call to publish the message is made and the message id is returned.
 3. If your method returns `Single<String>` then it's a reactive call, and you can `subscribe` to the publisher to retrieve the message id.
 

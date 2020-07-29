@@ -26,7 +26,7 @@ import io.micronaut.messaging.exceptions.MessageAcknowledgementException;
  */
 public class DefaultPubSubAcknowledgement implements Acknowledgement {
 
-    private volatile boolean messageAcked = false;
+    private volatile boolean clientAck = false;
     private final AckReplyConsumer ackReplyConsumer;
 
     public DefaultPubSubAcknowledgement(AckReplyConsumer ackReplyConsumer) {
@@ -36,20 +36,20 @@ public class DefaultPubSubAcknowledgement implements Acknowledgement {
     @Override
     public void ack() throws MessageAcknowledgementException {
         this.ackReplyConsumer.ack();
-        this.messageAcked = true;
+        this.clientAck = true;
     }
 
     @Override
     public void nack() throws MessageAcknowledgementException {
         this.ackReplyConsumer.nack();
-        this.messageAcked = false;
+        this.clientAck = true;
     }
 
     /**
      *
-     * @return if message was acked by client
+     * @return if the client has ack/nack the message.
      */
-    public boolean isMessageAcked() {
-        return messageAcked;
+    public boolean isClientAck() {
+        return clientAck;
     }
 }

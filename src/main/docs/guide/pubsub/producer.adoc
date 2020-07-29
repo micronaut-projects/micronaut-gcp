@@ -18,7 +18,8 @@ IMPORTANT: If a body argument cannot be found, an exception will be thrown.
 
 == Resource naming
 
-On the previous examples you noticed we used a simple naming for the topic such as `animals`. Inside Google Cloud however resources are only accessible via their FQN. In PubSub case topics are named as `projects/$PROJECT_ID/topics/$TOPIC_NAME`.
+On the previous examples you noticed we used a simple naming for the topic such as `animals`. Inside Google Cloud however resources are only accessible via their FQN.
+In Pub/Sub case topics are named as `projects/$PROJECT_ID/topics/$TOPIC_NAME`.
 Micronaut integration with GCP will automatically grab the default project id available (please refer to the section <<setup, Google Project Id>> ) and convert the simple naming of the resource into a FQN.
 You can also support a FQN that uses a different project name, that is useful when your project has to publish message to more than the default project configured for the Service Account.
 

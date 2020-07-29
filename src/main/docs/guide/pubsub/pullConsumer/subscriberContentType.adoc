@@ -1,0 +1,22 @@
+The framework provides a custom serialization/deserialization (SerDes) mechanism for both message producers and message listeners.
+On the receiving end the rules to deserialize a link:https://developers.google.com/resources/api-libraries/documentation/pubsub/v1/java/latest/com/google/api/services/pubsub/model/PubsubMessage.html[PubSubMessage] are the following:
+
+. If the `body` argument of the method is of link:https://developers.google.com/resources/api-libraries/documentation/pubsub/v1/java/latest/com/google/api/services/pubsub/model/PubsubMessage.html[PubSubMessage] type, SerDes is bypassed and the "raw" message is copied to the argument.
+. If the `body` argument of the method is a byte array, SerDes is bypassed and the byte contents of the `PubSubMessage` are copied to the argument.
+. If the `body` argument is a Pojo then the following applies:
+.. The default `Content-Type` is `application/json` and the framework will use it if not overridden
+.. If the message contains an attribute `Content-Type` that value is used
+.. Finally if the ann:configuration.gcp.pubsub.annotation.Subscription[] has a `contentType` value this value overrides all of the previous values
+
+Automatic SerDes is a nice feature that the framework offers, but sometimes you may need to have access to the `PubSubMessage` id.
+This is provided via the ann:configuration.gcp.pubsub.annotation.MessageId[] annotation.
+Once you annotate an argument of type `String` with this annotation, the message id will be copied to that argument.
+
+IMPORTANT: PubSubMessage ids are always of type `String` for that reason your annotated argument must also be a `String`.
+
+snippet::io.micronaut.gcp.pubsub.subscriber.ContentTypeSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> Bytes are copied, SerDes is bypassed, message id injected for usage
+<2> SerDes is bypassed, `PubSubMessage` object is copied, no need to use `@MessageId`
+<3> The framework will try to deserialize this payload. If no `Content-Type` header is found, will default to `application/json`
+<4> Uses a custom SerDes and the framework will find a api:serdes.PubSubMessageSerDes[] that can handle `application/xml`

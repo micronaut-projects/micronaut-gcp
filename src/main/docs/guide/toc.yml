@@ -8,12 +8,12 @@ cloudFunction:
   httpFunctions:
     title: HTTP Functions
 pubsub:
-  title: Google Cloud PubSub Support
+  title: Google Cloud Pub/Sub Support
   pubsubIntroduction: Introduction
   quickstart: Quickstart
   pubsubProperties: Pub/Sub configuration Properties
   producer:
-    title: PubSub Publishers
+    title: Pub/Sub Publishers
     publisherContentType: Content-Type and message serialization
     publisherHeaders: Message Headers
     publisherProperties: Publisher properties
