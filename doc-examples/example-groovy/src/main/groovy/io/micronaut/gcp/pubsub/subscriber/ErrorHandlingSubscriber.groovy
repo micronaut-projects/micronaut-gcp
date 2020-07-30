@@ -16,22 +16,29 @@
 package io.micronaut.gcp.pubsub.subscriber
 //tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
-import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException
+import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler
 import io.micronaut.gcp.pubsub.support.Animal
 // end::imports[]
 
 // tag::clazz[]
-@PubSubListener // <1>
-class SimpleSubscriber {
+@PubSubListener
+class ErrorHandlingSubscriber implements PubSubMessageReceiverExceptionHandler { // <1>
 
-	@Subscription("animals") // <2>
-	fun onMessage(animal: Animal) {
+    void onMessage(Animal animal) {
+        throw new RuntimeException("error");
+    }
 
-	}
+    @Override
+    void handle(PubSubMessageReceiverException exception) { // <2>
 
-	@Subscription("projects/eu-project/subscriptions/animals") // <3>
-	fun onMessageEU(animal: Animal) {
+        def listener = exception.listener// <3>
+        def state = exception.state // <4>
+        def originalMessage = state.pubsubMessage
+        def contentType = state.contentType
+        //some logic
+        state.getAckReplyConsumer().ack(); // <5>
 
-	}
-
+    }
 }
+// end::clazz[]

@@ -16,31 +16,34 @@
 package io.micronaut.gcp.pubsub.subscriber;
 //tag::imports[]
 import com.google.pubsub.v1.PubsubMessage;
-import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
+import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
+import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
+import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
 import io.micronaut.gcp.pubsub.support.Animal;
 // end::imports[]
 
 // tag::clazz[]
 @PubSubListener
-public class ContentTypeSubscriber {
-
-    @Subscription("raw-subscription") // <1>
-    void receiveRaw(byte[] data, @MessageId String id) {
+public class ErrorHandlingSubscriber implements PubSubMessageReceiverExceptionHandler { // <1>
+    /**
+     *
+     * @param animal payload
+     */
+    public void onMessage(Animal animal) {
+        throw new RuntimeException("error");
     }
 
-    @Subscription("native-subscription") // <2>
-    void receiveNative(PubsubMessage message) {
-    }
+    @Override
+    public void handle(PubSubMessageReceiverException exception) { // <2>
 
-    @Subscription("animals") // <3>
-    void receivePojo(Animal animal, @MessageId String id) {
-    }
+        Object listener = exception.getListener(); // <3>
+        PubSubConsumerState state = exception.getState(); // <4>
+        PubsubMessage originalMessage = state.getPubsubMessage();
+        String contentType = state.getContentType();
+        //some logic
+        state.getAckReplyConsumer().ack(); // <5>
 
-    @Subscription(value = "animals-legacy", contentType = "application/xml") // <4>
-    void receiveXML(Animal animal, @MessageId String id) {
     }
-
 }
 // end::clazz[]

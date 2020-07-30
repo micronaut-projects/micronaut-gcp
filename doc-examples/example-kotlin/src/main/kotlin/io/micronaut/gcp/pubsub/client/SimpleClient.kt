@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.client
 
-//tag imports[]
+//tag::imports[]
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic

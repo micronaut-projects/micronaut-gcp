@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.client
 
-//tag imports[]
+//tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.support.Animal;

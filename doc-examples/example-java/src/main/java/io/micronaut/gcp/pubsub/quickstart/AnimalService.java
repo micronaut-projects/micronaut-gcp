@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.gcp.pubsub.quickstart;
-//tag imports[]
+//tag::imports[]
 import io.micronaut.gcp.pubsub.support.Animal;
 import javax.inject.Singleton;
 // end::imports[]

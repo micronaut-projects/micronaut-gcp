@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.gcp.pubsub.quickstart;
-//tag imports[]
+//tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 // end::imports[]
@@ -23,6 +23,11 @@ import io.micronaut.gcp.pubsub.annotation.Subscription;
 @PubSubListener // <1>
 public class AnimalListener {
 
+
+    /**
+     *
+     * @param data raw data
+     */
     @Subscription("animals") // <2>
     public void onMessage(byte[] data) { // <3>
         System.out.println("Message received");

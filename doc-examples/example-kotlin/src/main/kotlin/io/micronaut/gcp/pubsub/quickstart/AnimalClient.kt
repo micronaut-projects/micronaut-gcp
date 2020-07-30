@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.quickstart
 
-//tag imports[]
+//tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 // end::imports[]

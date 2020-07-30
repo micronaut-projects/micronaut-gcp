@@ -26,6 +26,7 @@ pubsub:
     subscriberProperties: Subscriber properties
     messageAcknowledge: Handling message acknowledgement
     errorHandling: Consumer error handling
+    customParameter: Custom Parameter Binding
   serdes:
     title: Message Serialization/Deserialization (SerDes)
     custom: Customizing Message Serialization/Deserialization

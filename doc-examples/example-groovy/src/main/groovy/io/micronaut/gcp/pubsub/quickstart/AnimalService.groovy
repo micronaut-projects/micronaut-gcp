@@ -17,7 +17,7 @@ package io.micronaut.gcp.pubsub.quickstart
 
 
 import io.micronaut.gcp.pubsub.support.Animal;
-//tag imports[]
+//tag::imports[]
 import javax.inject.Singleton;
 // end::imports[]
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.gcp.pubsub.subscriber
-//tag imports[]
+//tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
