@@ -7,7 +7,7 @@ dependencies {
     api "io.micronaut:micronaut-inject:$micronautVersion"
     implementation'io.zipkin.gcp:zipkin-sender-stackdriver:0.17.0'
     implementation 'io.zipkin.gcp:brave-propagation-stackdriver:0.17.0'
-    implementation 'io.grpc:grpc-auth:1.30.2'
+    implementation 'io.grpc:grpc-auth:1.31.0'
     implementation 'io.grpc:grpc-netty-shaded:1.30.2'
     implementation "io.opentracing.brave:brave-opentracing:0.37.3"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
