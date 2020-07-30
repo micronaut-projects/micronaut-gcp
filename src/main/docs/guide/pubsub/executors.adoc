@@ -1,0 +1,20 @@
+
+The framework allows users to configure separate thread pools to be used for link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publishers] and link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber].
+You can set a reference to a pre-defined executor at <<pubsubProperties, Pub/Sub configuration properties>>, or create custom configurations for <<publisherProperties, publishers>> and <<subscriberProperties, subscribers>>.
+Micronaut supports definition of custom link:{jdkapi}/java/util/concurrent/ExecutorService.html[ExecutorService] implementations, see link:{apimicronaut}scheduling/executor/ExecutorConfiguration.html[ExecutorConfiguration] for the full list of options.
+
+IMPORTANT: Pub/Sub client libraries require an  link:{jdkapi}/java/util/concurrent/ScheduledExecutorService.html[ScheduledExecutorService] for both `Publisher` and `Subscriber` make sure your custom executor is of type `scheduled` or an error will be thrown.
+
+For example:
+
+.Configuring the `custom` thread pool
+[source,yaml]
+----
+micronaut:
+    executors:
+        custom:
+            type: scheduled
+            nThreads: 32
+----
+
+If no configuration is supplied, the framework will use the default named `scheduled` executor.

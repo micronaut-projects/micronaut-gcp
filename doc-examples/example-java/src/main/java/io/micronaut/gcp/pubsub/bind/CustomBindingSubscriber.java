@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.support;
+package io.micronaut.gcp.pubsub.bind;
+//tag::imports[]
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+import io.micronaut.gcp.pubsub.support.Animal;
+//end::imports[]
 
-import java.io.Serializable;
+// tag::clazz[]
+@PubSubListener
+public class CustomBindingSubscriber {
 
-public final class Animal implements Serializable {
-    private String name;
+    /**
+     *
+     * @param animal payload
+     * @param publishTime message publish time
+     */
+    public void onMessage(Animal animal, @MessagePublishTime Long publishTime) { // <1>
 
-    public Animal(String name) {
-        this.name = name;
     }
 
-    public Animal() { }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
+// end::clazz[]

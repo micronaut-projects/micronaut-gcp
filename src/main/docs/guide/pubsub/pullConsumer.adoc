@@ -4,7 +4,7 @@ To start receiving messages you annotate a class with ann:configuration.gcp.pubs
 
 
 All methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] will be invoked by the framework.
-Each annotated method creates an individual https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber],
+Each annotated method creates an individual link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber],
 that can be configured using the `configuration` parameter of the ann:configuration.gcp.pubsub.annotation.Subscription[] annotation.
 
 IMPORTANT: Methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] must be unique on your application.

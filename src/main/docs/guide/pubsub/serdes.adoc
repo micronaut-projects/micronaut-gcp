@@ -1,0 +1,29 @@
+The serialization and deserialization of message bodies is handled through instances of api:serdes.PubSubMessageSerDes[].
+The ser-des (Serializer/Deserializer) is responsible for both serialization and deserialization of Pub/Sub message bodies into the message body types defined in your clients and consumers methods.
+
+The ser-des are managed by a api:serdes.PubSubMessageSerDesRegistry[].
+All ser-des beans are injected in order into the registry and then searched for when serialization or deserialization is needed.
+The search is based on the `Content-Type` defined for the message, the framework default is `application/json`.
+If a ser-des can't be located an exception is thrown.
+You can supply your own ser-des by simply registering a bean of type api:serdes.PuvSubMessageSerDes[].
+
+For example let's say you want to implement a ser-des that uses java native object serialization instead of the Json serialization provided.
+First you need to define a custom mimeType for that, we will use `application/x.java`, following the best principles for handling mime types.
+
+NOTE: This is a fictional example, java serialization is not ideal, and its not portable.
+
+snippet::io.micronaut.gcp.pubsub.serdes.JavaMessageSerDes[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> The class is declared as a singleton so it will be registered with the context
+<2> The `contentType` defines what kind of messages will this implementation be able to handle
+
+To publish messages with this ser-des set the Content-Type for `@Topic`
+```java
+@Topic(value = "animals", contentType = "application/x.java")
+```
+
+If the messages that are arriving on your subscriber already contain a `Content-Type` header with this type the framework will pick it up, or you can just force it on the `@Suibscription` annotation too.
+
+```java
+@Subscription(value = "animals", contentType = "application/x.java")
+```
