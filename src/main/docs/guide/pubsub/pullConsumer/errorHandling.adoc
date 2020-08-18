@@ -14,7 +14,7 @@ There's two ways you can provide error handling.
 
 The api:exception.PubSubMessageReceiverException[] contains references to the originating bean that threw the exception as well as a reference to api:bind.PubSubConsumerState[] which has state information regarding the message handling.
 
-snippet::io.micronaut.gcp.pubsub.subscriber.SimpleSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.subscriber.ErrorHandlingSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
 
 <1> Implement `PubSubMessageReceiverExceptionHandler` to mark this bean as a local error handler
 <2> Method invoked if any error happens during the processing of this `PubSubListener` class

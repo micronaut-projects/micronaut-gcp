@@ -29,5 +29,4 @@ pubsub:
     customParameter: Custom Parameter Binding
   serdes:
     title: Message Serialization/Deserialization (SerDes)
-    custom: Customizing Message Serialization/Deserialization
   executors: Configuring Thread pools
