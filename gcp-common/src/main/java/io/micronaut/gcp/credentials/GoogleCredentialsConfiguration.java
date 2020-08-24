@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,7 +48,7 @@ public class GoogleCredentialsConfiguration {
 
     private List<URI> scopes = DEFAULT_SCOPES;
 
-    private String path;
+    private String location;
 
     private String encodedKey;
 
@@ -78,7 +78,7 @@ public class GoogleCredentialsConfiguration {
      * @return The location
      */
     public @Nonnull Optional<String> getLocation() {
-        return Optional.ofNullable(path);
+        return Optional.ofNullable(location);
     }
 
     /**
@@ -86,7 +86,7 @@ public class GoogleCredentialsConfiguration {
      * @param location The location
      */
     public void setLocation(@Nullable String location) {
-        this.path = path;
+        this.location = location;
     }
 
     /**

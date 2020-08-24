@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-$YEAR original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.condition;
-
-import io.micronaut.context.annotation.Requires;
-
-import java.lang.annotation.*;
-
-/**
- * A custom condition that indicates the bean requires a configured Google Project ID.
- *
- * @author graemerocher
- * @since 1.0
- */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
-@Requires(condition = RequiresProjectIdCondition.class)
-public @interface RequiresGoogleProjectId {
-}

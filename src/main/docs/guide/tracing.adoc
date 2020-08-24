@@ -1,4 +1,4 @@
-The `micronaut-gcp-tracing` integrates Micronaut with https://cloud.google.com/trace[Stackdriver Trace].
+The `micronaut-gcp-tracing` integrates Micronaut with https://cloud.google.com/trace[Cloud Trace] from Google Cloud Operations (formerly Stackdriver).
 
 To enable it add the following dependency:
 

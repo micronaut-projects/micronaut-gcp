@@ -15,7 +15,6 @@
  */
 package io.micronaut.gcp.credentials
 
-import com.google.api.gax.core.GoogleCredentialsProvider
 import com.google.auth.oauth2.GoogleCredentials
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
@@ -36,5 +35,17 @@ class GoogleCredentialsConfigurationSpec extends Specification {
         expect:
         configuration.scopes == GoogleCredentialsConfiguration.DEFAULT_SCOPES
         context.getBean(GoogleCredentials)
+    }
+
+    void "test setLocation updates location"() {
+        given:
+        GoogleCredentialsConfiguration googleCredentialsConfiguration = new GoogleCredentialsConfiguration()
+
+        when:
+        googleCredentialsConfiguration.setLocation("test")
+
+        then:
+        googleCredentialsConfiguration.getLocation().isPresent()
+        googleCredentialsConfiguration.getLocation().get() == "test"
     }
 }
