@@ -45,13 +45,15 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>3</strong><span>Setting up GCP Support</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#authorizingClients"><strong>4</strong><span>Authorizing HTTP Clients</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>4</strong><span>Stackdriver Trace</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>5</strong><span>Cloud Function Support</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#authorizingClients"><strong>5</strong><span>Authorizing HTTP Clients</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>6</strong><span>Cloud Function Support</span></a></div>
                                 
                             </div>
                         </div>
@@ -84,17 +86,19 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-introduction"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>2</strong><span>Setting up GCP Support</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-releaseHistory"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>3</strong><span>Stackdriver Trace</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>3</strong><span>Setting up GCP Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-authorizingClients"><a href="#authorizingClients"><strong>4</strong><span>Authorizing HTTP Clients</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>4</strong><span>Stackdriver Trace</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>5</strong><span>Cloud Function Support</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-authorizingClients"><a href="#authorizingClients"><strong>5</strong><span>Authorizing HTTP Clients</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>5.1</strong><span>Simple Functions</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>6</strong><span>Cloud Function Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>5.2</strong><span>HTTP Functions</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>6.1</strong><span>Simple Functions</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>6.2</strong><span>HTTP Functions</span></a></div>
         
         </div>
     </div>
@@ -104,7 +108,7 @@
         <h1>Micronaut GCP</h1>
         <p></p>
         <p>Provides integration between Micronaut and Google Cloud Platform (GCP)</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-gcp/snapshot/guide/index.html'>SNAPSHOT</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0/guide/index.html'>2.0.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.RC2/guide/index.html'>2.0.0.RC2</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.RC1/guide/index.html'>2.0.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M3/guide/index.html'>2.0.0.M3</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M2/guide/index.html'>2.0.0.M2</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M1/guide/index.html'>2.0.0.M1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0.RC1/guide/index.html'>1.0.0.RC1</option></select></p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-gcp/snapshot/guide/index.html'>SNAPSHOT</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-gcp/2.0.2/guide/index.html'>2.0.2</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.1/guide/index.html'>2.0.1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0/guide/index.html'>2.0.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.RC2/guide/index.html'>2.0.0.RC2</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.RC1/guide/index.html'>2.0.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M3/guide/index.html'>2.0.0.M3</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M2/guide/index.html'>2.0.0.M2</option><option value='https://micronaut-projects.github.io/micronaut-gcp/2.0.0.M1/guide/index.html'>2.0.0.M1</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-gcp/1.0.0.RC1/guide/index.html'>1.0.0.RC1</option></select></p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -120,7 +124,23 @@
 <p>This project provides various extensions to Micronaut to integrate Micronaut with Google Cloud Platform (GCP).</p>
 </div>
 
-<h1 id="setup"><a class="anchor" href="#setup"></a>2 Setting up GCP Support</h1>
+<h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>For this project, you can find a list of releases (with release notes) here:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/micronaut-projects/micronaut-gcp/releases">https://github.com/micronaut-projects/micronaut-gcp/releases</a></p>
+</div>
+
+<h1 id="setup"><a class="anchor" href="#setup"></a>3 Setting up GCP Support</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/setup.adoc"'>
@@ -136,7 +156,7 @@
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common:2.0.0")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common:2.0.2")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -144,7 +164,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-common&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0&lt;/version&gt;
+    &lt;version&gt;2.0.2&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -236,20 +256,20 @@
  Leave this empty if you don&#8217;t need additional API access.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.encoded-key</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Base64 encoded service account key content..</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.location</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the location to the service account credential key file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.encoded-key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Base64 encoded service account key content..</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 
-<h1 id="tracing"><a class="anchor" href="#tracing"></a>3 Stackdriver Trace</h1>
+<h1 id="tracing"><a class="anchor" href="#tracing"></a>4 Stackdriver Trace</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/tracing.adoc"'>
@@ -268,7 +288,7 @@
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing:2.0.0")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing:2.0.2")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -276,7 +296,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-tracing&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0&lt;/version&gt;
+    &lt;version&gt;2.0.2&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -305,7 +325,7 @@
 </div>
 </div>
 
-<h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>4 Authorizing HTTP Clients</h1>
+<h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>5 Authorizing HTTP Clients</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/authorizingClients.adoc"'>
@@ -349,7 +369,7 @@
 </div>
 </div>
 
-<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>5 Cloud Function Support</h1>
+<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>6 Cloud Function Support</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction.adoc"'>
@@ -362,7 +382,7 @@
 <p>Micronaut GCP includes extended support for Google Cloud Function - designed for serverless workloads.</p>
 </div>
 
-<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>5.1 Simple Functions</h2>
+<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>6.1 Simple Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/simpleFunctions.adoc"'>
@@ -607,8 +627,63 @@ Functions require a no argument constructor hence you must use field injection (
 <div class="paragraph">
 <p>The <code>FunctionInitializer</code> super class provides numerous methods that you can override to customize how the <code>ApplicationContext</code> is built if desired.</p>
 </div>
+<div class="sect2">
+<h3 id="_running_functions_locally">Running Functions Locally</h3>
+<div class="paragraph">
+<p>Raw functions cannot be executed locally. They can be tested by instantiating the function and inspecting any side effects by providing mock arguments or mocking dependent beans.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deployment">Deployment</h3>
+<div class="paragraph">
+<p>When deploying the function to Cloud Function you should use the fully qualified name of the function class as the handler reference.</p>
+</div>
+<div class="paragraph">
+<p>First build the function with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ ./gradlew clean shadowJar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then <code>cd</code> into the <code>build/libs</code> directory (deployment has to be done from the location where the JAR file resides):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd build/libs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy the function make sure you have <code>gcloud</code> CLI then run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ gcloud beta functions deploy myfunction --entry-point example.function.Function --runtime java11 --trigger-http</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above <code>myfunction</code> refers to the name of your function and can be changed to whatever name you prefer to name your function. <code>example.function.Function</code> refers to the fully qualified name of your function class.</p>
+</div>
+<div class="paragraph">
+<p>To obtain the trigger URL you can use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ YOUR_HTTP_TRIGGER_URL=$(gcloud beta functions describe myfunction --format='value(httpsTrigger.url)')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then use this variable to test the function invocation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -i $YOUR_HTTP_TRIGGER_URL</code></pre>
+</div>
+</div>
+</div>
 
-<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>5.2 HTTP Functions</h2>
+<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>6.2 HTTP Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/httpFunctions.adoc"'>
@@ -632,7 +707,7 @@ Functions require a no argument constructor hence you must use field injection (
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http:2.0.0")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http:2.0.2")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -640,7 +715,7 @@ Functions require a no argument constructor hence you must use field injection (
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-function-http&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0&lt;/version&gt;
+    &lt;version&gt;2.0.2&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -752,7 +827,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ gcloud alpha functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ gcloud beta functions deploy myfunction --entry-point io.micronaut.gcp.function.http.HttpFunction --runtime java11 --trigger-http</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -763,7 +838,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ YOUR_HTTP_TRIGGER_URL=$(gcloud alpha functions describe myfunction --format='value(httpsTrigger.url)')</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ YOUR_HTTP_TRIGGER_URL=$(gcloud beta functions describe myfunction --format='value(httpsTrigger.url)')</code></pre>
 </div>
 </div>
 <div class="paragraph">
