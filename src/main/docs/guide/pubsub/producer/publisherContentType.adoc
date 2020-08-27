@@ -1,0 +1,19 @@
+The contents of a link:https://developers.google.com/resources/api-libraries/documentation/pubsub/v1/java/latest/com/google/api/services/pubsub/model/PubsubMessage.html[PubSubMessage] are always a base64 encoded ByteString.
+This framework provide a way to create custom Serialization/Deserialization as explained in the section <<serdes, Custom Serialization/Deserialization>>.
+
+By default any body message argument will be serialized via api:serdes.JsonPubSubMessageSerDes[] unless specified otherwise via the `contentType` property of the ann:annotation.Topic[] annotation.
+
+The rules of message serialization are the following:
+
+1. If the body type is link:https://developers.google.com/resources/api-libraries/documentation/pubsub/v1/java/latest/com/google/api/services/pubsub/model/PubsubMessage.html[PubSubMessage] then SerDes is bypassed completely and no header is added to the message.
+2. If the body type is `byte[]` SerDes logic is bypassed, but a `Content-Type` header of `application/json` will be added unless overwritten by the ann:annotation.Topic[] annotation.
+3. For any other type, the type defined by `contentType` will be used to located the correct api:serdes.PubSubMessageSerDes[] to handle it, if none is passed `application/json` will be used.
+
+snippet::io.micronaut.gcp.pubsub.publisher.CustomSerDesClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> Using `PubsubMessage` no SerDes will be used, no headers are added to the message, user is responsible to create the message.
+<2> Using byte array. No SerDes logic is used, however a `Content-Type` header in this example is added with value `application/json`
+<3> Using byte array and specifying a contentType. SerDes will be bypassed and a `Content-Type` header with value `image/gif` will be added.
+<4> No `contentType` defined, and `JsonPubSubMessageSerDes` will be use to serialize the object.
+<5> Using specific `contentType`, the framework will look for a `PubSubMessageSerDes` registered for type `application/xml` user must provide this bean or an exception is thrown at runtime.
+

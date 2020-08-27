@@ -1,0 +1,31 @@
+Pub/Sub support in micronaut follows the same pattern used for other types of clients such as the HTTP Client.
+By annotating an interface with ann:configuration.gcp.pubsub.annotation.PubSubClient[] the framework will create an implementation bean that handles communication with Pub/Sub for you.
+
+== Topics
+
+In order to publish messages to Pub/Sub you need a method annotated with a `@Topic` annotation.
+For each annotated method the framework will create a dedicated link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publisher]  with its own configuration for `RetrySettings`, `BatchSettings` and its own `Executor`.
+All settings can be overridden via configuration properties and the appropriate configuration can be passed via the `configuration` attribute of the `@Topic` annotation.
+
+snippet::io.micronaut.gcp.pubsub.client.SimpleClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> The `@PubSubClient` enables this interface to be replaced by bean implementation by micronaut.
+<2> Sending a `PubsubMessage` object skips any SerDes or contentType headers
+<3> Sending a byte array, SerDes will be bypassed and bytes will just be copied, but the default content type will still be `application/json`
+<4> You can send any domain object as long as a SerDes is configured to handled it. By default `application/json` is used.
+
+IMPORTANT: If a body argument cannot be found, an exception will be thrown.
+
+== Resource naming
+
+On the previous examples you noticed we used a simple naming for the topic such as `animals`. Inside Google Cloud however resources are only accessible via their FQN.
+In Pub/Sub case topics are named as `projects/$PROJECT_ID/topics/$TOPIC_NAME`.
+Micronaut integration with GCP will automatically grab the default project id available (please refer to the section <<setup, Google Project Id>> ) and convert the simple naming of the resource into a FQN.
+You can also support a FQN that uses a different project name, that is useful when your project has to publish message to more than the default project configured for the Service Account.
+
+NOTE: When publishing to a different project, make sure your service account has the proper access to the resource.
+
+snippet::io.micronaut.gcp.pubsub.client.MultipleProjectClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> This would use the default project configured for the application.
+<2> This would override and publish messages to a different project.
