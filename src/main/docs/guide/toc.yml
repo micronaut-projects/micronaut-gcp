@@ -8,3 +8,26 @@ cloudFunction:
   simpleFunctions: Simple Functions
   httpFunctions:
     title: HTTP Functions
+pubsub:
+  title: Google Cloud Pub/Sub Support
+  pubsubIntroduction: Introduction
+  quickstart: Quickstart
+  pubsubProperties: Pub/Sub configuration Properties
+  producer:
+    title: Pub/Sub Publishers
+    publisherContentType: Content-Type and message serialization
+    publisherHeaders: Message Headers
+    publisherProperties: Publisher properties
+    messageId: Retrieving message Ids (broker acknowledge)
+
+  pullConsumer:
+    title: Receiving messages via @PubSubListener methods
+    subscriberContentType: Content-Type and message deserialization
+    subscriberHeaders: Message Headers
+    subscriberProperties: Subscriber properties
+    messageAcknowledge: Handling message acknowledgement
+    errorHandling: Consumer error handling
+    customParameter: Custom Parameter Binding
+  serdes:
+    title: Message Serialization/Deserialization (SerDes)
+  executors: Configuring Thread pools

@@ -1,0 +1,9 @@
+Google Cloud Pub/Sub messages contain a dictionary of message attributes in the form of a `Map<String, String>`.
+
+The framework binds those attributes to a link:{apimicronaut}messaging/annotation/Header.html[@Header] annotation that can be used at an argument of the method.
+
+A link:{apimicronaut}core/convert/ConversionService.html[ConversionService] is used to try to convert from the `String` value of the attribute to the target type on the method.
+
+snippet::io.micronaut.gcp.pubsub.subscriber.CustomHeaderSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> Each annotated argument will be mapped to the corresponding attribute value. The `ConversionService` will try to convert to the target type

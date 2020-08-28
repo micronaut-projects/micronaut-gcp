@@ -1,0 +1,11 @@
+You can customize certain aspects of the client.
+Pub/Sub client libraries leverage a link:https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ScheduledExecutorService.html[ScheduledExecutorService] for both message publishing and consumption.
+
+If not specified the framework will configure the framework default `Scheduled` executor service to be used for both Publishers and Subscribers.
+See link:{apimicronaut}scheduling/executor/ExecutorConfiguration.html[ExecutorConfiguration] for the full list of options.
+
+You can override it at PubSubConfigurationProperties to make a default value for all clients, or you can setup per Topic Publisher, or Subscription listener as discussed further bellow.
+
+Creating a custom executor is presented on the section <<executors, Configuring Thread pools >>.
+
+include::{includedir}configurationProperties/io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties.adoc[]

@@ -1,0 +1,23 @@
+During message handling for listeners errors can happen at the framework or at your method level such as:
+
+* Problems binding method arguments to the message body
+* Content-Type deserialization issues
+* Acknowledgement
+* Uncaught exceptions at the annotated method
+
+The framework provides a Global Error Handler api:exception.DefaultPubSubMessageReceiverExceptionHandler[], this handler will catch any errors and just log it. This behavior is far from ideal as messages would continue to be redelivered since they are not acknowledged.
+
+There's two ways you can provide error handling.
+
+* Locally: your ann:configuration.gcp.pubsub.annotation.PubSubListener[] class implements api:exception.PubSubMessageReceiverExceptionHandler[], then any error related to `Subscriptions` of that class will be handled by your class.
+* Globally: You define a new implementation of api:exception.PubSubMessageReceiverExceptionHandler[] and annotate it as `@Primary` overriding the default one.
+
+The api:exception.PubSubMessageReceiverException[] contains references to the originating bean that threw the exception as well as a reference to api:bind.PubSubConsumerState[] which has state information regarding the message handling.
+
+snippet::io.micronaut.gcp.pubsub.subscriber.ErrorHandlingSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> Implement `PubSubMessageReceiverExceptionHandler` to mark this bean as a local error handler
+<2> Method invoked if any error happens during the processing of this `PubSubListener` class
+<3> Reference to the class that originated the exception
+<4> Contains information related to the subscription
+<5> Depending on your use case you can `ack()` of `nack()` the message

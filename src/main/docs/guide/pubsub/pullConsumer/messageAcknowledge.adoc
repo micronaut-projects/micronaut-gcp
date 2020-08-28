@@ -1,0 +1,9 @@
+The message delivery is handled by an `IntroductionAdvice` class api:intercept.PubSubConsumerAdvice[]. It invokes the method annotated with ann:configuration.gcp.pubsub.annotation.Subscription[].
+By default messages are auto acknowledged if the method returns without exceptions, see the section  <<erroHandling, Consumer ErrorHandling >> for more information on error handling.
+It is possible to have manual acknowledgement control by adding an argument of type link:{apimicronaut}messaging/Acknowledge.html[Acknowledge] and manually invoking `ack()` or `nack()` methods.
+
+Google Cloud Pub/Sub controls Acknowledgment at the Subscription level, please refer to the link:https://cloud.google.com/pubsub/docs/subscriber[Pub/Sub Subscriber documentation] for more information.
+
+TIP: If you provide an `Acknowledge` type in your method and forget to invoke `ack()`/`nack()` the framework will log a warning message to let you know if you forgot to manually register an acknowledgement.
+
+snippet::io.micronaut.gcp.pubsub.subscriber.AcknowledgementSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
