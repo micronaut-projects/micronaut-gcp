@@ -109,14 +109,14 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
     }
 
     @Override
-    public MutableHttpResponse<B> body(@Nullable B body) {
+    public <T> MutableHttpResponse<T> body(@Nullable T body) {
         if (body instanceof CharSequence) {
             if (!getContentType().isPresent()) {
                 contentType(MediaType.TEXT_PLAIN_TYPE);
             }
         }
-        this.body = body;
-        return this;
+        this.body = (B) body;
+        return (MutableHttpResponse<T>) this;
     }
 
     @Override
