@@ -1,0 +1,32 @@
+Pub/Sub allows each link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber] to have its own configuration for things such as executors or flow control settings.
+
+The framework allows you to create configurations and then bind those configurations to each  ann:configuration.gcp.pubsub.annotation.Subscription[] using the `configuration` parameter.
+
+[%header, format=csv]
+.Configuration properties for api:configuration.SubscriberConfigurationProperties[]
+|===
+Property,Type,Description
+gcp.pubsub.subscriber.*.executor,java.lang.String,Name of the executor to use. Default: scheduled
+gcp.pubsub.subscriber.*.parallel-pull-count,java.lang.Integer,number of concurrent pulls. Default: 1
+gcp.pubsub.subscriber.*.max-ack-extension-period,org.threeten.bp.Duration,Set the maximum period a message ack deadline will be extended. Default: one hour.
+gcp.pubsub.subscriber.*.max-duration-per-ack-extension,org.threeten.bp.Duration,Set the upper bound for a single mod ack extention period. Default: one hour.
+gcp.pubsub.subscriber.*.flow-control.max-outstanding-element-count,java.lang.Long,Maximum number of outstanding elements to keep in memory before enforcing flow control. Default: 1000
+gcp.pubsub.subscriber.*.flow-control.max-outstanding-request-bytes,java.lang.Long,Maximum number of outstanding bytes to keep in memory before enforcing flow control. Default: 100 * 1024 * 1024
+gcp.pubsub.subscriber.*.flow-control.limit-exceeded-behavior,com.google.api.gax.batching.FlowController$LimitExceededBehavior,Default: LimitExceededBehavior.Block
+|===
+
+Suppose you have the following configuration for a subscriber:
+
+[source,yaml]
+----
+gcp:
+  pubsub:
+    subscriber:
+      custom:
+        executor: custom-executor
+        parallel-pull-count: 4
+----
+
+snippet::io.micronaut.gcp.pubsub.subscriber.CustomConfigurationSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+
+<1> The link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber] will be configured using a configuration named `custom`
