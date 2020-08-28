@@ -5,15 +5,4 @@ io.micronaut.gcp.function
 io.micronaut.gcp.function.http
 io.micronaut.gcp.function.http.jackson
 io.micronaut.gcp.http.client
-io.micronaut.gcp.pubsub.annotation
-io.micronaut.gcp.pubsub.bind
-io.micronaut.gcp.pubsub.client
-io.micronaut.gcp.pubsub.configuration
-io.micronaut.gcp.pubsub.exception
-io.micronaut.gcp.pubsub.intercept
-io.micronaut.gcp.pubsub.publisher
-io.micronaut.gcp.pubsub.quickstart
-io.micronaut.gcp.pubsub.serdes
-io.micronaut.gcp.pubsub.subscriber
-io.micronaut.gcp.pubsub.support
 io.micronaut.gcp.tracing.zipkin
