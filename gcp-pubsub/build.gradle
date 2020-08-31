@@ -9,7 +9,7 @@ dependencies {
     api "com.google.cloud:google-cloud-pubsub:1.108.0"
 
     testImplementation "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut.test:micronaut-test-spock:1.1.5"
+    testImplementation "io.micronaut.test:micronaut-test-spock:1.2.3"
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation "org.testcontainers:spock:1.14.3"
 }
