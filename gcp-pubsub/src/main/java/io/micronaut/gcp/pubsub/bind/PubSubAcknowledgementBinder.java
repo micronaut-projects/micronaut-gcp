@@ -20,6 +20,7 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.messaging.Acknowledgement;
 
 import java.util.Optional;
+import javax.inject.Singleton;
 
 /**
  * Binds {@link Acknowledgement} arguments.
@@ -27,6 +28,7 @@ import java.util.Optional;
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
+@Singleton
 public class PubSubAcknowledgementBinder implements PubSubTypeArgumentBinder<Acknowledgement> {
 
     @Override
