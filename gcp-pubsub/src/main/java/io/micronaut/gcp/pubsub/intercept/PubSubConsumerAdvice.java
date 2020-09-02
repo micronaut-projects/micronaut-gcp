@@ -25,6 +25,7 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.bind.DefaultExecutableBinder;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
@@ -111,7 +112,9 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
             String configuration = subscriptionAnnotation.get("configuration", String.class).orElse("");
             MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer consumer) -> {
                 String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
-                String contentType = Optional.of(messageContentType).orElse(defaultContentType);
+                String contentType = Optional.of(messageContentType)
+                        .filter(StringUtils::isNotEmpty)
+                        .orElse(defaultContentType);
                 DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(consumer);
 
                 PubSubConsumerState consumerState = new PubSubConsumerState(message, consumer,

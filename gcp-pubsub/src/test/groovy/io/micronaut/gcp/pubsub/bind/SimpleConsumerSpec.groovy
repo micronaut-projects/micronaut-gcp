@@ -1,5 +1,6 @@
 package io.micronaut.gcp.pubsub.bind
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.ByteString
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
@@ -26,6 +27,9 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
 
     @Inject
     SimpleReceiver receiver
+
+    @Inject
+    ObjectMapper mapper
 
     void "simple consumer spec"() {
         PollingConditions conditions = new PollingConditions(timeout: 3)
@@ -76,6 +80,19 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
                 map != null && map.get("id") == "1234"
             }
     }
+
+    void "receive person without content type"() {
+        PollingConditions conditions = new PollingConditions(timeout: 3)
+        def person = new Person()
+        person.name = "alf"
+        def bytes = mapper.writeValueAsBytes(person)
+        when:
+            pubSubClient.publishPojoWithoutContentType(bytes)
+        then:
+            conditions.eventually {
+                receiver.dataHolder["test-without-content-type"].name == person.name
+            }
+    }
 }
 
 @PubSubClient
@@ -92,6 +109,9 @@ interface SimplePubSubClient {
 
     @Topic("test-with-message-id")
     String publishPojoMessageId(Person person)
+
+    @Topic(value = "test-without-content-type", contentType = "")
+    String publishPojoWithoutContentType(byte[] data)
 
 }
 
@@ -124,5 +144,10 @@ class SimpleReceiver {
         holder.put("body", person)
         holder.put("header", answer)
         dataHolder["test-headers"] = holder
+    }
+
+    @Subscription(value = "test-without-content-type", contentType = "application/json")
+    void receive(Person person){
+        dataHolder["test-without-content-type"] = person
     }
 }
