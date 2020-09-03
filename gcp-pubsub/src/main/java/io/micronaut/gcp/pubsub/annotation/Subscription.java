@@ -38,10 +38,10 @@ public @interface Subscription {
 
     /**
      * Defines the Content-Type to be used for message deserialization.
-     * There's no default, if not set and the message does not contain a Content-Type header deserialization will fail.
+     * Defaults to application/json.
      * @return contentType to use
      */
-    String contentType() default "";
+    String contentType() default "application/json";
 
     /**
      * Defines the name of a particular configuration used for a Subscriber.
