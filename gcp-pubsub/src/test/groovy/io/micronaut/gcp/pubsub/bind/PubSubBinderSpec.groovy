@@ -12,6 +12,7 @@ import io.micronaut.core.bind.DefaultExecutableBinder
 import io.micronaut.gcp.pubsub.annotation.MessageId
 import io.micronaut.inject.BeanDefinition
 import io.micronaut.inject.ExecutableMethod
+import io.micronaut.messaging.Acknowledgement
 import spock.lang.Specification
 
 import javax.inject.Singleton
@@ -55,6 +56,25 @@ class PubSubBinderSpec extends Specification{
             e.message.startsWith("Can't bind messageId to argument")
     }
 
+    void "should be possible to bind Acknowledgement"() {
+        ApplicationContext applicationContext = ApplicationContext.run(["spec.name" : getClass().simpleName])
+        TestBinderBean bean = applicationContext.getBean(TestBinderBean)
+        BeanDefinition<TestBinderBean> beanDefinition = applicationContext.getBeanDefinition(TestBinderBean)
+        ExecutableMethod<?, ?> method = beanDefinition.findMethod("bindWithAck", byte[], Acknowledgement).get()
+        PubSubBinderRegistry binderRegistry = applicationContext.getBean(PubSubBinderRegistry)
+        DefaultExecutableBinder<PubSubConsumerState> binder = new DefaultExecutableBinder<>()
+        AckReplyConsumer ackReplyConsumer = Mock(AckReplyConsumer)
+        ProjectSubscriptionName subscriptionName = ProjectSubscriptionName.of("test-project","test-subscription")
+        PubsubMessage message = PubsubMessage.newBuilder().setData(ByteString.copyFrom("foo".getBytes())).setMessageId("1234").build()
+        PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer, subscriptionName, "application/json")
+        BoundExecutable executable = binder.bind(method, binderRegistry, consumerState)
+        when:
+            executable.invoke(bean)
+        then:
+            Map<String, Object> result = bean.dataHolder["receive"]
+            result["ack"] != null
+    }
+
 }
 
 @Singleton
@@ -74,5 +94,13 @@ class TestBinderBean {
     @Executable
     void bindFail(byte[] body, @MessageId Integer id) {
 
+    }
+
+    @Executable
+    void bindWithAck(byte[] body, Acknowledgement ack) {
+        Map<String, Object> data = new HashMap<>()
+        data["body"] = body
+        data["ack"] = ack
+        dataHolder["receive"] = data
     }
 }
