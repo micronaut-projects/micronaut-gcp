@@ -18,6 +18,7 @@ package io.micronaut.gcp.pubsub.bind;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.type.Argument;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
@@ -56,7 +57,7 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<Body> {
         } else if (bodyType.getType().equals(PubsubMessage.class)) {
             result = state.getPubsubMessage();
         } else {
-            if (!state.getPubsubMessage().containsAttributes("Content-Type")) {
+            if (StringUtils.isEmpty(state.getContentType()) && !state.getPubsubMessage().containsAttributes("Content-Type")) {
                 throw  new PubSubListenerException("Could not detect Content-Type header at message and no Content-Type specified on method.");
             }
             PubSubMessageSerDes serDes = serDesRegistry.find(state.getContentType())

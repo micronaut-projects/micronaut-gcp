@@ -6,12 +6,15 @@ import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.AbstractConsumerSpec
+import io.micronaut.gcp.pubsub.MockPubSubEngine
 import io.micronaut.gcp.pubsub.annotation.MessageId
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Person
+import io.micronaut.http.annotation.Body
+import io.micronaut.messaging.Acknowledgement
 import io.micronaut.messaging.annotation.Header
 import io.micronaut.test.annotation.MicronautTest
 import spock.util.concurrent.PollingConditions
@@ -30,6 +33,8 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
 
     @Inject
     ObjectMapper mapper
+
+    @Inject MockPubSubEngine mockPubSubEngine
 
     void "simple consumer spec"() {
         PollingConditions conditions = new PollingConditions(timeout: 3)
@@ -93,6 +98,35 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
                 receiver.dataHolder["test-without-content-type"].name == person.name
             }
     }
+
+    void "receive with manual ack"() {
+        PollingConditions conditions = new PollingConditions(timeout: 3)
+        def person = new Person()
+        person.name = "alf"
+        when:
+            pubSubClient.publishPojoForManualAck(person)
+        then:
+            conditions.eventually {
+                receiver.dataHolder["test-with-manual-ack"].name == person.name
+            }
+    }
+
+    void "receive with default content type used"() {
+        PollingConditions conditions = new PollingConditions(timeout: 3)
+        def person = new Person()
+        person.name = "alf"
+        def message = PubsubMessage
+                .newBuilder()
+                .setData(ByteString.copyFrom(mapper.writeValueAsBytes(person)))
+                .build()
+
+        when:
+            mockPubSubEngine.publish(message, "test-with-default-contentType")
+        then:
+            conditions.eventually {
+                receiver.dataHolder["test-with-default-contentType"].name == person.name
+            }
+    }
 }
 
 @PubSubClient
@@ -112,6 +146,9 @@ interface SimplePubSubClient {
 
     @Topic(value = "test-without-content-type", contentType = "")
     String publishPojoWithoutContentType(byte[] data)
+
+    @Topic(value = "test-with-manual-ack")
+    String publishPojoForManualAck(Person person);
 
 }
 
@@ -149,5 +186,15 @@ class SimpleReceiver {
     @Subscription(value = "test-without-content-type", contentType = "application/json")
     void receive(Person person){
         dataHolder["test-without-content-type"] = person
+    }
+
+    @Subscription(value = "test-with-manual-ack", contentType = "application/json")
+    void receive(@Body Person person, Acknowledgement ack) {
+        dataHolder["test-with-manual-ack"] = person
+        ack.ack()
+    }
+    @Subscription(value="test-with-default-contentType")
+    void receiveWithDefault(Person person){
+        dataHolder["test-with-default-contentType"] = person
     }
 }

@@ -110,14 +110,14 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
             ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
             String defaultContentType = subscriptionAnnotation.get("contentType", String.class).orElse("");
             String configuration = subscriptionAnnotation.get("configuration", String.class).orElse("");
-            MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer consumer) -> {
+            MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
                 String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
                 String contentType = Optional.of(messageContentType)
                         .filter(StringUtils::isNotEmpty)
                         .orElse(defaultContentType);
-                DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(consumer);
+                DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(ackReplyConsumer);
 
-                PubSubConsumerState consumerState = new PubSubConsumerState(message, consumer,
+                PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer,
                         projectSubscriptionName, contentType);
                 try {
                     BoundExecutable executable = null;
@@ -130,8 +130,12 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                     if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
                         pubSubAcknowledgement.ack();
                     } else {
-                        if (!pubSubAcknowledgement.isClientAck()) {
-                            logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", method.getName());
+                        Optional<Object> boundAck = Arrays.stream(executable.getBoundArguments()).filter(o -> (o instanceof DefaultPubSubAcknowledgement)).findFirst();
+                        if (boundAck.isPresent()) {
+                            DefaultPubSubAcknowledgement manualAck = (DefaultPubSubAcknowledgement) boundAck.get();
+                            if (!manualAck.isClientAck()) {
+                                logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", method.getName());
+                            }
                         }
                     }
                 } catch (Exception e) {
