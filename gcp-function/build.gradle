@@ -6,5 +6,5 @@ dependencies {
 
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation 'com.google.cloud.functions:functions-framework-api:1.0.1'
+    testImplementation 'com.google.cloud.functions:functions-framework-api:1.0.2'
 }
