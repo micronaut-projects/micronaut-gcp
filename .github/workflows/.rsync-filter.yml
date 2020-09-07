@@ -1,0 +1,4 @@
+- .rsync-filter
+- central-sync.yml
+- gradle.yml
+- release.yml
