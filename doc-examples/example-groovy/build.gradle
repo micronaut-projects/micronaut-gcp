@@ -5,5 +5,5 @@ dependencies {
 
     implementation project(":gcp-pubsub")
     implementation project(":gcp-function-http")
-    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.1'
+    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.2'
 }
