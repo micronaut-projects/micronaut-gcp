@@ -4,6 +4,7 @@ io.micronaut.gcp.credentials
 io.micronaut.gcp.function
 io.micronaut.gcp.function.http
 io.micronaut.gcp.function.http.jackson
+io.micronaut.gcp.function.http.test
 io.micronaut.gcp.http.client
 io.micronaut.gcp.pubsub.annotation
 io.micronaut.gcp.pubsub.bind
