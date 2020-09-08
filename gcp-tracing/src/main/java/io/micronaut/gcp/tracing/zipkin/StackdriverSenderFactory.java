@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.tracing.zipkin;
 
+import brave.propagation.B3Propagation;
 import brave.propagation.Propagation;
 import com.google.auth.oauth2.GoogleCredentials;
 import io.grpc.CallOptions;
@@ -120,6 +121,7 @@ public class StackdriverSenderFactory {
             BraveTracerConfiguration configurationBean = configuration.getBean();
 
             configurationBean.getTracingBuilder()
+                    .propagationFactory(brave.propagation.stackdriver.StackdriverTracePropagation.newFactory(B3Propagation.FACTORY))
                     .traceId128Bit(true)
                     .supportsJoin(false);
 
