@@ -12,5 +12,5 @@ dependencies {
     implementation project(":gcp-function-http")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.0"
-    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.1'
+    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.2'
 }

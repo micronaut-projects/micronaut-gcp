@@ -5,6 +5,7 @@ include 'gcp-tracing'
 include 'gcp-http-client'
 include 'gcp-function'
 include 'gcp-function-http'
+include 'gcp-function-http-test'
 include 'gcp-pubsub'
 include 'gcp-logging'
 
