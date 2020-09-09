@@ -227,8 +227,9 @@ public class InvokerHttpServer implements EmbeddedServer {
                            HttpServletResponse response) throws IOException, ServletException {
             if (NOT_FOUND_PATHS.contains(request.getRequestURI())) {
                 response.sendError(HttpStatus.NOT_FOUND_404, "Not Found");
+            } else {
+                super.handle(target, baseRequest, request, response);
             }
-            super.handle(target, baseRequest, request, response);
         }
 
         static NotFoundHandler forServlet(ServletContextHandler servletHandler) {
