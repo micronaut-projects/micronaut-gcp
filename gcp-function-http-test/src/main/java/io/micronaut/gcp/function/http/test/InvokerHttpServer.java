@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.function.http.test;
 
-import com.google.cloud.functions.invoker.NewHttpFunctionExecutor;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.annotation.Experimental;
@@ -105,8 +105,28 @@ public class InvokerHttpServer implements EmbeddedServer {
                     servletContextHandler.setContextPath("/");
                     server.setHandler(NotFoundHandler.forServlet(servletContextHandler));
 
-                    Class<?> functionClass = getFunctionClass();
-                    HttpServlet servlet = NewHttpFunctionExecutor.forClass(functionClass);
+                    HttpFunction httpFunction = new HttpFunction() {
+                        @Override
+                        protected ApplicationContext buildApplicationContext(@Nullable Object context) {
+                            ApplicationContext ctx = InvokerHttpServer.this.getApplicationContext();
+                            this.applicationContext = ctx;
+                            return ctx;
+                        }
+                    };
+                    HttpServlet servlet = new HttpServlet() {
+                        @Override
+                        protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+
+                            try {
+                                httpFunction.service(
+                                        new HttpRequestImpl(req),
+                                        new HttpResponseImpl(resp)
+                                );
+                            } catch (Exception e) {
+                                throw new ServletException(e);
+                            }
+                        }
+                    };
                     ServletHolder servletHolder = new ServletHolder(servlet);
                     servletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(""));
                     servletContextHandler.addServlet(servletHolder, "/*");
@@ -227,8 +247,9 @@ public class InvokerHttpServer implements EmbeddedServer {
                            HttpServletResponse response) throws IOException, ServletException {
             if (NOT_FOUND_PATHS.contains(request.getRequestURI())) {
                 response.sendError(HttpStatus.NOT_FOUND_404, "Not Found");
+            } else {
+                super.handle(target, baseRequest, request, response);
             }
-            super.handle(target, baseRequest, request, response);
         }
 
         static NotFoundHandler forServlet(ServletContextHandler servletHandler) {
