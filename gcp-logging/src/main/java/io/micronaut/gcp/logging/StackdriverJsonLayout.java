@@ -28,9 +28,9 @@ import java.util.concurrent.TimeUnit;
 public class StackdriverJsonLayout extends JsonLayout {
 
     private static final Set<String> FILTERED_MDC_FIELDS = new HashSet<>(Arrays.asList(
-            StackdriverLoggingConstants.MDC_FIELD_TRACE_ID,
-            StackdriverLoggingConstants.MDC_FIELD_SPAN_ID,
-            StackdriverLoggingConstants.MDC_FIELD_SPAN_EXPORT));
+            StackdriverTraceConstants.MDC_FIELD_TRACE_ID,
+            StackdriverTraceConstants.MDC_FIELD_SPAN_ID,
+            StackdriverTraceConstants.MDC_FIELD_SPAN_EXPORT));
 
     private String projectId;
 
@@ -79,13 +79,13 @@ public class StackdriverJsonLayout extends JsonLayout {
             });
         }
         if (this.includeTimestamp) {
-            map.put(StackdriverLoggingConstants.TIMESTAMP_SECONDS_ATTRIBUTE,
+            map.put(StackdriverTraceConstants.TIMESTAMP_SECONDS_ATTRIBUTE,
                     TimeUnit.MILLISECONDS.toSeconds(event.getTimeStamp()));
-            map.put(StackdriverLoggingConstants.TIMESTAMP_NANOS_ATTRIBUTE,
+            map.put(StackdriverTraceConstants.TIMESTAMP_NANOS_ATTRIBUTE,
                     TimeUnit.MILLISECONDS.toNanos(event.getTimeStamp() % 1_000));
         }
 
-        add(StackdriverLoggingConstants.SEVERITY_ATTRIBUTE, this.includeLevel,
+        add(StackdriverTraceConstants.SEVERITY_ATTRIBUTE, this.includeLevel,
                 String.valueOf(event.getLevel()), map);
         add(JsonLayout.THREAD_ATTR_NAME, this.includeThreadName, event.getThreadName(), map);
         add(JsonLayout.LOGGER_ATTR_NAME, this.includeLoggerName, event.getLoggerName(), map);
@@ -107,11 +107,8 @@ public class StackdriverJsonLayout extends JsonLayout {
         add(JsonLayout.CONTEXT_ATTR_NAME, this.includeContextName, event.getLoggerContextVO().getName(), map);
         addThrowableInfo(JsonLayout.EXCEPTION_ATTR_NAME, this.includeException, event, map);
         addTraceId(event, map);
-        add(StackdriverLoggingConstants.SPAN_ID_ATTRIBUTE, this.includeSpanId,
-                event.getMDCPropertyMap().get(StackdriverLoggingConstants.MDC_FIELD_SPAN_ID), map);
-//        if (this.serviceContext != null) {
-//            map.put(StackdriverLoggingConstants.SERVICE_CONTEXT_ATTRIBUTE, this.serviceContext);
-//        }
+        add(StackdriverTraceConstants.SPAN_ID_ATTRIBUTE, this.includeSpanId,
+                event.getMDCPropertyMap().get(StackdriverTraceConstants.MDC_FIELD_SPAN_ID), map);
         if (this.customJson != null && !this.customJson.isEmpty()) {
             for (Map.Entry<String, Object> entry : this.customJson.entrySet()) {
                 map.putIfAbsent(entry.getKey(), entry.getValue());
@@ -121,24 +118,28 @@ public class StackdriverJsonLayout extends JsonLayout {
         return map;
     }
 
+    /**
+     * Formats traceId to be exact 32 digits.
+     * @param traceId
+     * @return formated tracedId
+     */
+    protected String formatTraceId(final String traceId) {
+       return ("00000000000000000000000000000000" + traceId).substring(traceId.length());
+    }
 
     private void addTraceId(ILoggingEvent event, Map<String, Object> map) {
         if (!this.includeTraceId) {
             return;
         }
-
         String traceId =
-                event.getMDCPropertyMap().get(StackdriverLoggingConstants.MDC_FIELD_TRACE_ID);
-//        if (traceId == null) {
-//            traceId = TraceIdLoggingEnhancer.getCurrentTraceId();
-//        }
+                event.getMDCPropertyMap().get(StackdriverTraceConstants.MDC_FIELD_TRACE_ID);
         if (!StringUtils.isEmpty(traceId)
                 && !StringUtils.isEmpty(this.projectId)
                 && !this.projectId.endsWith("_IS_UNDEFINED")) {
-            traceId = StackdriverLoggingConstants.composeFullTraceName(
-                    this.projectId, String.format("%016d", traceId));
+            traceId = StackdriverTraceConstants.composeFullTraceName(
+                    this.projectId, formatTraceId(traceId));
         }
 
-        add(StackdriverLoggingConstants.TRACE_ID_ATTRIBUTE, this.includeTraceId, traceId, map);
+        add(StackdriverTraceConstants.TRACE_ID_ATTRIBUTE, this.includeTraceId, traceId, map);
     }
 }

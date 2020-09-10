@@ -1,6 +1,7 @@
 introduction: Introduction
 releaseHistory: Release History
 setup: Setting up GCP Support
+logging: Google Cloud Logging Support
 tracing: Stackdriver Trace
 authorizingClients: Authorizing HTTP Clients
 cloudFunction:
