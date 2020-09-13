@@ -16,12 +16,16 @@
 package io.micronaut.gcp.logging;
 
 import ch.qos.logback.core.PropertyDefinerBase;
+import io.micronaut.context.env.Environment;
+import io.micronaut.core.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Logback extension that sets a property called google_cloud_logging to allow users to switch between appender configurations.
@@ -37,9 +41,15 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
 
     @Override
     /**
-     * @return true if application is running on GCP
+     * @return true if application is running on GCP via metadata server detection or if user provided MICRONAUT_ENVIRONMENTS value.
      */
     public String getPropertyValue() {
+        String environmentsEnv = System.getenv(Environment.ENVIRONMENTS_ENV);
+        if (StringUtils.isNotEmpty(environmentsEnv)) {
+            String[] environments = StringUtils.tokenizeToStringArray(environmentsEnv, ",");
+            boolean isGcp = Arrays.stream(environments).anyMatch(s -> s.equals(Environment.GOOGLE_COMPUTE));
+            return String.valueOf(isGcp);
+        }
         return isGoogleCompute().toString();
     }
 

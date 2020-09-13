@@ -70,3 +70,5 @@ A sample logback.xml that uses the conditional feature looks like this:
 </configuration>
 
 ```
+
+NOTE: The environment detection executes a HTTP request to the Google Cloud metadata server. If you rather skip this to improve startup time, just set  `MICRONAUT_ENVIRONMENTS` environment variable as described in the https://docs.micronaut.io/latest/guide/index.html#environments[reference documentation].
