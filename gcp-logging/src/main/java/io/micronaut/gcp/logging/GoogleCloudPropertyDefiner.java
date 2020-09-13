@@ -17,6 +17,7 @@ package io.micronaut.gcp.logging;
 
 import ch.qos.logback.core.PropertyDefinerBase;
 import io.micronaut.context.env.Environment;
+import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -44,10 +45,11 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
      * @return true if application is running on GCP via metadata server detection or if user provided MICRONAUT_ENVIRONMENTS value.
      */
     public String getPropertyValue() {
-        String environmentsEnv = System.getenv(Environment.ENVIRONMENTS_ENV);
-        if (StringUtils.isNotEmpty(environmentsEnv)) {
-            String[] environments = StringUtils.tokenizeToStringArray(environmentsEnv, ",");
-            boolean isGcp = Arrays.stream(environments).anyMatch(s -> s.equals(Environment.GOOGLE_COMPUTE));
+        String[] fromEnvironment = StringUtils.tokenizeToStringArray(Optional.ofNullable(System.getenv(Environment.ENVIRONMENTS_ENV)).orElse(""), ",");
+        String[] fromProperties = StringUtils.tokenizeToStringArray(Optional.ofNullable(System.getProperty(Environment.ENVIRONMENTS_PROPERTY)).orElse(""), ",");
+        String[] combinedEnvironments = ArrayUtils.concat(fromEnvironment, fromProperties);
+        if (combinedEnvironments.length > 0) {
+            boolean isGcp = Arrays.stream(combinedEnvironments).anyMatch(s -> s.equals(Environment.GOOGLE_COMPUTE));
             return String.valueOf(isGcp);
         }
         return isGoogleCompute().toString();
