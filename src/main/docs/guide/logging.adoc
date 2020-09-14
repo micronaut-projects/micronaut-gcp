@@ -35,40 +35,55 @@ image::logs_json.png[JSON log output,1591,534]
 <1> Import the logback configuration that defines the JsonLayout appender
 <2> Define your root level as `CONSOLE_JSON`
 
+### Overriding defaults on logging configuration
+
+If you would like to override the fields that are included in the `JsonLayout` appender, you can declare it on your own logback configuration instead of including the default from `logback-json-appender.xml`:
+
+```xml
+<configuration>
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="io.micronaut.gcp.logging.StackdriverJsonLayout">
+                <projectId>${projectId}</projectId>
+                <includeTraceId>true</includeTraceId>
+                <includeSpanId>true</includeSpanId>
+                <includeLevel>true</includeLevel>
+                <includeThreadName>false</includeThreadName>
+                <includeMDC>true</includeMDC>
+                <includeLoggerName>true</includeLoggerName>
+                <includeFormattedMessage>true</includeFormattedMessage>
+                <includeExceptionInMessage>true</includeExceptionInMessage>
+                <includeContextName>true</includeContextName>
+                <includeMessage>false</includeMessage>
+                <includeException>false</includeException>
+            </layout>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_JSON" >
+
+        </appender-ref>
+    </root>
+</configuration>
+```
+
 ### Dinamically changing appenders deoending on environment
 
-The `JSONLayout` comes in hand when using Google Cloud Logging, but when running locally it will make your console logs unreadable. Instead of using 2 different log configurations you can rely
-on http://logback.qos.ch/manual/configuration.html[logback conditional support] to switch depending on your environment. The framework ships with a `PropertyDefiner` that sets a variable `google_cloud_logging`
-that allows you to use it on a conditional expression.
+The `JSONLayout` comes in hand when using Google Cloud Logging, but when running locally it will make your console logs unreadable. The default `logback-json-appender` configuration includes both a `STDOUT` and a `CONSOLE_JSON` appenders, as well as a dynamic logback property called `google_cloud_logging`.
 
-NOTE: Logback requires that both `org.codehaus.janino:janino` and `org.codehaus.janino:commons-compiler` to be on your classpath for conditional support to work, add those dependencies if you want to use this feature.
+You can use that variable to switch your logger appender dynamically.
 
-A sample logback.xml that uses the conditional feature looks like this:
+You logging configuration would look like this:
 
 ```xml
 <configuration>
     <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" />
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
-        <encoder>
-            <pattern>%cyan(%d{HH:mm:ss.SSS}) %gray([%thread]) %highlight(%-5level) %magenta(%logger{36}) - %msg%n </pattern>
-        </encoder>
-    </appender>
-
-    <if condition="${google_cloud_logging}">
-        <then>
-            <root level="INFO">
-                <appender-ref ref="CONSOLE_JSON" />
-            </root>
-        </then>
-        <else>
-            <root level="INFO">
-                <appender-ref ref="STDOUT" />
-            </root>
-        </else>
-    </if>
+    <root level="INFO">
+        <appender-ref ref="${google_cloud_logging}" /> <1>
+    </root>
 </configuration>
-
 ```
 
-NOTE: The environment detection executes a HTTP request to the Google Cloud metadata server. If you rather skip this to improve startup time, just set  `MICRONAUT_ENVIRONMENTS` environment variable as described in the https://docs.micronaut.io/latest/guide/index.html#environments[reference documentation].
+<1> Chooses the appropriate appender depending on the environment.
+
+NOTE: The environment detection executes a HTTP request to the Google Cloud metadata server. If you rather skip this to improve startup time, just set  `MICRONAUT_ENVIRONMENTS` environment variable or the `micronaut.environments` System property as described in the https://docs.micronaut.io/latest/guide/index.html#environments[reference documentation].

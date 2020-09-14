@@ -25,6 +25,12 @@ import io.micronaut.core.util.StringUtils;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Logback JsonLayout class to include tracing and other MDC fields.
+ *
+ * @author Vinicius Carvalho
+ * @since 3.0.0
+ */
 public class StackdriverJsonLayout extends JsonLayout {
 
     private static final Set<String> FILTERED_MDC_FIELDS = new HashSet<>(Arrays.asList(

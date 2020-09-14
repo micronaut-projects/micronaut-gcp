@@ -48,11 +48,13 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
         String[] fromEnvironment = StringUtils.tokenizeToStringArray(Optional.ofNullable(System.getenv(Environment.ENVIRONMENTS_ENV)).orElse(""), ",");
         String[] fromProperties = StringUtils.tokenizeToStringArray(Optional.ofNullable(System.getProperty(Environment.ENVIRONMENTS_PROPERTY)).orElse(""), ",");
         String[] combinedEnvironments = ArrayUtils.concat(fromEnvironment, fromProperties);
+        boolean isGcp = false;
         if (combinedEnvironments.length > 0) {
-            boolean isGcp = Arrays.stream(combinedEnvironments).anyMatch(s -> s.equals(Environment.GOOGLE_COMPUTE));
-            return String.valueOf(isGcp);
+            isGcp = Arrays.stream(combinedEnvironments).anyMatch(s -> s.equals(Environment.GOOGLE_COMPUTE));
+        } else {
+            isGcp = isGoogleCompute();
         }
-        return isGoogleCompute().toString();
+        return isGcp ? "CONSOLE_JSON" : "STDOUT";
     }
 
     private Boolean isGoogleCompute() {
