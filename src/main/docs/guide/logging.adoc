@@ -44,7 +44,7 @@ If you would like to override the fields that are included in the `JsonLayout` a
     <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <layout class="io.micronaut.gcp.logging.StackdriverJsonLayout">
-                <projectId>${projectId}</projectId>
+                <projectId>${projectId}</projectId> <1>
                 <includeTraceId>true</includeTraceId>
                 <includeSpanId>true</includeSpanId>
                 <includeLevel>true</includeLevel>
@@ -67,7 +67,9 @@ If you would like to override the fields that are included in the `JsonLayout` a
 </configuration>
 ```
 
-### Dinamically changing appenders deoending on environment
+<1> You can override the `projectId` settings via property. If not defined, the default `ServiceOptions.getDefaultProjectId()` will be used.
+
+### Dynamic appender selection
 
 The `JSONLayout` comes in hand when using Google Cloud Logging, but when running locally it will make your console logs unreadable. The default `logback-json-appender` configuration includes both a `STDOUT` and a `CONSOLE_JSON` appenders, as well as a dynamic logback property called `google_cloud_logging`.
 
