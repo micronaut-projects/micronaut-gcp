@@ -40,10 +40,10 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
     private static final int DEFAULT_CONNECT_TIMEOUT = 500;
     private static final String GOOGLE_COMPUTE_METADATA = "http://metadata.google.internal";
 
-    @Override
     /**
      * @return true if application is running on GCP via metadata server detection or if user provided MICRONAUT_ENVIRONMENTS value.
      */
+    @Override
     public String getPropertyValue() {
         String[] fromEnvironment = StringUtils.tokenizeToStringArray(Optional.ofNullable(System.getenv(Environment.ENVIRONMENTS_ENV)).orElse(""), ",");
         String[] fromProperties = StringUtils.tokenizeToStringArray(Optional.ofNullable(System.getProperty(Environment.ENVIRONMENTS_PROPERTY)).orElse(""), ",");
