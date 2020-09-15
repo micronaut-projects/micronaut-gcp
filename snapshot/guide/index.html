@@ -49,13 +49,15 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>3</strong><span>Setting up GCP Support</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>4</strong><span>Stackdriver Trace</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#logging"><strong>4</strong><span>Google Cloud Logging Support</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#authorizingClients"><strong>5</strong><span>Authorizing HTTP Clients</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>5</strong><span>Stackdriver Trace</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>6</strong><span>Cloud Function Support</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#authorizingClients"><strong>6</strong><span>Authorizing HTTP Clients</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#pubsub"><strong>7</strong><span>Google Cloud Pub/Sub Support</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>7</strong><span>Cloud Function Support</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#pubsub"><strong>8</strong><span>Google Cloud Pub/Sub Support</span></a></div>
                                 
                             </div>
                         </div>
@@ -92,51 +94,53 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>3</strong><span>Setting up GCP Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>4</strong><span>Stackdriver Trace</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-logging"><a href="#logging"><strong>4</strong><span>Google Cloud Logging Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-authorizingClients"><a href="#authorizingClients"><strong>5</strong><span>Authorizing HTTP Clients</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>5</strong><span>Stackdriver Trace</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>6</strong><span>Cloud Function Support</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-authorizingClients"><a href="#authorizingClients"><strong>6</strong><span>Authorizing HTTP Clients</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>6.1</strong><span>Simple Functions</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>7</strong><span>Cloud Function Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>6.2</strong><span>HTTP Functions</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>7.1</strong><span>Simple Functions</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-pubsub"><a href="#pubsub"><strong>7</strong><span>Google Cloud Pub/Sub Support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>7.2</strong><span>HTTP Functions</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubIntroduction"><a href="#pubsubIntroduction"><strong>7.1</strong><span>Introduction</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-pubsub"><a href="#pubsub"><strong>8</strong><span>Google Cloud Pub/Sub Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-quickstart"><a href="#quickstart"><strong>7.2</strong><span>Quickstart</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubIntroduction"><a href="#pubsubIntroduction"><strong>8.1</strong><span>Introduction</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubProperties"><a href="#pubsubProperties"><strong>7.3</strong><span>Pub/Sub configuration Properties</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-quickstart"><a href="#quickstart"><strong>8.2</strong><span>Quickstart</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-producer"><a href="#producer"><strong>7.4</strong><span>Pub/Sub Publishers</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubProperties"><a href="#pubsubProperties"><strong>8.3</strong><span>Pub/Sub configuration Properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherContentType"><a href="#publisherContentType"><strong>7.4.1</strong><span>Content-Type and message serialization</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-producer"><a href="#producer"><strong>8.4</strong><span>Pub/Sub Publishers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherHeaders"><a href="#publisherHeaders"><strong>7.4.2</strong><span>Message Headers</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherContentType"><a href="#publisherContentType"><strong>8.4.1</strong><span>Content-Type and message serialization</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherProperties"><a href="#publisherProperties"><strong>7.4.3</strong><span>Publisher properties</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherHeaders"><a href="#publisherHeaders"><strong>8.4.2</strong><span>Message Headers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-messageId"><a href="#messageId"><strong>7.4.4</strong><span>Retrieving message Ids (broker acknowledge)</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherProperties"><a href="#publisherProperties"><strong>8.4.3</strong><span>Publisher properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-pullConsumer"><a href="#pullConsumer"><strong>7.5</strong><span>Receiving messages via @PubSubListener methods</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-messageId"><a href="#messageId"><strong>8.4.4</strong><span>Retrieving message Ids (broker acknowledge)</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberContentType"><a href="#subscriberContentType"><strong>7.5.1</strong><span>Content-Type and message deserialization</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-pullConsumer"><a href="#pullConsumer"><strong>8.5</strong><span>Receiving messages via @PubSubListener methods</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberHeaders"><a href="#subscriberHeaders"><strong>7.5.2</strong><span>Message Headers</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberContentType"><a href="#subscriberContentType"><strong>8.5.1</strong><span>Content-Type and message deserialization</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>7.5.3</strong><span>Subscriber properties</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberHeaders"><a href="#subscriberHeaders"><strong>8.5.2</strong><span>Message Headers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>7.5.4</strong><span>Handling message acknowledgement</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>8.5.3</strong><span>Subscriber properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>7.5.5</strong><span>Consumer error handling</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>8.5.4</strong><span>Handling message acknowledgement</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>7.5.6</strong><span>Custom Parameter Binding</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>8.5.5</strong><span>Consumer error handling</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-serdes"><a href="#serdes"><strong>7.6</strong><span>Message Serialization/Deserialization (SerDes)</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>8.5.6</strong><span>Custom Parameter Binding</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-executors"><a href="#executors"><strong>7.7</strong><span>Configuring Thread pools</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-serdes"><a href="#serdes"><strong>8.6</strong><span>Message Serialization/Deserialization (SerDes)</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-executors"><a href="#executors"><strong>8.7</strong><span>Configuring Thread pools</span></a></div>
         
         </div>
     </div>
@@ -194,7 +198,7 @@
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common:3.1.2.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common:3.2.0.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -202,7 +206,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-common&lt;/artifactId&gt;
-    &lt;version&gt;3.1.2.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.2.0.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -307,7 +311,201 @@
 </table>
 </div>
 
-<h1 id="tracing"><a class="anchor" href="#tracing"></a>4 Stackdriver Trace</h1>
+<h1 id="logging"><a class="anchor" href="#logging"></a>4 Google Cloud Logging Support</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/logging.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p><a href="https://cloud.google.com/logging">Google Cloud Logging</a> integration is available via <a href="../api/io/micronaut/gcp/logging/StackdriverJsonLayout.html">StackdriverJsonLayout</a> that formats log output using <a href="https://cloud.google.com/logging/docs/structured-logging">Stackdriver structured logging format</a>.</p>
+</div>
+<div class="paragraph">
+<p>To enable it add the following dependency to your project:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-logging:3.2.0.BUILD-SNAPSHOT")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-logging&lt;/artifactId&gt;
+    &lt;version&gt;3.2.0.BUILD-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>By default if an application is using a CONSOLE appender Stackdriver log parser will
+consider the entire payload of the message as a text entry, making searching and correlation with tracing impractical.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/logs_plain.png" alt="Console log output" width="1593" height="364">
+</div>
+</div>
+<div class="paragraph">
+<p>Logs on the picture above can&#8217;t be searched by attributes such as <code>thread</code> and ansi coloring makes regex searching even more challenging.</p>
+</div>
+<div class="paragraph">
+<p>When enabled the JSON appender allows logs to be easily filtered:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you combine this module with the Stackdriver Trace module, all logs will also have a <code>traceId</code> field,  making possible to correlate traces with log entries.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/logs_json.png" alt="JSON log output" width="1591" height="534">
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Visual display of log levels</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Correlated <code>traceId</code> for tracing when you have enabled cloud tracing</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Simplified output without extra fields or ANSI coloring codes</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_configuring_logging_via_console">Configuring logging via console</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="CONSOLE_JSON" /&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Import the logback configuration that defines the JsonLayout appender</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Define your root level as <code>CONSOLE_JSON</code></td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_overriding_defaults_on_logging_configuration">Overriding defaults on logging configuration</h3>
+<div class="paragraph">
+<p>If you would like to override the fields that are included in the <code>JsonLayout</code> appender, you can declare it on your own logback configuration instead of including the default from <code>logback-json-appender.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender"&gt;
+        &lt;encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder"&gt;
+            &lt;layout class="io.micronaut.gcp.logging.StackdriverJsonLayout"&gt;
+                &lt;projectId&gt;${projectId}&lt;/projectId&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+                &lt;includeTraceId&gt;true&lt;/includeTraceId&gt;
+                &lt;includeSpanId&gt;true&lt;/includeSpanId&gt;
+                &lt;includeLevel&gt;true&lt;/includeLevel&gt;
+                &lt;includeThreadName&gt;false&lt;/includeThreadName&gt;
+                &lt;includeMDC&gt;true&lt;/includeMDC&gt;
+                &lt;includeLoggerName&gt;true&lt;/includeLoggerName&gt;
+                &lt;includeFormattedMessage&gt;true&lt;/includeFormattedMessage&gt;
+                &lt;includeExceptionInMessage&gt;true&lt;/includeExceptionInMessage&gt;
+                &lt;includeContextName&gt;true&lt;/includeContextName&gt;
+                &lt;includeMessage&gt;false&lt;/includeMessage&gt;
+                &lt;includeException&gt;false&lt;/includeException&gt;
+            &lt;/layout&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="CONSOLE_JSON" &gt;
+
+        &lt;/appender-ref&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>You can override the <code>projectId</code> settings via property. If not defined, the default <code>ServiceOptions.getDefaultProjectId()</code> will be used.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamic_appender_selection">Dynamic appender selection</h3>
+<div class="paragraph">
+<p>The <code>JSONLayout</code> comes in hand when using Google Cloud Logging, but when running locally it will make your console logs unreadable. The default <code>logback-json-appender</code> configuration includes both a <code>STDOUT</code> and a <code>CONSOLE_JSON</code> appenders, as well as a dynamic logback property called <code>google_cloud_logging</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can use that variable to switch your logger appender dynamically.</p>
+</div>
+<div class="paragraph">
+<p>You logging configuration would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /&gt;
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="${google_cloud_logging}" /&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Chooses the appropriate appender depending on the environment.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The environment detection executes a HTTP request to the Google Cloud metadata server. If you rather skip this to improve startup time, just set  <code>MICRONAUT_ENVIRONMENTS</code> environment variable or the <code>micronaut.environments</code> System property as described in the <a href="https://docs.micronaut.io/latest/guide/index.html#environments">reference documentation</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<h1 id="tracing"><a class="anchor" href="#tracing"></a>5 Stackdriver Trace</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/tracing.adoc"'>
@@ -326,7 +524,7 @@
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing:3.1.2.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing:3.2.0.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -334,7 +532,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-tracing&lt;/artifactId&gt;
-    &lt;version&gt;3.1.2.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.2.0.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -363,7 +561,7 @@
 </div>
 </div>
 
-<h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>5 Authorizing HTTP Clients</h1>
+<h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>6 Authorizing HTTP Clients</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/authorizingClients.adoc"'>
@@ -407,7 +605,7 @@
 </div>
 </div>
 
-<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>6 Cloud Function Support</h1>
+<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>7 Cloud Function Support</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction.adoc"'>
@@ -420,7 +618,7 @@
 <p>Micronaut GCP includes extended support for Google Cloud Function - designed for serverless workloads.</p>
 </div>
 
-<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>6.1 Simple Functions</h2>
+<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>7.1 Simple Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/simpleFunctions.adoc"'>
@@ -721,7 +919,7 @@ Functions require a no argument constructor hence you must use field injection (
 </div>
 </div>
 
-<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>6.2 HTTP Functions</h2>
+<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>7.2 HTTP Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/httpFunctions.adoc"'>
@@ -745,7 +943,7 @@ Functions require a no argument constructor hence you must use field injection (
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http:3.1.2.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http:3.2.0.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -753,7 +951,7 @@ Functions require a no argument constructor hence you must use field injection (
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-function-http&lt;/artifactId&gt;
-    &lt;version&gt;3.1.2.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.2.0.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -889,7 +1087,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 </div>
 </div>
 
-<h1 id="pubsub"><a class="anchor" href="#pubsub"></a>7 Google Cloud Pub/Sub Support</h1>
+<h1 id="pubsub"><a class="anchor" href="#pubsub"></a>8 Google Cloud Pub/Sub Support</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub.adoc"'>
@@ -900,7 +1098,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 
 
 
-<h2 id="pubsubIntroduction"><a class="anchor" href="#pubsubIntroduction"></a>7.1 Introduction</h2>
+<h2 id="pubsubIntroduction"><a class="anchor" href="#pubsubIntroduction"></a>8.1 Introduction</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pubsubIntroduction.adoc"'>
@@ -926,7 +1124,7 @@ The project does not attempt to create any of the resources in Google Cloud such
 </table>
 </div>
 
-<h2 id="quickstart"><a class="anchor" href="#quickstart"></a>7.2 Quickstart</h2>
+<h2 id="quickstart"><a class="anchor" href="#quickstart"></a>8.2 Quickstart</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/quickstart.adoc"'>
@@ -1196,7 +1394,7 @@ class AnimalListener {
 </div>
 </div>
 
-<h2 id="pubsubProperties"><a class="anchor" href="#pubsubProperties"></a>7.3 Pub/Sub configuration Properties</h2>
+<h2 id="pubsubProperties"><a class="anchor" href="#pubsubProperties"></a>8.3 Pub/Sub configuration Properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pubsubProperties.adoc"'>
@@ -1253,7 +1451,7 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 </tbody>
 </table>
 
-<h2 id="producer"><a class="anchor" href="#producer"></a>7.4 Pub/Sub Publishers</h2>
+<h2 id="producer"><a class="anchor" href="#producer"></a>8.4 Pub/Sub Publishers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer.adoc"'>
@@ -1462,7 +1660,7 @@ interface MultipleProjectClient {
 </div>
 </div>
 
-<h2 id="publisherContentType"><a class="anchor" href="#publisherContentType"></a>7.4.1 Content-Type and message serialization</h2>
+<h2 id="publisherContentType"><a class="anchor" href="#publisherContentType"></a>8.4.1 Content-Type and message serialization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/publisherContentType.adoc"'>
@@ -1606,7 +1804,7 @@ interface CustomSerDesClient {
 </table>
 </div>
 
-<h2 id="publisherHeaders"><a class="anchor" href="#publisherHeaders"></a>7.4.2 Message Headers</h2>
+<h2 id="publisherHeaders"><a class="anchor" href="#publisherHeaders"></a>8.4.2 Message Headers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/publisherHeaders.adoc"'>
@@ -1699,7 +1897,7 @@ interface CustomHeadersClient {
 </table>
 </div>
 
-<h2 id="publisherProperties"><a class="anchor" href="#publisherProperties"></a>7.4.3 Publisher properties</h2>
+<h2 id="publisherProperties"><a class="anchor" href="#publisherProperties"></a>8.4.3 Publisher properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/publisherProperties.adoc"'>
@@ -1914,7 +2112,7 @@ flattened at <code>PubSubConfigurationProperties</code> level, and it&#8217;s in
 </table>
 </div>
 
-<h2 id="messageId"><a class="anchor" href="#messageId"></a>7.4.4 Retrieving message Ids (broker acknowledge)</h2>
+<h2 id="messageId"><a class="anchor" href="#messageId"></a>8.4.4 Retrieving message Ids (broker acknowledge)</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/messageId.adoc"'>
@@ -2029,7 +2227,7 @@ interface CustomReturnClient {
 </table>
 </div>
 
-<h2 id="pullConsumer"><a class="anchor" href="#pullConsumer"></a>7.5 Receiving messages via @PubSubListener methods</h2>
+<h2 id="pullConsumer"><a class="anchor" href="#pullConsumer"></a>8.5 Receiving messages via @PubSubListener methods</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer.adoc"'>
@@ -2183,7 +2381,7 @@ When publishing to a different project, make sure your service account has the p
 </div>
 </div>
 
-<h2 id="subscriberContentType"><a class="anchor" href="#subscriberContentType"></a>7.5.1 Content-Type and message deserialization</h2>
+<h2 id="subscriberContentType"><a class="anchor" href="#subscriberContentType"></a>8.5.1 Content-Type and message deserialization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberContentType.adoc"'>
@@ -2348,7 +2546,7 @@ class ContentTypeSubscriber {
 </table>
 </div>
 
-<h2 id="subscriberHeaders"><a class="anchor" href="#subscriberHeaders"></a>7.5.2 Message Headers</h2>
+<h2 id="subscriberHeaders"><a class="anchor" href="#subscriberHeaders"></a>8.5.2 Message Headers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberHeaders.adoc"'>
@@ -2428,7 +2626,7 @@ class CustomHeaderSubscriber {
 </table>
 </div>
 
-<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>7.5.3 Subscriber properties</h2>
+<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>8.5.3 Subscriber properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberProperties.adoc"'>
@@ -2568,7 +2766,7 @@ class CustomConfigurationSubscriber {
 </table>
 </div>
 
-<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>7.5.4 Handling message acknowledgement</h2>
+<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>8.5.4 Handling message acknowledgement</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/messageAcknowledge.adoc"'>
@@ -2651,7 +2849,7 @@ class AcknowledgementSubscriber {
 </div>
 </div>
 
-<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>7.5.5 Consumer error handling</h2>
+<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>8.5.5 Consumer error handling</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/errorHandling.adoc"'>
@@ -2811,7 +3009,7 @@ class ErrorHandlingSubscriber : PubSubMessageReceiverExceptionHandler { <b class
 </table>
 </div>
 
-<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>7.5.6 Custom Parameter Binding</h2>
+<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>8.5.6 Custom Parameter Binding</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/customParameter.adoc"'>
@@ -3095,7 +3293,7 @@ class CustomBindingSubscriber {
 </div>
 </div>
 
-<h2 id="serdes"><a class="anchor" href="#serdes"></a>7.6 Message Serialization/Deserialization (SerDes)</h2>
+<h2 id="serdes"><a class="anchor" href="#serdes"></a>8.6 Message Serialization/Deserialization (SerDes)</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/serdes.adoc"'>
@@ -3287,7 +3485,7 @@ class JavaMessageSerDes : PubSubMessageSerDes {
 </div>
 </div>
 
-<h2 id="executors"><a class="anchor" href="#executors"></a>7.7 Configuring Thread pools</h2>
+<h2 id="executors"><a class="anchor" href="#executors"></a>8.7 Configuring Thread pools</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/executors.adoc"'>
