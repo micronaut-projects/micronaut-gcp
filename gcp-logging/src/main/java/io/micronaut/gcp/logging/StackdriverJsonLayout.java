@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * Logback JsonLayout class to include tracing and other MDC fields.
  *
  * @author Vinicius Carvalho
- * @since 3.0.0
+ * @since 3.2.0
  */
 public class StackdriverJsonLayout extends JsonLayout {
 

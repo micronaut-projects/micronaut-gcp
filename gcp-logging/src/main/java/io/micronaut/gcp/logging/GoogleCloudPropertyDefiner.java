@@ -32,7 +32,7 @@ import java.util.Optional;
  * Logback extension that sets a property called google_cloud_logging to allow users to switch between appender configurations.
  *
  * @author Vinicius Carvalho
- * @since 3.1.1
+ * @since 3.2.0
  */
 public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
 

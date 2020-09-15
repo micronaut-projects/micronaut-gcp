@@ -23,7 +23,7 @@ package io.micronaut.gcp.logging;
  * @author Chengyuan Zhao
  * @author Vinicius Carvalho
  *
- * @since 3.0.0
+ * @since 3.2.0
  */
 public interface StackdriverTraceConstants {
 
