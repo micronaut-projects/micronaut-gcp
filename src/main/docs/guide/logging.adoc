@@ -23,14 +23,15 @@ image::logs_json.png[JSON log output,1591,534]
 
 ## Configuring logging via console
 
-```xml
+[source,xml]
+----
 <configuration>
     <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /> <1>
     <root level="INFO">
         <appender-ref ref="CONSOLE_JSON" /> <2>
     </root>
 </configuration>
-```
+----
 
 <1> Import the logback configuration that defines the JsonLayout appender
 <2> Define your root level as `CONSOLE_JSON`
@@ -39,7 +40,8 @@ image::logs_json.png[JSON log output,1591,534]
 
 If you would like to override the fields that are included in the `JsonLayout` appender, you can declare it on your own logback configuration instead of including the default from `logback-json-appender.xml`:
 
-```xml
+[source,xml]
+----
 <configuration>
     <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
@@ -65,8 +67,7 @@ If you would like to override the fields that are included in the `JsonLayout` a
         </appender-ref>
     </root>
 </configuration>
-```
-
+----
 <1> You can override the `projectId` settings via property. If not defined, the default `ServiceOptions.getDefaultProjectId()` will be used.
 
 ### Dynamic appender selection
@@ -77,14 +78,15 @@ You can use that variable to switch your logger appender dynamically.
 
 You logging configuration would look like this:
 
-```xml
+[source,xml]
+----
 <configuration>
     <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" />
     <root level="INFO">
         <appender-ref ref="${google_cloud_logging}" /> <1>
     </root>
 </configuration>
-```
+----
 
 <1> Chooses the appropriate appender depending on the environment.
 
