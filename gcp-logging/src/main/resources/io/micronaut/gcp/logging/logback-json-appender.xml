@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Stackdriver json-log format provided for import.
+-->
+<included>
+    <define name="google_cloud_logging" class="io.micronaut.gcp.logging.GoogleCloudPropertyDefiner"></define>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) %gray([%thread]) %highlight(%-5level) %magenta(%logger{36}) - %msg%n </pattern>
+        </encoder>
+    </appender>
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="io.micronaut.gcp.logging.StackdriverJsonLayout">
+                <projectId>${projectId}</projectId>
+                <!--<includeTraceId>true</includeTraceId>-->
+                <!--<includeSpanId>true</includeSpanId>-->
+                <!--<includeLevel>true</includeLevel>-->
+                <!--<includeThreadName>true</includeThreadName>-->
+                <!--<includeMDC>true</includeMDC>-->
+                <!--<includeLoggerName>true</includeLoggerName>-->
+                <!--<includeFormattedMessage>true</includeFormattedMessage>-->
+                <!--<includeExceptionInMessage>true</includeExceptionInMessage>-->
+                <!--<includeContextName>true</includeContextName>-->
+                <!--<includeMessage>false</includeMessage>-->
+                <!--<includeException>false</includeException>-->
+            </layout>
+        </encoder>
+    </appender>
+</included>

@@ -1,0 +1,93 @@
+https://cloud.google.com/logging[Google Cloud Logging] integration is available via api:gcp.logging.StackdriverJsonLayout[] that formats log output using https://cloud.google.com/logging/docs/structured-logging[Stackdriver structured logging format].
+
+To enable it add the following dependency to your project:
+
+dependency:io.micronaut.gcp:micronaut-gcp-logging[version="{version}"]
+
+By default if an application is using a CONSOLE appender Stackdriver log parser will
+consider the entire payload of the message as a text entry, making searching and correlation with tracing impractical.
+
+image::logs_plain.png[Console log output,1593,364]
+
+Logs on the picture above can't be searched by attributes such as `thread` and ansi coloring makes regex searching even more challenging.
+
+When enabled the JSON appender allows logs to be easily filtered:
+
+NOTE: If you combine this module with the Stackdriver Trace module, all logs will also have a `traceId` field,  making possible to correlate traces with log entries.
+
+image::logs_json.png[JSON log output,1591,534]
+
+<1> Visual display of log levels
+<2> Correlated `traceId` for tracing when you have enabled cloud tracing
+<3> Simplified output without extra fields or ANSI coloring codes
+
+## Configuring logging via console
+
+[source,xml]
+----
+<configuration>
+    <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /> <1>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_JSON" /> <2>
+    </root>
+</configuration>
+----
+
+<1> Import the logback configuration that defines the JsonLayout appender
+<2> Define your root level as `CONSOLE_JSON`
+
+### Overriding defaults on logging configuration
+
+If you would like to override the fields that are included in the `JsonLayout` appender, you can declare it on your own logback configuration instead of including the default from `logback-json-appender.xml`:
+
+[source,xml]
+----
+<configuration>
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="io.micronaut.gcp.logging.StackdriverJsonLayout">
+                <projectId>${projectId}</projectId> <1>
+                <includeTraceId>true</includeTraceId>
+                <includeSpanId>true</includeSpanId>
+                <includeLevel>true</includeLevel>
+                <includeThreadName>false</includeThreadName>
+                <includeMDC>true</includeMDC>
+                <includeLoggerName>true</includeLoggerName>
+                <includeFormattedMessage>true</includeFormattedMessage>
+                <includeExceptionInMessage>true</includeExceptionInMessage>
+                <includeContextName>true</includeContextName>
+                <includeMessage>false</includeMessage>
+                <includeException>false</includeException>
+            </layout>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_JSON" >
+
+        </appender-ref>
+    </root>
+</configuration>
+----
+<1> You can override the `projectId` settings via property. If not defined, the default `ServiceOptions.getDefaultProjectId()` will be used.
+
+### Dynamic appender selection
+
+The `JSONLayout` comes in hand when using Google Cloud Logging, but when running locally it will make your console logs unreadable. The default `logback-json-appender` configuration includes both a `STDOUT` and a `CONSOLE_JSON` appenders, as well as a dynamic logback property called `google_cloud_logging`.
+
+You can use that variable to switch your logger appender dynamically.
+
+You logging configuration would look like this:
+
+[source,xml]
+----
+<configuration>
+    <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" />
+    <root level="INFO">
+        <appender-ref ref="${google_cloud_logging}" /> <1>
+    </root>
+</configuration>
+----
+
+<1> Chooses the appropriate appender depending on the environment.
+
+NOTE: The environment detection executes a HTTP request to the Google Cloud metadata server. If you rather skip this to improve startup time, just set  `MICRONAUT_ENVIRONMENTS` environment variable or the `micronaut.environments` System property as described in the https://docs.micronaut.io/latest/guide/index.html#environments[reference documentation].
