@@ -8,6 +8,7 @@ include 'gcp-function-http'
 include 'gcp-function-http-test'
 include 'gcp-pubsub'
 include 'gcp-logging'
+include 'gcp-secrets-manager'
 
 include 'doc-examples:example-java'
 include 'doc-examples:example-groovy'
