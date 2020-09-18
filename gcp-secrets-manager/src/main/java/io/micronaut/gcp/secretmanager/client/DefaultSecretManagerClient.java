@@ -39,7 +39,7 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
         AccessSecretVersionRequest secretVersionRequest = AccessSecretVersionRequest.newBuilder()
                 .setName(SecretVersionName.of(projectId, secretId, version).toString())
                 .build();
-        
+
         return null;
     }
 }
