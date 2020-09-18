@@ -22,24 +22,29 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
     }
 
     @Override
-    public Single<byte[]> fetchSecret(String secretId) {
+    public Single<VersionedSecret> fetchSecret(String secretId) {
         return fetchSecret(secretId, SecretManagerClient.LATEST);
     }
 
     @Override
-    public Single<byte[]> fetchSecret(String secretId, String version) {
+    public Single<VersionedSecret> fetchSecret(String secretId, String version) {
         return fetchSecret(secretId, version, googleCloudConfiguration.getProjectId());
     }
 
     @Override
-    public Single<byte[]> fetchSecret(String secretId, String version, String projectId) {
+    public Single<VersionedSecret> fetchSecret(String secretId, String version, String projectId) {
+
         GetSecretRequest secretRequest = GetSecretRequest.newBuilder()
                 .setName(SecretName.of(projectId, secretId).toString())
                 .build();
+
         AccessSecretVersionRequest secretVersionRequest = AccessSecretVersionRequest.newBuilder()
                 .setName(SecretVersionName.of(projectId, secretId, version).toString())
                 .build();
 
-        return null;
+        return Single.fromFuture(client.getSecretCallable().futureCall(secretRequest))
+                .flatMap(secret -> Single.fromFuture(client.accessSecretVersionCallable().futureCall(secretVersionRequest))
+                        .map(response -> new VersionedSecret(response.getPayload().getData().toByteArray(), version, secret.getLabelsMap())));
+
     }
 }

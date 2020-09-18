@@ -18,7 +18,7 @@ public interface SecretManagerClient {
      * @param secretId - name of the secret
      * @return The byte contents of the secret
      */
-    Single<byte[]> fetchSecret(String secretId);
+    Single<VersionedSecret> fetchSecret(String secretId);
 
     /**
      * Fetches a secret from the Secret Manager storage using the `gcp.projectId` project.
@@ -26,7 +26,7 @@ public interface SecretManagerClient {
      * @param version - version of the secret
      * @return The byte contents of the secret
      */
-    Single<byte[]> fetchSecret(String secretId, String version);
+    Single<VersionedSecret> fetchSecret(String secretId, String version);
 
     /**
      * Fetches a secret from the Secret Manager storage.
@@ -35,6 +35,6 @@ public interface SecretManagerClient {
      * @param projectId - project identifier
      * @return The byte contents of the secret
      */
-    Single<byte[]> fetchSecret(String secretId, String version, String projectId);
+    Single<VersionedSecret> fetchSecret(String secretId, String version, String projectId);
 
 }
