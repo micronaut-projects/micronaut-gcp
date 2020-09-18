@@ -17,6 +17,7 @@ package io.micronaut.gcp.tracing.zipkin;
 
 import brave.propagation.B3Propagation;
 import brave.propagation.Propagation;
+import brave.propagation.stackdriver.StackdriverTracePropagation;
 import com.google.auth.oauth2.GoogleCredentials;
 import io.grpc.CallOptions;
 import io.grpc.ManagedChannel;
@@ -33,7 +34,6 @@ import io.micronaut.gcp.condition.RequiresGoogleProjectId;
 import io.micronaut.tracing.brave.AsyncReporterConfiguration;
 import io.micronaut.tracing.brave.BraveTracerConfiguration;
 import zipkin2.Span;
-import zipkin2.propagation.stackdriver.StackdriverTracePropagation;
 import zipkin2.reporter.AsyncReporter;
 import zipkin2.reporter.Sender;
 import zipkin2.reporter.stackdriver.StackdriverEncoder;
@@ -121,7 +121,7 @@ public class StackdriverSenderFactory {
             BraveTracerConfiguration configurationBean = configuration.getBean();
 
             configurationBean.getTracingBuilder()
-                    .propagationFactory(brave.propagation.stackdriver.StackdriverTracePropagation.newFactory(B3Propagation.FACTORY))
+                    .propagationFactory(StackdriverTracePropagation.newFactory(B3Propagation.FACTORY))
                     .traceId128Bit(true)
                     .supportsJoin(false);
 
@@ -130,13 +130,13 @@ public class StackdriverSenderFactory {
     }
 
     /**
-     * The {@link StackdriverTracePropagation#FACTORY} as a bean.
+     * The {@link Propagation.Factory} as a bean.
      * @return The bean.
      */
     @Singleton
     @Requires(beans = StackdriverSender.class)
     protected Propagation.Factory stackdriverPropagation() {
-        return StackdriverTracePropagation.FACTORY;
+        return StackdriverTracePropagation.newFactory(B3Propagation.FACTORY);
     }
 
     /**
