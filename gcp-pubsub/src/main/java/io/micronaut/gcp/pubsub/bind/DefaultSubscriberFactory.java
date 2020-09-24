@@ -22,6 +22,7 @@ import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import io.micronaut.context.BeanContext;
+import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.inject.qualifiers.Qualifiers;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.Map;
@@ -51,8 +53,8 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
     private final BeanContext beanContext;
     private final Logger logger = LoggerFactory.getLogger(DefaultSubscriberFactory.class);
 
-    public DefaultSubscriberFactory(TransportChannelProvider transportChannelProvider,
-                                    CredentialsProvider credentialsProvider,
+    public DefaultSubscriberFactory(@Named(Modules.PUBSUB) TransportChannelProvider transportChannelProvider,
+                                    @Named(Modules.PUBSUB) CredentialsProvider credentialsProvider,
                                     BeanContext beanContext) {
         this.transportChannelProvider = transportChannelProvider;
         this.credentialsProvider = credentialsProvider;

@@ -22,11 +22,13 @@ import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.context.BeanContext;
+import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 
 import javax.annotation.Nonnull;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,8 +57,8 @@ public class DefaultPublisherFactory implements PublisherFactory {
     private final CredentialsProvider credentialsProvider;
     private final BeanContext beanContext;
 
-    public DefaultPublisherFactory(TransportChannelProvider transportChannelProvider,
-                                   CredentialsProvider credentialsProvider,
+    public DefaultPublisherFactory(@Named(Modules.PUBSUB) TransportChannelProvider transportChannelProvider,
+                                   @Named(Modules.PUBSUB) CredentialsProvider credentialsProvider,
                                    BeanContext beanContext) {
         this.transportChannelProvider = transportChannelProvider;
         this.credentialsProvider = credentialsProvider;

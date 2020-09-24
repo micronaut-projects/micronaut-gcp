@@ -18,6 +18,7 @@ import io.grpc.ManagedChannelBuilder
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Replaces
+import io.micronaut.gcp.Modules
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
@@ -31,6 +32,7 @@ import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @MicronautTest
@@ -66,6 +68,7 @@ class IntegrationTest extends Specification{
             .withCommand("gcloud", "beta", "emulators", "pubsub", "start", "--project=test-project",
                     "--host-port=0.0.0.0:8085")
             .withExposedPorts(8085)
+
             .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*Server started, listening on.*"))
 
     static {
@@ -81,12 +84,14 @@ class IntegrationTestFactory {
 
     @Replaces(CredentialsProvider)
     @Singleton
+    @Named(Modules.PUBSUB)
     CredentialsProvider credentialsProvider() {
         return NoCredentialsProvider.create()
     }
 
     @Replaces(TransportChannelProvider)
     @Singleton
+    @Named(Modules.PUBSUB)
     TransportChannelProvider transportChannelProvider(CredentialsProvider credentialsProvider){
         def host = "localhost:" + IntegrationTest.CONTAINER_PORT
         ManagedChannel channel = ManagedChannelBuilder.forTarget(host).usePlaintext().build()
