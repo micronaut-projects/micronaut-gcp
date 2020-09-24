@@ -10,14 +10,24 @@ import java.util.Map;
  */
 public class VersionedSecret {
 
+    private final String name;
     private final byte[] contents;
     private final String version;
     private final Map<String, String> labels;
 
-    public VersionedSecret(byte[] contents, String version, Map<String, String> labels) {
+    public VersionedSecret(String name, byte[] contents, String version, Map<String, String> labels) {
+        this.name = name;
         this.contents = contents;
         this.version = version;
         this.labels = labels;
+    }
+
+    /**
+     *
+     * @return name
+     */
+    public String getName() {
+        return name;
     }
 
     /**
