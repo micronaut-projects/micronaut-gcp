@@ -1,0 +1,14 @@
+Google Cloud Pub/Sub has a local link:https://cloud.google.com/pubsub/docs/emulator#emulator_command-line_arguments[emulator] to enable developers to test their applications locally with no need to connect to the cloud Pub/Sub service.
+
+The framework supports automatic switching of the `TransportChannelProvider` to use `PUBSUB_EMULATOR_HOST` if this variable is set on the environment.
+
+NOTE: Make sure that you also set `GCP_PROJECT_ID` to be the same as the project you have configured the emulator to use. Otherwise the framework may pick up the projectId used by the default credentials.
+
+You will need to manually configure topics and subscriptions on the emulator if you want to test locally. You can easily create resources using the link:https://cloud.google.com/pubsub/docs/reference/rest[Pub/Sub REST interface] to create topics and subscriptions.
+
+For instance, the following `curl` command would create a topic named `micronaut-devices` on the `test-project` project.
+
+```
+curl -XPUT $PUBSUB_EMULATOR_HOST/v1/projects/test-project/topics/micronaut-devices
+```
+

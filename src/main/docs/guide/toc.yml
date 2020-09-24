@@ -32,3 +32,4 @@ pubsub:
   serdes:
     title: Message Serialization/Deserialization (SerDes)
   executors: Configuring Thread pools
+  emulator: Using Google Cloud Pub/Sub emulator

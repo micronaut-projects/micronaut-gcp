@@ -3,6 +3,7 @@ dependencies {
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
 
     compileOnly "io.micronaut:micronaut-runtime"
+    compileOnly "io.micronaut:micronaut-inject-java"
     api "io.micronaut:micronaut-inject:$micronautVersion"
     api 'com.google.auth:google-auth-library-oauth2-http:0.21.1'
     api 'com.google.cloud:google-cloud-core:1.93.9'
