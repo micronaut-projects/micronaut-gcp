@@ -6,10 +6,17 @@ import com.google.api.gax.core.NoCredentialsProvider
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider
 import com.google.api.gax.rpc.FixedTransportChannelProvider
 import com.google.api.gax.rpc.TransportChannelProvider
+import com.google.auth.oauth2.AccessToken
+import com.google.auth.oauth2.GoogleCredentials
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Factory
+import io.micronaut.context.annotation.Replaces
 import io.micronaut.gcp.Modules
 import io.micronaut.inject.qualifiers.Qualifiers
 import spock.lang.Specification
+import spock.mock.MockingApi
+
+import javax.inject.Singleton
 
 class PubSubEmulatorSpec extends Specification{
 
@@ -30,5 +37,15 @@ class PubSubEmulatorSpec extends Specification{
         expect:
             provider instanceof NoCredentialsProvider
             transportChannelProvider instanceof FixedTransportChannelProvider
+    }
+}
+
+@Factory
+class EmptyCredentialsFactory {
+
+    @Singleton
+    @Replaces(GoogleCredentials)
+    GoogleCredentials mockCredentials() {
+        return GoogleCredentials.create(new AccessToken("", new Date()))
     }
 }
