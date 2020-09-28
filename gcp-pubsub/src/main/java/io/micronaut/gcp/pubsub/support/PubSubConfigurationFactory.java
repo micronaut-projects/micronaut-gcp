@@ -15,21 +15,24 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
-import com.google.api.gax.core.CredentialsProvider;
-import com.google.api.gax.core.ExecutorProvider;
-import com.google.api.gax.core.FixedCredentialsProvider;
-import com.google.api.gax.core.FixedExecutorProvider;
+import com.google.api.gax.core.*;
+import com.google.api.gax.grpc.GrpcTransportChannel;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
+import com.google.api.gax.rpc.FixedTransportChannelProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsub.v1.Publisher;
+import io.grpc.ManagedChannelBuilder;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.env.Environment;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.UserAgentHeaderProvider;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import org.threeten.bp.Duration;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.concurrent.Executors;
 
@@ -65,14 +68,28 @@ public class PubSubConfigurationFactory {
 
     /**
      *
-     * @return default {@link TransportChannelProvider}ansportChannelProvider
+     * @return default {@link TransportChannelProvider}TransportChannelProvider
      */
     @Singleton
+    @Named(Modules.PUBSUB)
+    @Requires(missingProperty = "pubsub.emulator.host")
     public TransportChannelProvider transportChannelProvider() {
         return InstantiatingGrpcChannelProvider.newBuilder()
-                .setHeaderProvider(new UserAgentHeaderProvider("pubsub"))
+                .setHeaderProvider(new UserAgentHeaderProvider(Modules.PUBSUB))
                 .setKeepAliveTime(Duration.ofMinutes(this.pubSubConfigurationProperties.getKeepAliveIntervalMinutes()))
                 .build();
+    }
+
+    /**
+     * @param environment - Micronaut Environment to fetch PUBSUB_EMULATOR_HOST value
+     * @return a {@link TransportChannelProvider} that targets the PUBSUB_EMULATOR_HOST
+     */
+    @Singleton
+    @Named(Modules.PUBSUB)
+    @Requires(property = "pubsub.emulator.host")
+    public TransportChannelProvider localChannelProvider(Environment environment) {
+        String host = environment.getProperty("pubsub.emulator.host", String.class).get();
+        return FixedTransportChannelProvider.create(GrpcTransportChannel.create(ManagedChannelBuilder.forTarget(host).usePlaintext().build()));
     }
 
     /**
@@ -81,8 +98,21 @@ public class PubSubConfigurationFactory {
      * @return A {@link FixedCredentialsProvider} holding the given credentials.
      */
     @Singleton
+    @Named(Modules.PUBSUB)
+    @Requires(missingProperty = "pubsub.emulator.host")
     public CredentialsProvider credentialsProvider(GoogleCredentials credentials) {
         return FixedCredentialsProvider.create(credentials);
+    }
+
+    /**
+     * Returns a {@link NoCredentialsProvider}. Useful for when running with an emulator instead of targeting GCP Pub/Sub service.
+     * @return A {@link NoCredentialsProvider} with no credentials.
+     */
+    @Singleton
+    @Named(Modules.PUBSUB)
+    @Requires(property = "pubsub.emulator.host")
+    public CredentialsProvider noCredentialsProvider() {
+        return NoCredentialsProvider.create();
     }
 
 }
