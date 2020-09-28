@@ -142,6 +142,8 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-executors"><a href="#executors"><strong>8.7</strong><span>Configuring Thread pools</span></a></div>
         
+        <div class="toc-item" style="margin-left:10px" id="toc-item-emulator"><a href="#emulator"><strong>8.8</strong><span>Using Google Cloud Pub/Sub emulator</span></a></div>
+        
         </div>
     </div>
     
@@ -3526,6 +3528,45 @@ Pub/Sub client libraries require an  <a href="{jdkapi}/java/util/concurrent/Sche
 </div>
 <div class="paragraph">
 <p>If no configuration is supplied, the framework will use the default named <code>scheduled</code> executor.</p>
+</div>
+
+<h2 id="emulator"><a class="anchor" href="#emulator"></a>8.8 Using Google Cloud Pub/Sub emulator</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/emulator.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Google Cloud Pub/Sub has a local <a href="https://cloud.google.com/pubsub/docs/emulator#emulator_command-line_arguments">emulator</a> to enable developers to test their applications locally with no need to connect to the cloud Pub/Sub service.</p>
+</div>
+<div class="paragraph">
+<p>The framework supports automatic switching of the <code>TransportChannelProvider</code> to use <code>PUBSUB_EMULATOR_HOST</code> if this variable is set on the environment.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Make sure that you also set <code>GCP_PROJECT_ID</code> to be the same as the project you have configured the emulator to use. Otherwise the framework may pick up the projectId used by the default credentials.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You will need to manually configure topics and subscriptions on the emulator if you want to test locally. You can easily create resources using the <a href="https://cloud.google.com/pubsub/docs/reference/rest">Pub/Sub REST interface</a> to create topics and subscriptions.</p>
+</div>
+<div class="paragraph">
+<p>For instance, the following <code>curl</code> command would create a topic named <code>micronaut-devices</code> on the <code>test-project</code> project.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>curl -XPUT $PUBSUB_EMULATOR_HOST/v1/projects/test-project/topics/micronaut-devices</code></pre>
+</div>
 </div>
 
     </div>

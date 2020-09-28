@@ -230,7 +230,9 @@ implements <a href="PublisherFactory.html" title="interface in io.micronaut.gcp.
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DefaultPublisherFactory</h4>
-<pre>public&nbsp;DefaultPublisherFactory&#8203;(com.google.api.gax.rpc.TransportChannelProvider&nbsp;transportChannelProvider,
+<pre>public&nbsp;DefaultPublisherFactory&#8203;(@Named("pubsub")
+                               com.google.api.gax.rpc.TransportChannelProvider&nbsp;transportChannelProvider,
+                               @Named("pubsub")
                                com.google.api.gax.core.CredentialsProvider&nbsp;credentialsProvider,
                                io.micronaut.context.BeanContext&nbsp;beanContext)</pre>
 </li>
