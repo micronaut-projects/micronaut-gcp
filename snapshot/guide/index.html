@@ -1159,7 +1159,7 @@ The project does not attempt to create any of the resources in Google Cloud such
 <h2 id="_creating_a_pub_sub_publisher_with_pubsubclient">Creating a Pub/Sub Publisher with @PubSubClient</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To publish messages to Google Cloud Pub/Sub, just define an interface that is annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a>.</p>
+<p>To publish messages to Google Cloud Pub/Sub, just define an interface that is annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
@@ -1207,7 +1207,7 @@ interface AnimalClient {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> annotation is used to designate this interface as a client</td>
+<td>The <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> annotation is used to designate this interface as a client</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -1319,7 +1319,7 @@ class AnimalService(private val animalClient: AnimalClient)  { <b class="conum">
 <h2 id="_creating_a_pub_sub_subscriber_with_pubsublistener">Creating a Pub/Sub Subscriber with @PubSubListener</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To listen to Pub/Sub messages you can use <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> annotation on a class to mark it as a message listener.</p>
+<p>To listen to Pub/Sub messages you can use <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> annotation on a class to mark it as a message listener.</p>
 </div>
 <div class="paragraph">
 <p>The following example would listen on a subscription named <code>animals</code> that is configured to be attached to the topic of the previous example.</p>
@@ -1464,7 +1464,7 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 
 <div class="paragraph">
 <p>Pub/Sub support in micronaut follows the same pattern used for other types of clients such as the HTTP Client.
-By annotating an interface with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> the framework will create an implementation bean that handles communication with Pub/Sub for you.</p>
+By annotating an interface with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> the framework will create an implementation bean that handles communication with Pub/Sub for you.</p>
 </div>
 <div class="sect1">
 <h2 id="_topics">Topics</h2>
@@ -2239,15 +2239,15 @@ interface CustomReturnClient {
 
 
 <div class="paragraph">
-<p>To start receiving messages you annotate a class with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a>, the framework will then use AOP to deliver messages to methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subbscription.html">@Subbscription</a>.</p>
+<p>To start receiving messages you annotate a class with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a>, the framework will then use AOP to deliver messages to methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.</p>
 </div>
 <div class="sect1">
 <h2 id="_subscriptions">Subscriptions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will be invoked by the framework.
+<p>All methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will be invoked by the framework.
 Each annotated method creates an individual <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a>,
-that can be configured using the <code>configuration</code> parameter of the <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> annotation.</p>
+that can be configured using the <code>configuration</code> parameter of the <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> annotation.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -2256,7 +2256,7 @@ that can be configured using the <code>configuration</code> parameter of the <a 
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> must be unique on your application.
+Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> must be unique on your application.
 If two distinct methods try to subscribe to the same <code>Subscription</code> an error is thrown.
 This is intended to avoid issues with message Acknowledgement control.
 </td>
@@ -2356,11 +2356,11 @@ class SimpleSubscriber {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> marks this class to be a Message Listener</td>
+<td><a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> marks this class to be a Message Listener</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will receive messages from that subscription</td>
+<td>Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will receive messages from that subscription</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -2415,7 +2415,7 @@ On the receiving end the rules to deserialize a <a href="https://developers.goog
 <p>If the message contains an attribute <code>Content-Type</code> that value is used</p>
 </li>
 <li>
-<p>Finally if the <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> has a <code>contentType</code> value this value overrides all of the previous values</p>
+<p>Finally if the <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> has a <code>contentType</code> value this value overrides all of the previous values</p>
 </li>
 </ol>
 </div>
@@ -2424,7 +2424,7 @@ On the receiving end the rules to deserialize a <a href="https://developers.goog
 </div>
 <div class="paragraph">
 <p>Automatic SerDes is a nice feature that the framework offers, but sometimes you may need to have access to the <code>PubSubMessage</code> id.
-This is provided via the <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/MessageId.html">@MessageId</a> annotation.
+This is provided via the <a href="../api/io/micronaut/gcp/pubsub/annotation/MessageId.html">@MessageId</a> annotation.
 Once you annotate an argument of type <code>String</code> with this annotation, the message id will be copied to that argument.</p>
 </div>
 <div class="admonitionblock important">
@@ -2641,7 +2641,7 @@ class CustomHeaderSubscriber {
 <p>Pub/Sub allows each <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a> to have its own configuration for things such as executors or flow control settings.</p>
 </div>
 <div class="paragraph">
-<p>The framework allows you to create configurations and then bind those configurations to each  <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> using the <code>configuration</code> parameter.</p>
+<p>The framework allows you to create configurations and then bind those configurations to each  <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> using the <code>configuration</code> parameter.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 1. Configuration properties for <a href="../api/io/micronaut/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
@@ -2778,7 +2778,7 @@ class CustomConfigurationSubscriber {
 
 
 <div class="paragraph">
-<p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
+<p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
 By default messages are auto acknowledged if the method returns without exceptions, see the section  <a href="#erroHandling">Consumer ErrorHandling </a> for more information on error handling.
 It is possible to have manual acknowledgement control by adding an argument of type <a href="{apimicronaut}messaging/Acknowledge.html">Acknowledge</a> and manually invoking <code>ack()</code> or <code>nack()</code> methods.</p>
 </div>
@@ -2888,7 +2888,7 @@ class AcknowledgementSubscriber {
 <div class="ulist">
 <ul>
 <li>
-<p>Locally: your <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class implements <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a>, then any error related to <code>Subscriptions</code> of that class will be handled by your class.</p>
+<p>Locally: your <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class implements <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a>, then any error related to <code>Subscriptions</code> of that class will be handled by your class.</p>
 </li>
 <li>
 <p>Globally: You define a new implementation of <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a> and annotate it as <code>@Primary</code> overriding the default one.</p>
