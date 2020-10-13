@@ -1,4 +1,4 @@
-The message delivery is handled by an `IntroductionAdvice` class api:intercept.PubSubConsumerAdvice[]. It invokes the method annotated with ann:configuration.gcp.pubsub.annotation.Subscription[].
+The message delivery is handled by an `IntroductionAdvice` class api:intercept.PubSubConsumerAdvice[]. It invokes the method annotated with ann:gcp.pubsub.annotation.Subscription[].
 By default messages are auto acknowledged if the method returns without exceptions, see the section  <<erroHandling, Consumer ErrorHandling >> for more information on error handling.
 It is possible to have manual acknowledgement control by adding an argument of type link:{apimicronaut}messaging/Acknowledge.html[Acknowledge] and manually invoking `ack()` or `nack()` methods.
 
