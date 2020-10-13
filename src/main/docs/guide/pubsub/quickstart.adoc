@@ -4,11 +4,11 @@ dependency:micronaut-gcp-pubsub[groupId="io.micronaut.gcp"]
 
 == Creating a Pub/Sub Publisher with @PubSubClient
 
-To publish messages to Google Cloud Pub/Sub, just define an interface that is annotated with ann:configuration.gcp.pubsub.annotation.PubSubClient[].
+To publish messages to Google Cloud Pub/Sub, just define an interface that is annotated with ann:gcp.pubsub.annotation.PubSubClient[].
 
 snippet::io.micronaut.gcp.pubsub.quickstart.AnimalClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
 
-<1> The ann:configuration.gcp.pubsub.annotation.PubSubClient[] annotation is used to designate this interface as a client
+<1> The ann:gcp.pubsub.annotation.PubSubClient[] annotation is used to designate this interface as a client
 <2> The topic `animals` will be used to publish messages
 <3> The method accepts one argument that will be used as message body
 
@@ -24,7 +24,7 @@ snippet::io.micronaut.gcp.pubsub.quickstart.AnimalService[tags="imports, clazz",
 
 == Creating a Pub/Sub Subscriber with @PubSubListener
 
-To listen to Pub/Sub messages you can use ann:configuration.gcp.pubsub.annotation.PubSubListener[] annotation on a class to mark it as a message listener.
+To listen to Pub/Sub messages you can use ann:gcp.pubsub.annotation.PubSubListener[] annotation on a class to mark it as a message listener.
 
 The following example would listen on a subscription named `animals` that is configured to be attached to the topic of the previous example.
 
