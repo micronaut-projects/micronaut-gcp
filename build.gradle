@@ -13,7 +13,6 @@ subprojects { Project subproject ->
     group "io.micronaut.gcp"
 
     apply plugin: "io.micronaut.build.common"
-
     apply plugin: "io.micronaut.build.dependency-updates"
     apply plugin: "io.micronaut.build.publishing"
 
