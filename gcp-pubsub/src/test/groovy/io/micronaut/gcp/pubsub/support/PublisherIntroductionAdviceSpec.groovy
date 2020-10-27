@@ -13,7 +13,7 @@ import io.micronaut.gcp.pubsub.exception.PubSubClientException
 import io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice
 import io.micronaut.messaging.annotation.Header
 import io.micronaut.messaging.annotation.Headers
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.reactivex.Single
 
 import javax.inject.Inject

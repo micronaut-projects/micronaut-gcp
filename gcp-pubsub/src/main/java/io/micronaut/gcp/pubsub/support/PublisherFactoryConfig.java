@@ -17,6 +17,8 @@ package io.micronaut.gcp.pubsub.support;
 
 import com.google.pubsub.v1.ProjectTopicName;
 
+import java.util.Objects;
+
 /**
  * Holds necessary configuration to create {@link com.google.cloud.pubsub.v1.Subscriber} instances via {@link io.micronaut.gcp.pubsub.bind.SubscriberFactory}.
  *
@@ -57,5 +59,20 @@ public class PublisherFactoryConfig {
      */
     public String getDefaultExecutor() {
         return defaultExecutor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PublisherFactoryConfig that = (PublisherFactoryConfig) o;
+        return topicName.equals(that.topicName) &&
+                publisherConfiguration.equals(that.publisherConfiguration) &&
+                defaultExecutor.equals(that.defaultExecutor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(topicName, publisherConfiguration, defaultExecutor);
     }
 }

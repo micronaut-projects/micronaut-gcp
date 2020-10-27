@@ -16,7 +16,7 @@ import io.micronaut.gcp.pubsub.support.Person
 import io.micronaut.http.annotation.Body
 import io.micronaut.messaging.Acknowledgement
 import io.micronaut.messaging.annotation.Header
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.util.concurrent.PollingConditions
 import javax.inject.Inject
 

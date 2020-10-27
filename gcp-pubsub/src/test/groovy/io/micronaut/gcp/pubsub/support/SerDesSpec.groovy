@@ -12,7 +12,7 @@ import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.exception.PubSubClientException
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes
 import io.micronaut.http.MediaType
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 
 import javax.inject.Inject
 import javax.inject.Singleton
