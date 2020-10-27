@@ -27,52 +27,53 @@ import java.util.Objects;
  */
 public class PublisherFactoryConfig {
 
-    private final ProjectTopicName topicName;
-    private final String publisherConfiguration;
-    private final String defaultExecutor;
+	private final ProjectTopicName topicName;
+	private final String publisherConfiguration;
+	private final String defaultExecutor;
 
-    public PublisherFactoryConfig(ProjectTopicName topicName, String publisherConfiguration, String defaultExecutor) {
-        this.topicName = topicName;
-        this.publisherConfiguration = publisherConfiguration;
-        this.defaultExecutor = defaultExecutor;
-    }
+	public PublisherFactoryConfig(ProjectTopicName topicName, String publisherConfiguration, String defaultExecutor) {
+		this.topicName = topicName;
+		this.publisherConfiguration = publisherConfiguration;
+		this.defaultExecutor = defaultExecutor;
+	}
 
-    /**
-     *
-     * @return ProjectTopicName to be used
-     */
-    public ProjectTopicName getTopicName() {
-        return topicName;
-    }
+	/**
+	 * @return ProjectTopicName to be used
+	 */
+	public ProjectTopicName getTopicName() {
+		return topicName;
+	}
 
-    /**
-     *
-     * @return Name of the publisher configuration passed via {@link io.micronaut.gcp.pubsub.annotation.Topic} annotation.
-     */
-    public String getPublisherConfiguration() {
-        return publisherConfiguration;
-    }
+	/**
+	 * @return Name of the publisher configuration passed via {@link io.micronaut.gcp.pubsub.annotation.Topic} annotation.
+	 */
+	public String getPublisherConfiguration() {
+		return publisherConfiguration;
+	}
 
-    /**
-     *
-     * @return Default {@link java.util.concurrent.ExecutorService} set for all publishers.
-     */
-    public String getDefaultExecutor() {
-        return defaultExecutor;
-    }
+	/**
+	 * @return Default {@link java.util.concurrent.ExecutorService} set for all publishers.
+	 */
+	public String getDefaultExecutor() {
+		return defaultExecutor;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PublisherFactoryConfig that = (PublisherFactoryConfig) o;
-        return topicName.equals(that.topicName) &&
-                publisherConfiguration.equals(that.publisherConfiguration) &&
-                defaultExecutor.equals(that.defaultExecutor);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		PublisherFactoryConfig that = (PublisherFactoryConfig) o;
+		return topicName.equals(that.topicName) &&
+				publisherConfiguration.equals(that.publisherConfiguration) &&
+				defaultExecutor.equals(that.defaultExecutor);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(topicName, publisherConfiguration, defaultExecutor);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(topicName, publisherConfiguration, defaultExecutor);
+	}
 }

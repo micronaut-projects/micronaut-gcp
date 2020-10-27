@@ -20,7 +20,6 @@ import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
-import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.context.BeanContext;
 import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
