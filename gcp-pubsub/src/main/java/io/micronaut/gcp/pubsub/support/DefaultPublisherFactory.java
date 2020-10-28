@@ -77,6 +77,7 @@ public class DefaultPublisherFactory implements PublisherFactory {
                 Optional<PublisherConfigurationProperties> publisherConfiguration = beanContext.findBean(PublisherConfigurationProperties.class, Qualifiers.byName(config.getPublisherConfiguration()));
                 String executor = publisherConfiguration.map(p -> p.getExecutor()).orElse(config.getDefaultExecutor());
                 ExecutorService executorService = beanContext.getBean(ExecutorService.class, Qualifiers.byName(executor));
+
                 if (publisherConfiguration.isPresent()) {
 
                     publisherBuilder.setRetrySettings(publisherConfiguration.get().getRetrySettings().build());

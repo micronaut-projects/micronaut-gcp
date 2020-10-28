@@ -30,43 +30,29 @@ import java.util.Map;
  */
 public class PubSubPublisherState {
 
-    private final String contentType;
-    private final ProjectTopicName topicName;
+    private final TopicState topicState;
     private final Map<String, String> staticMessageAttributes;
     private final Argument<?> bodyArgument;
-    private final String configuration;
 
-    public PubSubPublisherState(String contentType,
-                                ProjectTopicName topicName,
+    public PubSubPublisherState(TopicState topicState,
                                 Map<String, String> staticMessageAttributes,
-                                Argument<?> bodyArgument,
-                                String executor) {
-        this.contentType = contentType;
-        this.topicName = topicName;
+                                Argument<?> bodyArgument) {
+        this.topicState = topicState;
         this.staticMessageAttributes = staticMessageAttributes;
         this.bodyArgument = bodyArgument;
-        this.configuration = executor;
     }
 
     /**
      *
-     * @return the contentType
+     * @return topicState information
      */
-    public String getContentType() {
-        return contentType;
+    public TopicState getTopicState() {
+        return topicState;
     }
 
     /**
      *
-     * @return the topic name
-     */
-    public ProjectTopicName getTopicName() {
-        return topicName;
-    }
-
-    /**
-     *
-     * @return Message Attibutes from Header annotations
+     * @return Message Attributes from Header annotations
      */
     public Map<String, String> getStaticMessageAttributes() {
         return staticMessageAttributes;
@@ -80,11 +66,62 @@ public class PubSubPublisherState {
         return bodyArgument;
     }
 
-    /**
-     *
-     * @return the name of the {@link io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties} to be used
-     */
-    public String getConfiguration() {
-        return configuration;
+
+    public static class TopicState {
+
+        private final String contentType;
+        private final ProjectTopicName projectTopicName;
+        private final String configurationName;
+        private final String endpoint;
+        private final Boolean ordered;
+
+        public TopicState(String contentType, ProjectTopicName projectTopicName, String configurationName, String endpoint, Boolean ordered) {
+            this.contentType = contentType;
+            this.projectTopicName = projectTopicName;
+            this.configurationName = configurationName;
+            this.endpoint = endpoint;
+            this.ordered = ordered;
+        }
+
+        /**
+         *
+         * @return the contentType
+         */
+        public String getContentType() {
+            return contentType;
+        }
+
+        /**
+         *
+         * @return the topic name
+         */
+        public ProjectTopicName getProjectTopicName() {
+            return projectTopicName;
+        }
+
+        /**
+         *
+         * @return the name of the {@link io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties} to be used
+         */
+        public String getConfigurationName() {
+            return configurationName;
+        }
+
+        /**
+         *
+         * @return the endpoint to be used, or empty for global endpoint
+         */
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        /**
+         *
+         * @return if message ordering should be enabled
+         */
+        public Boolean getOrdered() {
+            return ordered;
+        }
     }
+
 }

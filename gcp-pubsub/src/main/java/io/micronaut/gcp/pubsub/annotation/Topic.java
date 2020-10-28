@@ -51,4 +51,12 @@ public @interface Topic {
      *
      */
     String configuration() default "";
+
+    /**
+     * Sets the endpoint that PubSub will use to store messages.
+     * If not specified PubSub stores messages on the nearest endpoint to the client.
+     * This is useful when regulations for data locality such as GDPR are in place.
+     * @return the remote endpoint to use
+     */
+    String endpoint() default "";
 }

@@ -20,7 +20,7 @@ import com.google.pubsub.v1.ProjectTopicName;
 import java.util.Objects;
 
 /**
- * Holds necessary configuration to create {@link com.google.cloud.pubsub.v1.Subscriber} instances via {@link io.micronaut.gcp.pubsub.bind.SubscriberFactory}.
+ * Holds necessary configuration to create {@link com.google.cloud.pubsub.v1.Publisher} instances via {@link PublisherFactory}.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
@@ -30,6 +30,8 @@ public class PublisherFactoryConfig {
 	private final ProjectTopicName topicName;
 	private final String publisherConfiguration;
 	private final String defaultExecutor;
+	private boolean ordered = false;
+	private String endpoint = "";
 
 	public PublisherFactoryConfig(ProjectTopicName topicName, String publisherConfiguration, String defaultExecutor) {
 		this.topicName = topicName;
@@ -60,20 +62,18 @@ public class PublisherFactoryConfig {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+		if (this == o) { return true; }
+		if (o == null || getClass() != o.getClass()) { return false; }
 		PublisherFactoryConfig that = (PublisherFactoryConfig) o;
-		return topicName.equals(that.topicName) &&
+		return ordered == that.ordered &&
+				topicName.equals(that.topicName) &&
 				publisherConfiguration.equals(that.publisherConfiguration) &&
-				defaultExecutor.equals(that.defaultExecutor);
+				defaultExecutor.equals(that.defaultExecutor) &&
+				endpoint.equals(that.endpoint);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(topicName, publisherConfiguration, defaultExecutor);
+		return Objects.hash(topicName, publisherConfiguration, defaultExecutor, ordered, endpoint);
 	}
 }
