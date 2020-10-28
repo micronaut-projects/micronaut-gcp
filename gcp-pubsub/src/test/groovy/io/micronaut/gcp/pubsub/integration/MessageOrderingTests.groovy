@@ -22,8 +22,8 @@ class MessageOrderingTests extends IntegrationTestSpec {
         ApplicationContext ctx = ApplicationContext.run(
                 ["gcp.projectId": "test-project",
                  "spec.name": "MessageOrderingTests"], "integration")
-        PubSubOrderingClient client = ctx.getBean(PubSubOrderingClient)
-        PubSubEastListener listener = ctx.getBean(PubSubEastListener)
+        PubSubLocationClient client = ctx.getBean(PubSubLocationClient)
+        PubSubLocationListener listener = ctx.getBean(PubSubLocationListener)
 
         def person = new Person()
         person.name = "alf"
@@ -38,8 +38,8 @@ class MessageOrderingTests extends IntegrationTestSpec {
     }
 
     void "publish message to with ordering key"() {
-        TopicName topicName = TopicName.of("test-project", "test-topic-east")
-        ProjectSubscriptionName subscriptionName = ProjectSubscriptionName.of("test-project", "test-subscription-east")
+        TopicName topicName = TopicName.of("test-project", "test-topic-ordering")
+        ProjectSubscriptionName subscriptionName = ProjectSubscriptionName.of("test-project", "test-subscription-ordering")
         IntegrationTestSpec.pubSubResourceAdmin.createTopic(topicName)
         IntegrationTestSpec.pubSubResourceAdmin.createSubscription(topicName, subscriptionName)
         PollingConditions conditions = new PollingConditions(timeout: 3)
@@ -47,7 +47,7 @@ class MessageOrderingTests extends IntegrationTestSpec {
                 ["gcp.projectId": "test-project",
                  "spec.name": "MessageOrderingTests"], "integration")
         PubSubOrderingClient client = ctx.getBean(PubSubOrderingClient)
-        PubSubEastListener listener = ctx.getBean(PubSubEastListener)
+        PubSubOrderingListener listener = ctx.getBean(PubSubOrderingListener)
 
         def person = new Person()
         person.name = "alf"
@@ -65,21 +65,37 @@ class MessageOrderingTests extends IntegrationTestSpec {
 
 @PubSubClient
 @io.micronaut.context.annotation.Requires(property = "spec.name", value = "MessageOrderingTests")
-interface PubSubOrderingClient {
+interface PubSubLocationClient {
     @Topic(value ="test-topic-east", endpoint = "us-east1-pubsub.googleapis.com:443")
     void send(Person person)
+}
 
-    @Topic(value = "test-topic-east", endpoint = "us-east1-pubsub.googleapis.com:443")
+@PubSubClient
+@io.micronaut.context.annotation.Requires(property = "spec.name", value = "MessageOrderingTests")
+interface PubSubOrderingClient {
+    @Topic(value = "test-topic-ordering", endpoint = "us-east1-pubsub.googleapis.com:443")
     void send(Person person, @OrderingKey Integer key)
-
 }
 
 @PubSubListener
-class PubSubEastListener {
+@io.micronaut.context.annotation.Requires(property = "spec.name", value = "MessageOrderingTests")
+class PubSubLocationListener {
 
     Person data
 
     @Subscription("test-subscription-east")
+    void onMessage(Person person) {
+        this.data = person
+    }
+}
+
+@PubSubListener
+@io.micronaut.context.annotation.Requires(property = "spec.name", value = "MessageOrderingTests")
+class PubSubOrderingListener {
+
+    Person data
+
+    @Subscription("test-subscription-ordering")
     void onMessage(Person person) {
         this.data = person
     }

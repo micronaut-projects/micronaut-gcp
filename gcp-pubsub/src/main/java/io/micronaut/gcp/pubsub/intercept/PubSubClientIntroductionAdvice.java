@@ -156,7 +156,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 PubsubMessage.Builder messageBuilder = PubsubMessage.newBuilder();
                 messageBuilder.setData(ByteString.copyFrom(serialized))
                         .putAllAttributes(messageAttributes);
-                if(publisherState.getOrderingArgument().isPresent()){
+                if (publisherState.getOrderingArgument().isPresent()) {
                     String orderingKey = conversionService.convert(parameterValues.get(publisherState.getOrderingArgument().get().getName()), String.class)
                             .orElseThrow(() -> new PubSubClientException("Could not convert argument annotated with @OrderingKey to String type"));
                     messageBuilder.setOrderingKey(orderingKey);

@@ -50,6 +50,10 @@ public class PubSubPublisherState {
         this.orderingArgument = orderingArgument;
     }
 
+    /**
+     *
+     * @return the cached publisher associated with the method.
+     */
     public PublisherInterface getPublisher() {
         return publisher;
     }

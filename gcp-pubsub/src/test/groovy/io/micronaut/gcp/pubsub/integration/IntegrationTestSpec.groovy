@@ -93,7 +93,7 @@ class PubSubResourceAdmin {
     }
 
     void createTopic(TopicName topicName) {
-        Topic topic = null
+        def topic = null
         try {
             topic = topicAdminClient.getTopic(topicName)
         } catch(Exception e){
@@ -104,7 +104,7 @@ class PubSubResourceAdmin {
     }
 
     void createSubscription(TopicName topicName, ProjectSubscriptionName subscriptionName) {
-        Subscription subscription = null
+        def subscription = null
         try {
             subscription = subscriptionAdminClient.getSubscription(subscriptionName)
         } catch(Exception e){
