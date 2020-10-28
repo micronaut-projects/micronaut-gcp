@@ -27,30 +27,20 @@ import java.util.Objects;
  */
 public class PublisherFactoryConfig {
 
-	private final ProjectTopicName topicName;
-	private final String publisherConfiguration;
 	private final String defaultExecutor;
-	private boolean ordered = false;
-	private String endpoint = "";
+	private final PubSubPublisherState.TopicState topicState;
 
-	public PublisherFactoryConfig(ProjectTopicName topicName, String publisherConfiguration, String defaultExecutor) {
-		this.topicName = topicName;
-		this.publisherConfiguration = publisherConfiguration;
+	public PublisherFactoryConfig(PubSubPublisherState.TopicState topicState, String defaultExecutor) {
 		this.defaultExecutor = defaultExecutor;
+		this.topicState = topicState;
 	}
 
 	/**
-	 * @return ProjectTopicName to be used
+	 *
+	 * @return TopicState configuration for the bound topic.
 	 */
-	public ProjectTopicName getTopicName() {
-		return topicName;
-	}
-
-	/**
-	 * @return Name of the publisher configuration passed via {@link io.micronaut.gcp.pubsub.annotation.Topic} annotation.
-	 */
-	public String getPublisherConfiguration() {
-		return publisherConfiguration;
+	public PubSubPublisherState.TopicState getTopicState() {
+		return topicState;
 	}
 
 	/**
@@ -60,20 +50,5 @@ public class PublisherFactoryConfig {
 		return defaultExecutor;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) { return true; }
-		if (o == null || getClass() != o.getClass()) { return false; }
-		PublisherFactoryConfig that = (PublisherFactoryConfig) o;
-		return ordered == that.ordered &&
-				topicName.equals(that.topicName) &&
-				publisherConfiguration.equals(that.publisherConfiguration) &&
-				defaultExecutor.equals(that.defaultExecutor) &&
-				endpoint.equals(that.endpoint);
-	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(topicName, publisherConfiguration, defaultExecutor, ordered, endpoint);
-	}
 }

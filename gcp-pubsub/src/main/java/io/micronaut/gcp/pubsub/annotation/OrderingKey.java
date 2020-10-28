@@ -15,6 +15,10 @@
  */
 package io.micronaut.gcp.pubsub.annotation;
 
+import io.micronaut.core.bind.annotation.Bindable;
+
+import java.lang.annotation.*;
+
 /**
  * Defines the value of they to be used for message ordering.
  * See: <a href="https://cloud.google.com/pubsub/docs/publisher#using_ordering_keys">ordering keys</a>.
@@ -24,10 +28,9 @@ package io.micronaut.gcp.pubsub.annotation;
  * @author Vinicius Carvalho
  * @since 3.2.2
  */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.PARAMETER})
+@Bindable
 public @interface OrderingKey {
-	/**
-	 * Value to be used as ordering key.
-	 * @return key value
-	 */
-	String value();
 }

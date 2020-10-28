@@ -16,10 +16,12 @@
 package io.micronaut.gcp.pubsub.support;
 
 
+import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.core.type.Argument;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Stores the context of a PubSubMessage to be pulished. Values of this class comes from parsing of method
@@ -33,13 +35,23 @@ public class PubSubPublisherState {
     private final TopicState topicState;
     private final Map<String, String> staticMessageAttributes;
     private final Argument<?> bodyArgument;
+    private final PublisherInterface publisher;
+    private final Optional<Argument> orderingArgument;
 
     public PubSubPublisherState(TopicState topicState,
                                 Map<String, String> staticMessageAttributes,
-                                Argument<?> bodyArgument) {
+                                Argument<?> bodyArgument,
+                                PublisherInterface publisher,
+                                Optional<Argument> orderingArgument) {
         this.topicState = topicState;
         this.staticMessageAttributes = staticMessageAttributes;
         this.bodyArgument = bodyArgument;
+        this.publisher = publisher;
+        this.orderingArgument = orderingArgument;
+    }
+
+    public PublisherInterface getPublisher() {
+        return publisher;
     }
 
     /**
@@ -66,6 +78,13 @@ public class PubSubPublisherState {
         return bodyArgument;
     }
 
+    /**
+     *
+     * @return Argument annotated with @{@link io.micronaut.gcp.pubsub.annotation.OrderingKey}.
+     */
+    public Optional<Argument> getOrderingArgument() {
+        return orderingArgument;
+    }
 
     public static class TopicState {
 
