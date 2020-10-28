@@ -20,7 +20,6 @@ import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Publisher;
-import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.context.BeanContext;
 import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
@@ -52,7 +51,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @Singleton
 public class DefaultPublisherFactory implements PublisherFactory {
 
-    private final ConcurrentHashMap<ProjectTopicName, Publisher> publishers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<PublisherFactoryConfig, Publisher> publishers = new ConcurrentHashMap<>();
     private final TransportChannelProvider transportChannelProvider;
     private final CredentialsProvider credentialsProvider;
     private final BeanContext beanContext;
@@ -72,7 +71,7 @@ public class DefaultPublisherFactory implements PublisherFactory {
      */
     @Override
     public Publisher createPublisher(@Nonnull PublisherFactoryConfig config) {
-        return this.publishers.computeIfAbsent(config.getTopicName(), (key) -> {
+        return this.publishers.computeIfAbsent(config, (key) -> {
             try {
                 Publisher.Builder publisherBuilder = Publisher.newBuilder(config.getTopicName());
                 Optional<PublisherConfigurationProperties> publisherConfiguration = beanContext.findBean(PublisherConfigurationProperties.class, Qualifiers.byName(config.getPublisherConfiguration()));
