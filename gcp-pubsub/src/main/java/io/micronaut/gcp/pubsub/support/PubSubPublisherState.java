@@ -16,10 +16,12 @@
 package io.micronaut.gcp.pubsub.support;
 
 
+import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.core.type.Argument;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Stores the context of a PubSubMessage to be pulished. Values of this class comes from parsing of method
@@ -30,43 +32,43 @@ import java.util.Map;
  */
 public class PubSubPublisherState {
 
-    private final String contentType;
-    private final ProjectTopicName topicName;
+    private final TopicState topicState;
     private final Map<String, String> staticMessageAttributes;
     private final Argument<?> bodyArgument;
-    private final String configuration;
+    private final PublisherInterface publisher;
+    private final Optional<Argument> orderingArgument;
 
-    public PubSubPublisherState(String contentType,
-                                ProjectTopicName topicName,
+    public PubSubPublisherState(TopicState topicState,
                                 Map<String, String> staticMessageAttributes,
                                 Argument<?> bodyArgument,
-                                String executor) {
-        this.contentType = contentType;
-        this.topicName = topicName;
+                                PublisherInterface publisher,
+                                Optional<Argument> orderingArgument) {
+        this.topicState = topicState;
         this.staticMessageAttributes = staticMessageAttributes;
         this.bodyArgument = bodyArgument;
-        this.configuration = executor;
+        this.publisher = publisher;
+        this.orderingArgument = orderingArgument;
     }
 
     /**
      *
-     * @return the contentType
+     * @return the cached publisher associated with the method.
      */
-    public String getContentType() {
-        return contentType;
+    public PublisherInterface getPublisher() {
+        return publisher;
     }
 
     /**
      *
-     * @return the topic name
+     * @return topicState information
      */
-    public ProjectTopicName getTopicName() {
-        return topicName;
+    public TopicState getTopicState() {
+        return topicState;
     }
 
     /**
      *
-     * @return Message Attibutes from Header annotations
+     * @return Message Attributes from Header annotations
      */
     public Map<String, String> getStaticMessageAttributes() {
         return staticMessageAttributes;
@@ -82,9 +84,67 @@ public class PubSubPublisherState {
 
     /**
      *
-     * @return the name of the {@link io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties} to be used
+     * @return Argument annotated with @{@link io.micronaut.gcp.pubsub.annotation.OrderingKey}.
      */
-    public String getConfiguration() {
-        return configuration;
+    public Optional<Argument> getOrderingArgument() {
+        return orderingArgument;
     }
+
+    public static class TopicState {
+
+        private final String contentType;
+        private final ProjectTopicName projectTopicName;
+        private final String configurationName;
+        private final String endpoint;
+        private final Boolean ordered;
+
+        public TopicState(String contentType, ProjectTopicName projectTopicName, String configurationName, String endpoint, Boolean ordered) {
+            this.contentType = contentType;
+            this.projectTopicName = projectTopicName;
+            this.configurationName = configurationName;
+            this.endpoint = endpoint;
+            this.ordered = ordered;
+        }
+
+        /**
+         *
+         * @return the contentType
+         */
+        public String getContentType() {
+            return contentType;
+        }
+
+        /**
+         *
+         * @return the topic name
+         */
+        public ProjectTopicName getProjectTopicName() {
+            return projectTopicName;
+        }
+
+        /**
+         *
+         * @return the name of the {@link io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties} to be used
+         */
+        public String getConfigurationName() {
+            return configurationName;
+        }
+
+        /**
+         *
+         * @return the endpoint to be used, or empty for global endpoint
+         */
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        /**
+         *
+         * @return if message ordering should be enabled
+         */
+        public Boolean getOrdered() {
+            return ordered;
+        }
+    }
+
 }
