@@ -49,13 +49,15 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#setup"><strong>3</strong><span>Setting up GCP Support</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>4</strong><span>Stackdriver Trace</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#logging"><strong>4</strong><span>Google Cloud Logging Support</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#authorizingClients"><strong>5</strong><span>Authorizing HTTP Clients</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#tracing"><strong>5</strong><span>Stackdriver Trace</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>6</strong><span>Cloud Function Support</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#authorizingClients"><strong>6</strong><span>Authorizing HTTP Clients</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#pubsub"><strong>7</strong><span>Google Cloud Pub/Sub Support</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#cloudFunction"><strong>7</strong><span>Cloud Function Support</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#pubsub"><strong>8</strong><span>Google Cloud Pub/Sub Support</span></a></div>
                                 
                             </div>
                         </div>
@@ -92,51 +94,57 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-setup"><a href="#setup"><strong>3</strong><span>Setting up GCP Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>4</strong><span>Stackdriver Trace</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-logging"><a href="#logging"><strong>4</strong><span>Google Cloud Logging Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-authorizingClients"><a href="#authorizingClients"><strong>5</strong><span>Authorizing HTTP Clients</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tracing"><a href="#tracing"><strong>5</strong><span>Stackdriver Trace</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>6</strong><span>Cloud Function Support</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-authorizingClients"><a href="#authorizingClients"><strong>6</strong><span>Authorizing HTTP Clients</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>6.1</strong><span>Simple Functions</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudFunction"><a href="#cloudFunction"><strong>7</strong><span>Cloud Function Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>6.2</strong><span>HTTP Functions</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-simpleFunctions"><a href="#simpleFunctions"><strong>7.1</strong><span>Simple Functions</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-pubsub"><a href="#pubsub"><strong>7</strong><span>Google Cloud Pub/Sub Support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-httpFunctions"><a href="#httpFunctions"><strong>7.2</strong><span>HTTP Functions</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubIntroduction"><a href="#pubsubIntroduction"><strong>7.1</strong><span>Introduction</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-pubsub"><a href="#pubsub"><strong>8</strong><span>Google Cloud Pub/Sub Support</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-quickstart"><a href="#quickstart"><strong>7.2</strong><span>Quickstart</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubIntroduction"><a href="#pubsubIntroduction"><strong>8.1</strong><span>Introduction</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubProperties"><a href="#pubsubProperties"><strong>7.3</strong><span>Pub/Sub configuration Properties</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-quickstart"><a href="#quickstart"><strong>8.2</strong><span>Quickstart</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-producer"><a href="#producer"><strong>7.4</strong><span>Pub/Sub Publishers</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-pubsubProperties"><a href="#pubsubProperties"><strong>8.3</strong><span>Pub/Sub configuration Properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherContentType"><a href="#publisherContentType"><strong>7.4.1</strong><span>Content-Type and message serialization</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-producer"><a href="#producer"><strong>8.4</strong><span>Pub/Sub Publishers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherHeaders"><a href="#publisherHeaders"><strong>7.4.2</strong><span>Message Headers</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherContentType"><a href="#publisherContentType"><strong>8.4.1</strong><span>Content-Type and message serialization</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherProperties"><a href="#publisherProperties"><strong>7.4.3</strong><span>Publisher properties</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherHeaders"><a href="#publisherHeaders"><strong>8.4.2</strong><span>Message Headers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-messageId"><a href="#messageId"><strong>7.4.4</strong><span>Retrieving message Ids (broker acknowledge)</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-publisherProperties"><a href="#publisherProperties"><strong>8.4.3</strong><span>Publisher properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-pullConsumer"><a href="#pullConsumer"><strong>7.5</strong><span>Receiving messages via @PubSubListener methods</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-messageId"><a href="#messageId"><strong>8.4.4</strong><span>Retrieving message Ids (broker acknowledge)</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberContentType"><a href="#subscriberContentType"><strong>7.5.1</strong><span>Content-Type and message deserialization</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-ordering"><a href="#ordering"><strong>8.5</strong><span>Restricting locations and message ordering</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberHeaders"><a href="#subscriberHeaders"><strong>7.5.2</strong><span>Message Headers</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-pullConsumer"><a href="#pullConsumer"><strong>8.6</strong><span>Receiving messages via @PubSubListener methods</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>7.5.3</strong><span>Subscriber properties</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberContentType"><a href="#subscriberContentType"><strong>8.6.1</strong><span>Content-Type and message deserialization</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>7.5.4</strong><span>Handling message acknowledgement</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberHeaders"><a href="#subscriberHeaders"><strong>8.6.2</strong><span>Message Headers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>7.5.5</strong><span>Consumer error handling</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>8.6.3</strong><span>Subscriber properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>7.5.6</strong><span>Custom Parameter Binding</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>8.6.4</strong><span>Handling message acknowledgement</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-serdes"><a href="#serdes"><strong>7.6</strong><span>Message Serialization/Deserialization (SerDes)</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>8.6.5</strong><span>Consumer error handling</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-executors"><a href="#executors"><strong>7.7</strong><span>Configuring Thread pools</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>8.6.6</strong><span>Custom Parameter Binding</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-serdes"><a href="#serdes"><strong>8.7</strong><span>Message Serialization/Deserialization (SerDes)</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-executors"><a href="#executors"><strong>8.8</strong><span>Configuring Thread pools</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-emulator"><a href="#emulator"><strong>8.9</strong><span>Using Google Cloud Pub/Sub emulator</span></a></div>
         
         </div>
     </div>
@@ -194,7 +202,7 @@
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common:3.1.2.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common:3.2.2.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -202,7 +210,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-common&lt;/artifactId&gt;
-    &lt;version&gt;3.1.2.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.2.2.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -307,7 +315,201 @@
 </table>
 </div>
 
-<h1 id="tracing"><a class="anchor" href="#tracing"></a>4 Stackdriver Trace</h1>
+<h1 id="logging"><a class="anchor" href="#logging"></a>4 Google Cloud Logging Support</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/logging.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p><a href="https://cloud.google.com/logging">Google Cloud Logging</a> integration is available via <a href="../api/io/micronaut/gcp/logging/StackdriverJsonLayout.html">StackdriverJsonLayout</a> that formats log output using <a href="https://cloud.google.com/logging/docs/structured-logging">Stackdriver structured logging format</a>.</p>
+</div>
+<div class="paragraph">
+<p>To enable it add the following dependency to your project:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-logging:3.2.2.BUILD-SNAPSHOT")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-logging&lt;/artifactId&gt;
+    &lt;version&gt;3.2.2.BUILD-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>By default if an application is using a CONSOLE appender Stackdriver log parser will
+consider the entire payload of the message as a text entry, making searching and correlation with tracing impractical.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/logs_plain.png" alt="Console log output" width="1593" height="364">
+</div>
+</div>
+<div class="paragraph">
+<p>Logs on the picture above can&#8217;t be searched by attributes such as <code>thread</code> and ansi coloring makes regex searching even more challenging.</p>
+</div>
+<div class="paragraph">
+<p>When enabled the JSON appender allows logs to be easily filtered:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you combine this module with the Stackdriver Trace module, all logs will also have a <code>traceId</code> field,  making possible to correlate traces with log entries.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/logs_json.png" alt="JSON log output" width="1591" height="534">
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Visual display of log levels</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Correlated <code>traceId</code> for tracing when you have enabled cloud tracing</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Simplified output without extra fields or ANSI coloring codes</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_configuring_logging_via_console">Configuring logging via console</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="CONSOLE_JSON" /&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Import the logback configuration that defines the JsonLayout appender</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Define your root level as <code>CONSOLE_JSON</code></td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_overriding_defaults_on_logging_configuration">Overriding defaults on logging configuration</h3>
+<div class="paragraph">
+<p>If you would like to override the fields that are included in the <code>JsonLayout</code> appender, you can declare it on your own logback configuration instead of including the default from <code>logback-json-appender.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender"&gt;
+        &lt;encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder"&gt;
+            &lt;layout class="io.micronaut.gcp.logging.StackdriverJsonLayout"&gt;
+                &lt;projectId&gt;${projectId}&lt;/projectId&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+                &lt;includeTraceId&gt;true&lt;/includeTraceId&gt;
+                &lt;includeSpanId&gt;true&lt;/includeSpanId&gt;
+                &lt;includeLevel&gt;true&lt;/includeLevel&gt;
+                &lt;includeThreadName&gt;false&lt;/includeThreadName&gt;
+                &lt;includeMDC&gt;true&lt;/includeMDC&gt;
+                &lt;includeLoggerName&gt;true&lt;/includeLoggerName&gt;
+                &lt;includeFormattedMessage&gt;true&lt;/includeFormattedMessage&gt;
+                &lt;includeExceptionInMessage&gt;true&lt;/includeExceptionInMessage&gt;
+                &lt;includeContextName&gt;true&lt;/includeContextName&gt;
+                &lt;includeMessage&gt;false&lt;/includeMessage&gt;
+                &lt;includeException&gt;false&lt;/includeException&gt;
+            &lt;/layout&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="CONSOLE_JSON" &gt;
+
+        &lt;/appender-ref&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>You can override the <code>projectId</code> settings via property. If not defined, the default <code>ServiceOptions.getDefaultProjectId()</code> will be used.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamic_appender_selection">Dynamic appender selection</h3>
+<div class="paragraph">
+<p>The <code>JSONLayout</code> comes in hand when using Google Cloud Logging, but when running locally it will make your console logs unreadable. The default <code>logback-json-appender</code> configuration includes both a <code>STDOUT</code> and a <code>CONSOLE_JSON</code> appenders, as well as a dynamic logback property called <code>google_cloud_logging</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can use that variable to switch your logger appender dynamically.</p>
+</div>
+<div class="paragraph">
+<p>You logging configuration would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /&gt;
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="${google_cloud_logging}" /&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Chooses the appropriate appender depending on the environment.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The environment detection executes a HTTP request to the Google Cloud metadata server. If you rather skip this to improve startup time, just set  <code>MICRONAUT_ENVIRONMENTS</code> environment variable or the <code>micronaut.environments</code> System property as described in the <a href="https://docs.micronaut.io/latest/guide/index.html#environments">reference documentation</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<h1 id="tracing"><a class="anchor" href="#tracing"></a>5 Stackdriver Trace</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/tracing.adoc"'>
@@ -326,7 +528,7 @@
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing:3.1.2.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing:3.2.2.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -334,7 +536,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-tracing&lt;/artifactId&gt;
-    &lt;version&gt;3.1.2.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.2.2.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -363,7 +565,7 @@
 </div>
 </div>
 
-<h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>5 Authorizing HTTP Clients</h1>
+<h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>6 Authorizing HTTP Clients</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/authorizingClients.adoc"'>
@@ -407,7 +609,7 @@
 </div>
 </div>
 
-<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>6 Cloud Function Support</h1>
+<h1 id="cloudFunction"><a class="anchor" href="#cloudFunction"></a>7 Cloud Function Support</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction.adoc"'>
@@ -420,7 +622,7 @@
 <p>Micronaut GCP includes extended support for Google Cloud Function - designed for serverless workloads.</p>
 </div>
 
-<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>6.1 Simple Functions</h2>
+<h2 id="simpleFunctions"><a class="anchor" href="#simpleFunctions"></a>7.1 Simple Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/simpleFunctions.adoc"'>
@@ -721,7 +923,7 @@ Functions require a no argument constructor hence you must use field injection (
 </div>
 </div>
 
-<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>6.2 HTTP Functions</h2>
+<h2 id="httpFunctions"><a class="anchor" href="#httpFunctions"></a>7.2 HTTP Functions</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudFunction/httpFunctions.adoc"'>
@@ -745,7 +947,7 @@ Functions require a no argument constructor hence you must use field injection (
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http:3.1.2.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http:3.2.2.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -753,7 +955,7 @@ Functions require a no argument constructor hence you must use field injection (
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-function-http&lt;/artifactId&gt;
-    &lt;version&gt;3.1.2.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.2.2.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -889,7 +1091,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 </div>
 </div>
 
-<h1 id="pubsub"><a class="anchor" href="#pubsub"></a>7 Google Cloud Pub/Sub Support</h1>
+<h1 id="pubsub"><a class="anchor" href="#pubsub"></a>8 Google Cloud Pub/Sub Support</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub.adoc"'>
@@ -900,7 +1102,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 
 
 
-<h2 id="pubsubIntroduction"><a class="anchor" href="#pubsubIntroduction"></a>7.1 Introduction</h2>
+<h2 id="pubsubIntroduction"><a class="anchor" href="#pubsubIntroduction"></a>8.1 Introduction</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pubsubIntroduction.adoc"'>
@@ -910,7 +1112,7 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 
 
 <div class="paragraph">
-<p>This project provides integration between Micronaut and Google Cloud PubSub.
+<p>This project provides integration between Micronaut and <a href="https://cloud.google.com/pubsub/docs">Google Cloud PubSub</a>.
 It uses the official Google Cloud Pub/Sub <a href="https://cloud.google.com/pubsub/docs/quickstart-client-libraries">client java libraries</a> to create Publisher and Subscribers while keeping a similar programming model for messaging as the ones defined in  <a href="https://micronaut-projects.github.io/micronaut-rabbitmq/latest/guide/">Micronaut RabbitMQ</a> and <a href="https://micronaut-projects.github.io/micronaut-kafka/latest/guide/">Micronaut Kafka</a>.</p>
 </div>
 <div class="admonitionblock important">
@@ -926,7 +1128,7 @@ The project does not attempt to create any of the resources in Google Cloud such
 </table>
 </div>
 
-<h2 id="quickstart"><a class="anchor" href="#quickstart"></a>7.2 Quickstart</h2>
+<h2 id="quickstart"><a class="anchor" href="#quickstart"></a>8.2 Quickstart</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/quickstart.adoc"'>
@@ -959,7 +1161,7 @@ The project does not attempt to create any of the resources in Google Cloud such
 <h2 id="_creating_a_pub_sub_publisher_with_pubsubclient">Creating a Pub/Sub Publisher with @PubSubClient</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To publish messages to Google Cloud Pub/Sub, just define an interface that is annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a>.</p>
+<p>To publish messages to Google Cloud Pub/Sub, just define an interface that is annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
@@ -1007,7 +1209,7 @@ interface AnimalClient {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> annotation is used to designate this interface as a client</td>
+<td>The <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> annotation is used to designate this interface as a client</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -1119,7 +1321,7 @@ class AnimalService(private val animalClient: AnimalClient)  { <b class="conum">
 <h2 id="_creating_a_pub_sub_subscriber_with_pubsublistener">Creating a Pub/Sub Subscriber with @PubSubListener</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To listen to Pub/Sub messages you can use <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> annotation on a class to mark it as a message listener.</p>
+<p>To listen to Pub/Sub messages you can use <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> annotation on a class to mark it as a message listener.</p>
 </div>
 <div class="paragraph">
 <p>The following example would listen on a subscription named <code>animals</code> that is configured to be attached to the topic of the previous example.</p>
@@ -1196,7 +1398,7 @@ class AnimalListener {
 </div>
 </div>
 
-<h2 id="pubsubProperties"><a class="anchor" href="#pubsubProperties"></a>7.3 Pub/Sub configuration Properties</h2>
+<h2 id="pubsubProperties"><a class="anchor" href="#pubsubProperties"></a>8.3 Pub/Sub configuration Properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pubsubProperties.adoc"'>
@@ -1253,7 +1455,7 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 </tbody>
 </table>
 
-<h2 id="producer"><a class="anchor" href="#producer"></a>7.4 Pub/Sub Publishers</h2>
+<h2 id="producer"><a class="anchor" href="#producer"></a>8.4 Pub/Sub Publishers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer.adoc"'>
@@ -1264,7 +1466,7 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 
 <div class="paragraph">
 <p>Pub/Sub support in micronaut follows the same pattern used for other types of clients such as the HTTP Client.
-By annotating an interface with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> the framework will create an implementation bean that handles communication with Pub/Sub for you.</p>
+By annotating an interface with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> the framework will create an implementation bean that handles communication with Pub/Sub for you.</p>
 </div>
 <div class="sect1">
 <h2 id="_topics">Topics</h2>
@@ -1462,7 +1664,7 @@ interface MultipleProjectClient {
 </div>
 </div>
 
-<h2 id="publisherContentType"><a class="anchor" href="#publisherContentType"></a>7.4.1 Content-Type and message serialization</h2>
+<h2 id="publisherContentType"><a class="anchor" href="#publisherContentType"></a>8.4.1 Content-Type and message serialization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/publisherContentType.adoc"'>
@@ -1606,7 +1808,7 @@ interface CustomSerDesClient {
 </table>
 </div>
 
-<h2 id="publisherHeaders"><a class="anchor" href="#publisherHeaders"></a>7.4.2 Message Headers</h2>
+<h2 id="publisherHeaders"><a class="anchor" href="#publisherHeaders"></a>8.4.2 Message Headers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/publisherHeaders.adoc"'>
@@ -1699,7 +1901,7 @@ interface CustomHeadersClient {
 </table>
 </div>
 
-<h2 id="publisherProperties"><a class="anchor" href="#publisherProperties"></a>7.4.3 Publisher properties</h2>
+<h2 id="publisherProperties"><a class="anchor" href="#publisherProperties"></a>8.4.3 Publisher properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/publisherProperties.adoc"'>
@@ -1914,7 +2116,7 @@ flattened at <code>PubSubConfigurationProperties</code> level, and it&#8217;s in
 </table>
 </div>
 
-<h2 id="messageId"><a class="anchor" href="#messageId"></a>7.4.4 Retrieving message Ids (broker acknowledge)</h2>
+<h2 id="messageId"><a class="anchor" href="#messageId"></a>8.4.4 Retrieving message Ids (broker acknowledge)</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/producer/messageId.adoc"'>
@@ -2029,7 +2231,202 @@ interface CustomReturnClient {
 </table>
 </div>
 
-<h2 id="pullConsumer"><a class="anchor" href="#pullConsumer"></a>7.5 Receiving messages via @PubSubListener methods</h2>
+<h2 id="ordering"><a class="anchor" href="#ordering"></a>8.5 Restricting locations and message ordering</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/ordering.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_restricting_storage_locations">Restricting storage locations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Cloud Pub/Sub is a globally distributed event platform. When a client publishes a message, the platform stores the message on the nearest region to the publisher.
+Sometimes regulations such as GDPR impose restrictions on where customer data can live. When using Micronaut integration you can
+specify the endpoint of the topic so that Pub/Sub will persist the message data on the specified region.
+To learn more about this feature visit the <a href="https://cloud.google.com/pubsub/docs/resource-location-restriction">resource location restriction</a> page.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubClient;
+import io.micronaut.gcp.pubsub.annotation.Topic;
+import io.micronaut.gcp.pubsub.support.Animal;
+
+@PubSubClient
+public interface LocationClient {
+    @Topic(value = "animals", endpoint = "europe-west1-pubsub.googleapis.com:443") <b class="conum">(1)</b>
+    void send(Animal animal);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubClient
+import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.support.Animal
+
+@PubSubClient
+interface LocationClient {
+    @Topic(value = "animals", endpoint = "europe-west1-pubsub.googleapis.com:443") <b class="conum">(1)</b>
+    void send(Animal animal);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubClient
+import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.support.Animal
+
+@PubSubClient
+interface LocationClient {
+	@Topic(value = "animals", endpoint = "europe-west1-pubsub.googleapis.com:443") <b class="conum">(1)</b>
+	fun send(animal: Animal?)
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>endpoint</code> attribute enforces that messages sent via this method will be stored on the <code>europe-west1</code> region.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_message_ordering">Message ordering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Cloud Pub/Sub supports message ordering if messages are published to a single location, and specify an <a href="https://cloud.google.com/pubsub/docs/publisher#using_ordering_keys">ordering key</a>.
+An example of this would be trading orders placed for a specific symbol. If you use the symbol as the ordering key, all messages regardless of how many publishers are guaranteed to be delivered in order.</p>
+</div>
+<div class="paragraph">
+<p>To enable message ordering for your publishers, use the <a href="../api/io/micronaut/gcp/pubsub/annotation/OrderingKey.html">@OrderingKey</a> in one of the method&#8217;s arguments to declare it an ordering key.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.gcp.pubsub.annotation.OrderingKey;
+import io.micronaut.gcp.pubsub.annotation.PubSubClient;
+import io.micronaut.gcp.pubsub.annotation.Topic;
+import io.micronaut.gcp.pubsub.support.Order;
+
+@PubSubClient
+public interface OrderClient {
+    @Topic(value = "orders", endpoint = "us-central1-pubsub.googleapis.com:443") <b class="conum">(1)</b>
+    void send(Order order, @OrderingKey String key); <b class="conum">(2)</b>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.OrderingKey
+import io.micronaut.gcp.pubsub.annotation.PubSubClient
+import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.support.Order
+
+@PubSubClient
+interface OrderClient {
+    @Topic(value = "orders", endpoint = "us-central1-pubsub.googleapis.com:443") <b class="conum">(1)</b>
+    void send(Order order, @OrderingKey String key) <b class="conum">(2)</b>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.OrderingKey
+import io.micronaut.gcp.pubsub.annotation.PubSubClient
+import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.support.Order
+
+@PubSubClient
+interface OrderClient {
+	@Topic(value = "orders", endpoint = "us-central1-pubsub.googleapis.com:443") <b class="conum">(1)</b>
+	fun send(order: Order, @OrderingKey key: String) <b class="conum">(2)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Ordering only works on regional endpoints, so you <strong>must</strong> declare an endpoint first</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Although the Pub/Sub API requires the key to be a String, the framework uses a conversion service to convert other types to String.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of how to use ordering on your clients:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.gcp.pubsub.support.Order;
+import javax.inject.Singleton;
+
+@Singleton
+public class OrderService {
+
+    private final OrderClient client;
+
+    public OrderService(OrderClient client) {
+        this.client = client;
+    }
+
+    public void placeOrder() {
+        Order order = new Order(100, "GOOG");
+        client.send(order, order.getSymbol());
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.gcp.pubsub.support.Order
+import javax.inject.Singleton
+
+@Singleton
+class OrderService {
+
+    private final OrderClient client
+
+    OrderService(OrderClient client) {
+        this.client = client
+    }
+
+    void placeOrder() {
+        Order order = new Order(100, "GOOG")
+        client.send(order, order.getSymbol())
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.gcp.pubsub.support.Order
+import javax.inject.Singleton
+
+@Singleton
+class OrderService(private val client: OrderClient) {
+	fun placeOrder() {
+		val order = Order(100, "GOOG")
+		client.send(order, order.symbol)
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="pullConsumer"><a class="anchor" href="#pullConsumer"></a>8.6 Receiving messages via @PubSubListener methods</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer.adoc"'>
@@ -2039,15 +2436,15 @@ interface CustomReturnClient {
 
 
 <div class="paragraph">
-<p>To start receiving messages you annotate a class with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a>, the framework will then use AOP to deliver messages to methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subbscription.html">@Subbscription</a>.</p>
+<p>To start receiving messages you annotate a class with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a>, the framework will then use AOP to deliver messages to methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.</p>
 </div>
 <div class="sect1">
 <h2 id="_subscriptions">Subscriptions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will be invoked by the framework.
+<p>All methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will be invoked by the framework.
 Each annotated method creates an individual <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a>,
-that can be configured using the <code>configuration</code> parameter of the <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> annotation.</p>
+that can be configured using the <code>configuration</code> parameter of the <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> annotation.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -2056,7 +2453,7 @@ that can be configured using the <code>configuration</code> parameter of the <a 
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> must be unique on your application.
+Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> must be unique on your application.
 If two distinct methods try to subscribe to the same <code>Subscription</code> an error is thrown.
 This is intended to avoid issues with message Acknowledgement control.
 </td>
@@ -2156,11 +2553,11 @@ class SimpleSubscriber {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> marks this class to be a Message Listener</td>
+<td><a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> marks this class to be a Message Listener</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Methods annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will receive messages from that subscription</td>
+<td>Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will receive messages from that subscription</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -2183,7 +2580,7 @@ When publishing to a different project, make sure your service account has the p
 </div>
 </div>
 
-<h2 id="subscriberContentType"><a class="anchor" href="#subscriberContentType"></a>7.5.1 Content-Type and message deserialization</h2>
+<h2 id="subscriberContentType"><a class="anchor" href="#subscriberContentType"></a>8.6.1 Content-Type and message deserialization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberContentType.adoc"'>
@@ -2215,7 +2612,7 @@ On the receiving end the rules to deserialize a <a href="https://developers.goog
 <p>If the message contains an attribute <code>Content-Type</code> that value is used</p>
 </li>
 <li>
-<p>Finally if the <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> has a <code>contentType</code> value this value overrides all of the previous values</p>
+<p>Finally if the <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> has a <code>contentType</code> value this value overrides all of the previous values</p>
 </li>
 </ol>
 </div>
@@ -2224,7 +2621,7 @@ On the receiving end the rules to deserialize a <a href="https://developers.goog
 </div>
 <div class="paragraph">
 <p>Automatic SerDes is a nice feature that the framework offers, but sometimes you may need to have access to the <code>PubSubMessage</code> id.
-This is provided via the <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/MessageId.html">@MessageId</a> annotation.
+This is provided via the <a href="../api/io/micronaut/gcp/pubsub/annotation/MessageId.html">@MessageId</a> annotation.
 Once you annotate an argument of type <code>String</code> with this annotation, the message id will be copied to that argument.</p>
 </div>
 <div class="admonitionblock important">
@@ -2348,7 +2745,7 @@ class ContentTypeSubscriber {
 </table>
 </div>
 
-<h2 id="subscriberHeaders"><a class="anchor" href="#subscriberHeaders"></a>7.5.2 Message Headers</h2>
+<h2 id="subscriberHeaders"><a class="anchor" href="#subscriberHeaders"></a>8.6.2 Message Headers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberHeaders.adoc"'>
@@ -2428,7 +2825,7 @@ class CustomHeaderSubscriber {
 </table>
 </div>
 
-<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>7.5.3 Subscriber properties</h2>
+<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>8.6.3 Subscriber properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberProperties.adoc"'>
@@ -2441,7 +2838,7 @@ class CustomHeaderSubscriber {
 <p>Pub/Sub allows each <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a> to have its own configuration for things such as executors or flow control settings.</p>
 </div>
 <div class="paragraph">
-<p>The framework allows you to create configurations and then bind those configurations to each  <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a> using the <code>configuration</code> parameter.</p>
+<p>The framework allows you to create configurations and then bind those configurations to each  <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> using the <code>configuration</code> parameter.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 1. Configuration properties for <a href="../api/io/micronaut/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
@@ -2568,7 +2965,7 @@ class CustomConfigurationSubscriber {
 </table>
 </div>
 
-<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>7.5.4 Handling message acknowledgement</h2>
+<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>8.6.4 Handling message acknowledgement</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/messageAcknowledge.adoc"'>
@@ -2578,7 +2975,7 @@ class CustomConfigurationSubscriber {
 
 
 <div class="paragraph">
-<p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
+<p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
 By default messages are auto acknowledged if the method returns without exceptions, see the section  <a href="#erroHandling">Consumer ErrorHandling </a> for more information on error handling.
 It is possible to have manual acknowledgement control by adding an argument of type <a href="{apimicronaut}messaging/Acknowledge.html">Acknowledge</a> and manually invoking <code>ack()</code> or <code>nack()</code> methods.</p>
 </div>
@@ -2651,7 +3048,7 @@ class AcknowledgementSubscriber {
 </div>
 </div>
 
-<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>7.5.5 Consumer error handling</h2>
+<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>8.6.5 Consumer error handling</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/errorHandling.adoc"'>
@@ -2688,7 +3085,7 @@ class AcknowledgementSubscriber {
 <div class="ulist">
 <ul>
 <li>
-<p>Locally: your <a href="../api/io/micronaut/configuration/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class implements <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a>, then any error related to <code>Subscriptions</code> of that class will be handled by your class.</p>
+<p>Locally: your <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class implements <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a>, then any error related to <code>Subscriptions</code> of that class will be handled by your class.</p>
 </li>
 <li>
 <p>Globally: You define a new implementation of <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a> and annotate it as <code>@Primary</code> overriding the default one.</p>
@@ -2811,7 +3208,7 @@ class ErrorHandlingSubscriber : PubSubMessageReceiverExceptionHandler { <b class
 </table>
 </div>
 
-<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>7.5.6 Custom Parameter Binding</h2>
+<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>8.6.6 Custom Parameter Binding</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/customParameter.adoc"'>
@@ -3095,7 +3492,7 @@ class CustomBindingSubscriber {
 </div>
 </div>
 
-<h2 id="serdes"><a class="anchor" href="#serdes"></a>7.6 Message Serialization/Deserialization (SerDes)</h2>
+<h2 id="serdes"><a class="anchor" href="#serdes"></a>8.7 Message Serialization/Deserialization (SerDes)</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/serdes.adoc"'>
@@ -3287,7 +3684,7 @@ class JavaMessageSerDes : PubSubMessageSerDes {
 </div>
 </div>
 
-<h2 id="executors"><a class="anchor" href="#executors"></a>7.7 Configuring Thread pools</h2>
+<h2 id="executors"><a class="anchor" href="#executors"></a>8.8 Configuring Thread pools</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/executors.adoc"'>
@@ -3328,6 +3725,45 @@ Pub/Sub client libraries require an  <a href="{jdkapi}/java/util/concurrent/Sche
 </div>
 <div class="paragraph">
 <p>If no configuration is supplied, the framework will use the default named <code>scheduled</code> executor.</p>
+</div>
+
+<h2 id="emulator"><a class="anchor" href="#emulator"></a>8.9 Using Google Cloud Pub/Sub emulator</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/emulator.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Google Cloud Pub/Sub has a local <a href="https://cloud.google.com/pubsub/docs/emulator#emulator_command-line_arguments">emulator</a> to enable developers to test their applications locally with no need to connect to the cloud Pub/Sub service.</p>
+</div>
+<div class="paragraph">
+<p>The framework supports automatic switching of the <code>TransportChannelProvider</code> to use <code>PUBSUB_EMULATOR_HOST</code> if this variable is set on the environment.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Make sure that you also set <code>GCP_PROJECT_ID</code> to be the same as the project you have configured the emulator to use. Otherwise the framework may pick up the projectId used by the default credentials.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You will need to manually configure topics and subscriptions on the emulator if you want to test locally. You can easily create resources using the <a href="https://cloud.google.com/pubsub/docs/reference/rest">Pub/Sub REST interface</a> to create topics and subscriptions.</p>
+</div>
+<div class="paragraph">
+<p>For instance, the following <code>curl</code> command would create a topic named <code>micronaut-devices</code> on the <code>test-project</code> project.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>curl -XPUT $PUBSUB_EMULATOR_HOST/v1/projects/test-project/topics/micronaut-devices</code></pre>
+</div>
 </div>
 
     </div>
