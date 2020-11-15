@@ -148,4 +148,44 @@ public class StackdriverJsonLayout extends JsonLayout {
 
         add(StackdriverTraceConstants.TRACE_ID_ATTRIBUTE, this.includeTraceId, traceId, map);
     }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public boolean isIncludeTraceId() {
+        return includeTraceId;
+    }
+
+    public void setIncludeTraceId(boolean includeTraceId) {
+        this.includeTraceId = includeTraceId;
+    }
+
+    public boolean isIncludeSpanId() {
+        return includeSpanId;
+    }
+
+    public void setIncludeSpanId(boolean includeSpanId) {
+        this.includeSpanId = includeSpanId;
+    }
+
+    public boolean isIncludeExceptionInMessage() {
+        return includeExceptionInMessage;
+    }
+
+    public void setIncludeExceptionInMessage(boolean includeExceptionInMessage) {
+        this.includeExceptionInMessage = includeExceptionInMessage;
+    }
+
+    public Map<String, Object> getCustomJson() {
+        return customJson;
+    }
+
+    public void setCustomJson(Map<String, Object> customJson) {
+        this.customJson = customJson;
+    }
 }
