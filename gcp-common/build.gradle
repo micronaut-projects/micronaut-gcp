@@ -4,8 +4,8 @@ dependencies {
 
     compileOnly "io.micronaut:micronaut-runtime"
     api "io.micronaut:micronaut-inject:$micronautVersion"
-    api 'com.google.auth:google-auth-library-oauth2-http:0.21.1'
-    api 'com.google.cloud:google-cloud-core:1.93.9'
+    api 'com.google.auth:google-auth-library-oauth2-http:0.22.0'
+    api 'com.google.cloud:google-cloud-core:1.94.0'
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
