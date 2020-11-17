@@ -14,6 +14,7 @@ io.micronaut.gcp.pubsub.client
 io.micronaut.gcp.pubsub.configuration
 io.micronaut.gcp.pubsub.exception
 io.micronaut.gcp.pubsub.intercept
+io.micronaut.gcp.pubsub.ordering
 io.micronaut.gcp.pubsub.publisher
 io.micronaut.gcp.pubsub.quickstart
 io.micronaut.gcp.pubsub.serdes
