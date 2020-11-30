@@ -25,7 +25,7 @@ abstract class AbstractConsumerSpec extends Specification{
         def future = new SettableApiFuture<String>()
         future.set("1234")
         factory.createPublisher(_) >> { PublisherFactoryConfig config ->
-            publisher.getTopicNameString() >> config.topicName.topic
+            publisher.getTopicNameString() >> config.topicState.projectTopicName.topic
             publisher.publish(_) >> { PubsubMessage message -> pubSubEngine.publish(message, publisher.getTopicNameString()); return future }
             return publisher
         }

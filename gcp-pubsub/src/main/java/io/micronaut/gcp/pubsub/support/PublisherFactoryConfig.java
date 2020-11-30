@@ -15,47 +15,34 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
-import com.google.pubsub.v1.ProjectTopicName;
-
 /**
- * Holds necessary configuration to create {@link com.google.cloud.pubsub.v1.Subscriber} instances via {@link io.micronaut.gcp.pubsub.bind.SubscriberFactory}.
+ * Holds necessary configuration to create {@link com.google.cloud.pubsub.v1.Publisher} instances via {@link PublisherFactory}.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
 public class PublisherFactoryConfig {
 
-    private final ProjectTopicName topicName;
-    private final String publisherConfiguration;
     private final String defaultExecutor;
+    private final PubSubPublisherState.TopicState topicState;
 
-    public PublisherFactoryConfig(ProjectTopicName topicName, String publisherConfiguration, String defaultExecutor) {
-        this.topicName = topicName;
-        this.publisherConfiguration = publisherConfiguration;
+    public PublisherFactoryConfig(PubSubPublisherState.TopicState topicState, String defaultExecutor) {
         this.defaultExecutor = defaultExecutor;
+        this.topicState = topicState;
     }
 
     /**
-     *
-     * @return ProjectTopicName to be used
+     * @return TopicState configuration for the bound topic.
      */
-    public ProjectTopicName getTopicName() {
-        return topicName;
+    public PubSubPublisherState.TopicState getTopicState() {
+        return topicState;
     }
 
     /**
-     *
-     * @return Name of the publisher configuration passed via {@link io.micronaut.gcp.pubsub.annotation.Topic} annotation.
-     */
-    public String getPublisherConfiguration() {
-        return publisherConfiguration;
-    }
-
-    /**
-     *
      * @return Default {@link java.util.concurrent.ExecutorService} set for all publishers.
      */
     public String getDefaultExecutor() {
         return defaultExecutor;
     }
+
 }

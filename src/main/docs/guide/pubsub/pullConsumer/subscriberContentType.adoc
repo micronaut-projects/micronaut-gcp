@@ -6,10 +6,10 @@ On the receiving end the rules to deserialize a link:https://developers.google.c
 . If the `body` argument is a Pojo then the following applies:
 .. The default `Content-Type` is `application/json` and the framework will use it if not overridden
 .. If the message contains an attribute `Content-Type` that value is used
-.. Finally if the ann:configuration.gcp.pubsub.annotation.Subscription[] has a `contentType` value this value overrides all of the previous values
+.. Finally if the ann:gcp.pubsub.annotation.Subscription[] has a `contentType` value this value overrides all of the previous values
 
 Automatic SerDes is a nice feature that the framework offers, but sometimes you may need to have access to the `PubSubMessage` id.
-This is provided via the ann:configuration.gcp.pubsub.annotation.MessageId[] annotation.
+This is provided via the ann:gcp.pubsub.annotation.MessageId[] annotation.
 Once you annotate an argument of type `String` with this annotation, the message id will be copied to that argument.
 
 IMPORTANT: PubSubMessage ids are always of type `String` for that reason your annotated argument must also be a `String`.

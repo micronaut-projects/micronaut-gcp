@@ -13,7 +13,7 @@ import io.micronaut.gcp.pubsub.exception.DefaultPubSubMessageReceiverExceptionHa
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler
 import io.micronaut.gcp.pubsub.support.Person
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.util.concurrent.PollingConditions
 
 import javax.inject.Inject

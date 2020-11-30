@@ -29,6 +29,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.UserAgentHeaderProvider;
 import io.micronaut.gcp.condition.RequiresGoogleProjectId;
 import io.micronaut.tracing.brave.AsyncReporterConfiguration;
@@ -79,7 +80,7 @@ public class StackdriverSenderFactory {
     @Bean(preDestroy = "shutdownNow")
     @Named("stackdriverTraceSenderChannel")
     protected @Nonnull ManagedChannel stackdriverTraceSenderChannel() {
-        UserAgentHeaderProvider userAgentHeaderProvider = new UserAgentHeaderProvider("trace");
+        UserAgentHeaderProvider userAgentHeaderProvider = new UserAgentHeaderProvider(Modules.TRACING);
 
         return ManagedChannelBuilder.forTarget(TRACE_TARGET)
                 .userAgent(userAgentHeaderProvider.getUserAgent())

@@ -1,5 +1,5 @@
 Pub/Sub support in micronaut follows the same pattern used for other types of clients such as the HTTP Client.
-By annotating an interface with ann:configuration.gcp.pubsub.annotation.PubSubClient[] the framework will create an implementation bean that handles communication with Pub/Sub for you.
+By annotating an interface with ann:gcp.pubsub.annotation.PubSubClient[] the framework will create an implementation bean that handles communication with Pub/Sub for you.
 
 == Topics
 

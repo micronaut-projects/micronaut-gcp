@@ -6,9 +6,9 @@ dependencies {
     api "io.micronaut:micronaut-inject:$micronautVersion"
     api project(":gcp-common")
     implementation ("ch.qos.logback.contrib:logback-json-classic:0.1.5")
-    implementation ("com.fasterxml.jackson.core:jackson-databind:2.11.2")
+    implementation ("com.fasterxml.jackson.core:jackson-databind:2.11.3")
     testImplementation "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut.test:micronaut-test-spock:2.0.0"
+    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "org.testcontainers:spock:1.14.3"
+    testImplementation "org.testcontainers:spock:1.15.0"
 }

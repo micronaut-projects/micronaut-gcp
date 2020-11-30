@@ -1,13 +1,13 @@
-To start receiving messages you annotate a class with ann:configuration.gcp.pubsub.annotation.PubSubListener[], the framework will then use AOP to deliver messages to methods annotated with ann:configuration.gcp.pubsub.annotation.Subbscription[].
+To start receiving messages you annotate a class with ann:gcp.pubsub.annotation.PubSubListener[], the framework will then use AOP to deliver messages to methods annotated with ann:gcp.pubsub.annotation.Subscription[].
 
 == Subscriptions
 
 
-All methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] will be invoked by the framework.
+All methods annotated with ann:gcp.pubsub.annotation.Subscription[] will be invoked by the framework.
 Each annotated method creates an individual link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber],
-that can be configured using the `configuration` parameter of the ann:configuration.gcp.pubsub.annotation.Subscription[] annotation.
+that can be configured using the `configuration` parameter of the ann:gcp.pubsub.annotation.Subscription[] annotation.
 
-IMPORTANT: Methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] must be unique on your application.
+IMPORTANT: Methods annotated with ann:gcp.pubsub.annotation.Subscription[] must be unique on your application.
 If two distinct methods try to subscribe to the same `Subscription` an error is thrown.
 This is intended to avoid issues with message Acknowledgement control.
 
@@ -24,8 +24,8 @@ This is helpful when you need to listen to subscriptions from different projects
 
 snippet::io.micronaut.gcp.pubsub.subscriber.SimpleSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
 
-<1> ann:configuration.gcp.pubsub.annotation.PubSubListener[] marks this class to be a Message Listener
-<2> Methods annotated with ann:configuration.gcp.pubsub.annotation.Subscription[] will receive messages from that subscription
+<1> ann:gcp.pubsub.annotation.PubSubListener[] marks this class to be a Message Listener
+<2> Methods annotated with ann:gcp.pubsub.annotation.Subscription[] will receive messages from that subscription
 <3> You can also use a FQN for the subscription, specially when you need to access a resource on a different project
 
 NOTE: When publishing to a different project, make sure your service account has the proper access to the resource.

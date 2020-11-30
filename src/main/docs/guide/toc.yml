@@ -20,7 +20,7 @@ pubsub:
     publisherHeaders: Message Headers
     publisherProperties: Publisher properties
     messageId: Retrieving message Ids (broker acknowledge)
-
+  ordering: Restricting locations and message ordering
   pullConsumer:
     title: Receiving messages via @PubSubListener methods
     subscriberContentType: Content-Type and message deserialization
@@ -32,3 +32,4 @@ pubsub:
   serdes:
     title: Message Serialization/Deserialization (SerDes)
   executors: Configuring Thread pools
+  emulator: Using Google Cloud Pub/Sub emulator

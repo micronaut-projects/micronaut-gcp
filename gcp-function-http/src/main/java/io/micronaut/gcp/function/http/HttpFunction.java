@@ -168,13 +168,17 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         request.getHeaders().forEach(headers::put);
         request.getParameters().forEach(parameters::put);
         Object body = request.getBody().orElse(null);
-        Cookies cookies = request.getCookies();
-        cookies.forEach((s, cookie) -> {
-            if (cookie instanceof NettyCookie) {
-                headers.computeIfAbsent(HttpHeaders.COOKIE, s1 -> new ArrayList<>())
-                        .add(ClientCookieEncoder.STRICT.encode(((NettyCookie) cookie).getNettyCookie()));
-            }
-        });
+        try {
+            Cookies cookies = request.getCookies();
+            cookies.forEach((s, cookie) -> {
+                if (cookie instanceof NettyCookie) {
+                    headers.computeIfAbsent(HttpHeaders.COOKIE, s1 -> new ArrayList<>())
+                            .add(ClientCookieEncoder.STRICT.encode(((NettyCookie) cookie).getNettyCookie()));
+                }
+            });
+        } catch (UnsupportedOperationException e) {
+            //not all request types support retrieving cookies
+        }
         return new HttpRequest() {
             @Override
             public String getMethod() {

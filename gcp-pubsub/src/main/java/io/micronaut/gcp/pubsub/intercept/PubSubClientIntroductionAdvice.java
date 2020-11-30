@@ -29,6 +29,7 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.ReturnType;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.pubsub.annotation.OrderingKey;
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
@@ -96,8 +97,10 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 AnnotationValue<PubSubClient> client = method.findAnnotation(PubSubClient.class).orElseThrow(() -> new IllegalStateException("No @PubSubClient annotation present"));
                 String projectId = client.stringValue().orElse(googleCloudConfiguration.getProjectId());
                 AnnotationValue<Topic> topicAnnotation = method.findAnnotation(Topic.class).get();
+                Optional<Argument> orderingArgument = Arrays.stream(method.getArguments()).filter(argument -> argument.getAnnotationMetadata().hasAnnotation(OrderingKey.class)).findFirst();
                 String topic = topicAnnotation.stringValue().get();
-                String configuration = topicAnnotation.get("configuration", String.class).orElse("");
+                String endpoint = topicAnnotation.get("endpoint", String.class).orElse("");
+                String configurationName = topicAnnotation.get("configuration", String.class).orElse("");
                 String contentType = topicAnnotation.get("contentType", String.class).orElse("");
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
                 Map<String, String> staticMessageAttributes = new HashMap<>();
@@ -109,14 +112,16 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                         staticMessageAttributes.put(name, value);
                     }
                 });
-                Argument<?> bodyArgument = findBodyArgument(context.getExecutableMethod())
+                Argument<?> bodyArgument = findBodyArgument(method)
                         .orElseThrow(() -> new PubSubClientException("No valid message body argument found for method: " + context.getExecutableMethod()));
 
-                return new PubSubPublisherState(contentType, projectTopicName, staticMessageAttributes, bodyArgument, configuration);
+                PubSubPublisherState.TopicState topicState = new PubSubPublisherState.TopicState(contentType, projectTopicName, configurationName, endpoint, orderingArgument.isPresent());
+                PublisherInterface publisher = publisherFactory.createPublisher(new PublisherFactoryConfig(topicState, pubSubConfigurationProperties.getPublishingExecutor()));
+                return new PubSubPublisherState(topicState, staticMessageAttributes, bodyArgument, publisher, orderingArgument);
             });
 
             Map<String, String> messageAttributes = new HashMap<>(publisherState.getStaticMessageAttributes());
-            String contentType = publisherState.getContentType();
+            String contentType = publisherState.getTopicState().getContentType();
             Argument<?> bodyArgument = publisherState.getBodyArgument();
             Map<String, Object> parameterValues = context.getParameterValueMap();
             ReturnType<Object> returnType = context.getReturnType();
@@ -131,7 +136,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 }
             }
 
-            PublisherInterface publisher = publisherFactory.createPublisher(new PublisherFactoryConfig(publisherState.getTopicName(), publisherState.getConfiguration(), pubSubConfigurationProperties.getPublishingExecutor()));
+            PublisherInterface publisher = publisherState.getPublisher();
+
             Object body = parameterValues.get(bodyArgument.getName());
             PubsubMessage pubsubMessage = null;
             if (body.getClass() == PubsubMessage.class) {
@@ -147,10 +153,17 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                     serialized = serDes.serialize(body);
                 }
                 messageAttributes.put("Content-Type", contentType);
-                pubsubMessage = PubsubMessage.newBuilder()
-                        .setData(ByteString.copyFrom(serialized))
-                        .putAllAttributes(messageAttributes)
-                        .build();
+                PubsubMessage.Builder messageBuilder = PubsubMessage.newBuilder();
+                messageBuilder.setData(ByteString.copyFrom(serialized))
+                        .putAllAttributes(messageAttributes);
+                if (publisherState.getOrderingArgument().isPresent()) {
+                    String orderingKey = conversionService.convert(parameterValues.get(publisherState.getOrderingArgument().get().getName()), String.class)
+                            .orElseThrow(() -> new PubSubClientException("Could not convert argument annotated with @OrderingKey to String type"));
+                    messageBuilder.setOrderingKey(orderingKey);
+
+                }
+                pubsubMessage = messageBuilder.build();
+
             }
             ApiFuture<String> future = publisher.publish(pubsubMessage);
             Single<String> reactiveResult = Single.fromFuture(future);

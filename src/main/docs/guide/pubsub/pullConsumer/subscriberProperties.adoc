@@ -1,6 +1,6 @@
 Pub/Sub allows each link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber] to have its own configuration for things such as executors or flow control settings.
 
-The framework allows you to create configurations and then bind those configurations to each  ann:configuration.gcp.pubsub.annotation.Subscription[] using the `configuration` parameter.
+The framework allows you to create configurations and then bind those configurations to each  ann:gcp.pubsub.annotation.Subscription[] using the `configuration` parameter.
 
 [%header, format=csv]
 .Configuration properties for api:configuration.SubscriberConfigurationProperties[]
