@@ -17,6 +17,7 @@ public class SecretManagementConfigClient implements ConfigurationClient {
 
     @Override
     public Publisher<PropertySource> getPropertySources(Environment environment) {
+
         return null;
     }
 

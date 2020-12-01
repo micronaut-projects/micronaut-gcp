@@ -4,7 +4,7 @@ import com.google.cloud.secretmanager.v1.*;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.condition.RequiresGoogleProjectId;
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,31 +25,23 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
     }
 
     @Override
-    public Flowable<VersionedSecret> fetchSecret(String secretId) {
-        return fetchSecret(secretId, SecretManagerClient.LATEST);
+    public Maybe<String> getSecret(String secretId) {
+        return getSecret(secretId, LATEST ,this.googleCloudConfiguration.getProjectId());
     }
 
     @Override
-    public Flowable<VersionedSecret> fetchSecret(String secretId, String version) {
-        return fetchSecret(secretId, version, googleCloudConfiguration.getProjectId());
+    public Maybe<String> getSecret(String secretId, String version) {
+        return getSecret(secretId, version, this.googleCloudConfiguration.getProjectId());
     }
 
     @Override
-    public Flowable<VersionedSecret> fetchSecret(String secretId, String version, String projectId) {
-
-        GetSecretRequest secretRequest = GetSecretRequest.newBuilder()
-                .setName(SecretName.of(projectId, secretId).toString())
+    public Maybe<String> getSecret(String secretId, String version, String projectId) {
+        SecretVersionName secretVersionName = SecretVersionName.of(projectId, secretId, version);
+        AccessSecretVersionRequest request = AccessSecretVersionRequest.newBuilder()
+                .setName(secretVersionName.toString())
                 .build();
-
-        AccessSecretVersionRequest secretVersionRequest = AccessSecretVersionRequest.newBuilder()
-                .setName(SecretVersionName.of(projectId, secretId, version).toString())
-                .build();
-
-        return Flowable.defer(() ->
-                Flowable.fromFuture(client.getSecretCallable().futureCall(secretRequest))
-                        .flatMap(secret -> Flowable.fromFuture(client.accessSecretVersionCallable().futureCall(secretVersionRequest))
-                                .map(response -> new VersionedSecret(secretId, response.getPayload().getData().toByteArray(), version, secret.getLabelsMap()))))
-                .onErrorResumeNext(Flowable.empty());
-
+        return Maybe.fromFuture(client.accessSecretVersionCallable().futureCall(request))
+                .map(response -> response.getPayload().getData().toStringUtf8())
+                .onErrorResumeNext(Maybe.empty());
     }
 }
