@@ -5,13 +5,13 @@ dependencies {
     api project(":gcp-common")
     api "io.micronaut:micronaut-tracing:$micronautVersion"
     api "io.micronaut:micronaut-inject:$micronautVersion"
-    implementation'io.zipkin.gcp:zipkin-sender-stackdriver:0.18.1'
-    implementation 'io.zipkin.gcp:brave-propagation-stackdriver:0.18.1'
+    implementation'io.zipkin.gcp:zipkin-sender-stackdriver:1.0.0'
+    implementation 'io.zipkin.gcp:brave-propagation-stackdriver:1.0.0'
 
     implementation 'io.grpc:grpc-auth:1.33.1'
 
     implementation 'io.grpc:grpc-netty-shaded:1.33.1'
-    implementation "io.opentracing.brave:brave-opentracing:0.37.4"
+    implementation "io.opentracing.brave:brave-opentracing:0.37.5"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-groovy"
