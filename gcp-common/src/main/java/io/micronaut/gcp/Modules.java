@@ -31,4 +31,9 @@ public interface Modules {
      */
     String PUBSUB = "pubsub";
 
+    /**
+     * Module name for secret-manager
+     */
+    String SECRET_MANAGER = "secret-manager";
+
 }

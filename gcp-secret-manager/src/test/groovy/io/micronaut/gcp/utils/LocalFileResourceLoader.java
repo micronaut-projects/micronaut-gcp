@@ -1,4 +1,4 @@
-package io.micronaut.gcp.secretmanager.utils;
+package io.micronaut.gcp.utils;
 
 import io.micronaut.core.io.IOUtils;
 
@@ -9,8 +9,8 @@ import java.io.InputStreamReader;
 
 public class LocalFileResourceLoader {
 
-    public static String loadSecret(String path) throws IOException {
-//        String path = String.format("projects/%s/secrets/%s", projectId, name);
+    public static String loadSecret(String projectId, String name) throws IOException {
+        String path = String.format("projects/%s/secrets/%s", projectId, name);
         InputStream in = LocalFileResourceLoader.class.getClassLoader().getResourceAsStream(path);
         return IOUtils.readText(new BufferedReader(new InputStreamReader(in)));
     }
