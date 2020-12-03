@@ -16,7 +16,7 @@
 package io.micronaut.gcp;
 
 /**
- * Constants for module naming. 
+ * Provides names of implemented modules to be used as {@link javax.inject.Named} qualifiers as a well for {@link UserAgentHeaderProvider}.
  *
  * @author Vinicius Carvalho
  */
@@ -32,7 +32,7 @@ public interface Modules {
     String PUBSUB = "pubsub";
 
     /**
-     * Module name for secret-manager
+     * Module name for secret-manager.
      */
     String SECRET_MANAGER = "secret-manager";
 
