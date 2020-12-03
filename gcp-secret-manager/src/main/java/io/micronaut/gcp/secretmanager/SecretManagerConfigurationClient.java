@@ -35,22 +35,26 @@ import javax.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * @author Vinicius Carvalho
+ * @since 3.2.0
+ *
+ * Distributed configuration client implementation that fetches application configuration files from Google Cloud Secret Manager.
+ */
 @Singleton
 @BootstrapContextCompatible
 @Requires(property = ConfigurationClient.ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
 public class SecretManagerConfigurationClient implements ConfigurationClient {
 
-    private final SecretManagerClient secretManagerClient;
-    private final SecretManagerConfigurationProperties configurationProperties;
-    private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
     private static final String DESCRIPTION = "GCP Secret Manager Config Client";
-    private final Logger logger = LoggerFactory.getLogger(SecretManagerConfigurationClient.class);
-
-    private static final List<PropertySourceReader> readers = Arrays.asList(
+    private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
+    private static final List<PropertySourceReader> READERS = Arrays.asList(
             new YamlPropertySourceLoader(),
             new PropertiesPropertySourceLoader(),
             new JsonPropertySourceLoader());
-
+    private final SecretManagerClient secretManagerClient;
+    private final SecretManagerConfigurationProperties configurationProperties;
+    private final Logger logger = LoggerFactory.getLogger(SecretManagerConfigurationClient.class);
 
     public SecretManagerConfigurationClient(SecretManagerClient secretManagerClient, SecretManagerConfigurationProperties configurationProperties) {
         this.secretManagerClient = secretManagerClient;
@@ -75,13 +79,12 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
                 .map(k -> secretManagerClient.getSecret(k))
                 .flatMap(Maybe::toFlowable)
                 .filter(Objects::nonNull)
-                .toMap(versionedSecret -> "sm."+ versionedSecret.getName(), versionedSecret -> (Object)new String(versionedSecret.getContents(), StandardCharsets.UTF_8).replaceAll("\\n", "").trim())
+                .toMap(versionedSecret -> "sm." + versionedSecret.getName(), versionedSecret -> (Object) new String(versionedSecret.getContents(), StandardCharsets.UTF_8).replaceAll("\\n", "").trim())
                 .map(m -> PropertySource.of("secret-manager-keys", m, 101))
                 .toFlowable();
     }
 
     /**
-     *
      * @param environment
      * @return a collection of all possible combinations of files to be queried. For each active environment.
      */
@@ -91,28 +94,38 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
         Set<String> candidates = new HashSet<>();
         candidates.add("application");
         candidates.addAll(configurationProperties.getCustomConfigs());
-        if(applicationName.isPresent()){
+        if (applicationName.isPresent()) {
             candidates.add(applicationName.get());
         }
         for (String e : activeEnv) {
-            candidates.add("application_"+e);
-            if(applicationName.isPresent()){
-                candidates.add(applicationName.get()+"_"+e);
+            candidates.add("application_" + e);
+            if (applicationName.isPresent()) {
+                candidates.add(applicationName.get() + "_" + e);
             }
         }
         return candidates;
     }
 
+    /**
+     * GCP Secret Manager unfortunately lacks support of file extensions. There's a new feature being tested
+     * to allow {@link com.google.cloud.secretmanager.v1.AccessSecretVersionResponse} to contain labels, and
+     * we could use a `Content-Type` label to define the type of file.
+     * So, the code loops through the provided readers, and the first that can read the file (when a wrong file type is read an exception is swallowed )
+     * returns a Property Source based on the Map of the parsed file.
+     * @param secret
+     * @return Mapped PropertySource
+     */
     private PropertySource fromSecret(VersionedSecret secret) {
         Map<String, Object> data = new HashMap<>();
         int priority = EnvironmentPropertySource.POSITION + 100;
-        for (PropertySourceReader reader : readers) {
-            try{
+        for (PropertySourceReader reader : READERS) {
+            try {
                 data.putAll(reader.read(secret.getName(), secret.getContents()));
-                if(!data.isEmpty()){
+                if (!data.isEmpty()) {
                     break;
                 }
-            } catch (Exception e){ }
+            } catch (Exception e) {
+            }
         }
         return PropertySource.of(secret.getName() + PROPERTY_SOURCE_SUFFIX, data, priority);
     }

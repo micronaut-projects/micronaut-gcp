@@ -16,6 +16,7 @@
 package io.micronaut.gcp.credentials;
 
 import com.google.auth.oauth2.GoogleCredentials;
+import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
  */
 @Factory
 @Requires(classes = com.google.auth.oauth2.GoogleCredentials.class)
+@BootstrapContextCompatible
 public class GoogleCredentialsFactory {
     private static final Logger LOG = LoggerFactory.getLogger(GoogleCredentialsFactory.class);
 

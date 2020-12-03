@@ -19,12 +19,18 @@ import com.google.cloud.secretmanager.v1.*;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
+import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.reactivex.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 
+/**
+ * Default implementation of {@link SecretManagerClient}
+ * @author Vinicius Carvalho
+ * @since 3.2.0
+ */
 @Singleton
 @BootstrapContextCompatible
 @Requires(classes = SecretManagerServiceClient.class)
@@ -32,21 +38,23 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
 
     private final SecretManagerServiceClient client;
     private final Environment environment;
+    private final GoogleCloudConfiguration googleCloudConfiguration;
     private final Logger logger = LoggerFactory.getLogger(SecretManagerClient.class);
 
-    public DefaultSecretManagerClient(SecretManagerServiceClient client, Environment environment) {
+    public DefaultSecretManagerClient(SecretManagerServiceClient client, Environment environment, GoogleCloudConfiguration googleCloudConfiguration) {
         this.client = client;
         this.environment = environment;
+        this.googleCloudConfiguration = googleCloudConfiguration;
     }
 
     @Override
     public Maybe<VersionedSecret> getSecret(String secretId) {
-        return getSecret(secretId, LATEST ,environment.getProperty("gcp.projectId", String.class).get());
+        return getSecret(secretId, LATEST , googleCloudConfiguration.getProjectId());
     }
 
     @Override
     public Maybe<VersionedSecret> getSecret(String secretId, String version) {
-        return getSecret(secretId, version, environment.getProperty("gcp.projectId", String.class).get());
+        return getSecret(secretId, version, googleCloudConfiguration.getProjectId());
     }
 
     @Override

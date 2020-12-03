@@ -27,8 +27,6 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.UserAgentHeaderProvider;
-import io.micronaut.gcp.condition.RequiresGoogleProjectId;
-import org.threeten.bp.Duration;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -49,6 +47,8 @@ public class SecretManagerFactory {
     /**
      * Creates a {@link SecretManagerServiceClient} instance.
      *
+     * @param credentialsProvider - Google Cloud Credentials Provider
+     * @param transportChannelProvider - TransportChannel Provider
      * @return an instance using defaults.
      */
     @Singleton
@@ -73,8 +73,8 @@ public class SecretManagerFactory {
      */
     @Singleton
     @Named(Modules.SECRET_MANAGER)
-    public CredentialsProvider credentialsProvider() throws IOException {
-        return FixedCredentialsProvider.create(GoogleCredentials.getApplicationDefault());
+    public CredentialsProvider credentialsProvider(GoogleCredentials credentials) throws IOException {
+        return FixedCredentialsProvider.create(credentials);
     }
 
     /**
