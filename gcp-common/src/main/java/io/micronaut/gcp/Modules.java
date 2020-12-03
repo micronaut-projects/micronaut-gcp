@@ -16,7 +16,7 @@
 package io.micronaut.gcp;
 
 /**
- * Provides names of implemented modules to be used as {@link javax.inject.Named} qualifiers as a well for {@link UserAgentHeaderProvider}.
+ * Constants for module naming. 
  *
  * @author Vinicius Carvalho
  */
