@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.ordering;
+package io.micronaut.gcp.secretmanager
 //tag::imports[]
-import io.micronaut.gcp.pubsub.support.Order;
-import javax.inject.Singleton;
+import io.micronaut.context.event.StartupEvent
+import io.micronaut.gcp.secretmanager.client.SecretManagerClient
+import io.micronaut.runtime.event.annotation.EventListener
 //end::imports[]
 
 //tag::clazz[]
-@Singleton
-public final class OrderService {
-
-    private final OrderClient client;
-
-    public OrderService(OrderClient client) {
-        this.client = client;
-    }
-
-    public void placeOrder() {
-        Order order = new Order(100, "GOOG");
-        client.send(order, order.getSymbol());
-    }
-
+class ClientExample(private val client: SecretManagerClient) {
+	@EventListener
+	fun onStartup(event: StartupEvent) {
+		val secret = client.getSecret("secretId") // <1>
+		val v2 = client.getSecret("secretId", "v2") //<2>
+		val fromOtherProject = client.getSecret("secretId", "latest", "another-project-id") //<3>
+	}
 }
 //end::clazz[]

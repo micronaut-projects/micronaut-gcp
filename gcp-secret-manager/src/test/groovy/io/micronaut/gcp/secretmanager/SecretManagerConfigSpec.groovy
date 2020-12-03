@@ -18,9 +18,29 @@ class SecretManagerConfigSpec extends Specification {
                                                              "gcp.projectId"                  : "first-gcp-project"], "gcp")
 
         expect:
-        "gold" == context.getRequiredProperty("acme.customer.tier", String)
-        true == context.getRequiredProperty("application.debug", Boolean)
-        false == context.containsProperty("sm.password")
+            "gold" == context.getRequiredProperty("acme.customer.tier", String)
+            true == context.getRequiredProperty("application.debug", Boolean)
+            false == context.containsProperty("sm.password")
+            false == context.containsProperty("custom.value")
+        cleanup:
+            context.stop()
+    }
+
+    void "load first project with custom config"() {
+
+        given:
+        System.setProperty(Environment.BOOTSTRAP_CONTEXT_PROPERTY, "true")
+        ApplicationContext context = ApplicationContext.run(["spec.name"                      : "SecretManagerConfigSpec",
+                                                             "micronaut.application.name"     : "secret-manager-test",
+                                                             "gcp.secret-manager.custom-configs[0]"     : "custom",
+                                                             "micronaut.config-client.enabled": true,
+                                                             "gcp.projectId"                  : "first-gcp-project"], "gcp")
+
+        expect:
+            "gold" == context.getRequiredProperty("acme.customer.tier", String)
+            true == context.getRequiredProperty("application.debug", Boolean)
+            false == context.containsProperty("sm.password")
+            "foo" == context.getRequiredProperty("custom.value", String)
         cleanup:
         context.stop()
     }
@@ -39,6 +59,26 @@ class SecretManagerConfigSpec extends Specification {
         "gold" == context.getRequiredProperty("acme.customer.tier", String)
         true == context.getRequiredProperty("application.debug", Boolean)
         "secret" == context.getRequiredProperty("sm.password", String)
+        cleanup:
+        context.stop()
+    }
+
+    void "load first project normalized with keys"() {
+
+        given:
+        System.setProperty(Environment.BOOTSTRAP_CONTEXT_PROPERTY, "true")
+        ApplicationContext context = ApplicationContext.run(["spec.name"                      : "SecretManagerConfigSpec",
+                                                             "micronaut.application.name"     : "secret-manager-test",
+                                                             "micronaut.config-client.enabled": true,
+                                                             "gcp.secret-manager.keys[0]"     : "DB_PASSWORD",
+                                                             "gcp.secret-manager.keys[1]"     : "dbUser",
+                                                             "gcp.projectId"                  : "first-gcp-project"], "gcp")
+
+        expect:
+        "gold" == context.getRequiredProperty("acme.customer.tier", String)
+        true == context.getRequiredProperty("application.debug", Boolean)
+        "secret" == context.getRequiredProperty("sm.db.password", String)
+        "user" == context.getRequiredProperty("sm.db.user", String)
         cleanup:
         context.stop()
     }

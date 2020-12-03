@@ -5,7 +5,7 @@ The framework allows you to create configurations and then bind those configurat
 
 
 [%header, format=csv]
-.Configuration properties for api:configuration.PublisherConfigurationProperties[]
+.Configuration properties for api:gcp.pubsub.configuration.PublisherConfigurationProperties[]
 |===
 Property,Type,Description
 gcp.pubsub.publisher.*.executor,java.lang.String,Name of the executor to use. Default: scheduled

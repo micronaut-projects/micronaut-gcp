@@ -1,0 +1,103 @@
+You can leverage https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration[Distributed Configuration] and rely on Google Cloud Secret Manager to store your configuration files.
+
+To enable it, add a `src/main/resources/bootstrap.yml` configuration file to your project:
+
+.bootstrap.yml
+[source,yaml]
+----
+micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+----
+
+IMPORTANT: Make sure you have configured the correct credentials on your project following the <<setup, Setting up GCP >> section.
+And that the service account you designated your application has proper rights to read secrets. Follow the official link:https://cloud.google.com/secret-manager/docs/access-control[Access Control] guide for Secret Manager if you need more information.
+
+
+== Configuration file resolution
+
+It's important to note that Google Cloud Secret Manager *does not* support file extensions.
+When you upload your `application.yml` or `application.properties` you need to remove the extension from its name.
+
+Micronaut tries circumvent this limitation adopting a convention when fetching configuration files.
+The following table displays the possible secrets that are fetched by default:
+
+|===
+|Name|Description
+|`application`
+|Configuration shared by all applications
+|`application_${env}`
+|Environment specific configuration, for instance if you have `gcp` and `k8s` as environments the framework will look for `application_gcp` and `application_k8s`
+|`[APPLICATION_NAME]`
+|Application specific configuration, example `hello-world`
+|`[APPLICATION_NAME]_${env}`
+|Application specific configuration bound to an environment, example `hello-world_gcp`
+
+|===
+
+=== Supported formats
+
+Internally the framework will try to read the files (that lack extensions) on the following order: `yaml`, `json`, `properties`.
+The first PropertySourceLoader that succeeds reading the contents of the secrets interrupts the chain.
+
+=== Loading non default config files
+
+It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.
+You can `whitelist` secrets that you would like to loaded as PropertySources using the following configuration:
+
+.bootstrap.yml
+[source,yaml]
+----
+micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+      custom-configs:
+        - my-first-config
+        - my-second-config
+----
+
+TIP: The secrets you list on `custom-configs` must be valid configuration files and not single keys.
+
+=== Loading key/value pairs into a PropertySource
+
+Google Cloud Secret Manager can also host single keys mapping to a single String value.
+For instance one could have a `DB_PASSWORD` secret, instead of storing it on a configuration file.
+Because Secret Manager does not offer a hierarchical approach, loading all secrets in a project is not a viable solution.
+Instead you need to whitelist the keys you would like to pre-fetch such as the following config demonstrates:
+
+.bootstrap.yml
+[source,yaml]
+----
+micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+      keys:
+        - DB_PASSWORD
+        - dbUser
+----
+
+The framework will load all Secret Manager keys and prefix them with a `sm` key. The table below shows how entries could be accessed:
+
+|===
+|Secret Name|Micronaut resolved property
+|`DB_PASSWORD`
+|`{sm.db.password}`
+|`dbUser`
+|`{sm.db.user}`
+|===
+
+== Secret Versioning
+
+Google Cloud Secret Manager supports link:https://cloud.google.com/secret-manager/docs/managing-secret-versions[secret versioning].
+For the distributed configuration use case Micronaut will *always* load the `latest` version of each secret into a property source file.
+It's currently not supported specifying what version of your `application` configuration file should be loaded.

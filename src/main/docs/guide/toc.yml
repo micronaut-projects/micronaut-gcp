@@ -33,3 +33,7 @@ pubsub:
     title: Message Serialization/Deserialization (SerDes)
   executors: Configuring Thread pools
   emulator: Using Google Cloud Pub/Sub emulator
+secretManager:
+  title: Google Cloud Secret Manager Support
+  distributedConfiguration: Distributed Configuration
+  secretManagerClient: Low-Level Secret Manager Client access

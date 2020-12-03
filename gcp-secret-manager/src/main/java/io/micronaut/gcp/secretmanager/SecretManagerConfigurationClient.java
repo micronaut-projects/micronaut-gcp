@@ -46,6 +46,8 @@ import java.util.*;
 @Requires(property = ConfigurationClient.ENABLED, value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
 public class SecretManagerConfigurationClient implements ConfigurationClient {
 
+    private static final String CAMEL_CASE_REGEX = "([a-z])([A-Z]+)";
+    private static final String CAMEL_CASE_REPLACE = "$1_$2";
     private static final String DESCRIPTION = "GCP Secret Manager Config Client";
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
     private static final List<PropertySourceReader> READERS = Arrays.asList(
@@ -74,13 +76,21 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
                 .map(this::fromSecret);
     }
 
+    /**
+     * Resolve keys from Secret Manager into a single "secret-manager-keys" PropertySource. Keys are all converted to snake case prior to insertion to allow the following mapping to happen:
+     *
+     * DB_PASSWORD -> db.password
+     * dbPassword -> (DB_PASSWORD) -> db.password
+     * @return
+     */
     private Publisher<PropertySource> resolveSecretKeys() {
         return Flowable.fromIterable(configurationProperties.getKeys())
                 .map(k -> secretManagerClient.getSecret(k))
                 .flatMap(Maybe::toFlowable)
                 .filter(Objects::nonNull)
-                .toMap(versionedSecret -> "sm." + versionedSecret.getName(), versionedSecret -> (Object) new String(versionedSecret.getContents(), StandardCharsets.UTF_8).replaceAll("\\n", "").trim())
-                .map(m -> PropertySource.of("secret-manager-keys", m, 101))
+                .toMap(versionedSecret -> "sm." + versionedSecret.getName().replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase(),
+                        versionedSecret -> (Object) new String(versionedSecret.getContents(), StandardCharsets.UTF_8).replaceAll("\\n", "").trim())
+                .map(m -> PropertySource.of("secret-manager-keys", m, PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE))
                 .toFlowable();
     }
 
