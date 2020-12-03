@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.credentials;
 
+import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.gcp.GoogleCloudConfiguration;
@@ -35,6 +36,7 @@ import java.util.Optional;
  */
 @ConfigurationProperties(GoogleCredentialsConfiguration.PREFIX)
 @Context
+@BootstrapContextCompatible
 public class GoogleCredentialsConfiguration {
     /**
      * The default scopes.
