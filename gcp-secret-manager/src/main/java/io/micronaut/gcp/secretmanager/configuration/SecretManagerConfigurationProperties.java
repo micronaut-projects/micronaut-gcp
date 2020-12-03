@@ -15,12 +15,11 @@
  */
 package io.micronaut.gcp.secretmanager.configuration;
 
+import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,6 +28,7 @@ import java.util.Set;
  * @since 3.2.0
  */
 @ConfigurationProperties(SecretManagerConfigurationProperties.PREFIX)
+@BootstrapContextCompatible
 public class SecretManagerConfigurationProperties {
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".secret-manager";
 

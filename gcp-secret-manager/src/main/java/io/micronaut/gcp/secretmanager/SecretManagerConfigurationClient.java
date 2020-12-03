@@ -112,7 +112,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
                 if(!data.isEmpty()){
                     break;
                 }
-            } catch (Exception e){}
+            } catch (Exception e){ }
         }
         return PropertySource.of(secret.getName() + PROPERTY_SOURCE_SUFFIX, data, priority);
     }

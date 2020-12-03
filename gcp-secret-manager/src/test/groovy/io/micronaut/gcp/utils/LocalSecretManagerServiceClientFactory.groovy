@@ -11,6 +11,7 @@ import com.google.cloud.secretmanager.v1.SecretPayload
 import com.google.cloud.secretmanager.v1.SecretVersionName
 import com.google.cloud.secretmanager.v1.stub.SecretManagerServiceStub
 import com.google.protobuf.ByteString
+import io.micronaut.context.annotation.BootstrapContextCompatible
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.gcp.secretmanager.SecretManagerFactory
@@ -21,6 +22,7 @@ import spock.mock.MockFactory
 import javax.inject.Singleton
 
 @Factory
+@BootstrapContextCompatible
 class LocalSecretManagerServiceClientFactory extends Specification {
 
 

@@ -22,6 +22,7 @@ import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceSettings;
+import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.Modules;
@@ -41,14 +42,8 @@ import java.io.IOException;
  */
 @Factory
 @Requires(classes = {SecretManagerServiceClient.class})
-@RequiresGoogleProjectId
+@BootstrapContextCompatible
 public class SecretManagerFactory {
-
-    private final CredentialsProvider credentialsProvider;
-
-    public SecretManagerFactory(GoogleCredentials credentials) {
-        this.credentialsProvider = FixedCredentialsProvider.create(credentials);
-    }
 
 
     /**
@@ -78,8 +73,8 @@ public class SecretManagerFactory {
      */
     @Singleton
     @Named(Modules.SECRET_MANAGER)
-    public CredentialsProvider credentialsProvider(GoogleCredentials credentials) {
-        return FixedCredentialsProvider.create(credentials);
+    public CredentialsProvider credentialsProvider() throws IOException {
+        return FixedCredentialsProvider.create(GoogleCredentials.getApplicationDefault());
     }
 
     /**

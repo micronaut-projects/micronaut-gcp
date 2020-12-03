@@ -9,9 +9,11 @@ import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse
 import com.google.cloud.secretmanager.v1.SecretPayload
 import com.google.cloud.secretmanager.v1.SecretVersionName
 import com.google.protobuf.ByteString
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class SettableUnaryCallable extends UnaryCallable<AccessSecretVersionRequest, AccessSecretVersionResponse> {
-
+    final Logger logger = LoggerFactory.getLogger(SettableUnaryCallable)
     @Override
     ApiFuture<AccessSecretVersionResponse> futureCall(AccessSecretVersionRequest request, ApiCallContext context) {
         SecretVersionName secretVersionName = SecretVersionName.parse(request.getName())
