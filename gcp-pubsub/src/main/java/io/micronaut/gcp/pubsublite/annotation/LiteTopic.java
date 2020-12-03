@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.gcp.pubsublite.annotation;
 
 import io.micronaut.http.MediaType;
 
@@ -24,22 +24,36 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Represents a pubsub topic to be used by classes annotated with {@link PubSubClient}.
+ * Represents a pubsub lite topic to be used by classes annotated with {@link PubSubLiteClient}.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.annotation.Topic}.
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface Topic {
+public @interface LiteTopic {
 
     /**
-     * Set the name of the topic used to publish messages. Valid names are simple names such as "animals" or
-     * FQN names such as {@code projects/<project_name>/topics/<topic_name>}
+     * A fully qualified topic name, properly formatted and including the project number.
+     * ie., projects/<project_number>/locations/<location>/topics/<subscription_name>
+     * @return The FQN of the topic.
+     */
+    String value() default "";
+
+    /**
+     * Set the name of the topic used to publish messages. An example of a name is "animals".
      * @return The name of the topic to publish messages to
      */
-    String value();
+    String name() default "";
+
+    /**
+     * The location of the pubsub lite topic. An example of a valid location is "us-central1-a".
+     * @return GCP location of the topic to publish messages to.
+     */
+    String location() default "us-central1-a";
 
     /**
      * Defines the Content-Type to be used for message serialization.
@@ -55,12 +69,4 @@ public @interface Topic {
      *
      */
     String configuration() default "";
-
-    /**
-     * Sets the endpoint that PubSub will use to store messages.
-     * If not specified PubSub stores messages on the nearest endpoint to the client.
-     * This is useful when regulations for data locality such as GDPR are in place.
-     * @return the remote endpoint to use
-     */
-    String endpoint() default "";
 }

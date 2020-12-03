@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.intercept;
+package io.micronaut.gcp.pubsublite.intercept;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.pubsub.v1.PublisherInterface;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.protobuf.ByteString;
-import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
@@ -30,28 +30,21 @@ import io.micronaut.core.type.ReturnType;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.OrderingKey;
-import io.micronaut.gcp.pubsub.annotation.PubSubClient;
-import io.micronaut.gcp.pubsub.annotation.Topic;
-import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
-import io.micronaut.gcp.pubsub.support.PubSubPublisherState;
-import io.micronaut.gcp.pubsub.support.PubSubTopicUtils;
-import io.micronaut.gcp.pubsub.support.PublisherFactory;
-import io.micronaut.gcp.pubsub.support.PublisherFactoryConfig;
+import io.micronaut.gcp.pubsublite.annotation.LiteTopic;
+import io.micronaut.gcp.pubsublite.annotation.PubSubLiteClient;
+import io.micronaut.gcp.pubsublite.configuration.PubSubLiteConfigurationProperties;
+import io.micronaut.gcp.pubsublite.support.LitePublisherFactory;
+import io.micronaut.gcp.pubsublite.support.LitePublisherFactoryConfig;
+import io.micronaut.gcp.pubsublite.support.PubSubLitePublisherState;
+import io.micronaut.gcp.pubsublite.support.PubSubLiteTopicUtils;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.Body;
 import io.micronaut.messaging.annotation.Header;
-import io.micronaut.scheduling.TaskExecutors;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.annotation.PreDestroy;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.AbstractMap;
 import java.util.Arrays;
@@ -60,35 +53,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 
 /**
- * Implementation of {@link io.micronaut.gcp.pubsub.annotation.PubSubClient} advice annotation.
+ * Implementation of {@link io.micronaut.gcp.pubsublite.annotation.PubSubLiteClient} advice annotation.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice}
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
 @Singleton
-public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object, Object>, AutoCloseable {
+public class PubSubLiteClientIntroductionAdvice implements MethodInterceptor<Object, Object>  {
 
-    private final Logger logger = LoggerFactory.getLogger(PubSubClientIntroductionAdvice.class);
-    private final ConcurrentHashMap<ExecutableMethod, PubSubPublisherState> publisherStateCache = new ConcurrentHashMap<>();
-    private final PublisherFactory publisherFactory;
+    private final ConcurrentHashMap<ExecutableMethod, PubSubLitePublisherState> publisherStateCache = new ConcurrentHashMap<>();
+    private final LitePublisherFactory publisherFactory;
     private final PubSubMessageSerDesRegistry serDesRegistry;
-    private final Scheduler scheduler;
     private final ConversionService<?> conversionService;
     private final GoogleCloudConfiguration googleCloudConfiguration;
-    private final PubSubConfigurationProperties pubSubConfigurationProperties;
+    private final PubSubLiteConfigurationProperties pubSubConfigurationProperties;
 
-    public PubSubClientIntroductionAdvice(PublisherFactory publisherFactory,
-                                          PubSubMessageSerDesRegistry serDesRegistry,
-                                          @Named(TaskExecutors.IO) ExecutorService executorService,
-                                          ConversionService<?> conversionService,
-                                          GoogleCloudConfiguration googleCloudConfiguration,
-                                          PubSubConfigurationProperties pubSubConfigurationProperties) {
+    public PubSubLiteClientIntroductionAdvice(LitePublisherFactory publisherFactory,
+                                              PubSubMessageSerDesRegistry serDesRegistry,
+                                              ConversionService<?> conversionService,
+                                              GoogleCloudConfiguration googleCloudConfiguration,
+                                              PubSubLiteConfigurationProperties pubSubConfigurationProperties) {
         this.publisherFactory = publisherFactory;
         this.serDesRegistry = serDesRegistry;
-        this.scheduler = Schedulers.from(executorService);
         this.conversionService = conversionService;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
@@ -97,18 +87,28 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     @Override
     public Object intercept(MethodInvocationContext<Object, Object> context) {
 
-        if (context.hasAnnotation(Topic.class)) {
+        if (context.hasAnnotation(LiteTopic.class)) {
+            PubSubLitePublisherState publisherState = publisherStateCache.computeIfAbsent(context.getExecutableMethod(), method -> {
+                AnnotationValue<PubSubLiteClient> client = method.findAnnotation(PubSubLiteClient.class).orElseThrow(() -> new IllegalStateException("No @PubSubLiteClient annotation present"));
+                AnnotationValue<LiteTopic> topicAnnotation = method.findAnnotation(LiteTopic.class).get();
 
-            PubSubPublisherState publisherState = publisherStateCache.computeIfAbsent(context.getExecutableMethod(), method -> {
-                AnnotationValue<PubSubClient> client = method.findAnnotation(PubSubClient.class).orElseThrow(() -> new IllegalStateException("No @PubSubClient annotation present"));
-                String projectId = client.stringValue().orElse(googleCloudConfiguration.getProjectId());
-                AnnotationValue<Topic> topicAnnotation = method.findAnnotation(Topic.class).get();
+                TopicPath topicPath;
+                if (!topicAnnotation.stringValue().isPresent()) {
+                    String projectId = googleCloudConfiguration.getProjectId();
+                    long projectNumber = client.longValue("projectNumber").orElse(0);
+                    String location = topicAnnotation.getRequiredValue("location", String.class);
+                    String topicName = topicAnnotation.getRequiredValue("name", String.class);
+                    topicPath = projectNumber > 0 ?
+                            PubSubLiteTopicUtils.toPubsubLiteTopic(topicName, projectNumber, location) :
+                            PubSubLiteTopicUtils.toPubsubLiteTopic(topicName, projectId, location);
+                } else {
+                    topicPath = TopicPath.parse(topicAnnotation.stringValue().get());
+                }
+
                 Optional<Argument> orderingArgument = Arrays.stream(method.getArguments()).filter(argument -> argument.getAnnotationMetadata().hasAnnotation(OrderingKey.class)).findFirst();
-                String topic = topicAnnotation.stringValue().get();
-                String endpoint = topicAnnotation.get("endpoint", String.class).orElse("");
                 String configurationName = topicAnnotation.get("configuration", String.class).orElse("");
                 String contentType = topicAnnotation.get("contentType", String.class).orElse("");
-                ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
+
                 Map<String, String> staticMessageAttributes = new HashMap<>();
                 List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
                 headerAnnotations.forEach((header) -> {
@@ -121,10 +121,9 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 Argument<?> bodyArgument = findBodyArgument(method)
                         .orElseThrow(() -> new PubSubClientException("No valid message body argument found for method: " + context.getExecutableMethod()));
 
-                PubSubPublisherState.TopicState topicState = new PubSubPublisherState.TopicState(contentType, projectTopicName, configurationName, endpoint, orderingArgument.isPresent());
-                logger.debug("Created a new publisher[{}] for topic: {}", context.getExecutableMethod().getName(), topic);
-                PublisherInterface publisher = publisherFactory.createPublisher(new PublisherFactoryConfig(topicState, pubSubConfigurationProperties.getPublishingExecutor()));
-                return new PubSubPublisherState(topicState, staticMessageAttributes, bodyArgument, publisher, orderingArgument);
+                PubSubLitePublisherState.TopicState topicState = new PubSubLitePublisherState.TopicState(contentType, topicPath, configurationName);
+                Publisher publisher = publisherFactory.createLitePublisher(new LitePublisherFactoryConfig(topicState));
+                return new PubSubLitePublisherState(topicState, staticMessageAttributes, bodyArgument, publisher, orderingArgument);
             });
 
             Map<String, String> messageAttributes = new HashMap<>(publisherState.getStaticMessageAttributes());
@@ -143,7 +142,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 }
             }
 
-            PublisherInterface publisher = publisherState.getPublisher();
+            Publisher publisher = publisherState.getPublisher();
 
             Object body = parameterValues.get(bodyArgument.getName());
             PubsubMessage pubsubMessage = null;
@@ -167,8 +166,10 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                     String orderingKey = conversionService.convert(parameterValues.get(publisherState.getOrderingArgument().get().getName()), String.class)
                             .orElseThrow(() -> new PubSubClientException("Could not convert argument annotated with @OrderingKey to String type"));
                     messageBuilder.setOrderingKey(orderingKey);
+
                 }
                 pubsubMessage = messageBuilder.build();
+
             }
             ApiFuture<String> future = publisher.publish(pubsubMessage);
             Single<String> reactiveResult = Single.fromFuture(future);
@@ -209,13 +210,5 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
         String value = String.valueOf(parameterValues.get(argumentName));
 
         return new AbstractMap.SimpleEntry<>(name, value);
-    }
-
-    @Override
-    @PreDestroy
-    public void close() throws Exception {
-        for (PubSubPublisherState publisherState : publisherStateCache.values()) {
-            publisherState.close();
-        }
     }
 }

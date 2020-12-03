@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.gcp.pubsublite.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -22,23 +22,38 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Represents a PubSub subscription. Methods annotated with this annotation
+ * Represents a PubSub Lite subscription. Methods annotated with this annotation
  * will be invoked when a new message is received by a {@link com.google.cloud.pubsub.v1.MessageReceiver}
  * that is bound to the annotated method.
  *
- * @author Vinicius Carvalho
- * @since 2.0
+ * Based on {@link io.micronaut.gcp.pubsub.annotation.Subscription}
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface Subscription {
+public @interface LiteSubscription {
+
     /**
-     * The name of the subscription, it could be a simple name such as "animals" or
-     * a FQN such as {@code projects/<project_name>/subscriptions/<subscription_name>}.
-     * @return the subscription name
+     * A fully qualified subscription name, properly formatted and including the project number.
+     * ie., projects/<project_number>/locations/<location>/subscriptions/<subscription_name>
+     * @return The FQN of the subscription.
      */
-    String value();
+    String value() default "";
+
+    /**
+     * Set the name of the subscription. An example of a name is "animals".
+     * @return The name of the subscription
+     */
+    String name() default "";
+
+    /**
+     * The location of the pubsub lite subscription. An example of a valid location is "us-central1-a".
+     * @return GCP location of the subscription
+     */
+    String location() default "us-central1-a";
 
     /**
      * Defines the Content-Type to be used for message deserialization.

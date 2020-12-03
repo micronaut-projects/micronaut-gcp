@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.intercept;
+package io.micronaut.gcp.pubsublite.intercept;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
-import com.google.pubsub.v1.ProjectSubscriptionName;
+import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
@@ -27,19 +27,19 @@ import io.micronaut.core.bind.DefaultExecutableBinder;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
-import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement;
-import io.micronaut.gcp.pubsub.bind.PubSubBinderRegistry;
-import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
-import io.micronaut.gcp.pubsub.bind.SubscriberFactory;
-import io.micronaut.gcp.pubsub.bind.SubscriberFactoryConfig;
-import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
-import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
-import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
-import io.micronaut.gcp.pubsub.support.PubSubSubscriptionUtils;
+import io.micronaut.gcp.pubsublite.annotation.LiteSubscription;
+import io.micronaut.gcp.pubsublite.annotation.PubSubLiteListener;
+import io.micronaut.gcp.pubsublite.bind.PubSubLiteBinderRegistry;
+import io.micronaut.gcp.pubsublite.bind.PubSubLiteConsumerState;
+import io.micronaut.gcp.pubsublite.configuration.PubSubLiteConfigurationProperties;
+import io.micronaut.gcp.pubsublite.exception.PubSubLiteMessageReceiverException;
+import io.micronaut.gcp.pubsublite.exception.PubSubLiteMessageReceiverExceptionHandler;
+import io.micronaut.gcp.pubsublite.support.LiteSubscriberFactory;
+import io.micronaut.gcp.pubsublite.support.LiteSubscriberFactoryConfig;
+import io.micronaut.gcp.pubsublite.support.PubSubLiteSubscriptionUtils;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
@@ -53,39 +53,39 @@ import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Optional;
 
-
 /**
  * Implementation of an {@link ExecutableMethodProcessor} that creates
- * {@link com.google.cloud.pubsub.v1.MessageReceiver} that subscribes to the PubSub subscription
- * and invoke methods annotated by @{@link io.micronaut.gcp.pubsub.annotation.Subscription}.
+ * {@link com.google.cloud.pubsub.v1.MessageReceiver} that subscribes to the PubSub Lite subscription
+ * and invoke methods annotated by @{@link io.micronaut.gcp.pubsublite.annotation.LiteSubscription}.
  * <p>
  * There can be only one subscriber for any given subscription (in order to avoid issues with message
  * Ack control). Having more than one method using the same subscription raises a {@link io.micronaut.gcp.pubsub.exception.PubSubListenerException}.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.intercept.PubSubConsumerAdvice}
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
 @Singleton
-public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubListener> {
-
-    private final Logger logger = LoggerFactory.getLogger(PubSubConsumerAdvice.class);
+public class PubSubLiteConsumerAdvice implements ExecutableMethodProcessor<PubSubLiteListener> {
+    private final Logger logger = LoggerFactory.getLogger(PubSubLiteConsumerAdvice.class);
     private final BeanContext beanContext;
     private final ConversionService<?> conversionService;
     private final PubSubMessageSerDesRegistry serDesRegistry;
-    private final SubscriberFactory subscriberFactory;
+    private final LiteSubscriberFactory subscriberFactory;
     private final GoogleCloudConfiguration googleCloudConfiguration;
-    private final PubSubConfigurationProperties pubSubConfigurationProperties;
-    private final PubSubBinderRegistry binderRegistry;
-    private final PubSubMessageReceiverExceptionHandler exceptionHandler;
+    private final PubSubLiteConfigurationProperties pubSubConfigurationProperties;
+    private final PubSubLiteBinderRegistry binderRegistry;
+    private final PubSubLiteMessageReceiverExceptionHandler exceptionHandler;
 
-    public PubSubConsumerAdvice(BeanContext beanContext,
+    public PubSubLiteConsumerAdvice(BeanContext beanContext,
                                 ConversionService<?> conversionService,
                                 PubSubMessageSerDesRegistry serDesRegistry,
-                                SubscriberFactory subscriberFactory,
+                                LiteSubscriberFactory subscriberFactory,
                                 GoogleCloudConfiguration googleCloudConfiguration,
-                                PubSubConfigurationProperties pubSubConfigurationProperties,
-                                PubSubBinderRegistry binderRegistry,
-                                PubSubMessageReceiverExceptionHandler exceptionHandler) {
+                                PubSubLiteConfigurationProperties pubSubConfigurationProperties,
+                                PubSubLiteBinderRegistry binderRegistry,
+                                PubSubLiteMessageReceiverExceptionHandler exceptionHandler) {
         this.beanContext = beanContext;
         this.conversionService = conversionService;
         this.serDesRegistry = serDesRegistry;
@@ -98,7 +98,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
 
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
-        AnnotationValue<Subscription> subscriptionAnnotation = method.getAnnotation(Subscription.class);
+        AnnotationValue<LiteSubscription> subscriptionAnnotation = method.getAnnotation(LiteSubscription.class);
         io.micronaut.context.Qualifier<Object> qualifer = beanDefinition
                 .getAnnotationTypeByStereotype(Qualifier.class)
                 .map(type -> Qualifiers.byAnnotation(beanDefinition, type))
@@ -108,13 +108,27 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
 
         Class<Object> beanType = (Class<Object>) beanDefinition.getBeanType();
         Object bean = beanContext.findBean(beanType, qualifer).orElseThrow(() -> new MessageListenerException("Could not find the bean to execute the method " + method));
-        DefaultExecutableBinder<PubSubConsumerState> binder = new DefaultExecutableBinder<>();
+        DefaultExecutableBinder<PubSubLiteConsumerState> binder = new DefaultExecutableBinder<>();
 
         if (subscriptionAnnotation != null) {
-            String subscriptionName = subscriptionAnnotation.getRequiredValue(String.class);
-            ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
+            AnnotationValue<PubSubLiteListener> listener = method.findAnnotation(PubSubLiteListener.class).orElseThrow(() -> new IllegalStateException("No @PubSubLiteListener annotation present"));
+            SubscriptionPath subscriptionPath;
+            if (!subscriptionAnnotation.stringValue().isPresent()) {
+                String projectId = googleCloudConfiguration.getProjectId();
+                long projectNumber = listener.longValue("projectNumber").orElse(0);
+                String subscriptionName = subscriptionAnnotation.getRequiredValue("name", String.class);
+                String location = subscriptionAnnotation.getRequiredValue("location", String.class);
+
+                 subscriptionPath = projectNumber > 0 ?
+                        PubSubLiteSubscriptionUtils.toSubscriptionPath(subscriptionName, projectNumber, location) :
+                        PubSubLiteSubscriptionUtils.toSubscriptionPath(subscriptionName, projectId, location);
+            } else {
+                subscriptionPath = SubscriptionPath.parse(subscriptionAnnotation.stringValue().get());
+            }
+
             String defaultContentType = subscriptionAnnotation.get("contentType", String.class).orElse("");
             String configuration = subscriptionAnnotation.get("configuration", String.class).orElse("");
+
             MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
                 String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
                 String contentType = Optional.of(messageContentType)
@@ -122,14 +136,14 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                         .orElse(defaultContentType);
                 DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(ackReplyConsumer);
 
-                PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer,
-                        projectSubscriptionName, contentType);
+                PubSubLiteConsumerState consumerState = new PubSubLiteConsumerState(message, ackReplyConsumer,
+                        subscriptionPath, contentType);
                 try {
                     BoundExecutable executable = null;
                     try {
                         executable = binder.bind(method, binderRegistry, consumerState);
                     } catch (Exception ex) {
-                        handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState));
+                        handleException(new PubSubLiteMessageReceiverException("Error binding message to the method", ex, bean, consumerState));
                     }
                     executable.invoke(bean); // Discard result
                     if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
@@ -144,26 +158,24 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                         }
                     }
                 } catch (Exception e) {
-                    handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState));
+                    handleException(new PubSubLiteMessageReceiverException("Error handling message", e, bean, consumerState));
                 }
             };
             try {
-                this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
+                this.subscriberFactory.createSubscriber(new LiteSubscriberFactoryConfig(subscriptionPath, receiver, configuration));
             } catch (Exception e) {
                 throw new PubSubListenerException("Failed to create subscriber", e);
             }
 
         }
-
     }
 
-    private void handleException(PubSubMessageReceiverException ex) {
+    private void handleException(PubSubLiteMessageReceiverException ex) {
         Object bean = ex.getListener();
-        if (bean instanceof PubSubMessageReceiverExceptionHandler) {
-            ((PubSubMessageReceiverExceptionHandler) bean).handle(ex);
+        if (bean instanceof PubSubLiteMessageReceiverExceptionHandler) {
+            ((PubSubLiteMessageReceiverExceptionHandler) bean).handle(ex);
         } else {
             exceptionHandler.handle(ex);
         }
     }
-
 }

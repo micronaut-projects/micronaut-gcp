@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.gcp.pubsublite.annotation;
 
 import io.micronaut.messaging.annotation.MessageListener;
 
@@ -26,16 +26,20 @@ import java.lang.annotation.Target;
 /**
  * Indicates that a bean will be consuming PubSub Messages.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.annotation.PubSubListener}.
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @MessageListener
-public @interface PubSubListener {
+public @interface PubSubLiteListener {
     /**
-     * @return GCP Project Id, if null it will be inferred from the environment via {@link io.micronaut.gcp.GoogleCloudConfiguration}
+     * Project number of the subscriptions the listener will utilize.
+     * If null it will be inferred from the environment via {@link io.micronaut.gcp.GoogleCloudConfiguration}
+     * @return the project number
      */
-    String project() default "";
+    long projectNumber() default 0;
 }

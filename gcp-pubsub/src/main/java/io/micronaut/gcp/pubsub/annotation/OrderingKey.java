@@ -17,7 +17,11 @@ package io.micronaut.gcp.pubsub.annotation;
 
 import io.micronaut.core.bind.annotation.Bindable;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Defines the value of they to be used for message ordering.

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.bind;
+package io.micronaut.gcp.pubsublite.bind;
 
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.type.Argument;
+import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement;
 import io.micronaut.messaging.Acknowledgement;
 
 import javax.inject.Singleton;
@@ -25,11 +26,13 @@ import java.util.Optional;
 /**
  * Binds {@link Acknowledgement} arguments.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.bind.PubSubAcknowledgementBinder}
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
 @Singleton
-public class PubSubAcknowledgementBinder implements PubSubTypeArgumentBinder<Acknowledgement> {
+public class PubSubLiteAcknowledgementBinder implements PubSubLiteTypeArgumentBinder<Acknowledgement> {
 
     @Override
     public Argument<Acknowledgement> argumentType() {
@@ -37,7 +40,7 @@ public class PubSubAcknowledgementBinder implements PubSubTypeArgumentBinder<Ack
     }
 
     @Override
-    public BindingResult<Acknowledgement> bind(ArgumentConversionContext<Acknowledgement> context, PubSubConsumerState source) {
+    public BindingResult<Acknowledgement> bind(ArgumentConversionContext<Acknowledgement> context, PubSubLiteConsumerState source) {
         Acknowledgement acknowledgement = new DefaultPubSubAcknowledgement(source.getAckReplyConsumer());
         return () -> Optional.of(acknowledgement);
     }

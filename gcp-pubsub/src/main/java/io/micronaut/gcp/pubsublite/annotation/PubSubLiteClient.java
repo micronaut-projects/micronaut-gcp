@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.gcp.pubsublite.annotation;
 
-import io.micronaut.messaging.annotation.MessageListener;
+import io.micronaut.aop.Introduction;
+import io.micronaut.context.annotation.Type;
+import io.micronaut.gcp.pubsublite.intercept.PubSubLiteClientIntroductionAdvice;
 
+import javax.inject.Singleton;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,18 +27,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that a bean will be consuming PubSub Messages.
+ * Client for a PubSub Lite Topic.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.annotation.PubSubClient}
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@MessageListener
-public @interface PubSubListener {
+@Target({ElementType.TYPE})
+@Introduction
+@Type(PubSubLiteClientIntroductionAdvice.class)
+@Singleton
+public @interface PubSubLiteClient {
     /**
-     * @return GCP Project Id, if null it will be inferred from the environment via {@link io.micronaut.gcp.GoogleCloudConfiguration}
+     * Project number of the client the listener will utilize.
+     * If null it will be inferred from the environment via {@link io.micronaut.gcp.GoogleCloudConfiguration}
+     * @return the project number
      */
-    String project() default "";
+    long projectNumber() default 0;
 }

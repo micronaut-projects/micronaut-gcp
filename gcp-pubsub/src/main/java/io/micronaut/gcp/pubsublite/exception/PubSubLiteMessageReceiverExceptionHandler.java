@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.gcp.pubsublite.exception;
 
-import io.micronaut.core.bind.annotation.Bindable;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.micronaut.core.exceptions.ExceptionHandler;
 
 /**
- * An annotation used to indicate that a parameter on a method should be bound to the message id.
+ * Marker interface that {@link io.micronaut.gcp.pubsublite.annotation.PubSubLiteListener} beans can implement
+ * to handle exceptions.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler}
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER})
-@Bindable
-public @interface MessageId {
+public interface PubSubLiteMessageReceiverExceptionHandler extends ExceptionHandler<PubSubLiteMessageReceiverException> {
 }
-

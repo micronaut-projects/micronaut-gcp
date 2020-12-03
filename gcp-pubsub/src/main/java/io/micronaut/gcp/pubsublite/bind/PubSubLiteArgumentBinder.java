@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.gcp.pubsublite.bind;
 
-import io.micronaut.core.bind.annotation.Bindable;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.micronaut.core.bind.ArgumentBinder;
 
 /**
- * An annotation used to indicate that a parameter on a method should be bound to the message id.
+ * An interface for PubSub Lite argument binding.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.bind.PubSubArgumentBinder}
+ *
+ * @param <T> The type of argument to be bound
+ * @author Jacob Mims
+ * @since 2.2.0
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER})
-@Bindable
-public @interface MessageId {
+public interface PubSubLiteArgumentBinder<T> extends ArgumentBinder<T, PubSubLiteConsumerState> {
 }
-

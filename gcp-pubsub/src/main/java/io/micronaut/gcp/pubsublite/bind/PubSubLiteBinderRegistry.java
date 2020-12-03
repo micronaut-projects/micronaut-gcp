@@ -1,0 +1,80 @@
+/*
+ * Copyright 2017-2020 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.micronaut.gcp.pubsublite.bind;
+
+import io.micronaut.core.bind.ArgumentBinder;
+import io.micronaut.core.bind.ArgumentBinderRegistry;
+import io.micronaut.core.bind.annotation.Bindable;
+import io.micronaut.core.type.Argument;
+import io.micronaut.core.util.ArrayUtils;
+
+import javax.inject.Singleton;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * Based on {@link io.micronaut.gcp.pubsub.bind.PubSubBinderRegistry}.
+ * @author Jacob Mims
+ * @since 2.2.0
+ */
+@Singleton
+public class PubSubLiteBinderRegistry implements ArgumentBinderRegistry<PubSubLiteConsumerState> {
+
+    private final PubSubLiteDefaultArgumentBinder defaultBinder;
+    private final Map<Class<? extends Annotation>, ArgumentBinder<?, PubSubLiteConsumerState>> byAnnotation = new HashMap<>();
+    private final Map<Integer, ArgumentBinder<?, PubSubLiteConsumerState>> byType = new HashMap<>();
+
+    /**
+     * Default constructor.
+     * @param defaultBinder The default binder to be used if there's no binder is found
+     * @param binders List of registered {@link PubSubLiteArgumentBinder} binders
+     */
+    public PubSubLiteBinderRegistry(PubSubLiteDefaultArgumentBinder defaultBinder,
+                                    PubSubLiteArgumentBinder... binders) {
+        this.defaultBinder = defaultBinder;
+        if (ArrayUtils.isNotEmpty(binders)) {
+            for (PubSubLiteArgumentBinder binder : binders) {
+                if (binder instanceof PubSubLiteAnnotatedArgumentBinder) {
+                    PubSubLiteAnnotatedArgumentBinder annotatedArgumentBinder = (PubSubLiteAnnotatedArgumentBinder) binder;
+                    byAnnotation.putIfAbsent(annotatedArgumentBinder.getAnnotationType(), binder);
+                } else if (binder instanceof PubSubLiteTypeArgumentBinder) {
+                    PubSubLiteTypeArgumentBinder typeBinder = (PubSubLiteTypeArgumentBinder) binder;
+                    byType.put(typeBinder.argumentType().typeHashCode(), typeBinder);
+                }
+            }
+        }
+    }
+
+    @Override
+    public <T> Optional<ArgumentBinder<T, PubSubLiteConsumerState>> findArgumentBinder(Argument<T> argument, PubSubLiteConsumerState source) {
+        Optional<Class<? extends Annotation>> opt = argument.getAnnotationMetadata().getAnnotationTypeByStereotype(Bindable.class);
+        if (opt.isPresent()) {
+            Class<? extends Annotation> annotationType = opt.get();
+            ArgumentBinder binder = byAnnotation.get(annotationType);
+            if (binder != null) {
+                return Optional.of(binder);
+            }
+        } else {
+            ArgumentBinder binder = byType.get(argument.typeHashCode());
+            if (binder != null) {
+                return Optional.of(binder);
+            }
+        }
+        return Optional.of((ArgumentBinder<T, PubSubLiteConsumerState>) defaultBinder);
+    }
+}

@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.gcp.pubsublite.configuration;
 
-import io.micronaut.core.bind.annotation.Bindable;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.gcp.GoogleCloudConfiguration;
 
 /**
- * An annotation used to indicate that a parameter on a method should be bound to the message id.
+ * Configuration properties for PubSub Lite support.
  *
- * @author Vinicius Carvalho
- * @since 2.0.0
+ * Based on {@link io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties}.
+ *
+ * @author Jacob Mims
+ * @since 2.2.0
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER})
-@Bindable
-public @interface MessageId {
+@ConfigurationProperties(PubSubLiteConfigurationProperties.PREFIX)
+public class PubSubLiteConfigurationProperties {
+
+    public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".pubsublite";
 }
 
