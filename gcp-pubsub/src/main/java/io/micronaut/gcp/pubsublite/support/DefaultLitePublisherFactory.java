@@ -15,7 +15,6 @@
  */
 package io.micronaut.gcp.pubsublite.support;
 
-import com.google.api.gax.batching.BatchingSettings;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.TopicPath;
@@ -23,6 +22,7 @@ import com.google.cloud.pubsublite.cloudpubsub.KeyExtractor;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
@@ -70,14 +70,8 @@ public class DefaultLitePublisherFactory implements LitePublisherFactory {
 
             if (publisherConfiguration.isPresent()) {
                 LitePublisherConfigurationProperties publisherConfigurationProperties = publisherConfiguration.get();
-                BatchingSettings batchSettings = publisherConfigurationProperties.getBatchingSettings().build();
-                publisherSettings.setBatchingSettings(BatchingSettings.newBuilder()
-                        .setDelayThreshold(batchSettings.getDelayThreshold())
-                        .setElementCountThreshold(batchSettings.getElementCountThreshold())
-                        .setIsEnabled(batchSettings.getIsEnabled())
-                        .setElementCountThreshold(batchSettings.getElementCountThreshold())
-                        .setDelayThreshold(batchSettings.getDelayThreshold())
-                        .setFlowControlSettings(publisherConfiguration.get().getFlowControlSettings().build())
+                publisherSettings.setBatchingSettings(publisherConfigurationProperties.getBatchingSettings()
+                        .setFlowControlSettings(publisherConfigurationProperties.getFlowControlSettings().build())
                         .build());
 
                 if (publisherConfigurationProperties.getServiceClientSupplier() != null) {
@@ -121,14 +115,24 @@ public class DefaultLitePublisherFactory implements LitePublisherFactory {
                                 config.getTopicState().getConfigurationName());
                     }
                 }
-
             }
 
-            Publisher publisher = Publisher.create(publisherSettings.build());
-            publisher.startAsync().awaitRunning();
-            return publisher;
+            return startPublisher(publisherSettings);
         } catch (Exception ex) {
             throw new PubSubClientException("Failed to create publisher", ex);
         }
+    }
+
+    /**
+     * Encapsulation to allow for testing publisher creation without calling
+     * the Google API.
+     * @param publisherSettings Settings for the publisher
+     * @return A started publisher
+     */
+    @VisibleForTesting
+    public Publisher startPublisher(PublisherSettings.Builder publisherSettings) {
+        Publisher publisher = Publisher.create(publisherSettings.build());
+        publisher.startAsync().awaitRunning();
+        return publisher;
     }
 }

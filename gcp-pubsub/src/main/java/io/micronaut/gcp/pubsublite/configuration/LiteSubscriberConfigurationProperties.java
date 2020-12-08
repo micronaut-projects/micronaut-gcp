@@ -37,7 +37,6 @@ import java.util.List;
 @EachProperty(value = PubSubLiteConfigurationProperties.PREFIX + ".subscriber")
 public class LiteSubscriberConfigurationProperties {
     private final String name;
-    private String assignmentServiceClient;
     private String cursorServiceClientSupplier;
     private String subscriberServiceClientSupplier;
     private String nackHandler;
@@ -80,22 +79,6 @@ public class LiteSubscriberConfigurationProperties {
      */
     public void setFlowControlSettings(FlowControlSettings.Builder flowControlSettings) {
         this.flowControlSettings = flowControlSettings;
-    }
-
-    /**
-     *
-     * @return bean name for the assignmentServiceClient
-     */
-    public String getAssignmentServiceClient() {
-        return assignmentServiceClient;
-    }
-
-    /**
-     *
-     * @param assignmentServiceClient bean name
-     */
-    public void setAssignmentServiceClient(String assignmentServiceClient) {
-        this.assignmentServiceClient = assignmentServiceClient;
     }
 
     /**

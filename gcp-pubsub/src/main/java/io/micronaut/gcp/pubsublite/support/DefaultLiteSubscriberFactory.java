@@ -24,8 +24,8 @@ import com.google.cloud.pubsublite.cloudpubsub.NackHandler;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
-import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
@@ -57,8 +57,7 @@ public class DefaultLiteSubscriberFactory implements LiteSubscriberFactory, Auto
     private final BeanContext beanContext;
     private final Logger logger = LoggerFactory.getLogger(DefaultLiteSubscriberFactory.class);
 
-    public DefaultLiteSubscriberFactory(
-                                    BeanContext beanContext) {
+    public DefaultLiteSubscriberFactory(BeanContext beanContext) {
         this.beanContext = beanContext;
     }
 
@@ -79,18 +78,6 @@ public class DefaultLiteSubscriberFactory implements LiteSubscriberFactory, Auto
 
                     if (subscriberConfigurationProperties.getFlowControlSettings() != null) {
                         builder.setPerPartitionFlowControlSettings(subscriberConfigurationProperties.getFlowControlSettings().build());
-                    }
-
-                    if (subscriberConfigurationProperties.getAssignmentServiceClient() != null) {
-                        PartitionAssignmentServiceClient client = beanContext.findBean(PartitionAssignmentServiceClient.class,
-                                Qualifiers.byName(subscriberConfigurationProperties.getAssignmentServiceClient())).orElse(null);
-                        if (client != null) {
-                            builder.setAssignmentServiceClient(client);
-                        } else {
-                            logger.warn("Could not find PartitionAssignmentServiceClient bean [{}] for subscriber [{}].",
-                                    subscriberConfigurationProperties.getAssignmentServiceClient(),
-                                    config.getSubscriberConfiguration());
-                        }
                     }
 
                     if (subscriberConfigurationProperties.getCursorServiceClientSupplier() != null) {
@@ -156,12 +143,24 @@ public class DefaultLiteSubscriberFactory implements LiteSubscriberFactory, Auto
                             .build());
                 }
 
-                return Subscriber.create(builder.build());
+                return startSubscriber(builder);
             }
             throw new PubSubListenerException(String.format("Subscription %s is already registered for another" +
                     " method", config.getSubscriptionPath().toString()));
         });
 
+        return subscriber;
+    }
+
+    /**
+     * Encapsulation to allow for testing subscriber creation without calling
+     * the Google API.
+     * @param subscriberSettings Settings for the subscriber
+     * @return A subscriber in the process of starting.
+     */
+    @VisibleForTesting
+    public Subscriber startSubscriber(SubscriberSettings.Builder subscriberSettings) {
+        Subscriber subscriber = Subscriber.create(subscriberSettings.build());
         subscriber.startAsync();
         return subscriber;
     }
