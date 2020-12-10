@@ -1,6 +1,6 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.4.20"
-    id "org.jetbrains.kotlin.kapt" version "1.4.20"
+    id "org.jetbrains.kotlin.jvm" version "1.4.21"
+    id "org.jetbrains.kotlin.kapt" version "1.4.21"
 }
 
 ext.skipDocumentation=true
@@ -12,6 +12,6 @@ dependencies {
     implementation project(":gcp-function-http")
     implementation project(":gcp-secret-manager")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.21"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.20"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.2'
 }

@@ -12,3 +12,9 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
 }
+
+micronautBuild {
+    resolutionStrategy {
+        force 'org.eclipse.jetty:jetty-servlet:9.4.35.v20201120'
+    }
+}
