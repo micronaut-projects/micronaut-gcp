@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ import java.util.Set;
 public class SecretManagerConfigurationProperties {
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".secret-manager";
 
-    private Set<String> customConfigs = new HashSet<>();
+    private Set<String> customConfigs = new LinkedHashSet<>();
     private Set<String> keys = new HashSet<>();
 
     /**

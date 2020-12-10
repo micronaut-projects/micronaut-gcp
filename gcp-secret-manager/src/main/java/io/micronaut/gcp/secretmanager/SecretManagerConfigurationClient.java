@@ -101,9 +101,8 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     private Set<String> configCandidates(Environment environment) {
         Optional<String> applicationName = environment.getProperty("micronaut.application.name", String.class);
         Set<String> activeEnv = environment.getActiveNames();
-        Set<String> candidates = new HashSet<>();
+        Set<String> candidates = new LinkedHashSet<>();
         candidates.add("application");
-        candidates.addAll(configurationProperties.getCustomConfigs());
         if (applicationName.isPresent()) {
             candidates.add(applicationName.get());
         }
@@ -113,6 +112,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
                 candidates.add(applicationName.get() + "_" + e);
             }
         }
+        candidates.addAll(configurationProperties.getCustomConfigs());
         return candidates;
     }
 
