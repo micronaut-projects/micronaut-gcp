@@ -59,6 +59,8 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#pubsub"><strong>8</strong><span>Google Cloud Pub/Sub Support</span></a></div>
                                 
+                                <div class="toc-item" style="margin-left:0"><a href="#secretManager"><strong>9</strong><span>Google Cloud Secret Manager Support</span></a></div>
+                                
                             </div>
                         </div>
                     </li>
@@ -145,6 +147,12 @@
         <div class="toc-item" style="margin-left:10px" id="toc-item-executors"><a href="#executors"><strong>8.8</strong><span>Configuring Thread pools</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-emulator"><a href="#emulator"><strong>8.9</strong><span>Using Google Cloud Pub/Sub emulator</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-secretManager"><a href="#secretManager"><strong>9</strong><span>Google Cloud Secret Manager Support</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-distributedConfiguration"><a href="#distributedConfiguration"><strong>9.1</strong><span>Distributed Configuration</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-secretManagerClient"><a href="#secretManagerClient"><strong>9.2</strong><span>Low-Level Secret Manager Client access</span></a></div>
         
         </div>
     </div>
@@ -1693,7 +1701,7 @@ interface MultipleProjectClient {
 This framework provide a way to create custom Serialization/Deserialization as explained in the section <a href="#serdes">Custom Serialization/Deserialization</a>.</p>
 </div>
 <div class="paragraph">
-<p>By default any body message argument will be serialized via <a href="../api/io/micronaut/serdes/JsonPubSubMessageSerDes.html">JsonPubSubMessageSerDes</a> unless specified otherwise via the <code>contentType</code> property of the <a href="../api/io/micronaut/annotation/Topic.html">@Topic</a> annotation.</p>
+<p>By default any body message argument will be serialized via <a href="../api/io/micronaut/gcp/pubsub/serdes/JsonPubSubMessageSerDes.html">JsonPubSubMessageSerDes</a> unless specified otherwise via the <code>contentType</code> property of the <a href="../api/io/micronaut/annotation/Topic.html">@Topic</a> annotation.</p>
 </div>
 <div class="paragraph">
 <p>The rules of message serialization are the following:</p>
@@ -1707,7 +1715,7 @@ This framework provide a way to create custom Serialization/Deserialization as e
 <p>If the body type is <code>byte[]</code> SerDes logic is bypassed, but a <code>Content-Type</code> header of <code>application/json</code> will be added unless overwritten by the <a href="../api/io/micronaut/annotation/Topic.html">@Topic</a> annotation.</p>
 </li>
 <li>
-<p>For any other type, the type defined by <code>contentType</code> will be used to located the correct <a href="../api/io/micronaut/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a> to handle it, if none is passed <code>application/json</code> will be used.</p>
+<p>For any other type, the type defined by <code>contentType</code> will be used to located the correct <a href="../api/io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a> to handle it, if none is passed <code>application/json</code> will be used.</p>
 </li>
 </ol>
 </div>
@@ -1935,7 +1943,7 @@ This is useful when you need to publish messages to topic that uses different SL
 <p>The framework allows you to create configurations and then bind those configurations to each topic annotation using the <code>configuration</code> parameter.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration properties for <a href="../api/io/micronaut/configuration/PublisherConfigurationProperties.html">PublisherConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html">PublisherConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2390,7 +2398,7 @@ interface OrderClient {
 import javax.inject.Singleton;
 
 @Singleton
-public class OrderService {
+public final class OrderService {
 
     private final OrderClient client;
 
@@ -2864,7 +2872,7 @@ class CustomHeaderSubscriber {
 <p>The framework allows you to create configurations and then bind those configurations to each  <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> using the <code>configuration</code> parameter.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration properties for <a href="../api/io/micronaut/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2999,7 +3007,7 @@ class CustomConfigurationSubscriber {
 
 
 <div class="paragraph">
-<p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
+<p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/gcp/pubsub/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
 By default messages are auto acknowledged if the method returns without exceptions, see the section  <a href="#erroHandling">Consumer ErrorHandling </a> for more information on error handling.
 It is possible to have manual acknowledgement control by adding an argument of type <a href="{apimicronaut}messaging/Acknowledge.html">Acknowledge</a> and manually invoking <code>ack()</code> or <code>nack()</code> methods.</p>
 </div>
@@ -3102,7 +3110,7 @@ class AcknowledgementSubscriber {
 </ul>
 </div>
 <div class="paragraph">
-<p>The framework provides a Global Error Handler <a href="../api/io/micronaut/exception/DefaultPubSubMessageReceiverExceptionHandler.html">DefaultPubSubMessageReceiverExceptionHandler</a>, this handler will catch any errors and just log it. This behavior is far from ideal as messages would continue to be redelivered since they are not acknowledged.</p>
+<p>The framework provides a Global Error Handler <a href="../api/io/micronaut/gcp/pubsub/exception/DefaultPubSubMessageReceiverExceptionHandler.html">DefaultPubSubMessageReceiverExceptionHandler</a>, this handler will catch any errors and just log it. This behavior is far from ideal as messages would continue to be redelivered since they are not acknowledged.</p>
 </div>
 <div class="paragraph">
 <p>There&#8217;s two ways you can provide error handling.</p>
@@ -3110,10 +3118,10 @@ class AcknowledgementSubscriber {
 <div class="ulist">
 <ul>
 <li>
-<p>Locally: your <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class implements <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a>, then any error related to <code>Subscriptions</code> of that class will be handled by your class.</p>
+<p>Locally: your <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class implements <a href="../api/io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a>, then any error related to <code>Subscriptions</code> of that class will be handled by your class.</p>
 </li>
 <li>
-<p>Globally: You define a new implementation of <a href="../api/io/micronaut/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a> and annotate it as <code>@Primary</code> overriding the default one.</p>
+<p>Globally: You define a new implementation of <a href="../api/io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a> and annotate it as <code>@Primary</code> overriding the default one.</p>
 </li>
 </ul>
 </div>
@@ -3247,12 +3255,12 @@ class ErrorHandlingSubscriber : PubSubMessageReceiverExceptionHandler { <b class
 <h3 id="_default_binding_functionality">Default Binding Functionality</h3>
 <div class="paragraph">
 <p>Consumer argument binding is achieved through an <a href="{apimicronaut}core/bind/ArgumentBinderRegistry.html">ArgumentBinderRegistry</a>  that is specific for binding consumers from Pub/Sub messages.
-The class responsible for this is the <a href="../api/io/micronaut/bind/PubSubBinderRegistry.html">PubSubBinderRegistry</a>.
-The registry supports argument binders that are used based on an annotation applied to the argument or the argument type. All argument binders must implement either <a href="../api/io/micronaut/bind/PubSubAnnotatedArgumentBinder.html">PubSubAnnotatedArgumentBinder</a> or <a href="../api/io/micronaut/bind/PubSubTypeArgumentBinder.html">PubSubTypeArgumentBinder</a>.
-The exception to that rule is the <a href="../api/io/micronaut/bind/PubSubDefaultArgumentBinder.html">PubSubDefaultArgumentBinder</a> which is used when no other binders support a given argument.</p>
+The class responsible for this is the <a href="../api/io/micronaut/gcp/pubsub/bind/PubSubBinderRegistry.html">PubSubBinderRegistry</a>.
+The registry supports argument binders that are used based on an annotation applied to the argument or the argument type. All argument binders must implement either <a href="../api/io/micronaut/gcp/pubsub/bind/PubSubAnnotatedArgumentBinder.html">PubSubAnnotatedArgumentBinder</a> or <a href="../api/io/micronaut/bind/PubSubTypeArgumentBinder.html">PubSubTypeArgumentBinder</a>.
+The exception to that rule is the <a href="../api/io/micronaut/gcp/pubsub/bind/PubSubDefaultArgumentBinder.html">PubSubDefaultArgumentBinder</a> which is used when no other binders support a given argument.</p>
 </div>
 <div class="paragraph">
-<p>When an argument needs bound, the <a href="../api/io/micronaut/bind/PubSubConsumerState.html">PubSubConsumerState</a> is used as the source of all of the available data.
+<p>When an argument needs bound, the <a href="../api/io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html">PubSubConsumerState</a> is used as the source of all of the available data.
 The binder registry follows a small sequence of steps to attempt to find a binder that supports the argument.</p>
 </div>
 <div class="olist arabic">
@@ -3277,7 +3285,7 @@ The binder registry follows a small sequence of steps to attempt to find a binde
 <div class="sect3">
 <h4 id="_annotation_binding">Annotation Binding</h4>
 <div class="paragraph">
-<p>A custom annotation can be created to bind consumer arguments. A custom binder can then be created to use that annotation and the <a href="../api/io/micronaut/bind/PubSubConsumerState.html">PubSubConsumerState</a> to supply a value for the argument.
+<p>A custom annotation can be created to bind consumer arguments. A custom binder can then be created to use that annotation and the <a href="../api/io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html">PubSubConsumerState</a> to supply a value for the argument.
 The value may in fact come from anywhere, however for the purposes of this documentation, we will show how you would create an annotation to bind the message publish time.</p>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3529,15 +3537,15 @@ class CustomBindingSubscriber {
 
 
 <div class="paragraph">
-<p>The serialization and deserialization of message bodies is handled through instances of <a href="../api/io/micronaut/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a>.
+<p>The serialization and deserialization of message bodies is handled through instances of <a href="../api/io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a>.
 The ser-des (Serializer/Deserializer) is responsible for both serialization and deserialization of Pub/Sub message bodies into the message body types defined in your clients and consumers methods.</p>
 </div>
 <div class="paragraph">
-<p>The ser-des are managed by a <a href="../api/io/micronaut/serdes/PubSubMessageSerDesRegistry.html">PubSubMessageSerDesRegistry</a>.
+<p>The ser-des are managed by a <a href="../api/io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDesRegistry.html">PubSubMessageSerDesRegistry</a>.
 All ser-des beans are injected in order into the registry and then searched for when serialization or deserialization is needed.
 The search is based on the <code>Content-Type</code> defined for the message, the framework default is <code>application/json</code>.
 If a ser-des can&#8217;t be located an exception is thrown.
-You can supply your own ser-des by simply registering a bean of type <a href="../api/io/micronaut/serdes/PuvSubMessageSerDes.html">PuvSubMessageSerDes</a>.</p>
+You can supply your own ser-des by simply registering a bean of type <a href="../api/io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a>.</p>
 </div>
 <div class="paragraph">
 <p>For example let&#8217;s say you want to implement a ser-des that uses java native object serialization instead of the Json serialization provided.
@@ -3792,6 +3800,423 @@ Make sure that you also set <code>GCP_PROJECT_ID</code> to be the same as the pr
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>curl -XPUT $PUBSUB_EMULATOR_HOST/v1/projects/test-project/topics/micronaut-devices</code></pre>
+</div>
+</div>
+
+<h1 id="secretManager"><a class="anchor" href="#secretManager"></a>9 Google Cloud Secret Manager Support</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master
+/src/main/docs/guide/secretManager.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Google Cloud <a href="https://cloud.google.com/secret-manager/docs">Secret Manager Secret Manager</a> is a secure and convenient storage system for API keys, passwords, certificates, and other sensitive data.
+Applications can also use it to store configuration files and use it as secure distributed repository of metadata.</p>
+</div>
+<div class="paragraph">
+<p>To add support for Google Cloud Secret Manager to an existing project, add the following dependencies to your build.</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-secret-manager")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-gcp-secret-manager&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+
+<h2 id="distributedConfiguration"><a class="anchor" href="#distributedConfiguration"></a>9.1 Distributed Configuration</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master
+/src/main/docs/guide/secretManager/distributedConfiguration.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can leverage <a href="https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration">Distributed Configuration</a> and rely on Google Cloud Secret Manager to store your configuration files.</p>
+</div>
+<div class="paragraph">
+<p>To enable it, add a <code>src/main/resources/bootstrap.yml</code> configuration file to your project:</p>
+</div>
+<div class="listingblock">
+<div class="title">bootstrap.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Make sure you have configured the correct credentials on your project following the <a href="#setup">Setting up GCP </a> section.
+And that the service account you designated your application has proper rights to read secrets. Follow the official <a href="https://cloud.google.com/secret-manager/docs/access-control">Access Control</a> guide for Secret Manager if you need more information.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_configuration_file_resolution">Configuration file resolution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s important to note that Google Cloud Secret Manager <strong>does not</strong> support file extensions.
+When you upload your <code>application.yml</code> or <code>application.properties</code> you need to remove the extension from its name.</p>
+</div>
+<div class="paragraph">
+<p>Micronaut tries circumvent this limitation adopting a convention when fetching configuration files.
+The following table displays the possible secrets that are fetched by default:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration shared by all applications</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application_${env}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment specific configuration, for instance if you have <code>gcp</code> and <code>k8s</code> as environments the framework will look for <code>application_gcp</code> and <code>application_k8s</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[APPLICATION_NAME]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application specific configuration, example <code>hello-world</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[APPLICATION_NAME]_${env}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application specific configuration bound to an environment, example <code>hello-world_gcp</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_supported_formats">Supported formats</h3>
+<div class="paragraph">
+<p>Internally the framework will try to read the files (that lack extensions) on the following order: <code>yaml</code>, <code>json</code>, <code>properties</code>.
+The first PropertySourceLoader that succeeds reading the contents of the secrets interrupts the chain.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_loading_non_default_config_files">Loading non default config files</h3>
+<div class="paragraph">
+<p>It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.
+You can <code>whitelist</code> secrets that you would like to loaded as PropertySources using the following configuration:</p>
+</div>
+<div class="listingblock">
+<div class="title">bootstrap.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+      custom-configs:
+        - my-first-config
+        - my-second-config</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The secrets you list on <code>custom-configs</code> must be valid configuration files and not single keys.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_loading_key_value_pairs_into_a_propertysource">Loading key/value pairs into a PropertySource</h3>
+<div class="paragraph">
+<p>Google Cloud Secret Manager can also host single keys mapping to a single String value.
+For instance one could have a <code>DB_PASSWORD</code> secret, instead of storing it on a configuration file.
+Because Secret Manager does not offer a hierarchical approach, loading all secrets in a project is not a viable solution.
+Instead you need to whitelist the keys you would like to pre-fetch such as the following config demonstrates:</p>
+</div>
+<div class="listingblock">
+<div class="title">bootstrap.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+      keys:
+        - DB_PASSWORD
+        - dbUser</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The framework will load all Secret Manager keys and prefix them with a <code>sm</code> key. The table below shows how entries could be accessed:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Secret Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Micronaut resolved property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DB_PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{sm.db.password}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dbUser</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{sm.db.user}</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secret_versioning">Secret Versioning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Cloud Secret Manager supports <a href="https://cloud.google.com/secret-manager/docs/managing-secret-versions">secret versioning</a>.
+For the distributed configuration use case Micronaut will <strong>always</strong> load the <code>latest</code> version of each secret into a property source file.
+It&#8217;s currently not supported specifying what version of your <code>application</code> configuration file should be loaded.</p>
+</div>
+</div>
+</div>
+
+<h2 id="secretManagerClient"><a class="anchor" href="#secretManagerClient"></a>9.2 Low-Level Secret Manager Client access</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master
+/src/main/docs/guide/secretManager/secretManagerClient.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_accessing_secret_manager_via_client_libraries">Accessing Secret Manager via client libraries</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you require access to Secret Manager via the Google <a href="https://cloud.google.com/pubsub/docs/quickstart-client-libraries">client java libraries</a>, Micronaut provides a bean of type <a href="https://googleapis.dev/java/google-cloud-secretmanager/latest/com/google/cloud/secretmanager/v1/SecretManagerServiceClient.html">SecretManagerServiceClient</a> for injection.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
+import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import com.google.cloud.secretmanager.v1.SecretVersionName;
+import io.micronaut.context.event.StartupEvent;
+import io.micronaut.runtime.event.annotation.EventListener;
+
+public final class GoogleClientExample {
+
+    private final SecretManagerServiceClient client;
+
+    public GoogleClientExample(SecretManagerServiceClient googleSecretManagerClient) { <b class="conum">(1)</b>
+        this.client = googleSecretManagerClient;
+    }
+
+    @EventListener
+    public void onStartup(StartupEvent event) {
+        AccessSecretVersionResponse response = client.accessSecretVersion(AccessSecretVersionRequest
+                .newBuilder()
+                .setName(SecretVersionName.of("my-cloud-project", "secretName", "latest").toString())
+                .build());
+        String secret = response.getPayload().getData().toStringUtf8();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
+import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import com.google.cloud.secretmanager.v1.SecretVersionName;
+import io.micronaut.context.event.StartupEvent;
+import io.micronaut.runtime.event.annotation.EventListener;
+
+class GoogleClientExample {
+
+    private final SecretManagerServiceClient client
+
+    GoogleClientExample(SecretManagerServiceClient googleSecretManagerClient) { <b class="conum">(1)</b>
+        this.client = googleSecretManagerClient;
+    }
+
+    @EventListener
+    void onStartup(StartupEvent event) {
+        AccessSecretVersionResponse response = client.accessSecretVersion(AccessSecretVersionRequest
+                .newBuilder()
+                .setName(SecretVersionName.of("my-cloud-project", "secretName", "latest").toString())
+                .build())
+        String secret = response.getPayload().getData().toStringUtf8()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
+import com.google.cloud.secretmanager.v1.SecretVersionName
+import io.micronaut.context.event.StartupEvent
+import io.micronaut.runtime.event.annotation.EventListener
+
+class GoogleClientExample (private val client: SecretManagerServiceClient) { <b class="conum">(1)</b>
+	@EventListener
+	fun onStartup(event: StartupEvent) {
+		val response = client.accessSecretVersion(AccessSecretVersionRequest
+				.newBuilder()
+				.setName(SecretVersionName.of("my-cloud-project", "secretName", "latest").toString())
+				.build())
+		val secret = response.payload.data.toStringUtf8()
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Inject SecretManagerServiceClient</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_micronaut_secret_manager_client">Micronaut Secret Manager Client</h3>
+<div class="paragraph">
+<p>If you rather not deal with Google gRPC libraries, internally the framework uses a wrapper client: <a href="../api/io/micronaut/gcp/secretmanager/client/SecretManagerClient.html">SecretManagerClient</a> that provides a reactive based approach:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.event.StartupEvent;
+import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
+import io.micronaut.gcp.secretmanager.client.VersionedSecret;
+import io.micronaut.runtime.event.annotation.EventListener;
+import io.reactivex.Maybe;
+
+public final class ClientExample {
+
+    private final SecretManagerClient client;
+
+    public ClientExample(SecretManagerClient client) {
+        this.client = client;
+    }
+
+    @EventListener
+    public void onStartup(StartupEvent event) {
+        Maybe&lt;VersionedSecret&gt; secret = client.getSecret("secretId"); <b class="conum">(1)</b>
+        Maybe&lt;VersionedSecret&gt; v2 = client.getSecret("secretId", "v2"); <b class="conum">(2)</b>
+        Maybe&lt;VersionedSecret&gt; fromOtherProject = client.getSecret("secretId", "latest", "another-project-id"); <b class="conum">(3)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.event.StartupEvent;
+import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
+import io.micronaut.gcp.secretmanager.client.VersionedSecret;
+import io.micronaut.runtime.event.annotation.EventListener;
+import io.reactivex.Maybe;
+
+ class ClientExample {
+
+    private final SecretManagerClient client
+
+     ClientExample(SecretManagerClient client) {
+        this.client = client
+    }
+
+    @EventListener
+    void onStartup(StartupEvent event) {
+        Maybe&lt;VersionedSecret&gt; secret = client.getSecret("secretId") <b class="conum">(1)</b>
+        Maybe&lt;VersionedSecret&gt; v2 = client.getSecret("secretId", "v2") <b class="conum">(2)</b>
+        Maybe&lt;VersionedSecret&gt; fromOtherProject = client.getSecret("secretId", "latest", "another-project-id") <b class="conum">(3)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.event.StartupEvent
+import io.micronaut.gcp.secretmanager.client.SecretManagerClient
+import io.micronaut.runtime.event.annotation.EventListener
+
+class ClientExample(private val client: SecretManagerClient) {
+	@EventListener
+	fun onStartup(event: StartupEvent) {
+		val secret = client.getSecret("secretId") <b class="conum">(1)</b>
+		val v2 = client.getSecret("secretId", "v2") <b class="conum">(2)</b>
+		val fromOtherProject = client.getSecret("secretId", "latest", "another-project-id") <b class="conum">(3)</b>
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Uses <code>latest</code> version and current project from <code>GoogleCloudCredentials</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Uses current project but overrides version</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Fetches a secret from a different project</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can use the client libraries at any point in time of your runtime, however it&#8217;s advised that secrets should be loaded only once during application startup, to reduce latency of the remote call as well as costs associated with secret retrieval.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 

@@ -20,4 +20,7 @@ io.micronaut.gcp.pubsub.quickstart
 io.micronaut.gcp.pubsub.serdes
 io.micronaut.gcp.pubsub.subscriber
 io.micronaut.gcp.pubsub.support
+io.micronaut.gcp.secretmanager
+io.micronaut.gcp.secretmanager.client
+io.micronaut.gcp.secretmanager.configuration
 io.micronaut.gcp.tracing.zipkin
