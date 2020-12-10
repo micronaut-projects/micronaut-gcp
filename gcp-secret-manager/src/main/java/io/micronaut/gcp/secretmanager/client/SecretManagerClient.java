@@ -22,7 +22,7 @@ import io.reactivex.Maybe;
  * transform it on reactive extensions.
  *
  * @author Vinicius Carvalho
- * @since 3.2.0
+ * @since 3.4.0
  */
 public interface SecretManagerClient {
 
