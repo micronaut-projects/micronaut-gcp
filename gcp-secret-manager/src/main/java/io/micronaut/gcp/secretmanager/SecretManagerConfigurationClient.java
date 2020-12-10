@@ -37,7 +37,7 @@ import java.util.*;
 
 /**
  * @author Vinicius Carvalho
- * @since 3.2.0
+ * @since 3.4.0
  *
  * Distributed configuration client implementation that fetches application configuration files from Google Cloud Secret Manager.
  */
