@@ -36,7 +36,7 @@ import java.io.IOException;
  * Factory to create SecretManager clients.
  *
  * @author Vinicius Carvalho
- * @since 3.2.0
+ * @since 3.4.0
  */
 @Factory
 @Requires(classes = {SecretManagerServiceClient.class})
