@@ -1,11 +1,11 @@
-The serialization and deserialization of message bodies is handled through instances of api:serdes.PubSubMessageSerDes[].
+The serialization and deserialization of message bodies is handled through instances of api:gcp.pubsub.serdes.PubSubMessageSerDes[].
 The ser-des (Serializer/Deserializer) is responsible for both serialization and deserialization of Pub/Sub message bodies into the message body types defined in your clients and consumers methods.
 
-The ser-des are managed by a api:serdes.PubSubMessageSerDesRegistry[].
+The ser-des are managed by a api:gcp.pubsub.serdes.PubSubMessageSerDesRegistry[].
 All ser-des beans are injected in order into the registry and then searched for when serialization or deserialization is needed.
 The search is based on the `Content-Type` defined for the message, the framework default is `application/json`.
 If a ser-des can't be located an exception is thrown.
-You can supply your own ser-des by simply registering a bean of type api:serdes.PuvSubMessageSerDes[].
+You can supply your own ser-des by simply registering a bean of type api:gcp.pubsub.serdes.PubSubMessageSerDes[].
 
 For example let's say you want to implement a ser-des that uses java native object serialization instead of the Json serialization provided.
 First you need to define a custom mimeType for that, we will use `application/x.java`, following the best principles for handling mime types.

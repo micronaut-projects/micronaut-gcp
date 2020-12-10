@@ -3,7 +3,7 @@ Pub/Sub allows each link:https://googleapis.dev/java/google-cloud-pubsub/latest/
 The framework allows you to create configurations and then bind those configurations to each  ann:gcp.pubsub.annotation.Subscription[] using the `configuration` parameter.
 
 [%header, format=csv]
-.Configuration properties for api:configuration.SubscriberConfigurationProperties[]
+.Configuration properties for api:gcp.pubsub.configuration.SubscriberConfigurationProperties[]
 |===
 Property,Type,Description
 gcp.pubsub.subscriber.*.executor,java.lang.String,Name of the executor to use. Default: scheduled

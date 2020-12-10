@@ -1,13 +1,13 @@
 The contents of a link:https://developers.google.com/resources/api-libraries/documentation/pubsub/v1/java/latest/com/google/api/services/pubsub/model/PubsubMessage.html[PubSubMessage] are always a base64 encoded ByteString.
 This framework provide a way to create custom Serialization/Deserialization as explained in the section <<serdes, Custom Serialization/Deserialization>>.
 
-By default any body message argument will be serialized via api:serdes.JsonPubSubMessageSerDes[] unless specified otherwise via the `contentType` property of the ann:annotation.Topic[] annotation.
+By default any body message argument will be serialized via api:gcp.pubsub.serdes.JsonPubSubMessageSerDes[] unless specified otherwise via the `contentType` property of the ann:annotation.Topic[] annotation.
 
 The rules of message serialization are the following:
 
 1. If the body type is link:https://developers.google.com/resources/api-libraries/documentation/pubsub/v1/java/latest/com/google/api/services/pubsub/model/PubsubMessage.html[PubSubMessage] then SerDes is bypassed completely and no header is added to the message.
 2. If the body type is `byte[]` SerDes logic is bypassed, but a `Content-Type` header of `application/json` will be added unless overwritten by the ann:annotation.Topic[] annotation.
-3. For any other type, the type defined by `contentType` will be used to located the correct api:serdes.PubSubMessageSerDes[] to handle it, if none is passed `application/json` will be used.
+3. For any other type, the type defined by `contentType` will be used to located the correct api:gcp.pubsub.serdes.PubSubMessageSerDes[] to handle it, if none is passed `application/json` will be used.
 
 snippet::io.micronaut.gcp.pubsub.publisher.CustomSerDesClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
 

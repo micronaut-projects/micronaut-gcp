@@ -5,12 +5,12 @@ During message handling for listeners errors can happen at the framework or at y
 * Acknowledgement
 * Uncaught exceptions at the annotated method
 
-The framework provides a Global Error Handler api:exception.DefaultPubSubMessageReceiverExceptionHandler[], this handler will catch any errors and just log it. This behavior is far from ideal as messages would continue to be redelivered since they are not acknowledged.
+The framework provides a Global Error Handler api:gcp.pubsub.exception.DefaultPubSubMessageReceiverExceptionHandler[], this handler will catch any errors and just log it. This behavior is far from ideal as messages would continue to be redelivered since they are not acknowledged.
 
 There's two ways you can provide error handling.
 
-* Locally: your ann:gcp.pubsub.annotation.PubSubListener[] class implements api:exception.PubSubMessageReceiverExceptionHandler[], then any error related to `Subscriptions` of that class will be handled by your class.
-* Globally: You define a new implementation of api:exception.PubSubMessageReceiverExceptionHandler[] and annotate it as `@Primary` overriding the default one.
+* Locally: your ann:gcp.pubsub.annotation.PubSubListener[] class implements api:gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler[], then any error related to `Subscriptions` of that class will be handled by your class.
+* Globally: You define a new implementation of api:gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler[] and annotate it as `@Primary` overriding the default one.
 
 The api:exception.PubSubMessageReceiverException[] contains references to the originating bean that threw the exception as well as a reference to api:bind.PubSubConsumerState[] which has state information regarding the message handling.
 

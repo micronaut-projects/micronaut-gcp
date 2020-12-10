@@ -1,11 +1,11 @@
 === Default Binding Functionality
 
 Consumer argument binding is achieved through an link:{apimicronaut}core/bind/ArgumentBinderRegistry.html[ArgumentBinderRegistry]  that is specific for binding consumers from Pub/Sub messages.
-The class responsible for this is the api:bind.PubSubBinderRegistry[].
-The registry supports argument binders that are used based on an annotation applied to the argument or the argument type. All argument binders must implement either api:bind.PubSubAnnotatedArgumentBinder[] or api:bind.PubSubTypeArgumentBinder[].
-The exception to that rule is the api:bind.PubSubDefaultArgumentBinder[] which is used when no other binders support a given argument.
+The class responsible for this is the api:gcp.pubsub.bind.PubSubBinderRegistry[].
+The registry supports argument binders that are used based on an annotation applied to the argument or the argument type. All argument binders must implement either api:gcp.pubsub.bind.PubSubAnnotatedArgumentBinder[] or api:bind.PubSubTypeArgumentBinder[].
+The exception to that rule is the api:gcp.pubsub.bind.PubSubDefaultArgumentBinder[] which is used when no other binders support a given argument.
 
-When an argument needs bound, the api:bind.PubSubConsumerState[] is used as the source of all of the available data.
+When an argument needs bound, the api:gcp.pubsub.bind.PubSubConsumerState[] is used as the source of all of the available data.
 The binder registry follows a small sequence of steps to attempt to find a binder that supports the argument.
 
 . Search the annotation based binders for one that matches any annotation on the argument that is annotated with link:{apimicronaut}core/bind/annotation/Bindable.html[@Bindable].
@@ -18,7 +18,7 @@ To inject your own argument binding behavior, it is as simple as registering a b
 
 ==== Annotation Binding
 
-A custom annotation can be created to bind consumer arguments. A custom binder can then be created to use that annotation and the api:bind.PubSubConsumerState[] to supply a value for the argument.
+A custom annotation can be created to bind consumer arguments. A custom binder can then be created to use that annotation and the api:gcp.pubsub.bind.PubSubConsumerState[] to supply a value for the argument.
 The value may in fact come from anywhere, however for the purposes of this documentation, we will show how you would create an annotation to bind the message publish time.
 
 snippet::io.micronaut.gcp.pubsub.bind.MessagePublishTime[tags="imports, clazz", source="main", project-base="doc-examples/example"]

@@ -1,0 +1,14 @@
+dependencies {
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
+    compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
+    implementation "io.micronaut:micronaut-discovery-client"
+    api "io.micronaut:micronaut-inject:$micronautVersion"
+    api "io.micronaut:micronaut-messaging:$micronautVersion"
+    api project(":gcp-common")
+    api "com.google.cloud:google-cloud-secretmanager:1.1.1"
+
+    testImplementation "io.micronaut:micronaut-inject-java"
+    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
+}

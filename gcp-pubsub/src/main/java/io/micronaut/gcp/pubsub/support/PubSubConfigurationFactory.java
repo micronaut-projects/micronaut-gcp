@@ -94,7 +94,7 @@ public class PubSubConfigurationFactory {
 
     /**
      * Returns a default {@link CredentialsProvider}, allows users to override it and provide their own implementation.
-     * @param credentials default credentials, if not overriden by user should be provided by {@link io.micronaut.gcp.credentials.GoogleCredentialsFactory}
+     * @param credentials default credentials, if not overridden by user should be provided by {@link io.micronaut.gcp.credentials.GoogleCredentialsFactory}
      * @return A {@link FixedCredentialsProvider} holding the given credentials.
      */
     @Singleton

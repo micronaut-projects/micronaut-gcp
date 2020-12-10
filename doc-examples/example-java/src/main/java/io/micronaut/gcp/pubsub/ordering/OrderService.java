@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 
 //tag::clazz[]
 @Singleton
-public class OrderService {
+public final class OrderService {
 
     private final OrderClient client;
 

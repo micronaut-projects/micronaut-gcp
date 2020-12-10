@@ -16,6 +16,7 @@
 package io.micronaut.gcp;
 
 import com.google.cloud.ServiceOptions;
+import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.exceptions.ConfigurationException;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @since 1.0
  */
 @ConfigurationProperties(GoogleCloudConfiguration.PREFIX)
+@BootstrapContextCompatible
 public class GoogleCloudConfiguration {
 
     /**
