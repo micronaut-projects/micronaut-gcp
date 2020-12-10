@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 /**
  * Default implementation of {@link SecretManagerClient}.
  * @author Vinicius Carvalho
- * @since 3.2.0
+ * @since 3.4.0
  */
 @Singleton
 @BootstrapContextCompatible
