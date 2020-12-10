@@ -19,7 +19,7 @@ package io.micronaut.gcp.secretmanager.client;
  * A wrapper class around {@link com.google.cloud.secretmanager.v1.AccessSecretVersionResponse} with secret information.
  *
  * @author Vinicius Carvalho
- * @since 3.2.0
+ * @since 3.4.0
  */
 public class VersionedSecret {
 
