@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * Configuration for SecretManager clients and config client integration.
  * @author Vinicius Carvalho
- * @since 3.2.0
+ * @since 3.4.0
  */
 @ConfigurationProperties(SecretManagerConfigurationProperties.PREFIX)
 @BootstrapContextCompatible
