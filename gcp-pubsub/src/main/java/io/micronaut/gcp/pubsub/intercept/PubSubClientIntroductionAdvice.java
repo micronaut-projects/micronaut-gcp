@@ -50,6 +50,7 @@ import io.reactivex.schedulers.Schedulers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PreDestroy;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.*;
@@ -63,7 +64,7 @@ import java.util.concurrent.ExecutorService;
  * @since 2.0.0
  */
 @Singleton
-public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object, Object> {
+public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object, Object>, AutoCloseable {
 
     private final Logger logger = LoggerFactory.getLogger(PubSubClientIntroductionAdvice.class);
     private final ConcurrentHashMap<ExecutableMethod, PubSubPublisherState> publisherStateCache = new ConcurrentHashMap<>();
@@ -116,6 +117,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                         .orElseThrow(() -> new PubSubClientException("No valid message body argument found for method: " + context.getExecutableMethod()));
 
                 PubSubPublisherState.TopicState topicState = new PubSubPublisherState.TopicState(contentType, projectTopicName, configurationName, endpoint, orderingArgument.isPresent());
+                logger.debug("Created a new publisher[{}] for topic: {}", context.getExecutableMethod().getName(), topic);
                 PublisherInterface publisher = publisherFactory.createPublisher(new PublisherFactoryConfig(topicState, pubSubConfigurationProperties.getPublishingExecutor()));
                 return new PubSubPublisherState(topicState, staticMessageAttributes, bodyArgument, publisher, orderingArgument);
             });
@@ -160,10 +162,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                     String orderingKey = conversionService.convert(parameterValues.get(publisherState.getOrderingArgument().get().getName()), String.class)
                             .orElseThrow(() -> new PubSubClientException("Could not convert argument annotated with @OrderingKey to String type"));
                     messageBuilder.setOrderingKey(orderingKey);
-
                 }
                 pubsubMessage = messageBuilder.build();
-
             }
             ApiFuture<String> future = publisher.publish(pubsubMessage);
             Single<String> reactiveResult = Single.fromFuture(future);
@@ -204,5 +204,13 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
         String value = String.valueOf(parameterValues.get(argumentName));
 
         return new AbstractMap.SimpleEntry<>(name, value);
+    }
+
+    @Override
+    @PreDestroy
+    public void close() throws Exception {
+        for (PubSubPublisherState publisherState : publisherStateCache.values()) {
+            publisherState.close();
+        }
     }
 }
