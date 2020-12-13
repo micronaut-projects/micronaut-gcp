@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.support;
 
 
+import com.google.cloud.pubsub.v1.Publisher;
 import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.core.type.Argument;
@@ -30,7 +31,7 @@ import java.util.Optional;
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-public class PubSubPublisherState {
+public class PubSubPublisherState implements AutoCloseable {
 
     private final TopicState topicState;
     private final Map<String, String> staticMessageAttributes;
@@ -90,6 +91,18 @@ public class PubSubPublisherState {
         return orderingArgument;
     }
 
+    @Override
+    public void close() throws Exception {
+        //Lite and Default PubSub have different ancestors for resource management, hence the not so elegant type check
+        if (this.publisher instanceof Publisher) {
+            Publisher defaultPublisher = (Publisher) this.publisher;
+            defaultPublisher.shutdown();
+        }
+    }
+
+    /**
+     * Internal class to represent Topic State.
+     */
     public static class TopicState {
 
         private final String contentType;
