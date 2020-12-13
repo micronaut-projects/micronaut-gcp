@@ -5,7 +5,6 @@ import com.google.cloud.pubsub.v1.Publisher
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.gcp.pubsub.support.PublisherFactory
-import io.micronaut.test.annotation.MockBean
 import spock.lang.Specification
 
 /**
@@ -15,7 +14,6 @@ import spock.lang.Specification
 
 abstract class AbstractPublisherSpec extends Specification {
 
-    @MockBean
     @Replaces(PublisherFactory)
     PublisherFactory publisherFactory() {
         def factory = Mock(PublisherFactory)

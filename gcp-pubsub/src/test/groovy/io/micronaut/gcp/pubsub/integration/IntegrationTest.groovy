@@ -37,6 +37,8 @@ class IntegrationTest extends IntegrationTestSpec{
             conditions.eventually {
                 listener.data.name == person.name
             }
+        cleanup:
+            ctx.close()
 
     }
 

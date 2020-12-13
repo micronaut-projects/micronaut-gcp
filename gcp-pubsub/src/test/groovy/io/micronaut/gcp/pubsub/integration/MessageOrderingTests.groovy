@@ -32,9 +32,10 @@ class MessageOrderingTests extends IntegrationTestSpec {
             client.send(person)
         then:
             conditions.eventually {
-            listener.data.name == person.name
-        }
-
+                listener.data.name == person.name
+            }
+        cleanup:
+            ctx.close()
     }
 
     void "publish message to with ordering key"() {
@@ -53,12 +54,13 @@ class MessageOrderingTests extends IntegrationTestSpec {
         person.name = "alf"
 
         when:
-        client.send(person, 42)
+            client.send(person, 42)
         then:
-        conditions.eventually {
-            listener.data.name == person.name
-        }
-
+            conditions.eventually {
+                listener.data.name == person.name
+            }
+        cleanup:
+            ctx.close()
     }
 
 }

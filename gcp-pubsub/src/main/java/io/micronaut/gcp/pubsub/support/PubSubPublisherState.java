@@ -16,12 +16,14 @@
 package io.micronaut.gcp.pubsub.support;
 
 
+import com.google.cloud.pubsub.v1.Publisher;
 import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.pubsub.v1.ProjectTopicName;
 import io.micronaut.core.type.Argument;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Stores the context of a PubSubMessage to be pulished. Values of this class comes from parsing of method
@@ -30,7 +32,7 @@ import java.util.Optional;
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
-public class PubSubPublisherState {
+public class PubSubPublisherState implements AutoCloseable{
 
     private final TopicState topicState;
     private final Map<String, String> staticMessageAttributes;
@@ -88,6 +90,15 @@ public class PubSubPublisherState {
      */
     public Optional<Argument> getOrderingArgument() {
         return orderingArgument;
+    }
+
+    @Override
+    public void close() throws Exception {
+        //Lite and Default PubSub have different ancestors for resource management, hence the not so elegant type check
+        if(this.publisher instanceof Publisher) {
+            Publisher defaultPublisher = (Publisher) this.publisher;
+            defaultPublisher.shutdown();
+        }
     }
 
     public static class TopicState {
