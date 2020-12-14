@@ -32,17 +32,17 @@ import java.util.Optional;
  * @since 2.2.0
  */
 public class PubSubLitePublisherState {
-    private final PubSubLitePublisherState.TopicState topicState;
+    private final TopicState topicState;
     private final Map<String, String> staticMessageAttributes;
     private final Argument<?> bodyArgument;
     private final Publisher publisher;
     private final Optional<Argument> orderingArgument;
 
-    public PubSubLitePublisherState(PubSubLitePublisherState.TopicState topicState,
-                                Map<String, String> staticMessageAttributes,
-                                Argument<?> bodyArgument,
-                                Publisher publisher,
-                                Optional<Argument> orderingArgument) {
+    public PubSubLitePublisherState(TopicState topicState,
+                                    Map<String, String> staticMessageAttributes,
+                                    Argument<?> bodyArgument,
+                                    Publisher publisher,
+                                    Optional<Argument> orderingArgument) {
         this.topicState = topicState;
         this.staticMessageAttributes = staticMessageAttributes;
         this.bodyArgument = bodyArgument;
@@ -62,7 +62,7 @@ public class PubSubLitePublisherState {
      *
      * @return topicState information
      */
-    public PubSubLitePublisherState.TopicState getTopicState() {
+    public TopicState getTopicState() {
         return topicState;
     }
 
@@ -128,7 +128,7 @@ public class PubSubLitePublisherState {
 
         /**
          *
-         * @return the name of the {@link  io.micronaut.gcp.pubsublite.configuration.LitePublisherConfigurationProperties} to be used
+         * @return the name of the {@link io.micronaut.gcp.pubsublite.configuration.LitePublisherConfigurationProperties} to be used
          */
         public String getConfigurationName() {
             return configurationName;

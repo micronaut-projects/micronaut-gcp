@@ -7,9 +7,9 @@ import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Primary
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
-import io.micronaut.gcp.pubsub.MockPubSubEngine
 import io.micronaut.gcp.pubsub.annotation.MessageId
 import io.micronaut.gcp.pubsub.exception.PubSubClientException
+import io.micronaut.gcp.pubsublite.MockPubSubEngine
 import io.micronaut.gcp.pubsublite.annotation.LiteSubscription
 import io.micronaut.gcp.pubsublite.annotation.LiteTopic
 import io.micronaut.gcp.pubsublite.annotation.PubSubLiteClient

@@ -56,7 +56,7 @@ import java.util.Optional;
 /**
  * Implementation of an {@link ExecutableMethodProcessor} that creates
  * {@link com.google.cloud.pubsub.v1.MessageReceiver} that subscribes to the PubSub Lite subscription
- * and invoke methods annotated by @{@link io.micronaut.gcp.pubsublite.annotation.LiteSubscription}.
+ * and invoke methods annotated by @{@link LiteSubscription}.
  * <p>
  * There can be only one subscriber for any given subscription (in order to avoid issues with message
  * Ack control). Having more than one method using the same subscription raises a {@link io.micronaut.gcp.pubsub.exception.PubSubListenerException}.

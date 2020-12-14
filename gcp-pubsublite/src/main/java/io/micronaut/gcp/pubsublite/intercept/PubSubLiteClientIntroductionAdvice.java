@@ -55,7 +55,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Implementation of {@link io.micronaut.gcp.pubsublite.annotation.PubSubLiteClient} advice annotation.
+ * Implementation of {@link PubSubLiteClient} advice annotation.
  *
  * Based on {@link io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice}
  *
