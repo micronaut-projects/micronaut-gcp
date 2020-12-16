@@ -10,7 +10,7 @@ dependencies {
 
     implementation 'io.grpc:grpc-auth:1.34.0'
 
-    implementation 'io.grpc:grpc-netty-shaded:1.34.0'
+    implementation 'io.grpc:grpc-netty-shaded:1.34.1'
     implementation "io.opentracing.brave:brave-opentracing:0.37.5"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-java"
