@@ -7,7 +7,7 @@ dependencies {
     api 'com.google.auth:google-auth-library-oauth2-http:0.22.2'
     api 'com.google.cloud:google-cloud-core:1.94.0'
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "io.micronaut:micronaut-inject-groovy"
+    testImplementation "io.micronaut:micronaut-runtime"
 }
