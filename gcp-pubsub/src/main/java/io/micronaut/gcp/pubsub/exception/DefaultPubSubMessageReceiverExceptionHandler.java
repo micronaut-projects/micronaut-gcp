@@ -38,6 +38,6 @@ public class DefaultPubSubMessageReceiverExceptionHandler implements PubSubMessa
 
     @Override
     public void handle(PubSubMessageReceiverException exception) {
-        logger.error(String.format("Error processing message on bean %s listening for subscription: %", exception.getListener().getClass().getName(), exception.getState().getSubscriptionName()), exception);
+        logger.error(String.format("Error processing message on bean %s listening for subscription: %s", exception.getListener().getClass().getName(), exception.getState().getSubscriptionName()), exception);
     }
 }

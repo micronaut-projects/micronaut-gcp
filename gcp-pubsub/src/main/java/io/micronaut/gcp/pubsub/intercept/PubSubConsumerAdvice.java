@@ -36,6 +36,7 @@ import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.gcp.pubsub.support.PubSubSubscriptionUtils;
+import io.micronaut.http.MediaType;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
@@ -65,8 +66,6 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
 
     private final Logger logger = LoggerFactory.getLogger(PubSubConsumerAdvice.class);
     private final BeanContext beanContext;
-    private final ConversionService<?> conversionService;
-    private final PubSubMessageSerDesRegistry serDesRegistry;
     private final SubscriberFactory subscriberFactory;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
@@ -82,8 +81,6 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                                 PubSubBinderRegistry binderRegistry,
                                 PubSubMessageReceiverExceptionHandler exceptionHandler) {
         this.beanContext = beanContext;
-        this.conversionService = conversionService;
-        this.serDesRegistry = serDesRegistry;
         this.subscriberFactory = subscriberFactory;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
@@ -94,7 +91,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
         AnnotationValue<Subscription> subscriptionAnnotation = method.getAnnotation(Subscription.class);
-        io.micronaut.context.Qualifier<Object> qualifer = beanDefinition
+        io.micronaut.context.Qualifier<Object> qualifier = beanDefinition
                 .getAnnotationTypeByStereotype(Qualifier.class)
                 .map(type -> Qualifiers.byAnnotation(beanDefinition, type))
                 .orElse(null);
@@ -102,14 +99,15 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                 .anyMatch(arg -> Acknowledgement.class.isAssignableFrom(arg.getType()));
 
         Class<Object> beanType = (Class<Object>) beanDefinition.getBeanType();
-        Object bean = beanContext.findBean(beanType, qualifer).orElseThrow(() -> new MessageListenerException("Could not find the bean to execute the method " + method));
+        Object bean = beanContext.findBean(beanType, qualifier)
+                .orElseThrow(() -> new MessageListenerException("Could not find the bean to execute the method " + method));
         DefaultExecutableBinder<PubSubConsumerState> binder = new DefaultExecutableBinder<>();
 
         if (subscriptionAnnotation != null) {
             String subscriptionName = subscriptionAnnotation.getRequiredValue(String.class);
             ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
-            String defaultContentType = subscriptionAnnotation.get("contentType", String.class).orElse("");
-            String configuration = subscriptionAnnotation.get("configuration", String.class).orElse("");
+            String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse(MediaType.APPLICATION_JSON);
+            String configuration = subscriptionAnnotation.stringValue("configuration").orElse("");
             MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
                 String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
                 String contentType = Optional.of(messageContentType)
@@ -130,7 +128,10 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
                     if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
                         pubSubAcknowledgement.ack();
                     } else {
-                        Optional<Object> boundAck = Arrays.stream(executable.getBoundArguments()).filter(o -> (o instanceof DefaultPubSubAcknowledgement)).findFirst();
+                        Optional<Object> boundAck = Arrays
+                                .stream(executable.getBoundArguments())
+                                .filter(o -> (o instanceof DefaultPubSubAcknowledgement))
+                                .findFirst();
                         if (boundAck.isPresent()) {
                             DefaultPubSubAcknowledgement manualAck = (DefaultPubSubAcknowledgement) boundAck.get();
                             if (!manualAck.isClientAck()) {

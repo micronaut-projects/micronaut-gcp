@@ -15,6 +15,9 @@
  */
 package io.micronaut.gcp.pubsub.annotation;
 
+import io.micronaut.context.annotation.AliasFor;
+import io.micronaut.messaging.annotation.MessageMapping;
+
 import java.lang.annotation.*;
 
 /**
@@ -34,6 +37,7 @@ public @interface Subscription {
      * a FQN such as {@code projects/<project_name>/subscriptions/<subscription_name>}.
      * @return the subscription name
      */
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     String value();
 
     /**

@@ -15,7 +15,9 @@
  */
 package io.micronaut.gcp.pubsub.annotation;
 
+import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.http.MediaType;
+import io.micronaut.messaging.annotation.MessageMapping;
 
 import java.lang.annotation.*;
 
@@ -35,6 +37,7 @@ public @interface Topic {
      * FQN names such as {@code projects/<project_name>/topics/<topic_name>}
      * @return The name of the topic to publish messages to
      */
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     String value();
 
     /**
