@@ -210,7 +210,9 @@ public @interface <span class="memberNameLabel">Subscription</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>value</h4>
-<pre>java.lang.String&nbsp;value</pre>
+<pre>@AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
+          member="value")
+java.lang.String&nbsp;value</pre>
 <div class="block">The name of the subscription, it could be a simple name such as "animals" or
  a FQN such as <code>projects/&lt;project_name&gt;/subscriptions/&lt;subscription_name&gt;</code>.</div>
 <dl>

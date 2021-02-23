@@ -214,7 +214,9 @@ public @interface <span class="memberNameLabel">Topic</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>value</h4>
-<pre>java.lang.String&nbsp;value</pre>
+<pre>@AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
+          member="value")
+java.lang.String&nbsp;value</pre>
 <div class="block">Set the name of the topic used to publish messages. Valid names are simple names such as "animals" or
  FQN names such as <code>projects/&lt;project_name&gt;/topics/&lt;topic_name&gt;</code></div>
 <dl>
