@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -250,11 +250,61 @@ extends ch.qos.logback.contrib.json.classic.JsonLayout</pre>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCustomJson()">getCustomJson</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getProjectId()">getProjectId</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isIncludeExceptionInMessage()">isIncludeExceptionInMessage</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isIncludeSpanId()">isIncludeSpanId</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isIncludeTraceId()">isIncludeTraceId</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCustomJson(java.util.Map)">setCustomJson</a></span>&#8203;(java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;customJson)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setIncludeExceptionInMessage(boolean)">setIncludeExceptionInMessage</a></span>&#8203;(boolean&nbsp;includeExceptionInMessage)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setIncludeSpanId(boolean)">setIncludeSpanId</a></span>&#8203;(boolean&nbsp;includeSpanId)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setIncludeTraceId(boolean)">setIncludeTraceId</a></span>&#8203;(boolean&nbsp;includeTraceId)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setProjectId(java.lang.String)">setProjectId</a></span>&#8203;(java.lang.String&nbsp;projectId)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#start()">start</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>protected java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toJsonMap(ch.qos.logback.classic.spi.ILoggingEvent)">toJsonMap</a></span>&#8203;(ch.qos.logback.classic.spi.ILoggingEvent&nbsp;event)</code></th>
 <td class="colLast">
@@ -375,7 +425,7 @@ extends ch.qos.logback.contrib.json.classic.JsonLayout</pre>
 <a id="formatTraceId(java.lang.String)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>formatTraceId</h4>
 <pre class="methodSignature">protected&nbsp;java.lang.String&nbsp;formatTraceId&#8203;(java.lang.String&nbsp;traceId)</pre>
@@ -385,6 +435,136 @@ extends ch.qos.logback.contrib.json.classic.JsonLayout</pre>
 <dd><code>traceId</code> - </dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>formated tracedId</dd>
+</dl>
+</li>
+</ul>
+<a id="getProjectId()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getProjectId</h4>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getProjectId()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the project Id</dd>
+</dl>
+</li>
+</ul>
+<a id="setProjectId(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setProjectId</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setProjectId&#8203;(java.lang.String&nbsp;projectId)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>projectId</code> - to set</dd>
+</dl>
+</li>
+</ul>
+<a id="isIncludeTraceId()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isIncludeTraceId</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isIncludeTraceId()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>should trace id be included</dd>
+</dl>
+</li>
+</ul>
+<a id="setIncludeTraceId(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setIncludeTraceId</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setIncludeTraceId&#8203;(boolean&nbsp;includeTraceId)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>includeTraceId</code> - sets traceId inclusion</dd>
+</dl>
+</li>
+</ul>
+<a id="isIncludeSpanId()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isIncludeSpanId</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isIncludeSpanId()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>SpanId is included</dd>
+</dl>
+</li>
+</ul>
+<a id="setIncludeSpanId(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setIncludeSpanId</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setIncludeSpanId&#8203;(boolean&nbsp;includeSpanId)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>includeSpanId</code> - sets include span id</dd>
+</dl>
+</li>
+</ul>
+<a id="isIncludeExceptionInMessage()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isIncludeExceptionInMessage</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isIncludeExceptionInMessage()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>include message in exception</dd>
+</dl>
+</li>
+</ul>
+<a id="setIncludeExceptionInMessage(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setIncludeExceptionInMessage</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setIncludeExceptionInMessage&#8203;(boolean&nbsp;includeExceptionInMessage)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>includeExceptionInMessage</code> - includeExceptionInMessage</dd>
+</dl>
+</li>
+</ul>
+<a id="getCustomJson()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCustomJson</h4>
+<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;getCustomJson()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>customJson</dd>
+</dl>
+</li>
+</ul>
+<a id="setCustomJson(java.util.Map)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setCustomJson</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setCustomJson&#8203;(java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;customJson)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>customJson</code> - sets CustomJson Map</dd>
 </dl>
 </li>
 </ul>
