@@ -148,4 +148,84 @@ public class StackdriverJsonLayout extends JsonLayout {
 
         add(StackdriverTraceConstants.TRACE_ID_ATTRIBUTE, this.includeTraceId, traceId, map);
     }
+
+    /**
+     *
+     * @return the project Id
+     */
+    public String getProjectId() {
+        return projectId;
+    }
+
+    /**
+     *
+     * @param projectId to set
+     */
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    /**
+     *
+     * @return should trace id be included
+     */
+    public boolean isIncludeTraceId() {
+        return includeTraceId;
+    }
+
+    /**
+     *
+     * @param includeTraceId sets traceId inclusion
+     */
+    public void setIncludeTraceId(boolean includeTraceId) {
+        this.includeTraceId = includeTraceId;
+    }
+
+    /**
+     *
+     * @return SpanId is included
+     */
+    public boolean isIncludeSpanId() {
+        return includeSpanId;
+    }
+
+    /**
+     *
+     * @param includeSpanId sets include span id
+     */
+    public void setIncludeSpanId(boolean includeSpanId) {
+        this.includeSpanId = includeSpanId;
+    }
+
+    /**
+     *
+     * @return include message in exception
+     */
+    public boolean isIncludeExceptionInMessage() {
+        return includeExceptionInMessage;
+    }
+
+    /**
+     *
+     * @param includeExceptionInMessage includeExceptionInMessage
+     */
+    public void setIncludeExceptionInMessage(boolean includeExceptionInMessage) {
+        this.includeExceptionInMessage = includeExceptionInMessage;
+    }
+
+    /**
+     *
+     * @return  customJson
+     */
+    public Map<String, Object> getCustomJson() {
+        return customJson;
+    }
+
+    /**
+     *
+     * @param customJson sets CustomJson Map
+     */
+    public void setCustomJson(Map<String, Object> customJson) {
+        this.customJson = customJson;
+    }
 }
