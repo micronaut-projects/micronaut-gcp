@@ -19,20 +19,21 @@ package io.micronaut.gcp.pubsub.publisher
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Animal
-import io.micronaut.messaging.annotation.Header
+import io.micronaut.messaging.annotation.MessageHeader
+
 // end::imports[]
 
 // tag::clazz[]
 @PubSubClient
-@Header(name = "application-name", value = "petclinic") // <1>
+@MessageHeader(name = "application-name", value = "petclinic") // <1>
 interface CustomHeadersClient {
 
-	@Header(name = "status", value = "healthy") // <2>
+	@MessageHeader(name = "status", value = "healthy") // <2>
 	@Topic("animals")
 	fun sendWithStaticHeaders(animal: Animal)
 
 	@Topic("animals")
-	fun sendWithDynamicHeaders(animal: Animal, @Header(name = "code") code: Int) // <3>
+	fun sendWithDynamicHeaders(animal: Animal, @MessageHeader(name = "code") code: Int) // <3>
 
 }
 // end::clazz[]

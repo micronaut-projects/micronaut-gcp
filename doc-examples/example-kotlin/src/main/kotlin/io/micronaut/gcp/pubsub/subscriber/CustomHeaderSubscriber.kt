@@ -18,7 +18,7 @@ package io.micronaut.gcp.pubsub.subscriber
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
-import io.micronaut.messaging.annotation.Header
+import io.micronaut.messaging.annotation.MessageHeader
 // end::imports[]
 
 // tag::clazz[]
@@ -27,7 +27,7 @@ class CustomHeaderSubscriber {
 
 	@Subscription("animals")
 	fun onMessage(animal: Animal,
-				  @Header("Content-Type") contentType: String, @Header("code") code: Int) { // <1>
+				  @MessageHeader("Content-Type") contentType: String, @MessageHeader("code") code: Int) { // <1>
 	}
 }
 // end::clazz[]
