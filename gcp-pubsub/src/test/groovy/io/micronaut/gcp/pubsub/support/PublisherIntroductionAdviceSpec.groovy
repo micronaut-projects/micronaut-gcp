@@ -11,8 +11,8 @@ import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.exception.PubSubClientException
 import io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice
-import io.micronaut.messaging.annotation.Header
-import io.micronaut.messaging.annotation.Headers
+import io.micronaut.messaging.annotation.MessageHeader
+import io.micronaut.messaging.annotation.MessageHeaders
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.reactivex.Single
 
@@ -78,7 +78,7 @@ class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
 }
 
 @PubSubClient
-@Headers(  @Header(name = "x-client-type", value = "test")  )
+@MessageHeaders(  @MessageHeader(name = "x-client-type", value = "test")  )
 @Requires(property = "spec.name", value = "PublisherIntroductionAdviceSpec")
 interface TestPubSubClient {
     @Topic(value = "testTopic", contentType = "application/json")
@@ -97,7 +97,7 @@ interface TestPubSubClient {
     void invalidMethod()
 
     @Topic(value="testTopic")
-    @Headers(  @Header(name = "x-header-added", value = "foo")  )
+    @MessageHeaders(  @MessageHeader(name = "x-header-added", value = "foo")  )
     String withExtraHeaders(Object data)
 
 }

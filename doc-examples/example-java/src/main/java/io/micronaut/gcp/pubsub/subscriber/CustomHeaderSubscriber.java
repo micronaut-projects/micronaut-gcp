@@ -18,7 +18,7 @@ package io.micronaut.gcp.pubsub.subscriber;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
-import io.micronaut.messaging.annotation.Header;
+import io.micronaut.messaging.annotation.MessageHeader;
 // end::imports[]
 
 // tag::clazz[]
@@ -26,7 +26,7 @@ import io.micronaut.messaging.annotation.Header;
 public class CustomHeaderSubscriber {
 
     @Subscription("animals")
-    public void onMessage(Animal animal, @Header("Content-Type") String contentType, @Header("code") Integer code) { // <1>
+    public void onMessage(Animal animal, @MessageHeader("Content-Type") String contentType, @MessageHeader("code") Integer code) { // <1>
 
     }
 

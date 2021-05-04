@@ -8,7 +8,7 @@ import io.micronaut.gcp.pubsub.AbstractPublisherSpec
 import io.micronaut.gcp.pubsub.DataHolder
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
-import io.micronaut.messaging.annotation.Header
+import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 
 import javax.inject.Inject
@@ -82,13 +82,13 @@ interface ClientWithoutHeaders {
     String send(Object data)
 
     @Topic("test-topic")
-    @Header(name = "extra", value = "header")
+    @MessageHeader(name = "extra", value = "header")
     String sendWithExtraHeaders(Object data)
 
     @Topic("test-topic")
-    String sendWithDynamicHeaderValue(Object data, @Header("dynamic") String value)
+    String sendWithDynamicHeaderValue(Object data, @MessageHeader("dynamic") String value)
 
     @Topic("test-topic")
-    String sendWithHeadersAsFirstArg(@Header("dynamic") String value, Object data)
+    String sendWithHeadersAsFirstArg(@MessageHeader("dynamic") String value, Object data)
 
 }

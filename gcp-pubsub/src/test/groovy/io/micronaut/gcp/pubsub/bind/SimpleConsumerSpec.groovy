@@ -13,9 +13,9 @@ import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Person
-import io.micronaut.http.annotation.Body
 import io.micronaut.messaging.Acknowledgement
-import io.micronaut.messaging.annotation.Header
+import io.micronaut.messaging.annotation.MessageBody
+import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.util.concurrent.PollingConditions
 import javax.inject.Inject
@@ -139,7 +139,7 @@ interface SimplePubSubClient {
     String publish(PubsubMessage message)
 
     @Topic("test-headers")
-    String publishPojo(Person person, @Header("X-Answer-For-Everything") Integer answer)
+    String publishPojo(Person person, @MessageHeader("X-Answer-For-Everything") Integer answer)
 
     @Topic("test-with-message-id")
     String publishPojoMessageId(Person person)
@@ -176,7 +176,7 @@ class SimpleReceiver {
     }
 
     @Subscription("test-headers")
-    void receiveWithHeaders(Person person, @Header("X-Answer-For-Everything") Integer answer) {
+    void receiveWithHeaders(Person person, @MessageHeader("X-Answer-For-Everything") Integer answer) {
         Map<String, Object> holder = new HashMap<>()
         holder.put("body", person)
         holder.put("header", answer)
@@ -189,7 +189,7 @@ class SimpleReceiver {
     }
 
     @Subscription(value = "test-with-manual-ack", contentType = "application/json")
-    void receive(@Body Person person, Acknowledgement ack) {
+    void receive(@MessageBody Person person, Acknowledgement ack) {
         dataHolder["test-with-manual-ack"] = person
         ack.ack()
     }
