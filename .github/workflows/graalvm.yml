@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        graalvm: ['21.0.0.2.java11']
+        java: ['java11']
     steps:
        # https://github.com/actions/virtual-environments/issues/709
       - name: Free disk space
@@ -29,7 +29,7 @@ jobs:
          sudo apt-get clean
          df -h    
       - uses: actions/checkout@v2
-      - uses: actions/cache@v2.1.5
+      - uses: actions/cache@v2.1.6
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
@@ -38,7 +38,8 @@ jobs:
       - name: Setup GraalVM CE
         uses: DeLaGuardo/setup-graalvm@4.0
         with:
-          graalvm-version: ${{ matrix.graalvm }}
+          graalvm: 21.1.0
+          java: ${{ matrix.java }}
       - name: Install Native Image
         run: gu install native-image
       - name: Build with Gradle
@@ -50,4 +51,4 @@ jobs:
             ./gradlew check --continue --no-daemon
           fi
         env:
-          TESTCONTAINERS_RYUK_DISABLED: true
+           TESTCONTAINERS_RYUK_DISABLED: true
