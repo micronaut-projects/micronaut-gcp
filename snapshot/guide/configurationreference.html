@@ -51,9 +51,9 @@
             </div>
 <div class="sect2">
 <h3 id="_gcp_common_config_properties">Gcp Common Config Properties</h3>
-<a id="io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration" href="#io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration">&#128279;</a>
+<a id="io.micronaut.gcp.GoogleCloudConfiguration" href="#io.micronaut.gcp.GoogleCloudConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataConfiguration.html">GoogleComputeMetadataConfiguration</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/gcp/GoogleCloudConfiguration.html">GoogleCloudConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -68,29 +68,9 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default value (true).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.metadata-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.project-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default value ("http://metadata.google.internal/computeMetadata/v1/project/").</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.project-metadata-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default value ("http://metadata.google.internal/project/v1/project/").</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.read-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default value (5 seconds).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.connect-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default value (2).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the project id to use.</p></td>
 </tr>
 </tbody>
 </table>
@@ -131,9 +111,9 @@
 </tbody>
 </table>
 <div style="page-break-after: always;"></div>
-<a id="io.micronaut.gcp.GoogleCloudConfiguration" href="#io.micronaut.gcp.GoogleCloudConfiguration">&#128279;</a>
+<a id="io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration" href="#io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/gcp/GoogleCloudConfiguration.html">GoogleCloudConfiguration</a></caption>
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataConfiguration.html">GoogleComputeMetadataConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -148,9 +128,29 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.project-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.metadata-url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the project id to use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default value ("http://metadata.google.internal/computeMetadata/v1/project/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.project-metadata-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default value ("http://metadata.google.internal/project/v1/project/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.read-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default value (5 seconds).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.application.gcp.metadata.connect-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default value (2).</p></td>
 </tr>
 </tbody>
 </table>
