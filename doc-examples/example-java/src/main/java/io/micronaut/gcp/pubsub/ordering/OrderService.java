@@ -16,7 +16,7 @@
 package io.micronaut.gcp.pubsub.ordering;
 //tag::imports[]
 import io.micronaut.gcp.pubsub.support.Order;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 //end::imports[]
 
 //tag::clazz[]

@@ -24,7 +24,7 @@ import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest(environments = Environment.GOOGLE_COMPUTE)
 @Property(name = "gcp.http.client.auth.patterns", value = "/test/**")

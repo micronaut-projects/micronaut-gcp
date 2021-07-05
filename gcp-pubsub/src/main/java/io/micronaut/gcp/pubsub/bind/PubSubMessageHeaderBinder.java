@@ -18,7 +18,7 @@ package io.micronaut.gcp.pubsub.bind;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.messaging.annotation.MessageHeader;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Support the new {@link MessageHeader} annotation.

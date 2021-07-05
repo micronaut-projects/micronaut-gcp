@@ -17,7 +17,7 @@ package io.micronaut.gcp.pubsub.support;
 
 import com.google.pubsub.v1.ProjectTopicName;
 
-import javax.annotation.Nonnull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * Various utility methods for dealing with Pub/Sub topics.
@@ -42,7 +42,7 @@ public final class PubSubTopicUtils {
      * @param projectId the project ID to use if the topic is not a fully-qualified name
      * @return the Pub/Sub object representing the topic name
      */
-    public static ProjectTopicName toProjectTopicName(@Nonnull String topic, @Nonnull String projectId) {
+    public static ProjectTopicName toProjectTopicName(@NonNull String topic, @NonNull String projectId) {
 
         ProjectTopicName projectTopicName = null;
 

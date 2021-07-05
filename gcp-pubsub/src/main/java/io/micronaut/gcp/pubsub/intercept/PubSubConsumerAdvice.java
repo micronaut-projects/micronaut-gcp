@@ -29,6 +29,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
+import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.bind.*;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
@@ -45,8 +46,8 @@ import io.micronaut.messaging.exceptions.MessageListenerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Qualifier;
-import javax.inject.Singleton;
+import jakarta.inject.Qualifier;
+import jakarta.inject.Singleton;
 import java.util.*;
 
 
@@ -62,7 +63,7 @@ import java.util.*;
  * @since 2.0.0
  */
 @Singleton
-public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubListener> {
+public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscription> {
 
     private final Logger logger = LoggerFactory.getLogger(PubSubConsumerAdvice.class);
     private final BeanContext beanContext;
@@ -90,65 +91,67 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<PubSubLis
 
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
-        AnnotationValue<Subscription> subscriptionAnnotation = method.getAnnotation(Subscription.class);
-        io.micronaut.context.Qualifier<Object> qualifier = beanDefinition
-                .getAnnotationTypeByStereotype(Qualifier.class)
-                .map(type -> Qualifiers.byAnnotation(beanDefinition, type))
-                .orElse(null);
-        boolean hasAckArg = Arrays.stream(method.getArguments())
-                .anyMatch(arg -> Acknowledgement.class.isAssignableFrom(arg.getType()));
+        if (beanDefinition.hasDeclaredAnnotation(PubSubListener.class)) {
+            AnnotationValue<Subscription> subscriptionAnnotation = method.getAnnotation(Subscription.class);
+            io.micronaut.context.Qualifier<Object> qualifier = beanDefinition
+                    .getAnnotationTypeByStereotype(Qualifier.class)
+                    .map(type -> Qualifiers.byAnnotation(beanDefinition, type))
+                    .orElse(null);
+            boolean hasAckArg = Arrays.stream(method.getArguments())
+                    .anyMatch(arg -> Acknowledgement.class.isAssignableFrom(arg.getType()));
 
-        Class<Object> beanType = (Class<Object>) beanDefinition.getBeanType();
-        Object bean = beanContext.findBean(beanType, qualifier)
-                .orElseThrow(() -> new MessageListenerException("Could not find the bean to execute the method " + method));
-        DefaultExecutableBinder<PubSubConsumerState> binder = new DefaultExecutableBinder<>();
+            Class<Object> beanType = (Class<Object>) beanDefinition.getBeanType();
+            Object bean = beanContext.findBean(beanType, qualifier)
+                    .orElseThrow(() -> new MessageListenerException("Could not find the bean to execute the method " + method));
+            DefaultExecutableBinder<PubSubConsumerState> binder = new DefaultExecutableBinder<>();
 
-        if (subscriptionAnnotation != null) {
-            String subscriptionName = subscriptionAnnotation.getRequiredValue(String.class);
-            ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
-            String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse(MediaType.APPLICATION_JSON);
-            String configuration = subscriptionAnnotation.stringValue("configuration").orElse("");
-            MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
-                String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
-                String contentType = Optional.of(messageContentType)
-                        .filter(StringUtils::isNotEmpty)
-                        .orElse(defaultContentType);
-                DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(ackReplyConsumer);
+            if (subscriptionAnnotation != null) {
+                String subscriptionName = subscriptionAnnotation.getRequiredValue(String.class);
+                ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
+                String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse(MediaType.APPLICATION_JSON);
+                String configuration = subscriptionAnnotation.stringValue("configuration").orElse("");
+                MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
+                    String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
+                    String contentType = Optional.of(messageContentType)
+                            .filter(StringUtils::isNotEmpty)
+                            .orElse(defaultContentType);
+                    DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(ackReplyConsumer);
 
-                PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer,
-                        projectSubscriptionName, contentType);
-                try {
-                    BoundExecutable executable = null;
+                    PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer,
+                            projectSubscriptionName, contentType);
                     try {
-                        executable = binder.bind(method, binderRegistry, consumerState);
-                    } catch (Exception ex) {
-                        handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState));
-                    }
-                    executable.invoke(bean); // Discard result
-                    if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
-                        pubSubAcknowledgement.ack();
-                    } else {
-                        Optional<Object> boundAck = Arrays
-                                .stream(executable.getBoundArguments())
-                                .filter(o -> (o instanceof DefaultPubSubAcknowledgement))
-                                .findFirst();
-                        if (boundAck.isPresent()) {
-                            DefaultPubSubAcknowledgement manualAck = (DefaultPubSubAcknowledgement) boundAck.get();
-                            if (!manualAck.isClientAck()) {
-                                logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", method.getName());
+                        BoundExecutable executable = null;
+                        try {
+                            executable = binder.bind(method, binderRegistry, consumerState);
+                        } catch (Exception ex) {
+                            handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState));
+                        }
+                        executable.invoke(bean); // Discard result
+                        if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
+                            pubSubAcknowledgement.ack();
+                        } else {
+                            Optional<Object> boundAck = Arrays
+                                    .stream(executable.getBoundArguments())
+                                    .filter(o -> (o instanceof DefaultPubSubAcknowledgement))
+                                    .findFirst();
+                            if (boundAck.isPresent()) {
+                                DefaultPubSubAcknowledgement manualAck = (DefaultPubSubAcknowledgement) boundAck.get();
+                                if (!manualAck.isClientAck()) {
+                                    logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", method.getName());
+                                }
                             }
                         }
+                    } catch (Exception e) {
+                        handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState));
                     }
+                };
+                try {
+                    this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
                 } catch (Exception e) {
-                    handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState));
+                    throw new PubSubListenerException("Failed to create subscriber", e);
                 }
-            };
-            try {
-                this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
-            } catch (Exception e) {
-                throw new PubSubListenerException("Failed to create subscriber", e);
-            }
 
+            }
         }
 
     }

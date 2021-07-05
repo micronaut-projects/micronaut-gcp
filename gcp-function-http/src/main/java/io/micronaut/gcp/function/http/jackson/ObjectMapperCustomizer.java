@@ -21,7 +21,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Customizes the jackson object mapper to ensure essential modules are registered.

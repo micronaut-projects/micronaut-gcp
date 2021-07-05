@@ -16,7 +16,7 @@ import io.micronaut.gcp.Modules
 import io.micronaut.inject.qualifiers.Qualifiers
 import spock.lang.Specification
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class PubSubEmulatorSpec extends Specification{
 

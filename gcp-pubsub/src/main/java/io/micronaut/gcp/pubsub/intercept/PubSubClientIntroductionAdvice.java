@@ -40,6 +40,7 @@ import io.micronaut.gcp.pubsub.support.PubSubPublisherState;
 import io.micronaut.gcp.pubsub.support.PubSubTopicUtils;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
 import io.micronaut.gcp.pubsub.support.PublisherFactoryConfig;
+import io.micronaut.http.MediaType;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.Body;
 import io.micronaut.messaging.annotation.Header;
@@ -51,8 +52,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -95,14 +96,12 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
         if (context.hasAnnotation(Topic.class)) {
 
             PubSubPublisherState publisherState = publisherStateCache.computeIfAbsent(context.getExecutableMethod(), method -> {
-                AnnotationValue<PubSubClient> client = method.findAnnotation(PubSubClient.class).orElseThrow(() -> new IllegalStateException("No @PubSubClient annotation present"));
-                String projectId = client.stringValue().orElse(googleCloudConfiguration.getProjectId());
-                AnnotationValue<Topic> topicAnnotation = method.findAnnotation(Topic.class).get();
+                String projectId = method.stringValue(PubSubClient.class).orElse(googleCloudConfiguration.getProjectId());
                 Optional<Argument> orderingArgument = Arrays.stream(method.getArguments()).filter(argument -> argument.getAnnotationMetadata().hasAnnotation(OrderingKey.class)).findFirst();
-                String topic = topicAnnotation.stringValue().get();
-                String endpoint = topicAnnotation.get("endpoint", String.class).orElse("");
-                String configurationName = topicAnnotation.get("configuration", String.class).orElse("");
-                String contentType = topicAnnotation.get("contentType", String.class).orElse("");
+                String topic = method.stringValue(Topic.class).orElse(context.getName());
+                String endpoint = method.stringValue(Topic.class, "endpoint").orElse("");
+                String configurationName = method.stringValue(Topic.class, "configuration").orElse("");
+                String contentType = method.stringValue(Topic.class, "contentType").orElse(MediaType.APPLICATION_JSON);
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
                 Map<String, String> staticMessageAttributes = new HashMap<>();
                 List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);

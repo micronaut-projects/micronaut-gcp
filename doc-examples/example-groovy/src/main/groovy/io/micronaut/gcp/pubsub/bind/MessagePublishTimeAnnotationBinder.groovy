@@ -19,7 +19,7 @@ import com.google.protobuf.util.Timestamps
 import io.micronaut.core.convert.ArgumentConversionContext
 import io.micronaut.core.convert.ConversionService
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 //end::imports[]
 
 // tag::clazz[]

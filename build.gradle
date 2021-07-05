@@ -16,6 +16,7 @@ subprojects { Project subproject ->
     apply plugin: "io.micronaut.build.internal.publishing"
 
     dependencies {
+        implementation 'jakarta.inject:jakarta.inject-api:2.0.0'
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }

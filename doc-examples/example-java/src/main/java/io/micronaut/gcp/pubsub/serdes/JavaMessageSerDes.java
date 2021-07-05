@@ -18,7 +18,7 @@ package io.micronaut.gcp.pubsub.serdes;
 import io.micronaut.core.serialize.exceptions.SerializationException;
 import io.micronaut.core.type.Argument;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.*;
 //end::imports[]
 

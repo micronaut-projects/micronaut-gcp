@@ -18,7 +18,7 @@ package example.background
 import com.google.cloud.functions.*
 import io.micronaut.gcp.function.GoogleFunctionInitializer
 
-import javax.inject.*
+import jakarta.inject.*
 
 class Example extends GoogleFunctionInitializer // <1>
         implements BackgroundFunction<PubSubMessage> { // <2>

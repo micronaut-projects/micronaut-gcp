@@ -21,8 +21,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.exceptions.ConfigurationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * General Google cloud configuration.
@@ -53,7 +53,7 @@ public class GoogleCloudConfiguration {
      * @return The project id
      * @throws ConfigurationException if no project ID is found
      */
-    public @Nonnull String getProjectId() {
+    public @NonNull String getProjectId() {
         if (projectId == null) {
             projectId = ServiceOptions.getDefaultProjectId();
             if (projectId == null) {
