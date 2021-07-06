@@ -25,8 +25,9 @@ import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PreDestroy;
 import java.io.UnsupportedEncodingException;
@@ -66,8 +67,8 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
-        Flowable<String> token = Flowable.fromCallable(() -> encodeURI(request))
-                .flatMap(authURI -> authClient.retrieve(HttpRequest.GET(authURI).header(
+        Flux<String> token = Mono.fromCallable(() -> encodeURI(request))
+                .flatMapMany(authURI -> authClient.retrieve(HttpRequest.GET(authURI).header(
                         METADATA_FLAVOR, GOOGLE
                 )));
 

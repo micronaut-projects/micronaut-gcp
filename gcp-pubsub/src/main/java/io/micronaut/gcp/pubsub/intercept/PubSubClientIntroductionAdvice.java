@@ -45,18 +45,20 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.Body;
 import io.micronaut.messaging.annotation.Header;
 import io.micronaut.scheduling.TaskExecutors;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.MonoSink;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 
 /**
  * Implementation of {@link io.micronaut.gcp.pubsub.annotation.PubSubClient} advice annotation.
@@ -71,10 +73,10 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     private final ConcurrentHashMap<ExecutableMethod, PubSubPublisherState> publisherStateCache = new ConcurrentHashMap<>();
     private final PublisherFactory publisherFactory;
     private final PubSubMessageSerDesRegistry serDesRegistry;
-    private final Scheduler scheduler;
     private final ConversionService<?> conversionService;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
+    private final ExecutorService executorService;
 
     public PubSubClientIntroductionAdvice(PublisherFactory publisherFactory,
                                           PubSubMessageSerDesRegistry serDesRegistry,
@@ -83,8 +85,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                                           GoogleCloudConfiguration googleCloudConfiguration,
                                           PubSubConfigurationProperties pubSubConfigurationProperties) {
         this.publisherFactory = publisherFactory;
+        this.executorService = executorService;
         this.serDesRegistry = serDesRegistry;
-        this.scheduler = Schedulers.from(executorService);
         this.conversionService = conversionService;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
@@ -125,7 +127,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             String contentType = publisherState.getTopicState().getContentType();
             Argument<?> bodyArgument = publisherState.getBodyArgument();
             Map<String, Object> parameterValues = context.getParameterValueMap();
-            ReturnType<Object> returnType = context.getReturnType();
+            final ReturnType<Object> returnTypeInfo = context.getReturnType();
+            ReturnType<Object> returnType = returnTypeInfo;
             Class<?> javaReturnType = returnType.getType();
 
             Argument[] arguments = context.getArguments();
@@ -164,17 +167,29 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 }
                 pubsubMessage = messageBuilder.build();
             }
-            ApiFuture<String> future = publisher.publish(pubsubMessage);
-            Single<String> reactiveResult = Single.fromFuture(future);
-            boolean isReactive = Publishers.isConvertibleToPublisher(javaReturnType);
+
+            PubsubMessage finalPubsubMessage = pubsubMessage;
+            Mono<String> reactiveResult = Mono.create(sink -> {
+                ApiFuture<String> future = publisher.publish(finalPubsubMessage);
+                future.addListener(() -> {
+                    try {
+                        final String result = future.get();
+                        sink.success(result);
+                    } catch (Throwable e) {
+                        sink.error(e);
+                    }
+                }, executorService);
+            });
             if (javaReturnType == void.class || javaReturnType == Void.class) {
-                String result = reactiveResult.blockingGet();
+                String result = reactiveResult.block();
                 return null;
             } else {
-                if (isReactive) {
+                if (returnTypeInfo.isReactive()) {
                     return Publishers.convertPublisher(reactiveResult, javaReturnType);
+                } else if (returnTypeInfo.isAsync()) {
+                    return reactiveResult.toFuture();
                 } else {
-                    String result = reactiveResult.blockingGet();
+                    String result = reactiveResult.block();
                     return conversionService.convert(result, javaReturnType)
                             .orElseThrow(() -> new PubSubClientException("Could not convert publisher result to method return type: " + javaReturnType));
                 }

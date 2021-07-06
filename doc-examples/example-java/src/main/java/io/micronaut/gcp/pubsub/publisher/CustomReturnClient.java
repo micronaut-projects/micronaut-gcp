@@ -18,7 +18,7 @@ package io.micronaut.gcp.pubsub.publisher;
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.support.Animal;
-import io.reactivex.Single;
+import reactor.core.publisher.Mono;
 // end::imports[]
 
 // tag::clazz[]
@@ -32,7 +32,7 @@ public interface CustomReturnClient {
     String sendWithId(Animal animal); // <2>
 
     @Topic("animals")
-    Single<String> sendReactive(Animal animal); //<3>
+    Mono<String> sendReactive(Animal animal); //<3>
 
 }
 // tag::clazz[]

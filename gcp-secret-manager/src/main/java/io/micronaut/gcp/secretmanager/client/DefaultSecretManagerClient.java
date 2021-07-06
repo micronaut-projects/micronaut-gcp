@@ -15,16 +15,23 @@
  */
 package io.micronaut.gcp.secretmanager.client;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.google.api.core.ApiFuture;
 import com.google.cloud.secretmanager.v1.*;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.gcp.GoogleCloudConfiguration;
-import io.reactivex.Maybe;
+import io.micronaut.scheduling.TaskExecutors;
+import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
 
 /**
  * Default implementation of {@link SecretManagerClient}.
@@ -40,32 +47,51 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
     private final Environment environment;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final Logger logger = LoggerFactory.getLogger(SecretManagerClient.class);
+    private final ExecutorService executorService;
 
-    public DefaultSecretManagerClient(SecretManagerServiceClient client, Environment environment, GoogleCloudConfiguration googleCloudConfiguration) {
+    public DefaultSecretManagerClient(
+            SecretManagerServiceClient client,
+            Environment environment,
+            GoogleCloudConfiguration googleCloudConfiguration,
+            @Nullable @Named(TaskExecutors.IO) ExecutorService executorService) {
         this.client = client;
         this.environment = environment;
         this.googleCloudConfiguration = googleCloudConfiguration;
+        this.executorService = executorService != null ? executorService : Executors.newSingleThreadExecutor()  ;
     }
 
     @Override
-    public Maybe<VersionedSecret> getSecret(String secretId) {
+    public Mono<VersionedSecret> getSecret(String secretId) {
         return getSecret(secretId, LATEST , googleCloudConfiguration.getProjectId());
     }
 
     @Override
-    public Maybe<VersionedSecret> getSecret(String secretId, String version) {
+    public Mono<VersionedSecret> getSecret(String secretId, String version) {
         return getSecret(secretId, version, googleCloudConfiguration.getProjectId());
     }
 
     @Override
-    public Maybe<VersionedSecret> getSecret(String secretId, String version, String projectId) {
+    public Mono<VersionedSecret> getSecret(String secretId, String version, String projectId) {
         logger.debug(String.format("Fetching secret: projects/%s/secrets/%s/%s", projectId, secretId, version));
         SecretVersionName secretVersionName = SecretVersionName.of(projectId, secretId, version);
         AccessSecretVersionRequest request = AccessSecretVersionRequest.newBuilder()
                 .setName(secretVersionName.toString())
                 .build();
-        return Maybe.fromFuture(client.accessSecretVersionCallable().futureCall(request))
+        final Mono<AccessSecretVersionResponse> mono = Mono.create((sink) -> {
+            final ApiFuture<AccessSecretVersionResponse> future = client
+                    .accessSecretVersionCallable().futureCall(request);
+            future.addListener(() -> {
+                try {
+                    final AccessSecretVersionResponse result = future.get();
+                    sink.success(result);
+                } catch (Throwable e) {
+                    sink.error(e);
+                }
+            }, executorService);
+        });
+
+        return mono
                 .map(response -> new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray()))
-                .onErrorResumeNext(Maybe.empty());
+                .onErrorResume((throwable) -> Mono.empty());
     }
 }
