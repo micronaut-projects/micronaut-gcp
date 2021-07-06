@@ -15,6 +15,17 @@
  */
 package io.micronaut.gcp.pubsub.intercept;
 
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+
+import javax.annotation.PreDestroy;
+
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.protobuf.ByteString;
@@ -45,20 +56,11 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.Body;
 import io.micronaut.messaging.annotation.Header;
 import io.micronaut.scheduling.TaskExecutors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.PreDestroy;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.MonoSink;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.function.Consumer;
 
 /**
  * Implementation of {@link io.micronaut.gcp.pubsub.annotation.PubSubClient} advice annotation.

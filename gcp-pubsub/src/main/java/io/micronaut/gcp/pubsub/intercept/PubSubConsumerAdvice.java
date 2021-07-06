@@ -29,7 +29,6 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.bind.*;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
