@@ -36,7 +36,7 @@ import io.netty.util.internal.PlatformDependent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import io.micronaut.core.annotation.NonNull;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -98,7 +98,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         }
     }
 
-    @Nonnull
+    @NonNull
     @Override
     protected ApplicationContextBuilder newApplicationContextBuilder() {
         final ApplicationContextBuilder builder = super.newApplicationContextBuilder();

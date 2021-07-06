@@ -16,8 +16,8 @@ import io.micronaut.gcp.pubsub.support.Person
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.util.concurrent.PollingConditions
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 
 @MicronautTest
 @Property(name = "spec.name", value = "ExceptionHandlerSpec")

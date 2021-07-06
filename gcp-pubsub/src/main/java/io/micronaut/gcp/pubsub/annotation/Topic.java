@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
+import io.micronaut.context.annotation.Executable;
 import io.micronaut.http.MediaType;
 import io.micronaut.messaging.annotation.MessageMapping;
 
@@ -30,6 +31,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Executable
 public @interface Topic {
 
     /**

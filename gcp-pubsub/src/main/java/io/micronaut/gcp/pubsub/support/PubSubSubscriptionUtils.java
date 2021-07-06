@@ -17,8 +17,8 @@ package io.micronaut.gcp.pubsub.support;
 
 import com.google.pubsub.v1.ProjectSubscriptionName;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 
 
 /**
@@ -45,7 +45,7 @@ public final class PubSubSubscriptionUtils {
      * @return the Pub/Sub object representing the subscription name
      */
     @SuppressWarnings("checkstyle:RightCurly")
-    public static ProjectSubscriptionName toProjectSubscriptionName(@Nonnull String subscription, @Nullable String projectId) {
+    public static ProjectSubscriptionName toProjectSubscriptionName(@NonNull String subscription, @Nullable String projectId) {
 
         ProjectSubscriptionName projectSubscriptionName = null;
 

@@ -17,7 +17,7 @@ package io.micronaut.gcp.pubsub.bind;
 
 import io.micronaut.core.convert.ArgumentConversionContext;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Default body binder of PubSub consumers. If no @{@link io.micronaut.messaging.annotation.Body} arguments are annotated.

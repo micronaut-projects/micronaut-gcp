@@ -19,7 +19,7 @@ import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import io.micronaut.jackson.JacksonConfiguration;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Disables module scan for Jackson which is slow in function context.

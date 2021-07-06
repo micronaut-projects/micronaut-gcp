@@ -32,8 +32,8 @@ import io.micronaut.gcp.UserAgentHeaderProvider;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import org.threeten.bp.Duration;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.util.concurrent.Executors;
 
 /**

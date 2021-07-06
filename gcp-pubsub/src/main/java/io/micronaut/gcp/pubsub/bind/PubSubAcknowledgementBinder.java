@@ -20,7 +20,7 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.messaging.Acknowledgement;
 
 import java.util.Optional;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Binds {@link Acknowledgement} arguments.

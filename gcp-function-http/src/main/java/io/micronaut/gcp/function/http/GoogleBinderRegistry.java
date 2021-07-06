@@ -24,7 +24,7 @@ import io.micronaut.http.bind.DefaultRequestBinderRegistry;
 import io.micronaut.http.bind.binders.RequestArgumentBinder;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.List;
 
 /**

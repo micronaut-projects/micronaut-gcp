@@ -16,7 +16,7 @@ import io.micronaut.messaging.annotation.MessageHeaders
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.reactivex.Single
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 @Property(name = "spec.name", value = "PublisherIntroductionAdviceSpec")

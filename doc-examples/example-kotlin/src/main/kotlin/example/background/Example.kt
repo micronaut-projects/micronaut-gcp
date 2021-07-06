@@ -18,8 +18,8 @@ package example.background
 import com.google.cloud.functions.BackgroundFunction
 import com.google.cloud.functions.Context
 import io.micronaut.gcp.function.GoogleFunctionInitializer
-import javax.inject.Inject
-import javax.inject.Singleton
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 
 class Example : GoogleFunctionInitializer(), // <1>
         BackgroundFunction<PubSubMessage> { // <2>

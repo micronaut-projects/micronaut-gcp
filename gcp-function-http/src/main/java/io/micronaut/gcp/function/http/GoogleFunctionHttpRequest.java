@@ -31,8 +31,8 @@ import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookies;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,7 +108,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         return googleResponse;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Cookies getCookies() {
         ServletCookies cookies = this.cookies;
@@ -124,7 +124,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         return cookies;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public HttpParameters getParameters() {
         HttpParameters httpParameters = this.httpParameters;
@@ -140,25 +140,25 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         return httpParameters;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public HttpMethod getMethod() {
         return method;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public URI getUri() {
         return this.uri;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public HttpHeaders getHeaders() {
         return headers;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public MutableConvertibleValues<Object> getAttributes() {
         MutableConvertibleValues<Object> attributes = this.attributes;
@@ -174,15 +174,15 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         return attributes;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Optional<B> getBody() {
         return (Optional<B>) getBody(Argument.STRING);
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public <T> Optional<T> getBody(@Nonnull Argument<T> arg) {
+    public <T> Optional<T> getBody(@NonNull Argument<T> arg) {
         if (arg != null) {
             final Class<T> type = arg.getType();
             final MediaType contentType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);

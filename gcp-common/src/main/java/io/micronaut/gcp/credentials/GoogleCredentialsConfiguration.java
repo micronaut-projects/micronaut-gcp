@@ -20,8 +20,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +58,7 @@ public class GoogleCredentialsConfiguration {
      * The scopes to use.
      * @return The scopes
      */
-    public @Nonnull List<URI> getScopes() {
+    public @NonNull List<URI> getScopes() {
         return scopes;
     }
 
@@ -79,7 +79,7 @@ public class GoogleCredentialsConfiguration {
      * for more information on generating a service account key file.
      * @return The location
      */
-    public @Nonnull Optional<String> getLocation() {
+    public @NonNull Optional<String> getLocation() {
         return Optional.ofNullable(location);
     }
 
@@ -96,7 +96,7 @@ public class GoogleCredentialsConfiguration {
      * account key via an environmental variable. For other use cases, configure <pre>location</pre> instead.
      * @return The key
      */
-    public @Nonnull Optional<String> getEncodedKey() {
+    public @NonNull Optional<String> getEncodedKey() {
         return Optional.ofNullable(encodedKey);
     }
 

@@ -28,8 +28,8 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.UserAgentHeaderProvider;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 
 /**

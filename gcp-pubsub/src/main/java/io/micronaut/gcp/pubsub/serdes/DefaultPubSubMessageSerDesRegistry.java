@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.serdes;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;

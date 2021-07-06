@@ -21,7 +21,7 @@ import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.util.ArgumentUtils;
 
-import javax.annotation.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import java.util.*;
 
 /**

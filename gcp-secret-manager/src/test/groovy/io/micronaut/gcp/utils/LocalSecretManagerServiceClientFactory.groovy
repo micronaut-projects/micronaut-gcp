@@ -19,7 +19,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 import spock.mock.MockFactory
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 @Factory
 @BootstrapContextCompatible

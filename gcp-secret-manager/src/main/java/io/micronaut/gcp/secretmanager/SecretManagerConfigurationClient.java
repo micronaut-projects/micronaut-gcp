@@ -25,13 +25,13 @@ import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 import io.micronaut.jackson.env.JsonPropertySourceLoader;
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -65,13 +65,12 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
 
     @Override
     public Publisher<PropertySource> getPropertySources(Environment environment) {
-        return Flowable.concat(resolveEnvironmentSecrets(environment), resolveSecretKeys());
+        return Flux.concat(resolveEnvironmentSecrets(environment), resolveSecretKeys());
     }
 
     private Publisher<PropertySource> resolveEnvironmentSecrets(Environment environment) {
-        return Flowable.fromIterable(configCandidates(environment))
-                .map(s -> secretManagerClient.getSecret(s))
-                .flatMap(Maybe::toFlowable)
+        return Flux.fromIterable(configCandidates(environment))
+                .flatMap(secretManagerClient::getSecret)
                 .filter(Objects::nonNull)
                 .map(this::fromSecret);
     }
@@ -84,14 +83,12 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
      * @return
      */
     private Publisher<PropertySource> resolveSecretKeys() {
-        return Flowable.fromIterable(configurationProperties.getKeys())
-                .map(k -> secretManagerClient.getSecret(k))
-                .flatMap(Maybe::toFlowable)
+        return Flux.fromIterable(configurationProperties.getKeys())
+                .flatMap(secretManagerClient::getSecret)
                 .filter(Objects::nonNull)
-                .toMap(versionedSecret -> "sm." + versionedSecret.getName().replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase(),
+                .collectMap(versionedSecret -> "sm." + versionedSecret.getName().replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase(),
                         versionedSecret -> (Object) new String(versionedSecret.getContents(), StandardCharsets.UTF_8).replaceAll("\\n", "").trim())
-                .map(m -> PropertySource.of("secret-manager-keys", m, PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE))
-                .toFlowable();
+                .map(m -> PropertySource.of("secret-manager-keys", m, PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE));
     }
 
     /**

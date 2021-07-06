@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
+import io.micronaut.context.annotation.Executable;
 import io.micronaut.messaging.annotation.MessageMapping;
 
 import java.lang.annotation.*;
@@ -31,6 +32,8 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Inherited
+@Executable
 public @interface Subscription {
     /**
      * The name of the subscription, it could be a simple name such as "animals" or

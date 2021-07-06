@@ -25,8 +25,8 @@ import io.micronaut.core.util.ArgumentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Singleton;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class GoogleCredentialsFactory {
      * Default constructor.
      * @param configuration The configuration
      */
-    public GoogleCredentialsFactory(@Nonnull GoogleCredentialsConfiguration configuration) {
+    public GoogleCredentialsFactory(@NonNull GoogleCredentialsConfiguration configuration) {
         ArgumentUtils.requireNonNull("configuration", configuration);
         this.configuration = configuration;
     }

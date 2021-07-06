@@ -22,7 +22,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 @Requires(env = Environment.GOOGLE_COMPUTE)

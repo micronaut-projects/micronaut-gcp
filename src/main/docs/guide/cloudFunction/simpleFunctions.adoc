@@ -16,7 +16,7 @@ snippet::example.background.Example[project-base="doc-examples/example", source=
 <2> The function implements `com.google.cloud.functions.BackgroundFunction`
 <3> Dependency injection can be used on the fields
 
-When you extend from `FunctionInitializer` the Micronaut `ApplicationContext` will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using `javax.inject.Inject` as usual.
+When you extend from `FunctionInitializer` the Micronaut `ApplicationContext` will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using `jakarta.inject.Inject` as usual.
 
 WARNING: Functions require a no argument constructor hence you must use field injection (which requires `lateinit` in Kotlin) when injecting dependencies into the function itself.
 

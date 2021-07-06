@@ -24,7 +24,7 @@ import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.messaging.annotation.Body;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

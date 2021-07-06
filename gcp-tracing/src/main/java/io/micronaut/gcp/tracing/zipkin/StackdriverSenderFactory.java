@@ -40,9 +40,9 @@ import zipkin2.reporter.Sender;
 import zipkin2.reporter.stackdriver.StackdriverEncoder;
 import zipkin2.reporter.stackdriver.StackdriverSender;
 
-import javax.annotation.Nonnull;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -79,7 +79,7 @@ public class StackdriverSenderFactory {
     @Singleton
     @Bean(preDestroy = "shutdownNow")
     @Named("stackdriverTraceSenderChannel")
-    protected @Nonnull ManagedChannel stackdriverTraceSenderChannel() {
+    protected @NonNull ManagedChannel stackdriverTraceSenderChannel() {
         UserAgentHeaderProvider userAgentHeaderProvider = new UserAgentHeaderProvider(Modules.TRACING);
 
         return ManagedChannelBuilder.forTarget(TRACE_TARGET)
@@ -97,10 +97,10 @@ public class StackdriverSenderFactory {
     @RequiresGoogleProjectId
     @Requires(classes = StackdriverSender.class)
     @Singleton
-    protected @Nonnull Sender stackdriverSender(
-            @Nonnull GoogleCloudConfiguration cloudConfiguration,
-            @Nonnull GoogleCredentials credentials,
-            @Nonnull @Named("stackdriverTraceSenderChannel") ManagedChannel channel) {
+    protected @NonNull Sender stackdriverSender(
+            @NonNull GoogleCloudConfiguration cloudConfiguration,
+            @NonNull GoogleCredentials credentials,
+            @NonNull @Named("stackdriverTraceSenderChannel") ManagedChannel channel) {
 
         GoogleCredentials traceCredentials = credentials.createScoped(Arrays.asList(TRACE_SCOPE.toString()));
 
@@ -117,7 +117,7 @@ public class StackdriverSenderFactory {
      */
     @Singleton
     @Requires(classes = StackdriverSender.class)
-    protected @Nonnull BeanCreatedEventListener<BraveTracerConfiguration> braveTracerConfigurationBeanCreatedEventListener() {
+    protected @NonNull BeanCreatedEventListener<BraveTracerConfiguration> braveTracerConfigurationBeanCreatedEventListener() {
         return (configuration) -> {
             BraveTracerConfiguration configurationBean = configuration.getBean();
 
@@ -149,7 +149,7 @@ public class StackdriverSenderFactory {
     @Singleton
     @Requires(classes = StackdriverSender.class)
     @Requires(beans = AsyncReporterConfiguration.class)
-    public AsyncReporter<Span> stackdriverReporter(@Nonnull AsyncReporterConfiguration configuration) {
+    public AsyncReporter<Span> stackdriverReporter(@NonNull AsyncReporterConfiguration configuration) {
         return configuration.getBuilder()
                 .build(StackdriverEncoder.V2);
     }

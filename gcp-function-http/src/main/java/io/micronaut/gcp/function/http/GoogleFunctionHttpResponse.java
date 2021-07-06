@@ -27,8 +27,8 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.netty.cookies.NettyCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -86,7 +86,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
         return new GoogleFunctionHeaders();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public MutableConvertibleValues<Object> getAttributes() {
         MutableConvertibleValues<Object> attributes = this.attributes;
@@ -102,7 +102,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
         return attributes;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Optional<B> getBody() {
         return Optional.ofNullable(this.body);
