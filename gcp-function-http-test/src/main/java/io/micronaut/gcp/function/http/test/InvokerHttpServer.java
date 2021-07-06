@@ -15,11 +15,11 @@
  */
 package io.micronaut.gcp.function.http.test;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.io.socket.SocketUtils;
 import io.micronaut.gcp.function.http.HttpFunction;
 import io.micronaut.http.server.HttpServerConfiguration;

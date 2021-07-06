@@ -9,6 +9,9 @@ buildscript {
 }
 
 subprojects { Project subproject ->
+    repositories {
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+    }
     group "io.micronaut.gcp"
 
     apply plugin: "io.micronaut.build.internal.common"
