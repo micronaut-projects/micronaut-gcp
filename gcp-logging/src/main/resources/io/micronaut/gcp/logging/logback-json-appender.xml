@@ -5,7 +5,7 @@ Stackdriver json-log format provided for import.
 <included>
     <define name="google_cloud_logging" class="io.micronaut.gcp.logging.GoogleCloudPropertyDefiner"></define>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
+        <withJansi>${STDOUT_WITH_JANSI:-true}</withJansi>
         <encoder>
             <pattern>%cyan(%d{HH:mm:ss.SSS}) %gray([%thread]) %highlight(%-5level) %magenta(%logger{36}) - %msg%n </pattern>
         </encoder>
