@@ -27,9 +27,9 @@ import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 
-import javax.annotation.Nonnull;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -68,7 +68,7 @@ public class DefaultPublisherFactory implements PublisherFactory {
      * @return An instance of {@link Publisher} configured using the config and environment properties from `gcp.pubsub.publisher.&gt;config_name&lt;`
      */
     @Override
-    public Publisher createPublisher(@Nonnull PublisherFactoryConfig config) {
+    public Publisher createPublisher(@NonNull PublisherFactoryConfig config) {
         try {
             Publisher.Builder publisherBuilder = Publisher.newBuilder(config.getTopicState().getProjectTopicName());
             Optional<PublisherConfigurationProperties> publisherConfiguration = beanContext.findBean(PublisherConfigurationProperties.class, Qualifiers.byName(config.getTopicState().getConfigurationName()));

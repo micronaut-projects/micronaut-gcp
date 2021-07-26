@@ -19,7 +19,7 @@ import io.micronaut.context.event.StartupEvent;
 import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
 import io.micronaut.runtime.event.annotation.EventListener;
-import io.reactivex.Maybe;
+import reactor.core.publisher.Mono;
 //end::imports[]
 
 //tag::clazz[]
@@ -33,9 +33,9 @@ public final class ClientExample {
 
     @EventListener
     public void onStartup(StartupEvent event) {
-        Maybe<VersionedSecret> secret = client.getSecret("secretId"); // <1>
-        Maybe<VersionedSecret> v2 = client.getSecret("secretId", "v2"); //<2>
-        Maybe<VersionedSecret> fromOtherProject = client.getSecret("secretId", "latest", "another-project-id"); //<3>
+        Mono<VersionedSecret> secret = Mono.from(client.getSecret("secretId")); // <1>
+        Mono<VersionedSecret> v2 = Mono.from(client.getSecret("secretId", "v2")); //<2>
+        Mono<VersionedSecret> fromOtherProject = Mono.from(client.getSecret("secretId", "latest", "another-project-id")); //<3>
     }
 }
 //tag::clazz[]

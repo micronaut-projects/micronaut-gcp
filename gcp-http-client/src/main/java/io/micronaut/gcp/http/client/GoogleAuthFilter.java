@@ -21,12 +21,13 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.annotation.Filter;
-import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PreDestroy;
 import java.io.UnsupportedEncodingException;
@@ -51,14 +52,14 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     private static final String METADATA_FLAVOR = "Metadata-Flavor";
     private static final String GOOGLE = "Google";
     private static final String AUDIENCE = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
-    private final RxHttpClient authClient;
+    private final HttpClient authClient;
 
     /**
      * Default constructor.
      */
     public GoogleAuthFilter() {
         try {
-            this.authClient = RxHttpClient.create(new URL("http://metadata"));
+            this.authClient = HttpClient.create(new URL("http://metadata"));
         } catch (MalformedURLException e) {
             throw new HttpClientException("Cannot create Google Auth Client: " + e.getMessage(), e);
         }
@@ -66,8 +67,8 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
-        Flowable<String> token = Flowable.fromCallable(() -> encodeURI(request))
-                .flatMap(authURI -> authClient.retrieve(HttpRequest.GET(authURI).header(
+        Flux<String> token = Mono.fromCallable(() -> encodeURI(request))
+                .flatMapMany(authURI -> authClient.retrieve(HttpRequest.GET(authURI).header(
                         METADATA_FLAVOR, GOOGLE
                 )));
 

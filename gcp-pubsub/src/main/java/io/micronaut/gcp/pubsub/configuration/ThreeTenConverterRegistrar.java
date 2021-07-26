@@ -21,7 +21,7 @@ import io.micronaut.core.util.StringUtils;
 import org.threeten.bp.DateTimeException;
 import org.threeten.bp.Duration;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

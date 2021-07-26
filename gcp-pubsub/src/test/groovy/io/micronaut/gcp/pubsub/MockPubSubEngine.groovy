@@ -5,7 +5,7 @@ import com.google.cloud.pubsub.v1.MessageReceiver
 import com.google.pubsub.v1.PubsubMessage
 
 import javax.annotation.PreDestroy
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
 

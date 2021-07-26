@@ -15,6 +15,17 @@
  */
 package io.micronaut.gcp.pubsub.intercept;
 
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+
+import javax.annotation.PreDestroy;
+
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.protobuf.ByteString;
@@ -40,22 +51,16 @@ import io.micronaut.gcp.pubsub.support.PubSubPublisherState;
 import io.micronaut.gcp.pubsub.support.PubSubTopicUtils;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
 import io.micronaut.gcp.pubsub.support.PublisherFactoryConfig;
+import io.micronaut.http.MediaType;
 import io.micronaut.inject.ExecutableMethod;
-import io.micronaut.messaging.annotation.Body;
-import io.micronaut.messaging.annotation.Header;
+import io.micronaut.messaging.annotation.MessageBody;
+import io.micronaut.messaging.annotation.MessageHeader;
 import io.micronaut.scheduling.TaskExecutors;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.PreDestroy;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
+import reactor.core.publisher.Mono;
 
 /**
  * Implementation of {@link io.micronaut.gcp.pubsub.annotation.PubSubClient} advice annotation.
@@ -70,10 +75,10 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     private final ConcurrentHashMap<ExecutableMethod, PubSubPublisherState> publisherStateCache = new ConcurrentHashMap<>();
     private final PublisherFactory publisherFactory;
     private final PubSubMessageSerDesRegistry serDesRegistry;
-    private final Scheduler scheduler;
     private final ConversionService<?> conversionService;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
+    private final ExecutorService executorService;
 
     public PubSubClientIntroductionAdvice(PublisherFactory publisherFactory,
                                           PubSubMessageSerDesRegistry serDesRegistry,
@@ -82,8 +87,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                                           GoogleCloudConfiguration googleCloudConfiguration,
                                           PubSubConfigurationProperties pubSubConfigurationProperties) {
         this.publisherFactory = publisherFactory;
+        this.executorService = executorService;
         this.serDesRegistry = serDesRegistry;
-        this.scheduler = Schedulers.from(executorService);
         this.conversionService = conversionService;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
@@ -95,17 +100,15 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
         if (context.hasAnnotation(Topic.class)) {
 
             PubSubPublisherState publisherState = publisherStateCache.computeIfAbsent(context.getExecutableMethod(), method -> {
-                AnnotationValue<PubSubClient> client = method.findAnnotation(PubSubClient.class).orElseThrow(() -> new IllegalStateException("No @PubSubClient annotation present"));
-                String projectId = client.stringValue().orElse(googleCloudConfiguration.getProjectId());
-                AnnotationValue<Topic> topicAnnotation = method.findAnnotation(Topic.class).get();
+                String projectId = method.stringValue(PubSubClient.class).orElse(googleCloudConfiguration.getProjectId());
                 Optional<Argument> orderingArgument = Arrays.stream(method.getArguments()).filter(argument -> argument.getAnnotationMetadata().hasAnnotation(OrderingKey.class)).findFirst();
-                String topic = topicAnnotation.stringValue().get();
-                String endpoint = topicAnnotation.get("endpoint", String.class).orElse("");
-                String configurationName = topicAnnotation.get("configuration", String.class).orElse("");
-                String contentType = topicAnnotation.get("contentType", String.class).orElse("");
+                String topic = method.stringValue(Topic.class).orElse(context.getName());
+                String endpoint = method.stringValue(Topic.class, "endpoint").orElse("");
+                String configurationName = method.stringValue(Topic.class, "configuration").orElse("");
+                String contentType = method.stringValue(Topic.class, "contentType").orElse(MediaType.APPLICATION_JSON);
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
                 Map<String, String> staticMessageAttributes = new HashMap<>();
-                List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
+                List<AnnotationValue<MessageHeader>> headerAnnotations = context.getAnnotationValuesByType(MessageHeader.class);
                 headerAnnotations.forEach((header) -> {
                     String name = header.stringValue("name").orElse(null);
                     String value = header.stringValue().orElse(null);
@@ -126,12 +129,13 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             String contentType = publisherState.getTopicState().getContentType();
             Argument<?> bodyArgument = publisherState.getBodyArgument();
             Map<String, Object> parameterValues = context.getParameterValueMap();
-            ReturnType<Object> returnType = context.getReturnType();
+            final ReturnType<Object> returnTypeInfo = context.getReturnType();
+            ReturnType<Object> returnType = returnTypeInfo;
             Class<?> javaReturnType = returnType.getType();
 
             Argument[] arguments = context.getArguments();
             for (Argument arg : arguments) {
-                AnnotationValue<Header> headerAnn = arg.getAnnotation(Header.class);
+                AnnotationValue<MessageHeader> headerAnn = arg.getAnnotation(MessageHeader.class);
                 if (headerAnn != null) {
                     Map.Entry<String, String> entry = getNameAndValue(arg, headerAnn, parameterValues);
                     messageAttributes.put(entry.getKey(), entry.getValue());
@@ -165,17 +169,29 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 }
                 pubsubMessage = messageBuilder.build();
             }
-            ApiFuture<String> future = publisher.publish(pubsubMessage);
-            Single<String> reactiveResult = Single.fromFuture(future);
-            boolean isReactive = Publishers.isConvertibleToPublisher(javaReturnType);
+
+            PubsubMessage finalPubsubMessage = pubsubMessage;
+            Mono<String> reactiveResult = Mono.create(sink -> {
+                ApiFuture<String> future = publisher.publish(finalPubsubMessage);
+                future.addListener(() -> {
+                    try {
+                        final String result = future.get();
+                        sink.success(result);
+                    } catch (Throwable e) {
+                        sink.error(e);
+                    }
+                }, executorService);
+            });
             if (javaReturnType == void.class || javaReturnType == Void.class) {
-                String result = reactiveResult.blockingGet();
+                String result = reactiveResult.block();
                 return null;
             } else {
-                if (isReactive) {
+                if (returnTypeInfo.isReactive()) {
                     return Publishers.convertPublisher(reactiveResult, javaReturnType);
+                } else if (returnTypeInfo.isAsync()) {
+                    return reactiveResult.toFuture();
                 } else {
-                    String result = reactiveResult.blockingGet();
+                    String result = reactiveResult.block();
                     return conversionService.convert(result, javaReturnType)
                             .orElseThrow(() -> new PubSubClientException("Could not convert publisher result to method return type: " + javaReturnType));
                 }
@@ -188,7 +204,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
 
     private Optional<Argument<?>> findBodyArgument(ExecutableMethod<?, ?> method) {
         return Optional.ofNullable(Arrays.stream(method.getArguments())
-                .filter(argument -> argument.getAnnotationMetadata().hasAnnotation(Body.class))
+                .filter(argument -> argument.getAnnotationMetadata().hasAnnotation(MessageBody.class))
                 .findFirst()
                 .orElseGet(
                         () -> Arrays.stream(method.getArguments())

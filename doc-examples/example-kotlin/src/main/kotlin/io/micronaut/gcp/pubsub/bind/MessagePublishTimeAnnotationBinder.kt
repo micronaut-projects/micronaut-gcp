@@ -20,7 +20,7 @@ import io.micronaut.core.bind.ArgumentBinder
 import io.micronaut.core.bind.ArgumentBinder.BindingResult
 import io.micronaut.core.convert.ArgumentConversionContext
 import io.micronaut.core.convert.ConversionService
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 //end::imports[]
 
 // tag::clazz[]

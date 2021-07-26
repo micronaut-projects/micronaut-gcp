@@ -5,6 +5,7 @@ dependencies {
     api project(":gcp-common")
     api "io.micronaut:micronaut-http-client:$micronautVersion"
     api "io.micronaut:micronaut-inject:$micronautVersion"
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
     testCompileOnly "io.micronaut:micronaut-inject-groovy"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"

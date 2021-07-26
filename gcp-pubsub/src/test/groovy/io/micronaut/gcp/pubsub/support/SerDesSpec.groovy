@@ -14,8 +14,8 @@ import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes
 import io.micronaut.http.MediaType
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 
 @MicronautTest
 @Property(name = "spec.name", value = "SerDesSpec")

@@ -6,23 +6,23 @@ import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 class InvokerHttpServerSpec extends Specification {
 
     @Inject
     @Client('/')
-    RxHttpClient client
+    HttpClient client
 
     void 'test invoke function via server'() {
         when:
-        def result = client.retrieve('/test').blockingFirst()
+        def result = client.toBlocking().retrieve('/test')
 
         then:
         result == 'good'
@@ -30,8 +30,8 @@ class InvokerHttpServerSpec extends Specification {
 
     void 'test invoke post via server'() {
         when:
-        def result = client.retrieve(HttpRequest.POST('/test', "body")
-                .contentType(MediaType.TEXT_PLAIN), String).blockingFirst()
+        def result = client.toBlocking().retrieve(HttpRequest.POST('/test', "body")
+                .contentType(MediaType.TEXT_PLAIN), String)
 
         then:
         result == 'goodbody'

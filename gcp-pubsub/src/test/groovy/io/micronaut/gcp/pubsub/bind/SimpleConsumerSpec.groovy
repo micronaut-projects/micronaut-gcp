@@ -18,7 +18,7 @@ import io.micronaut.messaging.annotation.MessageBody
 import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.util.concurrent.PollingConditions
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 @Property(name = "spec.name", value = "SimpleConsumerSpec")
@@ -70,6 +70,9 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
             conditions.eventually {
                 def map = (Map<String,Object>)receiver.dataHolder["test-headers"]
                 map != null
+                map.containsKey("header")
+                map.containsKey("body")
+                map.get("header") == 42
             }
     }
 

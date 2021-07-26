@@ -15,7 +15,7 @@ import io.micronaut.inject.ExecutableMethod
 import io.micronaut.messaging.Acknowledgement
 import spock.lang.Specification
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class PubSubBinderSpec extends Specification{
 

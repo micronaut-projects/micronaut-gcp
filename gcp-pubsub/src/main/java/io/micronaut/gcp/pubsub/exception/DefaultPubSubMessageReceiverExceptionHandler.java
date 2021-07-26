@@ -19,7 +19,7 @@ import io.micronaut.context.annotation.Primary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Handles any exception on beans of type {@link io.micronaut.gcp.pubsub.annotation.PubSubListener} that do not

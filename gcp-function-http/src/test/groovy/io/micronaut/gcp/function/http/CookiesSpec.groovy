@@ -7,10 +7,12 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.cookie.Cookie
+import spock.lang.PendingFeature
 import spock.lang.Specification
 
 class CookiesSpec extends Specification {
 
+    @PendingFeature(reason = "NettyClientHttpRequest doesn't support retrieving cookies")
     void "test binding and receive cookies"() {
 
         given:

@@ -17,14 +17,13 @@ package io.micronaut.gcp.pubsub.bind;
 
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.convert.ConversionService;
-import io.micronaut.messaging.annotation.Header;
-
-import javax.inject.Singleton;
+import io.micronaut.messaging.annotation.MessageHeader;
+import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Binds an argument annotated with {@link io.micronaut.messaging.annotation.Header} annotation. The target type
+ * Binds an argument annotated with {@link io.micronaut.messaging.annotation.MessageHeader} annotation. The target type
  * must be supported by the {@link io.micronaut.core.convert.ConversionService}. PubSub attributes are always of type
  * String.
  *
@@ -32,7 +31,7 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Singleton
-public class PubSubHeaderBinder implements PubSubAnnotatedArgumentBinder<Header> {
+public class PubSubHeaderBinder implements PubSubAnnotatedArgumentBinder<MessageHeader> {
 
     private final ConversionService conversionService;
 
@@ -41,14 +40,14 @@ public class PubSubHeaderBinder implements PubSubAnnotatedArgumentBinder<Header>
     }
 
     @Override
-    public Class<Header> getAnnotationType() {
-        return Header.class;
+    public Class<MessageHeader> getAnnotationType() {
+        return MessageHeader.class;
     }
 
     @Override
     public BindingResult<Object> bind(ArgumentConversionContext<Object> context, PubSubConsumerState source) {
         String parameterName = context.getAnnotationMetadata()
-                .stringValue(Header.class)
+                .stringValue(MessageHeader.class)
                 .orElse(context.getArgument().getName());
 
         Map<String, String> attributes = source.getPubsubMessage().getAttributesMap();

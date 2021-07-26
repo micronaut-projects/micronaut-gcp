@@ -11,7 +11,7 @@ import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 @Property(name = "spec.name", value = "HeadersSpec")

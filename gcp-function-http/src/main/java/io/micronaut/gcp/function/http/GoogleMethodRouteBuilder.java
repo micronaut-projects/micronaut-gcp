@@ -27,7 +27,7 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.web.router.AnnotatedMethodRouteBuilder;
 import io.micronaut.web.router.UriRoute;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Modifies the route builder to take into account the context path.

@@ -19,7 +19,7 @@ import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.env.Environment;
 import io.micronaut.function.executor.FunctionInitializer;
 
-import javax.annotation.Nonnull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * Extended version of {@link FunctionInitializer} that configures the GCP environment.
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @since 2.0.0
  */
 public class GoogleFunctionInitializer extends FunctionInitializer {
-    @Nonnull
+    @NonNull
     @Override
     protected ApplicationContextBuilder newApplicationContextBuilder() {
         ApplicationContextBuilder builder = super.newApplicationContextBuilder();
