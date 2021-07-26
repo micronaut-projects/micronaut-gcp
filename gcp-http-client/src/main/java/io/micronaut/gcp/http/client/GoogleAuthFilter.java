@@ -21,7 +21,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.annotation.Filter;
-import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
@@ -52,14 +52,14 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     private static final String METADATA_FLAVOR = "Metadata-Flavor";
     private static final String GOOGLE = "Google";
     private static final String AUDIENCE = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
-    private final RxHttpClient authClient;
+    private final HttpClient authClient;
 
     /**
      * Default constructor.
      */
     public GoogleAuthFilter() {
         try {
-            this.authClient = RxHttpClient.create(new URL("http://metadata"));
+            this.authClient = HttpClient.create(new URL("http://metadata"));
         } catch (MalformedURLException e) {
             throw new HttpClientException("Cannot create Google Auth Client: " + e.getMessage(), e);
         }

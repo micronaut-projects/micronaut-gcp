@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.publisher;
+package io.micronaut.gcp.pubsub.publisher
 // tag::imports[]
-import io.micronaut.gcp.pubsub.annotation.PubSubClient;
-import io.micronaut.gcp.pubsub.annotation.Topic;
-import io.micronaut.gcp.pubsub.support.Animal;
-import io.reactivex.Single;
+import io.micronaut.gcp.pubsub.annotation.PubSubClient
+import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.support.Animal
+import reactor.core.publisher.Mono
+
 // end::imports[]
 
 // tag::clazz[]
@@ -32,7 +33,7 @@ interface CustomReturnClient {
     String sendWithId(Animal animal) // <2>
 
     @Topic("animals")
-    Single<String> sendReactive(Animal animal) //<3>
+    Mono<String> sendReactive(Animal animal) //<3>
 
 }
 // tag::clazz[]

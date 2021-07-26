@@ -53,8 +53,8 @@ import io.micronaut.gcp.pubsub.support.PublisherFactory;
 import io.micronaut.gcp.pubsub.support.PublisherFactoryConfig;
 import io.micronaut.http.MediaType;
 import io.micronaut.inject.ExecutableMethod;
-import io.micronaut.messaging.annotation.Body;
-import io.micronaut.messaging.annotation.Header;
+import io.micronaut.messaging.annotation.MessageBody;
+import io.micronaut.messaging.annotation.MessageHeader;
 import io.micronaut.scheduling.TaskExecutors;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -108,7 +108,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 String contentType = method.stringValue(Topic.class, "contentType").orElse(MediaType.APPLICATION_JSON);
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
                 Map<String, String> staticMessageAttributes = new HashMap<>();
-                List<AnnotationValue<Header>> headerAnnotations = context.getAnnotationValuesByType(Header.class);
+                List<AnnotationValue<MessageHeader>> headerAnnotations = context.getAnnotationValuesByType(MessageHeader.class);
                 headerAnnotations.forEach((header) -> {
                     String name = header.stringValue("name").orElse(null);
                     String value = header.stringValue().orElse(null);
@@ -135,7 +135,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
 
             Argument[] arguments = context.getArguments();
             for (Argument arg : arguments) {
-                AnnotationValue<Header> headerAnn = arg.getAnnotation(Header.class);
+                AnnotationValue<MessageHeader> headerAnn = arg.getAnnotation(MessageHeader.class);
                 if (headerAnn != null) {
                     Map.Entry<String, String> entry = getNameAndValue(arg, headerAnn, parameterValues);
                     messageAttributes.put(entry.getKey(), entry.getValue());
@@ -204,7 +204,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
 
     private Optional<Argument<?>> findBodyArgument(ExecutableMethod<?, ?> method) {
         return Optional.ofNullable(Arrays.stream(method.getArguments())
-                .filter(argument -> argument.getAnnotationMetadata().hasAnnotation(Body.class))
+                .filter(argument -> argument.getAnnotationMetadata().hasAnnotation(MessageBody.class))
                 .findFirst()
                 .orElseGet(
                         () -> Arrays.stream(method.getArguments())

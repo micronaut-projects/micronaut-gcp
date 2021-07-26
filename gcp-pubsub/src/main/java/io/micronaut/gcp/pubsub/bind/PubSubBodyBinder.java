@@ -22,20 +22,20 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
-import io.micronaut.messaging.annotation.Body;
 
+import io.micronaut.messaging.annotation.MessageBody;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Binds arguments annotated with {@link Body} and uses the appropriate
+ * Binds arguments annotated with {@link io.micronaut.messaging.annotation.MessageBody} and uses the appropriate
  * {@link io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes} to deserialize the contents of the PubSubMessage data.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
 @Singleton
-public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<Body> {
+public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBody> {
 
     private final PubSubMessageSerDesRegistry serDesRegistry;
 
@@ -44,8 +44,8 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<Body> {
     }
 
     @Override
-    public Class<Body> getAnnotationType() {
-        return Body.class;
+    public Class<MessageBody> getAnnotationType() {
+        return MessageBody.class;
     }
 
     @Override
