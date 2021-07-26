@@ -26,6 +26,8 @@ image::logs_json.png[JSON log output,1591,534]
 [source,xml]
 ----
 <configuration>
+    <!-- Uncomment the next line to enable ANSI color code interpretation -->
+    <!-- <property name="STDOUT_WITH_JANSI" value="true" /> -->
     <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /> <1>
     <root level="INFO">
         <appender-ref ref="CONSOLE_JSON" /> <2>
