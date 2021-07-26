@@ -410,6 +410,8 @@ If you combine this module with the Stackdriver Trace module, all logs will also
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;!-- Uncomment the next line to enable ANSI color code interpretation --&gt;
+    &lt;!-- &lt;property name="STDOUT_WITH_JANSI" value="true" /&gt; --&gt;
     &lt;include resource="io/micronaut/gcp/logging/logback-json-appender.xml" /&gt; <i class="conum" data-value="1"></i><b>(1)</b>
     &lt;root level="INFO"&gt;
         &lt;appender-ref ref="CONSOLE_JSON" /&gt; <i class="conum" data-value="2"></i><b>(2)</b>
