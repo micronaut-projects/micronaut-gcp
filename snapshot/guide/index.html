@@ -3101,7 +3101,7 @@ class AcknowledgementSubscriber {
 <p>Locally: your <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class implements <a href="../api/io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a>, then any error related to <code>Subscriptions</code> of that class will be handled by your class.</p>
 </li>
 <li>
-<p>Globally: You define a new implementation of <a href="../api/io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a> and annotate it as <code>@Primary</code> overriding the default one.</p>
+<p>Globally: You define a new implementation of <a href="../api/io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverExceptionHandler.html">PubSubMessageReceiverExceptionHandler</a> which <a href="https://docs.micronaut.io/latest/guide/#replaces">replaces</a> <a href="../api/io/micronaut/gcp/pubsub/exception/DefaultPubSubMessageReceiverExceptionHandler.html">DefaultPubSubMessageReceiverExceptionHandler</a>.</p>
 </li>
 </ul>
 </div>
