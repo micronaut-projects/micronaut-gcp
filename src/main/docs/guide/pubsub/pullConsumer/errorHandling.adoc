@@ -10,7 +10,7 @@ The framework provides a Global Error Handler api:gcp.pubsub.exception.DefaultPu
 There's two ways you can provide error handling.
 
 * Locally: your ann:gcp.pubsub.annotation.PubSubListener[] class implements api:gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler[], then any error related to `Subscriptions` of that class will be handled by your class.
-* Globally: You define a new implementation of api:gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler[] and annotate it as `@Primary` overriding the default one.
+* Globally: You define a new implementation of api:gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler[] which link:https://docs.micronaut.io/latest/guide/#replaces[replaces] api:gcp.pubsub.exception.DefaultPubSubMessageReceiverExceptionHandler[].
 
 The api:exception.PubSubMessageReceiverException[] contains references to the originating bean that threw the exception as well as a reference to api:bind.PubSubConsumerState[] which has state information regarding the message handling.
 

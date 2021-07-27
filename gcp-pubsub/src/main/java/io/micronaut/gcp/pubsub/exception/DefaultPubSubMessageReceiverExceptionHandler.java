@@ -15,7 +15,6 @@
  */
 package io.micronaut.gcp.pubsub.exception;
 
-import io.micronaut.context.annotation.Primary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,6 @@ import jakarta.inject.Singleton;
  * @since 2.0.0
  */
 @Singleton
-@Primary
 public class DefaultPubSubMessageReceiverExceptionHandler implements PubSubMessageReceiverExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultPubSubMessageReceiverExceptionHandler.class);
