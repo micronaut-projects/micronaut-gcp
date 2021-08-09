@@ -4,7 +4,7 @@ dependencies {
     api "io.micronaut:micronaut-http-server:$micronautVersion"
     api 'com.google.cloud.functions:functions-framework-api:1.0.4'
     api project(":gcp-function-http")
-    implementation "io.micronaut.servlet:micronaut-servlet-core:2.1.4"
+    implementation "io.micronaut.servlet:micronaut-servlet-core:3.0.0-RC2"
     implementation 'org.eclipse.jetty:jetty-servlet:10.0.6'
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
