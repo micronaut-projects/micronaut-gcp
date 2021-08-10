@@ -44,11 +44,10 @@ import java.util.*;
 @Internal
 final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpResponse, B> {
 
-    private final HttpResponse response;
+    private final HttpResponseWrapper response;
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
     private MutableConvertibleValues<Object> attributes;
     private B body;
-    private HttpStatus status = HttpStatus.OK;
 
     /**
      * Default constructor.
@@ -57,7 +56,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
      * @param mediaTypeCodecRegistry The media type codec registry
      */
     GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
-        this.response = response;
+        this.response = new HttpResponseWrapper(response);
         this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
     }
 
@@ -122,14 +121,13 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
     @Override
     public MutableHttpResponse<B> status(HttpStatus status, CharSequence message) {
         ArgumentUtils.requireNonNull("status", status);
-        this.status = status;
         response.setStatusCode(status.getCode(), message != null ? message.toString() : status.getReason());
         return this;
     }
 
     @Override
     public HttpStatus getStatus() {
-        return this.status;
+        return response.getStatus();
     }
 
     @Override

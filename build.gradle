@@ -23,7 +23,7 @@ subprojects { Project subproject ->
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
-        testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"        
+        testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     }
 }
 
