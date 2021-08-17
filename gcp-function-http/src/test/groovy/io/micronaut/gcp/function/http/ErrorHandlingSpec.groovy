@@ -23,7 +23,7 @@ class ErrorHandlingSpec extends Specification {
         then:"The local error handler is executed"
         googleResponse.statusCode == HttpStatus.BAD_REQUEST.code
         googleResponse.contentType.get() == MediaType.APPLICATION_JSON
-        googleResponse.text.startsWith("{\"message\":\"Failed to convert argument [id]")
+        googleResponse.text.contains("\"_embedded\":{\"errors\":[{\"message\":\"Failed to convert argument [id]")
     }
 
     void "test custom local 404 handler"() {
