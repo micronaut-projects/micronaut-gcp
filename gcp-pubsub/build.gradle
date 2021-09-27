@@ -6,7 +6,7 @@ dependencies {
     api "io.micronaut:micronaut-inject:$micronautVersion"
     api "io.micronaut:micronaut-messaging:$micronautVersion"
     api project(":gcp-common")
-    api "com.google.cloud:google-cloud-pubsub:1.113.6"
+    api "com.google.cloud:google-cloud-pubsub:1.114.4"
     implementation "io.projectreactor:reactor-core:$reactorVersion"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation 'io.micronaut.rxjava2:micronaut-rxjava2:1.0.0-M2'
