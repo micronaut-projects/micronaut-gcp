@@ -2989,7 +2989,7 @@ class CustomConfigurationSubscriber {
 
 <div class="paragraph">
 <p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/gcp/pubsub/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
-By default messages are auto acknowledged if the method returns without exceptions, see the section  <a href="#erroHandling">Consumer ErrorHandling </a> for more information on error handling.
+By default messages are auto acknowledged if the method returns without exceptions, see the section  <a href="#errorHandling">Consumer ErrorHandling </a> for more information on error handling.
 It is possible to have manual acknowledgement control by adding an argument of type <a href="{apimicronaut}messaging/Acknowledge.html">Acknowledge</a> and manually invoking <code>ack()</code> or <code>nack()</code> methods.</p>
 </div>
 <div class="paragraph">
