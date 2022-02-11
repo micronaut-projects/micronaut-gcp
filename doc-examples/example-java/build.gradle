@@ -1,9 +1,13 @@
-apply plugin:"java"
+plugins {
+    id 'java-library'
+}
 
-ext.skipDocumentation=true
+repositories {
+    mavenCentral()
+}
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
 
     implementation project(":gcp-function-http")
     implementation project(":gcp-pubsub")

@@ -1,7 +1,13 @@
-apply plugin:"groovy"
+plugins {
+    id 'groovy'
+}
+
+repositories {
+    mavenCentral()
+}
 
 dependencies {
-    compileOnly "io.micronaut:micronaut-inject-groovy"
+    compileOnly "io.micronaut:micronaut-inject-groovy:${micronautVersion}"
 
     implementation project(":gcp-pubsub")
     implementation project(":gcp-function-http")
