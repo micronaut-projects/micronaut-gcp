@@ -1,5 +1,17 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'io.micronaut.build.shared.settings' version '5.2.1'
+}
+
 rootProject.name = 'gcp'
 
+include 'gcp-bom'
 include 'gcp-common'
 include 'gcp-tracing'
 include 'gcp-http-client'

@@ -1,11 +1,15 @@
+plugins {
+    id("io.micronaut.build.internal.module")
+}
+
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
 
     compileOnly "io.micronaut:micronaut-runtime"
     api "io.micronaut:micronaut-inject:$micronautVersion"
-    api 'com.google.auth:google-auth-library-oauth2-http:1.0.0'
-    api 'com.google.cloud:google-cloud-core:2.0.2'
+    api("com.google.auth:google-auth-library-oauth2-http:${googleAuthLibraryOauth2HttpVersion}")
+    api("com.google.cloud:google-cloud-core:${googleCloudCoreVersion}")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "io.micronaut:micronaut-inject-groovy"

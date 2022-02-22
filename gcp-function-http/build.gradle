@@ -1,3 +1,7 @@
+plugins {
+    id("io.micronaut.build.internal.module")
+}
+
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     api "io.micronaut:micronaut-inject:$micronautVersion"
@@ -5,7 +9,7 @@ dependencies {
     api project(":gcp-function")
     implementation "io.micronaut:micronaut-http-netty:$micronautVersion"
     implementation "io.micronaut:micronaut-http-server:$micronautVersion"
-    implementation "io.micronaut.servlet:micronaut-servlet-core:$micronautServletVersion"
+    implementation "io.micronaut.servlet:micronaut-servlet-core"
     implementation "io.micronaut:micronaut-router:$micronautVersion"
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.4'
 

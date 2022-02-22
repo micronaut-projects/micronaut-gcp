@@ -1,28 +1,9 @@
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "io.micronaut.build.internal:micronaut-gradle-plugins:4.1.5"
-    }
+plugins {
+    id "io.micronaut.build.internal.docs"
+    id "io.micronaut.build.internal.dependency-updates"
 }
 
-subprojects { Project subproject ->
-    group "io.micronaut.gcp"
-
-    apply plugin: "io.micronaut.build.internal.common"
-    apply plugin: "io.micronaut.build.internal.dependency-updates"
-    apply plugin: "io.micronaut.build.internal.publishing"
-
-    dependencies {
-        implementation 'jakarta.inject:jakarta.inject-api:2.0.0'
-        testImplementation("org.spockframework:spock-core:${spockVersion}") {
-            exclude module:'groovy-all'
-        }
-        testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
-    }
+micronautBuild {
+    sourceCompatibility = "11"
+    targetCompatibility = "11"
 }
-
-apply plugin: "io.micronaut.build.internal.docs"
-apply plugin: "io.micronaut.build.internal.dependency-updates"

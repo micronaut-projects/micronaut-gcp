@@ -1,11 +1,17 @@
+plugins {
+    id("io.micronaut.build.internal.module")
+}
+
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
-    implementation 'io.micronaut.discovery:micronaut-discovery-client:3.0.0-M2'
+
     api "io.micronaut:micronaut-inject:$micronautVersion"
     api "io.micronaut:micronaut-messaging:$micronautVersion"
     api project(":gcp-common")
-    api "com.google.cloud:google-cloud-secretmanager:1.6.4"
+    api("com.google.cloud:google-cloud-secretmanager:${googleCloudSecretmanagerVersion}")
+
+    implementation 'io.micronaut.discovery:micronaut-discovery-client'
     implementation "io.projectreactor:reactor-core:$reactorVersion"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
