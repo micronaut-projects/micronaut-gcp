@@ -13,6 +13,6 @@ dependencies {
     implementation project(":gcp-secret-manager")
     implementation "io.projectreactor:reactor-core:$reactorVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.20"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.2'
 }
