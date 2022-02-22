@@ -12,6 +12,7 @@ dependencies {
     implementation project(":gcp-pubsub")
     implementation project(":gcp-function-http")
     implementation project(":gcp-secret-manager")
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation "io.projectreactor:reactor-core"
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.4'
 }
