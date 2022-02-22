@@ -12,7 +12,7 @@ dependencies {
     api("com.google.cloud:google-cloud-secretmanager:${googleCloudSecretmanagerVersion}")
 
     implementation 'io.micronaut.discovery:micronaut-discovery-client'
-    implementation "io.projectreactor:reactor-core:$reactorVersion"
+    implementation "io.projectreactor:reactor-core"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "io.micronaut:micronaut-inject-groovy"

@@ -12,7 +12,7 @@ dependencies {
     api project(":gcp-common")
     api("com.google.cloud:google-cloud-pubsub:${googleCloudPubsubVersion}")
 
-    implementation "io.projectreactor:reactor-core:$reactorVersion"
+    implementation "io.projectreactor:reactor-core"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation 'io.micronaut.rxjava2:micronaut-rxjava2'
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
