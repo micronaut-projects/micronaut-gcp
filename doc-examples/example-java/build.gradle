@@ -13,5 +13,5 @@ dependencies {
     implementation project(":gcp-pubsub")
     implementation project(":gcp-secret-manager")
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.4'
-    implementation "io.projectreactor:reactor-core:$reactorVersion"
+    implementation "io.projectreactor:reactor-core"
 }
