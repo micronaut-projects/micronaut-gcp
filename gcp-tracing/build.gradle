@@ -1,17 +1,22 @@
+plugins {
+    id("io.micronaut.build.internal.module")
+}
+
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"    
 
     api project(":gcp-common")
-    api "io.micronaut:micronaut-tracing:$micronautVersion"
-    api "io.micronaut:micronaut-inject:$micronautVersion"
+    api "io.micronaut:micronaut-tracing"
+    api "io.micronaut:micronaut-inject"
+
     implementation'io.zipkin.gcp:zipkin-sender-stackdriver:1.0.2'
     implementation 'io.zipkin.gcp:brave-propagation-stackdriver:1.0.2'
-
     implementation 'io.grpc:grpc-auth:1.39.0'
 
-    implementation 'io.grpc:grpc-netty-shaded:1.39.0'
+    implementation 'io.grpc:grpc-netty-shaded:1.44.1'
     implementation "io.opentracing.brave:brave-opentracing:1.0.0"
+
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-inject-groovy"
