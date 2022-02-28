@@ -9,7 +9,7 @@ dependencies {
     api("com.google.cloud.functions:functions-framework-api:${googleFunctionsFrameworkApiVersion}")
     api project(":gcp-function-http")
     implementation "io.micronaut.servlet:micronaut-servlet-core"
-    implementation 'org.eclipse.jetty:jetty-servlet:10.0.6'
+    implementation 'org.eclipse.jetty:jetty-servlet:10.0.8'
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "io.micronaut:micronaut-inject-groovy"
