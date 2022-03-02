@@ -10,7 +10,7 @@ dependencies {
     api "io.micronaut:micronaut-tracing"
     api "io.micronaut:micronaut-inject"
 
-    implementation'io.zipkin.gcp:zipkin-sender-stackdriver:1.0.2'
+    implementation'io.zipkin.gcp:zipkin-sender-stackdriver:1.0.4'
     implementation 'io.zipkin.gcp:brave-propagation-stackdriver:1.0.4'
     implementation 'io.grpc:grpc-auth:1.44.1'
 
