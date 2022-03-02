@@ -87,8 +87,6 @@ public class DefaultPublisherFactory implements PublisherFactory {
                         .setDelayThreshold(batchSettings.getDelayThreshold())
                         .setElementCountThreshold(batchSettings.getElementCountThreshold())
                         .setIsEnabled(batchSettings.getIsEnabled())
-                        .setElementCountThreshold(batchSettings.getElementCountThreshold())
-                        .setDelayThreshold(batchSettings.getDelayThreshold())
                         .setFlowControlSettings(publisherConfiguration.get().getFlowControlSettings().build())
                         .build());
             }
