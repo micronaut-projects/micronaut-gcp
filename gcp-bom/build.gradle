@@ -10,3 +10,8 @@ dependencies {
         api("com.google.cloud:google-cloud-secretmanager:${googleCloudSecretmanagerVersion}")
     }
 }
+micronautBom {
+    excludeProject.set({ p ->
+        p.name.contains('example')
+    } as Spec<String>)
+}
