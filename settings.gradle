@@ -22,8 +22,8 @@ include 'gcp-pubsub'
 include 'gcp-logging'
 include 'gcp-secret-manager'
 
-include 'doc-examples:example-java'
-include 'doc-examples:example-groovy'
-include 'doc-examples:example-kotlin'
+include 'test-suite'
+include 'test-suite-groovy'
+include 'test-suite-kotlin'
 
 

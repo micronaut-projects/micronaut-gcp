@@ -21,11 +21,11 @@ To inject your own argument binding behavior, it is as simple as registering a b
 A custom annotation can be created to bind consumer arguments. A custom binder can then be created to use that annotation and the api:gcp.pubsub.bind.PubSubConsumerState[] to supply a value for the argument.
 The value may in fact come from anywhere, however for the purposes of this documentation, we will show how you would create an annotation to bind the message publish time.
 
-snippet::io.micronaut.gcp.pubsub.bind.MessagePublishTime[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.bind.MessagePublishTime[tags="imports, clazz", source="main"]
 
 <1> The link:{apimicronaut}core/bind/annotation/Bindable.html[@Bindable] annotation is required for the annotation to be considered for binding.
 
-snippet::io.micronaut.gcp.pubsub.bind.MessagePublishTimeAnnotationBinder[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.bind.MessagePublishTimeAnnotationBinder[tags="imports, clazz", source="main"]
 
 <1> The class is made a bean by annotating with `@Singleton`.
 <2> The custom annotation is used as the generic type for the interface.
@@ -37,6 +37,6 @@ TIP: You could also return a `com.google.protobuf.Timestamp` if you register the
 
 The annotation can now be used on the argument in a consumer method.
 
-snippet::io.micronaut.gcp.pubsub.bind.CustomBindingSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.bind.CustomBindingSubscriber[tags="imports, clazz", source="main"]
 
 <1> The message publish time will now be passed to the annotated argument

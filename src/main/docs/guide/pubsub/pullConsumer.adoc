@@ -22,7 +22,7 @@ Micronaut integration with GCP will automatically grab the default project id av
 You can also pass a FQN as the subscription name.
 This is helpful when you need to listen to subscriptions from different projects.
 
-snippet::io.micronaut.gcp.pubsub.subscriber.SimpleSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.subscriber.SimpleSubscriber[tags="imports, clazz", source="main"]
 
 <1> ann:gcp.pubsub.annotation.PubSubListener[] marks this class to be a Message Listener
 <2> Methods annotated with ann:gcp.pubsub.annotation.Subscription[] will receive messages from that subscription

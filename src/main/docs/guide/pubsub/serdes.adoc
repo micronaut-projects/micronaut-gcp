@@ -12,7 +12,7 @@ First you need to define a custom mimeType for that, we will use `application/x.
 
 NOTE: This is a fictional example, java serialization is not ideal, and its not portable.
 
-snippet::io.micronaut.gcp.pubsub.serdes.JavaMessageSerDes[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.serdes.JavaMessageSerDes[tags="imports, clazz", source="main"]
 
 <1> The class is declared as a singleton so it will be registered with the context
 <2> The `contentType` defines what kind of messages will this implementation be able to handle

@@ -44,7 +44,7 @@ gcp:
 
 You can then apply it to individual methods as:
 
-snippet::io.micronaut.gcp.pubsub.publisher.CustomConfigurationClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.publisher.CustomConfigurationClient[tags="imports, clazz", source="main"]
 
 <1> The link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publisher] will be configured using a configuration named `batching`
 <2> The link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html[Publisher] will be configured using a configuration named `immediate`

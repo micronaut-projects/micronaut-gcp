@@ -5,7 +5,7 @@ Sometimes regulations such as GDPR impose restrictions on where customer data ca
 specify the endpoint of the topic so that Pub/Sub will persist the message data on the specified region.
 To learn more about this feature visit the link:https://cloud.google.com/pubsub/docs/resource-location-restriction[resource location restriction] page.
 
-snippet::io.micronaut.gcp.pubsub.ordering.LocationClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.ordering.LocationClient[tags="imports, clazz", source="main"]
 
 <1> The `endpoint` attribute enforces that messages sent via this method will be stored on the `europe-west1` region.
 
@@ -16,14 +16,14 @@ An example of this would be trading orders placed for a specific symbol. If you 
 
 To enable message ordering for your publishers, use the ann:gcp.pubsub.annotation.OrderingKey[] in one of the method's arguments to declare it an ordering key.
 
-snippet::io.micronaut.gcp.pubsub.ordering.OrderClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.ordering.OrderClient[tags="imports, clazz", source="main"]
 
 <1> Ordering only works on regional endpoints, so you *must* declare an endpoint first
 <2> Although the Pub/Sub API requires the key to be a String, the framework uses a conversion service to convert other types to String.
 
 Here's an example of how to use ordering on your clients:
 
-snippet::io.micronaut.gcp.pubsub.ordering.OrderService[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.ordering.OrderService[tags="imports, clazz", source="main"]
 
 
 

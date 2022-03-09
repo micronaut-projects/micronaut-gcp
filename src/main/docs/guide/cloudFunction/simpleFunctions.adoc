@@ -10,7 +10,7 @@ Now define a class that implements one of Google Cloud Found's interfaces, for e
 
 The following is an example of a `BackgroundFunction` that uses Micronaut and Google Cloud Function:
 
-snippet::example.background.Example[project-base="doc-examples/example", source="main"]
+snippet::example.background.Example[source="main"]
 
 <1> The function extends from `io.micronaut.function.executor.FunctionInitializer`
 <2> The function implements `com.google.cloud.functions.BackgroundFunction`
