@@ -4,6 +4,6 @@ The framework binds those attributes to a link:{apimicronaut}messaging/annotatio
 
 A link:{apimicronaut}core/convert/ConversionService.html[ConversionService] is used to try to convert from the `String` value of the attribute to the target type on the method.
 
-snippet::io.micronaut.gcp.pubsub.subscriber.CustomHeaderSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.subscriber.CustomHeaderSubscriber[tags="imports, clazz", source="main"]
 
 <1> Each annotated argument will be mapped to the corresponding attribute value. The `ConversionService` will try to convert to the target type

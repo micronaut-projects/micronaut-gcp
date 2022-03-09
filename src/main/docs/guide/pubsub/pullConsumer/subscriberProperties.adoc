@@ -27,6 +27,6 @@ gcp:
         parallel-pull-count: 4
 ----
 
-snippet::io.micronaut.gcp.pubsub.subscriber.CustomConfigurationSubscriber[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.subscriber.CustomConfigurationSubscriber[tags="imports, clazz", source="main"]
 
 <1> The link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber] will be configured using a configuration named `custom`

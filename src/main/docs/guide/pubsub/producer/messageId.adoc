@@ -9,7 +9,7 @@ Depending on your choice you may get the message acknowledge back and control if
 2. If your method return a `String` then a blocking call to publish the message is made and the message id is returned.
 3. If your method returns `Single<String>` then it's a reactive call, and you can `subscribe` to the publisher to retrieve the message id.
 
-snippet::io.micronaut.gcp.pubsub.publisher.CustomReturnClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.publisher.CustomReturnClient[tags="imports, clazz", source="main"]
 
 <1> Blocking call, message id is not returned
 <2> Blocking call, message id is returned as `String`

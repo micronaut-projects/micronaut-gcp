@@ -9,7 +9,7 @@ The rules of message serialization are the following:
 2. If the body type is `byte[]` SerDes logic is bypassed, but a `Content-Type` header of `application/json` will be added unless overwritten by the ann:annotation.Topic[] annotation.
 3. For any other type, the type defined by `contentType` will be used to located the correct api:gcp.pubsub.serdes.PubSubMessageSerDes[] to handle it, if none is passed `application/json` will be used.
 
-snippet::io.micronaut.gcp.pubsub.publisher.CustomSerDesClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.publisher.CustomSerDesClient[tags="imports, clazz", source="main"]
 
 <1> Using `PubsubMessage` no SerDes will be used, no headers are added to the message, user is responsible to create the message.
 <2> Using byte array. No SerDes logic is used, however a `Content-Type` header in this example is added with value `application/json`

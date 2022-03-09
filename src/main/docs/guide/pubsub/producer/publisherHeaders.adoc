@@ -1,7 +1,7 @@
 Google Cloud Pub/Sub messages contain a dictionary of message attributes in the form of a `Map<String, String>`.
 The framework binds those attributes to a link:{apimicronaut}messaging/annotation/Header.html[@Header] annotation that can be used at the class level or to the method or an argument of the method.
 
-snippet::io.micronaut.gcp.pubsub.publisher.CustomHeadersClient[tags="imports, clazz", source="main", project-base="doc-examples/example"]
+snippet::io.micronaut.gcp.pubsub.publisher.CustomHeadersClient[tags="imports, clazz", source="main"]
 
 <1> Headers specified at class level will be added to all annotated methods using `@Topic`
 <2> You can pass a static value as part of ann:io.micronaut.messaging.annotation.Header[]
