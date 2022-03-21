@@ -11,6 +11,8 @@ plugins {
 
 rootProject.name = 'gcp-parent'
 
+include 'cloudevents'
+include 'gcp-function-storage'
 include 'gcp-bom'
 include 'gcp-common'
 include 'gcp-tracing'

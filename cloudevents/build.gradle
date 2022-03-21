@@ -1,0 +1,9 @@
+plugins {
+    id("io.micronaut.build.internal.module")
+}
+
+dependencies {
+    implementation "io.micronaut:micronaut-validation"
+    api "io.cloudevents:cloudevents-api:$cloudEventsApiVersion"
+}
+
