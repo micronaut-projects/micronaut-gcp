@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -69,10 +70,12 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     }
 
     private Publisher<PropertySource> resolveEnvironmentSecrets(Environment environment) {
-        return Flux.fromIterable(configCandidates(environment))
-                .flatMap(secretManagerClient::getSecret)
-                .filter(Objects::nonNull)
-                .map(this::fromSecret);
+
+        return Flux.fromIterable(configCandidates(environment).entrySet())
+                .flatMap(env ->
+                        Mono.from(secretManagerClient.getSecret(env.getValue()))
+                                .mapNotNull( secret -> fromSecret(secret, env.getKey()))
+                );
     }
 
     /**
@@ -92,24 +95,33 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     }
 
     /**
-     * @param environment
-     * @return a collection of all possible combinations of files to be queried. For each active environment.
+     * Gather application and project named configurations by environments and custom configurations.
+     * @param environment Active application environment
+     * @return a map of all possible combinations of files with their position to be queried. For each active environment.
      */
-    private Set<String> configCandidates(Environment environment) {
+    private Map<Integer, String> configCandidates(Environment environment) {
         Optional<String> applicationName = environment.getProperty("micronaut.application.name", String.class);
         Set<String> activeEnv = environment.getActiveNames();
-        Set<String> candidates = new LinkedHashSet<>();
-        candidates.add("application");
+        Map<Integer, String> candidates = new HashMap<>();
+
+        candidates.put(EnvironmentPropertySource.POSITION + 101, "application");
         if (applicationName.isPresent()) {
-            candidates.add(applicationName.get());
+            candidates.put(EnvironmentPropertySource.POSITION + 102, applicationName.get());
         }
+
+        int priority = EnvironmentPropertySource.POSITION + 150;
         for (String e : activeEnv) {
-            candidates.add("application_" + e);
+            candidates.put(++priority, "application_" + e);
             if (applicationName.isPresent()) {
-                candidates.add(applicationName.get() + "_" + e);
+                candidates.put(++priority, applicationName.get() + "_" + e);
             }
         }
-        candidates.addAll(configurationProperties.getCustomConfigs());
+
+        for (String name: configurationProperties.getCustomConfigs()) {
+            //NOTE: User defined configuration have higher priority than environments
+            // with the last one having the highest priority.
+            candidates.put(++priority, name);
+        }
         return candidates;
     }
 
@@ -119,12 +131,13 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
      * we could use a `Content-Type` label to define the type of file.
      * So, the code loops through the provided readers, and the first that can read the file (when a wrong file type is read an exception is swallowed )
      * returns a Property Source based on the Map of the parsed file.
-     * @param secret
+     * @param secret Configuration to be parsed
+     * @param priority Property Source position
      * @return Mapped PropertySource
      */
-    private PropertySource fromSecret(VersionedSecret secret) {
+    private PropertySource fromSecret(VersionedSecret secret, int priority) {
         Map<String, Object> data = new HashMap<>();
-        int priority = EnvironmentPropertySource.POSITION + 100;
+
         for (PropertySourceReader reader : READERS) {
             try {
                 data.putAll(reader.read(secret.getName(), secret.getContents()));

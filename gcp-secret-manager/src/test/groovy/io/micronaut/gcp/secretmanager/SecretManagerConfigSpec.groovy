@@ -94,6 +94,7 @@ class SecretManagerConfigSpec extends Specification {
         expect:
 
         false == context.getRequiredProperty("application.debug", Boolean)
+        -1    == context.getRequiredProperty("application.server.port", Integer)
         cleanup:
         context.stop()
     }
