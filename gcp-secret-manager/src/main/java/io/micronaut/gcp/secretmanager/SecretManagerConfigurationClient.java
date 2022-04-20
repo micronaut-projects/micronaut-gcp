@@ -74,7 +74,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
         return Flux.fromIterable(configCandidates(environment).entrySet())
                 .flatMap(env ->
                         Mono.from(secretManagerClient.getSecret(env.getValue()))
-                                .mapNotNull( secret -> fromSecret(secret, env.getKey()))
+                                .mapNotNull(secret -> fromSecret(secret, env.getKey()))
                 );
     }
 
