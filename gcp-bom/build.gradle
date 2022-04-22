@@ -8,5 +8,6 @@ dependencies {
         api("com.google.cloud:google-cloud-core:${googleCloudCoreVersion}")
         api("com.google.cloud:google-cloud-pubsub:${googleCloudPubsubVersion}")
         api("com.google.cloud:google-cloud-secretmanager:${googleCloudSecretmanagerVersion}")
+        api("com.google.cloud:native-image-support:${googleCloudNativeImageSupportVersion}")
     }
 }

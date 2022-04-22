@@ -7,7 +7,7 @@ For Gradle add the following dependency:
 ----
 dependencies {
   ...
-  nativeImageCompileOnly("com.google.cloud:native-image-support:${version}")
+  nativeImageCompileOnly("com.google.cloud:native-image-support")
 }
 ----
 
@@ -27,12 +27,10 @@ For Maven add the following profile:
         <dependency>
           <groupId>com.google.cloud</groupId>
           <artifactId>native-image-support</artifactId>
-          <version>${version}</version>
         </dependency>
       </dependencies>
     </profile>
   </profiles>
 ----
 
-Find the latest version in the https://mvnrepository.com/artifact/com.google.cloud/native-image-support[Maven Repository].
 
