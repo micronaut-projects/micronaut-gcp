@@ -13,7 +13,7 @@ dependencies {
     implementation project(":gcp-secret-manager")
     implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation "io.projectreactor:reactor-core"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.2'
 }
