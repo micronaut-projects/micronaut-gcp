@@ -61,6 +61,8 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#secretManager"><strong>9</strong><span>Google Cloud Secret Manager Support</span></a></div>
                                 
+                                <div class="toc-item" style="margin-left:0"><a href="#nativeImage"><strong>10</strong><span>Generating Native Images</span></a></div>
+                                
                             </div>
                         </div>
                     </li>
@@ -153,6 +155,8 @@
         <div class="toc-item" style="margin-left:10px" id="toc-item-distributedConfiguration"><a href="#distributedConfiguration"><strong>9.1</strong><span>Distributed Configuration</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-secretManagerClient"><a href="#secretManagerClient"><strong>9.2</strong><span>Low-Level Secret Manager Client access</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-nativeImage"><a href="#nativeImage"><strong>10</strong><span>Generating Native Images</span></a></div>
         
         </div>
     </div>
@@ -4179,6 +4183,57 @@ You can use the client libraries at any point in time of your runtime, however i
 </table>
 </div>
 </div>
+</div>
+</div>
+
+<h1 id="nativeImage"><a class="anchor" href="#nativeImage"></a>10 Generating Native Images</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/nativeImage.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Some GCP modules require <a href="https://github.com/GoogleCloudPlatform/native-image-support-java">Native Image Support for Google Cloud Libraries</a> to build GraalVM native images.</p>
+</div>
+<div class="paragraph">
+<p>The library is only needed when compiling the native image.</p>
+</div>
+<div class="paragraph">
+<p>For Gradle add the following dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
+  ...
+  nativeImageCompileOnly("com.google.cloud:native-image-support")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Maven add the following profile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">  &lt;profiles&gt;
+    &lt;profile&gt;
+      &lt;id&gt;graalVM&lt;/id&gt;
+      &lt;activation&gt;
+        &lt;property&gt;
+          &lt;name&gt;packaging&lt;/name&gt;
+          &lt;value&gt;native-image&lt;/value&gt;
+        &lt;/property&gt;
+      &lt;/activation&gt;
+      &lt;dependencies&gt;
+        &lt;dependency&gt;
+          &lt;groupId&gt;com.google.cloud&lt;/groupId&gt;
+          &lt;artifactId&gt;native-image-support&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+      &lt;/dependencies&gt;
+    &lt;/profile&gt;
+  &lt;/profiles&gt;</code></pre>
 </div>
 </div>
 
