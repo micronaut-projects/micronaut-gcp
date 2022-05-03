@@ -3,19 +3,19 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
+    annotationProcessor(libs.micronaut.inject.java)
+    annotationProcessor(libs.micronaut.docs.asciidoc.config.props)
     compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
 
-    api "io.micronaut:micronaut-inject:$micronautVersion"
-    api "io.micronaut:micronaut-messaging:$micronautVersion"
+    api(libs.micronaut.inject)
+    api(libs.micronaut.messaging)
     api project(":gcp-common")
-    api("com.google.cloud:google-cloud-pubsub:${googleCloudPubsubVersion}")
+    api(libs.google.cloud.pubsub)
 
-    implementation "io.projectreactor:reactor-core"
-    testImplementation "io.micronaut:micronaut-inject-java"
-    testImplementation 'io.micronaut.rxjava2:micronaut-rxjava2'
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
-    testImplementation "io.micronaut:micronaut-inject-groovy"
+    implementation(libs.reactor.core)
+    testImplementation(libs.micronaut.inject.java)
+    testImplementation(libs.micronaut.rxjava2)
+    testImplementation(libs.micronaut.test.spock)
+    testImplementation(libs.micronaut.inject.groovy)
     testImplementation "org.testcontainers:spock:1.16.3"
 }
