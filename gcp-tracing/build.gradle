@@ -12,7 +12,11 @@ dependencies {
 
     implementation'io.zipkin.gcp:zipkin-sender-stackdriver:1.0.4'
     implementation 'io.zipkin.gcp:brave-propagation-stackdriver:1.0.4'
-    implementation 'io.grpc:grpc-auth:1.45.1'
+    implementation('io.grpc:grpc-auth:1.45.1'){
+        //grpc-auth pulls in an older version of google-auth-library-credentials
+        // which causes issues with maven native image compilation
+        exclude group: 'com.google.auth', module: 'google-auth-library-credentials'
+    }
 
     implementation 'io.grpc:grpc-netty-shaded:1.45.1'
     implementation "io.opentracing.brave:brave-opentracing:1.0.0"
