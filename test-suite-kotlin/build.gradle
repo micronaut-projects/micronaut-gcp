@@ -15,5 +15,5 @@ dependencies {
     implementation(libs.reactor.core)
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
-    compileOnly(libs.functions.framework.api)
+    compileOnly(libs.managed.functions.framework.api)
 }

@@ -3,12 +3,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.micronaut.inject.java)
-    annotationProcessor(libs.micronaut.docs.asciidoc.config.props)
-
     api project(":gcp-common")
     api(libs.micronaut.tracing.zipkin)
-    api(libs.micronaut.inject)
 
     implementation(libs.zipkin.sender.stackdriver)
     implementation(libs.brave.propagation.stackdriver)
@@ -20,5 +16,4 @@ dependencies {
     testAnnotationProcessor(libs.micronaut.inject.java)
     testImplementation(libs.micronaut.inject.java)
     testImplementation(libs.micronaut.inject.groovy)
-    testImplementation(libs.micronaut.test.spock)
 }

@@ -3,14 +3,9 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.micronaut.inject.java)
-    annotationProcessor(libs.micronaut.docs.asciidoc.config.props)
-
     api project(":gcp-common")
     api(libs.micronaut.http.client)
-    api(libs.micronaut.inject)
     implementation(libs.reactor.core)
     testCompileOnly(libs.micronaut.inject.groovy)
     testImplementation(libs.micronaut.http.server.netty)
-    testImplementation(libs.micronaut.test.spock)
 }

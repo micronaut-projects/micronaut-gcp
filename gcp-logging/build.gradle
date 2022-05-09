@@ -3,16 +3,12 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.micronaut.inject.java)
-    annotationProcessor(libs.micronaut.docs.asciidoc.config.props)
-    compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
     compileOnly project(":gcp-tracing")
-    api(libs.micronaut.inject)
     api project(":gcp-common")
     implementation(libs.logback.json.classic)
     implementation(libs.jackson.databind)
+
     testImplementation(libs.micronaut.inject.java)
-    testImplementation(libs.micronaut.test.spock)
     testImplementation(libs.micronaut.inject.groovy)
     testImplementation(libs.testcontainers.spock)
 }

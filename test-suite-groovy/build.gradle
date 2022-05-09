@@ -14,5 +14,5 @@ dependencies {
     implementation project(":gcp-secret-manager")
     implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation(libs.reactor.core)
-    compileOnly(libs.functions.framework.api)
+    compileOnly(libs.managed.functions.framework.api)
 }

@@ -7,12 +7,14 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     annotationProcessor(libs.micronaut.inject.java)
 
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation project(":gcp-function-http")
     implementation project(":gcp-pubsub")
     implementation project(":gcp-secret-manager")
-    compileOnly(libs.functions.framework.api)
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation(libs.reactor.core)
+
+    compileOnly(libs.managed.functions.framework.api)
 }

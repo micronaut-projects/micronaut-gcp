@@ -3,12 +3,9 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.micronaut.inject.java)
-    api(libs.micronaut.inject)
     api(libs.micronaut.function)
-    compileOnly(libs.functions.framework.api)
+    compileOnly(libs.managed.functions.framework.api)
 
-    testImplementation(libs.micronaut.inject.groovy)
     testAnnotationProcessor(libs.micronaut.inject.java)
-    testImplementation(libs.functions.framework.api)
+    testImplementation(libs.managed.functions.framework.api)
 }

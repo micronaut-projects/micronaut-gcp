@@ -1,59 +1,53 @@
 [versions]
+managed-google-auth-library-oauth2http = "1.5.3"
+managed-google-functions-framework-api = "1.0.4"
+managed-google-cloud-core = "2.5.6"
+managed-google-cloud-pubsub = "1.116.0"
+managed-google-cloud-secretmanager = "2.1.3"
+managed-google-cloud-native-image-support = "0.12.11"
+
 brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
-functions-framework-api = "1.0.4"
-google-auth-library-oauth2http = "1.5.3"
-google-cloud-core = "2.5.6"
-google-cloud-native-image-support = "0.12.11"
-google-cloud-pubsub = "1.116.0"
-google-cloud-secretmanager = "2.1.3"
-google-functions-framework-api = "1.0.4"
 groovy = "3.0.10"
 grpc = "1.45.1"
 jetty-servlet = "10.0.6"
 logback-json-classic = "0.1.5"
 zipkin-sender-stackdriver = "1.0.4"
 
-# Micronaut
-micronaut = "3.4.3"
-micronaut-docs = "2.0.0"
-micronaut-test = "3.1.1"
-
-
 [libraries]
+# Managed
+managed-google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "managed-google-auth-library-oauth2http" }
+managed-functions-framework-api = { module = "com.google.cloud.functions:functions-framework-api", version.ref = "managed-google-functions-framework-api" }
+managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
+managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "managed-google-cloud-pubsub" }
+managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
+managed-google-native-image-support = { module = "com.google.cloud:native-image-support", version.ref = "managed-google-cloud-native-image-support" }
+
 # Micronaut
 micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discovery-client" }
-micronaut-docs-asciidoc-config-props = { module = "io.micronaut.docs:micronaut-docs-asciidoc-config-props", version.ref = "micronaut-docs" }
-micronaut-function = { module = "io.micronaut:micronaut-function", version.ref = "micronaut" }
-micronaut-http-client = { module = "io.micronaut:micronaut-http-client", version.ref = "micronaut" }
-micronaut-http-netty = { module = "io.micronaut:micronaut-http-netty", version.ref = "micronaut" }
-micronaut-http-server = { module = "io.micronaut:micronaut-http-server", version.ref = "micronaut" }
+micronaut-function = { module = "io.micronaut:micronaut-function" }
+micronaut-http-client = { module = "io.micronaut:micronaut-http-client" }
+micronaut-http-netty = { module = "io.micronaut:micronaut-http-netty" }
+micronaut-http-server = { module = "io.micronaut:micronaut-http-server" }
 micronaut-http-server-netty = { module = "io.micronaut:micronaut-http-server-netty" }
-micronaut-inject = { module = "io.micronaut:micronaut-inject", version.ref = "micronaut" }
-micronaut-inject-groovy = { module = "io.micronaut:micronaut-inject-groovy", version.ref = "micronaut" }
-micronaut-inject-java = { module = "io.micronaut:micronaut-inject-java", version.ref = "micronaut" }
-micronaut-messaging = { module = "io.micronaut:micronaut-messaging", version.ref = "micronaut" }
-micronaut-router = { module = "io.micronaut:micronaut-router", version.ref = "micronaut" }
+micronaut-inject-groovy = { module = "io.micronaut:micronaut-inject-groovy" }
+micronaut-inject-java = { module = "io.micronaut:micronaut-inject-java" }
+micronaut-messaging = { module = "io.micronaut:micronaut-messaging" }
+micronaut-router = { module = "io.micronaut:micronaut-router" }
 micronaut-runtime = { module = "io.micronaut:micronaut-runtime" }
 micronaut-rxjava2 = { module = "io.micronaut.rxjava2:micronaut-rxjava2" }
 micronaut-servlet-core = { module = "io.micronaut.servlet:micronaut-servlet-core" }
-micronaut-test-spock = { module = "io.micronaut.test:micronaut-test-spock", version.ref = "micronaut-test" }
 micronaut-tracing-zipkin = { module = "io.micronaut.tracing:micronaut-tracing-zipkin" }
 
 brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
 brave-propagation-stackdriver = { module = "io.zipkin.gcp:brave-propagation-stackdriver", version.ref = "brave-propagation-stackdriver" }
-functions-framework-api = { module = "com.google.cloud.functions:functions-framework-api", version.ref = "google-functions-framework-api" }
-google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "google-auth-library-oauth2http" }
-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "google-cloud-core" }
-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "google-cloud-pubsub" }
-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "google-cloud-secretmanager" }
+
 groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
 grpc-auth = { module = "io.grpc:grpc-auth", version.ref = "grpc" }
 grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind" }
 jetty-servlet = { module = "org.eclipse.jetty:jetty-servlet", version.ref = "jetty-servlet" }
 logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic", version.ref = "logback-json-classic" }
-native-image-support = { module = "com.google.cloud:native-image-support", version.ref = "google-cloud-native-image-support" }
 reactor-core = { module = "io.projectreactor:reactor-core" }
 testcontainers-spock = { module = "org.testcontainers:spock" }
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }

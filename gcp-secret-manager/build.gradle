@@ -3,17 +3,13 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.micronaut.inject.java)
-    annotationProcessor(libs.micronaut.docs.asciidoc.config.props)
-
-    api(libs.micronaut.inject)
     api(libs.micronaut.messaging)
     api project(":gcp-common")
-    api(libs.google.cloud.secretmanager)
+    api(libs.managed.google.cloud.secretmanager)
 
     implementation(libs.micronaut.discovery.client)
     implementation(libs.reactor.core)
+
     testImplementation(libs.micronaut.inject.java)
-    testImplementation(libs.micronaut.test.spock)
     testImplementation(libs.micronaut.inject.groovy)
 }
