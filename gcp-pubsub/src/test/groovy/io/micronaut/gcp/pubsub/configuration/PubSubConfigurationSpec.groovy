@@ -11,11 +11,14 @@ class PubSubConfigurationSpec extends Specification {
 
     void "test configuration binding"() {
         ApplicationContext ctx = ApplicationContext.run([
-                "gcp.pubsub.keepAliveIntervalMinutes" : "10"])
+                "gcp.pubsub.keepAliveIntervalMinutes" : "10",
+                "gcp.pubsub.topicEndpoint" : "us-central1-pubsub.googleapis.com:443",
+                ])
         PubSubConfigurationProperties properties = ctx.getBean(PubSubConfigurationProperties)
 
         expect:
         properties.keepAliveIntervalMinutes == 10
+        properties.topicEndpoint == "us-central1-pubsub.googleapis.com:443"
     }
 
     void "test publisher configuration binding"() {
