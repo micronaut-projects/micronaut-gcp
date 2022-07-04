@@ -17,5 +17,5 @@ dependencies {
     testImplementation 'io.micronaut.rxjava2:micronaut-rxjava2'
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "org.testcontainers:spock:1.17.1"
+    testImplementation "org.testcontainers:spock:1.17.3"
 }
