@@ -9,6 +9,5 @@ dependencies {
     implementation(libs.jackson.databind)
 
     testImplementation(mn.micronaut.inject.java)
-    testImplementation(mn.micronaut.inject.groovy)
     testImplementation(libs.testcontainers.spock)
 }

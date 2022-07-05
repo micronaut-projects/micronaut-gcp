@@ -6,6 +6,5 @@ dependencies {
     api project(":gcp-common")
     api(mn.micronaut.http.client)
     implementation(libs.reactor.core)
-    testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)
 }

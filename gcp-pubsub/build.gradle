@@ -11,6 +11,5 @@ dependencies {
 
     testImplementation(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.rxjava2)
-    testImplementation(mn.micronaut.inject.groovy)
     testImplementation libs.testcontainers.spock
 }
