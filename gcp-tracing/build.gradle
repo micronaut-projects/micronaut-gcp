@@ -6,7 +6,7 @@ dependencies {
     api project(":gcp-common")
     api(libs.micronaut.tracing.zipkin)
 
-    implementation "com.google.auth:google-auth-library-credentials:$googleAuthLibraryOauth2HttpVersion"
+    implementation(libs.google.auth.library.credentials)
     implementation(libs.zipkin.sender.stackdriver)
     implementation(libs.brave.propagation.stackdriver)
     implementation(libs.grpc.auth)
