@@ -8,7 +8,7 @@ repositories {
 
 dependencies {
     annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    annotationProcessor(libs.micronaut.inject.java)
+    annotationProcessor(mn.micronaut.inject.java)
 
     implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation project(":gcp-function-http")

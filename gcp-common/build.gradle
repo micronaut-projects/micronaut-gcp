@@ -3,11 +3,11 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs.micronaut.runtime)
+    compileOnly(mn.micronaut.runtime)
 
     api(libs.managed.google.auth.library.oauth2.http)
     api(libs.managed.google.cloud.core)
 
-    testAnnotationProcessor(libs.micronaut.inject.java)
-    testImplementation(libs.micronaut.runtime)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.runtime)
 }

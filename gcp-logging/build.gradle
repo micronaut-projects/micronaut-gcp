@@ -8,7 +8,7 @@ dependencies {
     implementation(libs.logback.json.classic)
     implementation(libs.jackson.databind)
 
-    testImplementation(libs.micronaut.inject.java)
-    testImplementation(libs.micronaut.inject.groovy)
+    testImplementation(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.inject.groovy)
     testImplementation(libs.testcontainers.spock)
 }

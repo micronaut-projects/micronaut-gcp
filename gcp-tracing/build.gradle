@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     api project(":gcp-common")
-    api(libs.micronaut.tracing.zipkin)
+    api(mn.micronaut.tracing.zipkin)
 
     implementation(libs.google.auth.library.credentials)
     implementation(libs.zipkin.sender.stackdriver)
@@ -14,7 +14,7 @@ dependencies {
     implementation(libs.grpc.netty.shaded)
     implementation(libs.brave.opentracing)
 
-    testAnnotationProcessor(libs.micronaut.inject.java)
-    testImplementation(libs.micronaut.inject.java)
-    testImplementation(libs.micronaut.inject.groovy)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.inject.groovy)
 }

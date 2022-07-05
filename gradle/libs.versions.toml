@@ -23,22 +23,6 @@ managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub",
 managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
 managed-google-native-image-support = { module = "com.google.cloud:native-image-support", version.ref = "managed-google-cloud-native-image-support" }
 
-# Micronaut
-micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discovery-client" }
-micronaut-function = { module = "io.micronaut:micronaut-function" }
-micronaut-http-client = { module = "io.micronaut:micronaut-http-client" }
-micronaut-http-netty = { module = "io.micronaut:micronaut-http-netty" }
-micronaut-http-server = { module = "io.micronaut:micronaut-http-server" }
-micronaut-http-server-netty = { module = "io.micronaut:micronaut-http-server-netty" }
-micronaut-inject-groovy = { module = "io.micronaut:micronaut-inject-groovy" }
-micronaut-inject-java = { module = "io.micronaut:micronaut-inject-java" }
-micronaut-messaging = { module = "io.micronaut:micronaut-messaging" }
-micronaut-router = { module = "io.micronaut:micronaut-router" }
-micronaut-runtime = { module = "io.micronaut:micronaut-runtime" }
-micronaut-rxjava2 = { module = "io.micronaut.rxjava2:micronaut-rxjava2" }
-micronaut-servlet-core = { module = "io.micronaut.servlet:micronaut-servlet-core" }
-micronaut-tracing-zipkin = { module = "io.micronaut.tracing:micronaut-tracing-zipkin" }
-
 brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
 brave-propagation-stackdriver = { module = "io.zipkin.gcp:brave-propagation-stackdriver", version.ref = "brave-propagation-stackdriver" }
 

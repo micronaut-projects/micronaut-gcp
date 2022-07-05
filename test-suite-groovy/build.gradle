@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly(libs.micronaut.inject.groovy)
+    compileOnly(mn.micronaut.inject.groovy)
     compileOnly(libs.groovy)
     implementation project(":gcp-pubsub")
     implementation project(":gcp-function-http")

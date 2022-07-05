@@ -4,8 +4,8 @@ plugins {
 
 dependencies {
     api project(":gcp-common")
-    api(libs.micronaut.http.client)
+    api(mn.micronaut.http.client)
     implementation(libs.reactor.core)
-    testCompileOnly(libs.micronaut.inject.groovy)
-    testImplementation(libs.micronaut.http.server.netty)
+    testCompileOnly(mn.micronaut.inject.groovy)
+    testImplementation(mn.micronaut.http.server.netty)
 }
