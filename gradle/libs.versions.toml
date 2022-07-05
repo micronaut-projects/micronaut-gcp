@@ -42,6 +42,8 @@ micronaut-tracing-zipkin = { module = "io.micronaut.tracing:micronaut-tracing-zi
 brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
 brave-propagation-stackdriver = { module = "io.zipkin.gcp:brave-propagation-stackdriver", version.ref = "brave-propagation-stackdriver" }
 
+google-auth-library-credentials = { module = "com.google.auth:google-auth-library-credentials", version.ref = "managed-google-auth-library-oauth2http" }
+
 groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
 grpc-auth = { module = "io.grpc:grpc-auth", version.ref = "grpc" }
 grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
