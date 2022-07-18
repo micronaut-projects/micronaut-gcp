@@ -27,8 +27,8 @@ import spock.lang.Specification
 import jakarta.inject.Inject
 
 @MicronautTest(environments = Environment.GOOGLE_COMPUTE)
-@Property(name = "gcp.http.client.auth.patterns", value = "/test/**")
-class GoogleAuthFilterSpec extends Specification {
+@Property(name = "gcp.http.client.auth.service.patterns", value = "/test/**")
+class GoogleServiceAuthFilterSpec extends Specification {
 
     @Inject
     TestClient client

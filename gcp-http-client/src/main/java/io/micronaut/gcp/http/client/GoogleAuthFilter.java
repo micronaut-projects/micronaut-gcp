@@ -20,7 +20,6 @@ import io.micronaut.context.env.Environment;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.filter.ClientFilterChain;
@@ -32,26 +31,19 @@ import reactor.core.publisher.Mono;
 import javax.annotation.PreDestroy;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 
 /**
  * A filter that allows service to service communication in GCP (https://cloud.google.com/run/docs/authenticating/service-to-service).
- *
- * Requires the user to set the {@code gcp.http.client.auth.patterns} property with the URI patterns
- * to apply the filter to. For example {@code /**} for all requests.
  *
  * @author graemerocher
  * @since 1.0.0
  */
 @Requires(env = Environment.GOOGLE_COMPUTE)
-@Requires(property = "gcp.http.client.auth.patterns")
-@Filter(patterns = "${gcp.http.client.auth.patterns:/**}")
-public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
+public abstract class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     private static final String METADATA_FLAVOR = "Metadata-Flavor";
     private static final String GOOGLE = "Google";
-    private static final String AUDIENCE = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
+    protected static final String AUDIENCE = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
     private final HttpClient authClient;
 
     /**
@@ -81,9 +73,5 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
         authClient.close();
     }
 
-    private String encodeURI(MutableHttpRequest<?> request) throws UnsupportedEncodingException {
-        URI fullURI = request.getUri();
-        String receivingURI = fullURI.getScheme() + "://" + fullURI.getHost();
-        return AUDIENCE + URLEncoder.encode(receivingURI, "UTF-8");
-    }
+    protected abstract String encodeURI(MutableHttpRequest<?> request) throws UnsupportedEncodingException;
 }
