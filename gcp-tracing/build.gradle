@@ -13,7 +13,7 @@ dependencies {
     implementation "com.google.auth:google-auth-library-credentials:$googleAuthLibraryOauth2HttpVersion"
     implementation'io.zipkin.gcp:zipkin-sender-stackdriver:1.0.4'
     implementation 'io.zipkin.gcp:brave-propagation-stackdriver:1.0.4'
-    implementation('io.grpc:grpc-auth:1.45.1')
+    implementation('io.grpc:grpc-auth:1.48.0')
 
     implementation 'io.grpc:grpc-netty-shaded:1.45.1'
     implementation "io.opentracing.brave:brave-opentracing:1.0.0"
