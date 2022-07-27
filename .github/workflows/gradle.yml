@@ -29,7 +29,7 @@ jobs:
          sudo apt-get clean
          df -h
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3.0.5
+      - uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
@@ -51,18 +51,26 @@ jobs:
         run: |
           # Awful hack for kapt and JDK 16. See https://youtrack.jetbrains.com/issue/KT-45545
           if [ ${{ matrix.java }} == 16 ]; then export GRADLE_OPTS="-Dorg.gradle.jvmargs=--illegal-access=permit"; fi
-          ./gradlew dependencyUpdates check --no-daemon --parallel --continue
+          ./gradlew check --no-daemon --parallel --continue
         env:
            TESTCONTAINERS_RYUK_DISABLED: true
            GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
            GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USERNAME }}
            GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
+           PREDICTIVE_TEST_SELECTION: "${{ github.event_name == 'pull_request' && 'true' || 'false' }}"
       - name: Publish Test Report
         if: always()
         uses: mikepenz/action-junit-report@v3.2.0
         with:
           check_name: Java CI / Test Report (${{ matrix.java }})
           report_paths: '**/build/test-results/test/TEST-*.xml'
+          check_retries: 'true'
+      - name: "📜 Upload binary compatibility check results"
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: binary-compatibility-reports
+          path: "**/build/reports/binary-compatibility-*.html"
       - name: Publish to Sonatype Snapshots
         if: success() && github.event_name == 'push' && matrix.java == '11'
         env:
