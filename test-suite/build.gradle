@@ -7,12 +7,14 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
+    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    annotationProcessor(mn.micronaut.inject.java)
 
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation project(":gcp-function-http")
     implementation project(":gcp-pubsub")
     implementation project(":gcp-secret-manager")
-    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.4'
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    implementation "io.projectreactor:reactor-core"
+    implementation(libs.reactor.core)
+
+    compileOnly(libs.managed.functions.framework.api)
 }

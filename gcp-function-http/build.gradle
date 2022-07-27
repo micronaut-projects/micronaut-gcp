@@ -3,18 +3,15 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    api "io.micronaut:micronaut-inject:$micronautVersion"
-    api "io.micronaut:micronaut-http-server:$micronautVersion"
+    api(mn.micronaut.http.server)
     api project(":gcp-function")
-    implementation "io.micronaut:micronaut-http-netty:$micronautVersion"
-    implementation "io.micronaut:micronaut-http-server:$micronautVersion"
-    implementation "io.micronaut.servlet:micronaut-servlet-core"
-    implementation "io.micronaut:micronaut-router:$micronautVersion"
-    compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.4'
+    implementation(mn.micronaut.http.netty)
+    implementation(mn.micronaut.http.server)
+    implementation(mn.micronaut.servlet.core)
+    implementation(mn.micronaut.router)
+    compileOnly(libs.managed.functions.framework.api)
 
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation 'io.micronaut.rxjava2:micronaut-rxjava2'
-    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation 'com.google.cloud.functions:functions-framework-api:1.0.4'
+    testImplementation(mn.micronaut.rxjava2)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(libs.managed.functions.framework.api)
 }

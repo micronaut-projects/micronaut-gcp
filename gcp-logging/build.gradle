@@ -3,16 +3,11 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
-    compileOnly "io.micronaut:micronaut-inject-java" // needed only for IntelliJ
     compileOnly project(":gcp-tracing")
-    api "io.micronaut:micronaut-inject:$micronautVersion"
     api project(":gcp-common")
-    implementation ("ch.qos.logback.contrib:logback-json-classic:0.1.5")
-    implementation ("com.fasterxml.jackson.core:jackson-databind")
-    testImplementation "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "org.testcontainers:spock"
+    implementation(libs.logback.json.classic)
+    implementation(libs.jackson.databind)
+
+    testImplementation(mn.micronaut.inject.java)
+    testImplementation(libs.testcontainers.spock)
 }

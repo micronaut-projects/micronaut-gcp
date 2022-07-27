@@ -3,14 +3,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
-
     api project(":gcp-common")
-    api "io.micronaut:micronaut-http-client:$micronautVersion"
-    api "io.micronaut:micronaut-inject:$micronautVersion"
-    implementation "io.projectreactor:reactor-core"
-    testCompileOnly "io.micronaut:micronaut-inject-groovy"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
+    api(mn.micronaut.http.client)
+    implementation(libs.reactor.core)
+    testImplementation(mn.micronaut.http.server.netty)
 }

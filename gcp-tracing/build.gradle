@@ -3,23 +3,17 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"    
-
     api project(":gcp-common")
-    api "io.micronaut.tracing:micronaut-tracing-zipkin"
-    api "io.micronaut:micronaut-inject"
+    api(mn.micronaut.tracing.zipkin)
 
-    implementation "com.google.auth:google-auth-library-credentials:$googleAuthLibraryOauth2HttpVersion"
-    implementation'io.zipkin.gcp:zipkin-sender-stackdriver:1.0.4'
-    implementation 'io.zipkin.gcp:brave-propagation-stackdriver:1.0.4'
-    implementation('io.grpc:grpc-auth:1.45.1')
+    implementation(libs.google.auth.library.credentials)
+    implementation(libs.zipkin.sender.stackdriver)
+    implementation(libs.brave.propagation.stackdriver)
+    implementation(libs.grpc.auth)
 
-    implementation 'io.grpc:grpc-netty-shaded:1.45.1'
-    implementation "io.opentracing.brave:brave-opentracing:1.0.0"
+    implementation(libs.grpc.netty.shaded)
+    implementation(libs.brave.opentracing)
 
-    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.inject.java)
 }
