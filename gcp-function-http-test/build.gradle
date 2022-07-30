@@ -17,6 +17,6 @@ dependencies {
 
 micronautBuild {
     resolutionStrategy {
-        force 'org.eclipse.jetty:jetty-servlet:10.0.6'
+        force 'org.eclipse.jetty:jetty-servlet:10.0.11'
     }
 }
