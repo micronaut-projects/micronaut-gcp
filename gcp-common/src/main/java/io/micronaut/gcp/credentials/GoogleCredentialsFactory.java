@@ -22,6 +22,7 @@ import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.core.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +85,7 @@ public class GoogleCredentialsFactory {
      */
     @Requires(missingBeans = GoogleCredentials.class)
     @Requires(classes = com.google.auth.oauth2.GoogleCredentials.class)
+    @Requires(property = GoogleCredentialsConfiguration.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
     @Primary
     @Singleton
     protected GoogleCredentials defaultGoogleCredentials() throws IOException {

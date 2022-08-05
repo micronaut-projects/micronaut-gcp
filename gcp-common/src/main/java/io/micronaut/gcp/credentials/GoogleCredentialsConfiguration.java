@@ -18,6 +18,7 @@ package io.micronaut.gcp.credentials;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
+import io.micronaut.core.util.Toggleable;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 
 import io.micronaut.core.annotation.NonNull;
@@ -37,7 +38,15 @@ import java.util.Optional;
 @ConfigurationProperties(GoogleCredentialsConfiguration.PREFIX)
 @Context
 @BootstrapContextCompatible
-public class GoogleCredentialsConfiguration {
+public class GoogleCredentialsConfiguration implements Toggleable {
+
+    /**
+     * Google credentials configuration is enabled by default.
+     *
+     * @see GoogleCredentialsFactory#defaultGoogleCredentials()
+     */
+    public static final boolean DEFAULT_ENABLED = true;
+
     /**
      * The default scopes.
      */
@@ -47,6 +56,8 @@ public class GoogleCredentialsConfiguration {
      * The prefix to use.
      */
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".credentials";
+
+    private boolean enabled = DEFAULT_ENABLED;
 
     private List<URI> scopes = DEFAULT_SCOPES;
 
@@ -74,7 +85,7 @@ public class GoogleCredentialsConfiguration {
     }
 
     /**
-     * The location of the service account credential key file. 
+     * The location of the service account credential key file.
      * See <a href="https://cloud.google.com/iam/docs/understanding-service-accounts">Understanding Service Accounts</a>
      * for more information on generating a service account key file.
      * @return The location
@@ -106,5 +117,25 @@ public class GoogleCredentialsConfiguration {
      */
     public void setEncodedKey(@Nullable String encodedKey) {
         this.encodedKey = encodedKey;
+    }
+
+    /**
+     * Returns whether Google credentials configuration is enabled or not.
+     * @since 4.4.1
+     */
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    /**
+     * Allows disabling Google credentials configuration. This may be useful in situations where
+     * you don't want to authenticate despite having the Google Cloud SDK configured. Default value
+     * is {@value #DEFAULT_ENABLED}.
+     * @param enabled whether to enable or disable Google credentials configuration.
+     * @since 4.4.1
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
