@@ -27,6 +27,7 @@ import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -57,10 +58,10 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     private static final String GOOGLE = "Google";
     private static final String IDENTITY_TOKEN_URI = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
     private final HttpClient authClient;
-    private final ApplicationContext applicationContext;
+    @Inject
+    private ApplicationContext applicationContext;
 
-    public GoogleAuthFilter(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public GoogleAuthFilter() {
         try {
             this.authClient = HttpClient.create(new URL("http://metadata"));
         } catch (MalformedURLException e) {
@@ -91,7 +92,7 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     private String getAudience(MutableHttpRequest<?> request) {
         final Optional<Object> serviceId = request.getAttribute("micronaut.http.serviceId");
 
-        if (serviceId.isPresent()) {
+        if (applicationContext != null && serviceId.isPresent()) {
             final Optional<GoogleAuthServiceConfig> config = applicationContext.findBean(GoogleAuthServiceConfig.class, Qualifiers.byName(serviceId.get().toString()));
 
             if (config.isPresent()) {
