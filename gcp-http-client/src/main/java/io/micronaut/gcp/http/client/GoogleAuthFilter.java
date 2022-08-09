@@ -58,15 +58,20 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     private static final String GOOGLE = "Google";
     private static final String IDENTITY_TOKEN_URI = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
     private final HttpClient authClient;
-    @Inject
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     public GoogleAuthFilter() {
+        this(null);
+    }
+
+    @Inject
+    public GoogleAuthFilter(ApplicationContext applicationContext) {
         try {
             this.authClient = HttpClient.create(new URL("http://metadata"));
         } catch (MalformedURLException e) {
             throw new HttpClientException("Cannot create Google Auth Client: " + e.getMessage(), e);
         }
+        this.applicationContext = applicationContext;
     }
 
     @Override
