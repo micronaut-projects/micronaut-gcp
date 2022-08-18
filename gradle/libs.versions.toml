@@ -2,7 +2,7 @@
 managed-google-auth-library-oauth2http = "1.10.0"
 managed-google-functions-framework-api = "1.0.4"
 managed-google-cloud-core = "2.8.6"
-managed-google-cloud-pubsub = "1.116.0"
+managed-google-cloud-pubsub = "1.120.12"
 managed-google-cloud-secretmanager = "2.3.0"
 managed-google-cloud-native-image-support = "0.14.1"
 
