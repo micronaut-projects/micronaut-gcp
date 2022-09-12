@@ -63,6 +63,10 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#nativeImage"><strong>10</strong><span>Generating Native Images</span></a></div>
                                 
+                                <div class="toc-item" style="margin-left:0"><a href="#cloudStorage"><strong>11</strong><span>Google Cloud Storage Support</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>12</strong><span>Repository</span></a></div>
+                                
                             </div>
                         </div>
                     </li>
@@ -157,6 +161,10 @@
         <div class="toc-item" style="margin-left:10px" id="toc-item-secretManagerClient"><a href="#secretManagerClient"><strong>9.2</strong><span>Low-Level Secret Manager Client access</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-nativeImage"><a href="#nativeImage"><strong>10</strong><span>Generating Native Images</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-cloudStorage"><a href="#cloudStorage"><strong>11</strong><span>Google Cloud Storage Support</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>12</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -4242,6 +4250,57 @@ You can use the client libraries at any point in time of your runtime, however i
     &lt;/profile&gt;
   &lt;/profiles&gt;</code></pre>
 </div>
+</div>
+
+<h1 id="cloudStorage"><a class="anchor" href="#cloudStorage"></a>11 Google Cloud Storage Support</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/cloudStorage.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut provides a high-level, uniform object storage API that works across the major cloud providers: <a href="https://micronaut-projects.github.io/micronaut-object-storage/latest/guide/">Micronaut Object Storage</a>.</p>
+</div>
+<div class="paragraph">
+<p>To get started, select the <code>object-storage-gcp</code> feature in <a href="https://micronaut.io/launch?features=object-storage-gcp">Micronaut Launch</a>, or add the following dependency:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.objectstorage:micronaut-object-storage-gcp")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.objectstorage&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-object-storage-gcp&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+<div class="paragraph">
+<p>For more information, check the <a href="https://micronaut-projects.github.io/micronaut-object-storage/latest/guide/#gcp">Micronaut Object Storage GCP support</a> documentation.</p>
+</div>
+
+<h1 id="repository"><a class="anchor" href="#repository"></a>12 Repository</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/repository.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can find the source code of this project in this repository:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/micronaut-projects/micronaut-gcp">https://github.com/micronaut-projects/micronaut-gcp</a></p>
 </div>
 
     </div>
