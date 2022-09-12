@@ -39,3 +39,5 @@ secretManager:
   secretManagerClient: Low-Level Secret Manager Client access
 nativeImage:
   title: Generating Native Images
+cloudStorage: Google Cloud Storage Support
+repository: Repository
