@@ -8,7 +8,7 @@ managed-google-cloud-native-image-support = "0.14.1"
 
 brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
-groovy = "3.0.12"
+groovy = "3.0.13"
 grpc = "1.48.1"
 jetty-servlet = "10.0.11"
 logback-json-classic = "0.1.5"
