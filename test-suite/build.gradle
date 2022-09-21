@@ -1,9 +1,6 @@
 plugins {
     id 'java-library'
-}
-
-repositories {
-    mavenCentral()
+    id "io.micronaut.build.internal.gcp-tests"
 }
 
 dependencies {
