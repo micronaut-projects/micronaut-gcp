@@ -13,7 +13,7 @@ dependencies {
     implementation project(":gcp-secret-manager")
     implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation(libs.reactor.core)
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
     compileOnly(libs.managed.functions.framework.api)
 }
