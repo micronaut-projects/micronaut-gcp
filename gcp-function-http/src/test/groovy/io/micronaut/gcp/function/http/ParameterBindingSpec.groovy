@@ -4,6 +4,7 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import spock.lang.PendingFeature
 import spock.lang.Specification
 
 class ParameterBindingSpec extends Specification {
@@ -81,6 +82,7 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == 'Hello text/plain;q=1.0'
     }
 
+    @PendingFeature
     void "test request and response"() {
 
         given:

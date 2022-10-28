@@ -78,8 +78,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
 
     @Override
     public MutableHttpResponse<B> cookie(Cookie cookie) {
-        if (cookie instanceof NettyCookie) {
-            NettyCookie nettyCookie = (NettyCookie) cookie;
+        if (cookie instanceof NettyCookie nettyCookie) {
             final String encoded = ServerCookieEncoder.STRICT.encode(nettyCookie.getNettyCookie());
             header(HttpHeaders.SET_COOKIE, encoded);
         }
