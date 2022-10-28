@@ -4,14 +4,12 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     annotationProcessor(mn.micronaut.inject.java)
 
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    implementation project(":gcp-function-http")
-    implementation project(":gcp-pubsub")
-    implementation project(":gcp-secret-manager")
-    implementation(libs.reactor.core)
+    implementation projects.gcpFunctionHttp
+    implementation projects.gcpPubsub
+    implementation projects.gcpSecretManager
+    implementation(mn.reactor)
 
     compileOnly(libs.managed.functions.framework.api)
 }

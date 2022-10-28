@@ -5,11 +5,10 @@ plugins {
 
 dependencies {
     compileOnly(mn.micronaut.inject.groovy)
-    compileOnly(libs.groovy)
-    implementation project(":gcp-pubsub")
-    implementation project(":gcp-function-http")
-    implementation project(":gcp-secret-manager")
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    implementation(libs.reactor.core)
+    compileOnly(mn.groovy)
+    implementation projects.gcpPubsub
+    implementation projects.gcpFunctionHttp
+    implementation projects.gcpSecretManager
+    implementation(mn.reactor)
     compileOnly(libs.managed.functions.framework.api)
 }

@@ -17,22 +17,26 @@ package io.micronaut.gcp.function.http;
 
 import com.google.cloud.functions.HttpResponse;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.util.ArgumentUtils;
-import io.micronaut.servlet.http.ServletHttpResponse;
-import io.micronaut.http.*;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpHeaders;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.netty.cookies.NettyCookie;
+import io.micronaut.servlet.http.ServletHttpResponse;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.Optional;
 
 /**
  * The response object for Google Cloud Function.
@@ -48,6 +52,8 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
     private MutableConvertibleValues<Object> attributes;
     private B body;
+    private int status = HttpStatus.OK.getCode();
+    private String reason = HttpStatus.OK.getReason();
 
     /**
      * Default constructor.
@@ -119,15 +125,25 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
     }
 
     @Override
-    public MutableHttpResponse<B> status(HttpStatus status, CharSequence message) {
-        ArgumentUtils.requireNonNull("status", status);
-        response.setStatusCode(status.getCode(), message != null ? message.toString() : status.getReason());
+    public MutableHttpResponse<B> status(int status, CharSequence message) {
+        this.status = status;
+        if (message == null) {
+            this.reason = HttpStatus.getDefaultReason(status);
+        } else {
+            this.reason = message.toString();
+        }
+        response.setStatusCode(status, reason);
         return this;
     }
 
     @Override
-    public HttpStatus getStatus() {
-        return response.getStatus();
+    public int code() {
+        return status;
+    }
+
+    @Override
+    public String reason() {
+        return reason;
     }
 
     @Override

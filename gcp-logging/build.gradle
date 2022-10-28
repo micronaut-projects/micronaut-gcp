@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    compileOnly project(":gcp-tracing")
-    api project(":gcp-common")
+    compileOnly projects.gcpTracing
+    api projects.gcpCommon
     implementation(libs.logback.json.classic)
     implementation(libs.jackson.databind)
 

@@ -90,6 +90,9 @@ class ParameterBindingSpec extends Specification {
                 .service(googleRequest, googleResponse)
 
         expect:
+        // FIXME: this is failing because googleResponse is getting set back to HttpStatus.OK somewhere in the HttpFunction.service() call
+        //  MockGoogleResponse.setStatusCode is first called with HttpStatus.ACCEPTED from ParametersController.requestAndResponse,
+        //  but then again overwriting it with HttpStatus.OK
         googleResponse.statusCode == HttpStatus.ACCEPTED.code
         googleResponse.contentType.get() == MediaType.TEXT_PLAIN
         googleResponse.text == 'Good'
