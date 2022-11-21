@@ -1,0 +1,7 @@
+Micronaut provides a high-level, uniform object storage API that works across the major cloud providers: https://micronaut-projects.github.io/micronaut-object-storage/latest/guide/[Micronaut Object Storage].
+
+To get started, select the `object-storage-gcp` feature in https://micronaut.io/launch?features=object-storage-gcp[Micronaut Launch], or add the following dependency:
+
+dependency:io.micronaut.objectstorage:micronaut-object-storage-gcp[]
+
+For more information, check the https://micronaut-projects.github.io/micronaut-object-storage/latest/guide/#gcp[Micronaut Object Storage GCP support] documentation.

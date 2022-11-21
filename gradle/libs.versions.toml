@@ -1,0 +1,39 @@
+[versions]
+managed-google-auth-library-oauth2http = "1.11.0"
+managed-google-functions-framework-api = "1.0.4"
+managed-google-cloud-core = "2.8.12"
+managed-google-cloud-pubsub = "1.120.16"
+managed-google-cloud-secretmanager = "2.3.4"
+managed-google-cloud-native-image-support = "0.14.1"
+
+brave-opentracing = "1.0.0"
+brave-propagation-stackdriver = "1.0.4"
+groovy = "3.0.13"
+grpc = "1.49.1"
+jetty-servlet = "10.0.11"
+logback-json-classic = "0.1.5"
+zipkin-sender-stackdriver = "1.0.4"
+
+[libraries]
+# Managed
+managed-google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "managed-google-auth-library-oauth2http" }
+managed-functions-framework-api = { module = "com.google.cloud.functions:functions-framework-api", version.ref = "managed-google-functions-framework-api" }
+managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
+managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "managed-google-cloud-pubsub" }
+managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
+managed-google-native-image-support = { module = "com.google.cloud:native-image-support", version.ref = "managed-google-cloud-native-image-support" }
+
+brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
+brave-propagation-stackdriver = { module = "io.zipkin.gcp:brave-propagation-stackdriver", version.ref = "brave-propagation-stackdriver" }
+
+google-auth-library-credentials = { module = "com.google.auth:google-auth-library-credentials", version.ref = "managed-google-auth-library-oauth2http" }
+
+groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
+grpc-auth = { module = "io.grpc:grpc-auth", version.ref = "grpc" }
+grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind" }
+jetty-servlet = { module = "org.eclipse.jetty:jetty-servlet", version.ref = "jetty-servlet" }
+logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic", version.ref = "logback-json-classic" }
+reactor-core = { module = "io.projectreactor:reactor-core" }
+testcontainers-spock = { module = "org.testcontainers:spock" }
+zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }

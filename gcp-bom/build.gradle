@@ -1,13 +1,3 @@
 plugins {
     id "io.micronaut.build.internal.bom"
 }
-dependencies {
-    constraints {
-        api("com.google.auth:google-auth-library-oauth2-http:${googleAuthLibraryOauth2HttpVersion}")
-        api("com.google.cloud.functions:functions-framework-api:${googleFunctionsFrameworkApiVersion}")
-        api("com.google.cloud:google-cloud-core:${googleCloudCoreVersion}")
-        api("com.google.cloud:google-cloud-pubsub:${googleCloudPubsubVersion}")
-        api("com.google.cloud:google-cloud-secretmanager:${googleCloudSecretmanagerVersion}")
-        api("com.google.cloud:native-image-support:${googleCloudNativeImageSupportVersion}")
-    }
-}

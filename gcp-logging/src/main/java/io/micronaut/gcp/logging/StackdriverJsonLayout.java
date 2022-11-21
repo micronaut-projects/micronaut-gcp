@@ -62,7 +62,7 @@ public class StackdriverJsonLayout extends JsonLayout {
     public void start() {
         super.start();
         // If no Project ID set, then attempt to resolve it with the default project ID provider
-        if (StringUtils.isEmpty(this.projectId)) {
+        if (StringUtils.isEmpty(this.projectId) || this.projectId.endsWith("_IS_UNDEFINED")) {
             this.projectId = ServiceOptions.getDefaultProjectId();
         }
     }
