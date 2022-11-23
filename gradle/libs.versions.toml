@@ -3,7 +3,7 @@ managed-google-auth-library-oauth2http = "1.11.0"
 managed-google-functions-framework-api = "1.0.4"
 managed-google-cloud-core = "2.8.28"
 managed-google-cloud-pubsub = "1.120.16"
-managed-google-cloud-secretmanager = "2.3.4"
+managed-google-cloud-secretmanager = "2.6.0"
 managed-google-cloud-native-image-support = "0.14.1"
 
 brave-opentracing = "1.0.0"
