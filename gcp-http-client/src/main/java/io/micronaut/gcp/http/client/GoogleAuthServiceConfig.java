@@ -44,14 +44,23 @@ public class GoogleAuthServiceConfig {
         this.serviceId = serviceId;
     }
 
+    /**
+     * @return the audience service identifier
+     */
     public String getServiceId() {
         return serviceId;
     }
 
+    /**
+     * @return the desired audience
+     */
     public String getAudience() {
         return audience;
     }
 
+    /**
+     * @param audience set the desired audience
+     */
     public void setAudience(final String audience) {
         this.audience = audience;
     }
