@@ -4,8 +4,4 @@ plugins {
 
 dependencies {
     api(mn.micronaut.function)
-    compileOnly(libs.managed.functions.framework.api)
-
-    testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(libs.managed.functions.framework.api)
 }
