@@ -63,7 +63,6 @@ public abstract class GoogleCloudEventsFunction<T> extends GoogleFunctionInitial
      */
     protected abstract void accept(@NonNull CloudEventContext context, @Nullable T data) throws Exception;
 
-
     /**
      *
      * @return Google Cloud Event Type.
