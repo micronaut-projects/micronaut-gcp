@@ -4,7 +4,6 @@ managed-google-functions-framework-api = "1.0.4"
 managed-google-cloud-core = "2.8.12"
 managed-google-cloud-pubsub = "1.120.16"
 managed-google-cloud-secretmanager = "2.3.4"
-managed-google-cloud-storage = "2.13.1"
 managed-google-cloud-native-image-support = "0.14.1"
 managed-google-cloudevent-types="0.3.0"
 
@@ -25,7 +24,6 @@ managed-functions-framework-api = { module = "com.google.cloud.functions:functio
 managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
 managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "managed-google-cloud-pubsub" }
 managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
-managed-google-cloud-storage = { module = "com.google.cloud:google-cloud-storage", version.ref = "managed-google-cloud-storage" }
 managed-google-native-image-support = { module = "com.google.cloud:native-image-support", version.ref = "managed-google-cloud-native-image-support" }
 
 brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
