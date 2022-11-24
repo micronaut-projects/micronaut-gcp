@@ -2,11 +2,17 @@ To use https://cloudevents.io[CloudEvents], add the following dependency:
 
 dependency:micronaut-gcp-function-cloudevents[groupId=io.micronaut.gcp]
 
-In your application, create a class which extends api:gcp.function.cloudevents.GoogleCloudEventsFunction[]. Google publishes POJOs for https://github.com/googleapis/google-cloudevents-java[Google Cloud Events]. For example, to subscribe to a https://cloud.google.com/storage[Google Cloud Storage] event your function may look like:
-
+In your application, create a class that extends api:gcp.function.cloudevents.GoogleCloudEventsFunction[]. Google publishes POJOs for https://github.com/googleapis/google-cloudevents-java[Google Cloud Events]. For example, to subscribe to a https://cloud.google.com/storage[Google Cloud Storage] event, your function may look like this:
 [source, java]
 ----
 include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/cloudevents/GoogleCloudStorageFunctionSpec.groovy[tag="storageObjectDataStart",indent=0]
 include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/cloudevents/GoogleCloudStorageFunctionSpec.groovy[tag="storageObjectDataMethod",indent=4]
 include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/cloudevents/GoogleCloudStorageFunctionSpec.groovy[tag="storageObjectDataClose",indent=0]
+----
+
+Micronaut GCP Function CloudEvents uses https://micronaut-projects.github.io/micronaut-serialization/latest/guide/index.html[Micronaut Serialization] to deserialize the Google CloudEvents POJOs. You may need to adjust the serialization configuration to match your needs. For example, Google Cloud Storage events write timestamps as strings.
+
+[source, yaml]
+----
+include::gcp-function-cloudevents/src/test/resources/application.yml[]
 ----
