@@ -26,9 +26,6 @@ include 'gcp-secret-manager'
 include 'test-suite'
 include 'test-suite-groovy'
 include 'test-suite-kotlin'
-include 'cloudevents'
-include 'cloudevents-jackson'
-include 'cloudevents-serde'
 micronautBuild {
     importMicronautCatalog()
 }

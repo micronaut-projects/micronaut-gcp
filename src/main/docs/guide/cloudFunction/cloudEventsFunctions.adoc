@@ -1,0 +1,12 @@
+To use https://cloudevents.io[CloudEvents], add the following dependency:
+
+dependency:micronaut-gcp-function-cloudevents[groupId=io.micronaut.gcp]
+
+In your application, create a class which extends api:gcp.function.cloudevents.GoogleCloudEventsFunction[]. Google publishes POJOs for https://github.com/googleapis/google-cloudevents-java[Google Cloud Events]. For example, to subscribe to a https://cloud.google.com/storage[Google Cloud Storage] event your function may look like:
+
+[source, java]
+----
+include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/cloudevents/GoogleCloudStorageFunctionSpec.groovy[tag="storageObjectDataStart",indent=0]
+include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/cloudevents/GoogleCloudStorageFunctionSpec.groovy[tag="storageObjectDataMethod",indent=4]
+include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/cloudevents/GoogleCloudStorageFunctionSpec.groovy[tag="storageObjectDataClose",indent=0]
+----

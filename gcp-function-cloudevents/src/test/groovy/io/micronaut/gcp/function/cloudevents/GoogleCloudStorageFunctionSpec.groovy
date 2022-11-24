@@ -6,7 +6,6 @@ import io.cloudevents.CloudEventContext
 import io.cloudevents.core.builder.CloudEventBuilder
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
-import jakarta.inject.Singleton
 import spock.lang.Specification
 
 import java.time.OffsetDateTime
@@ -74,23 +73,22 @@ class GoogleCloudStorageFunctionSpec extends Specification {
         cleanup:
         function.close()
     }
-
-    //@Requires(property = "spec.name", value = "GoogleCloudStorageFunctionSpec")
-    @Singleton
+/*
+//tag::storageObjectDataStart[]
+    public class TestFunction extends GoogleCloudEventsFunction<StorageObjectData> {
+//end::storageObjectDataStart[]
+*/
     static class TestFunction extends GoogleCloudEventsFunction<StorageObjectData> {
         CloudEventContext context
         StorageObjectData data
-
-        @Override
-        protected Class<StorageObjectData> getType() {
-            return StorageObjectData.class;
-        }
-
+//tag::storageObjectDataMethod[]
         @Override
         protected void accept(@NonNull CloudEventContext context, @Nullable StorageObjectData data) throws Exception {
+//end::storageObjectDataMethod[]
             this.context = context
             this.data = data
+//tag::storageObjectDataClose[]
         }
     }
-
+//end::storageObjectDataClose[]
 }

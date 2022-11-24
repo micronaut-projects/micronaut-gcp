@@ -2,8 +2,11 @@ package io.micronaut.gcp.function.cloudevents
 
 import com.google.events.cloud.storage.v1.StorageObjectData
 import io.cloudevents.CloudEvent
+import io.cloudevents.CloudEventContext
 import io.cloudevents.core.builder.CloudEventBuilder
-import io.micronaut.cloudevents.CloudEventMapper
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
+import io.micronaut.serde.ObjectMapper
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
@@ -14,9 +17,10 @@ import java.time.OffsetDateTime
 class StorageObjectDataMapperSpec extends Specification {
 
     @Inject
-    CloudEventMapper cloudEventMapper
+    ObjectMapper objectMapper
 
     void "deserialize storage object"() {
+
         given:
         String json = '''
 {
@@ -61,6 +65,12 @@ class StorageObjectDataMapperSpec extends Specification {
                 .build()
 
         when:
+        GoogleCloudEventsFunction<StorageObjectData> cloudEventMapper = new GoogleCloudEventsFunction<StorageObjectData>() {
+            @Override
+            protected void accept(@NonNull CloudEventContext context, @Nullable StorageObjectData data) throws Exception {
+
+            }
+        }
         Optional<StorageObjectData> result = cloudEventMapper.map(event, StorageObjectData)
         System.err.println("result: " + result)
 
