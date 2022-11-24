@@ -72,7 +72,6 @@ class StorageObjectDataMapperSpec extends Specification {
             }
         }
         Optional<StorageObjectData> result = cloudEventMapper.map(event, StorageObjectData)
-        System.err.println("result: " + result)
 
         then:
         result.present
