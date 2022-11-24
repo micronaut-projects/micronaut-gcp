@@ -10,7 +10,7 @@ include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/clou
 include::gcp-function-cloudevents/src/test/groovy/io/micronaut/gcp/function/cloudevents/GoogleCloudStorageFunctionSpec.groovy[tag="storageObjectDataClose",indent=0]
 ----
 
-Micronaut GCP Function CloudEvents uses https://micronaut-projects.github.io/micronaut-serialization/latest/guide/index.html[Micronaut Serialization] to deserialize the Google CloudEvents POJOs. You may need to adjust the serialization configuration to match your needs. For example, Google Cloud Storage events write timestamps as strings.
+Micronaut GCP Function CloudEvents uses https://micronaut-projects.github.io/micronaut-serialization/latest/guide/index.html[Micronaut Serialization] to deserialize the Google CloudEvents POJOs. You may need to adjust the serialization configuration to match your needs. For example, Google Cloud Storage events write dates as strings instead of timestamps.
 
 [source, yaml]
 ----
