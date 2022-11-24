@@ -88,7 +88,7 @@ import io.micronaut.serde.annotation.SerdeImport;
 /**
  * @see <a href="https://github.com/googleapis/google-cloudevents-java">Google Cloud Events</a>.
  * @author Sergio del Amo
- * @since 4.8.0
+ * @since 4.7.0
  */
 @SerdeImport(ReferenceEventData.class)
 @SerdeImport(com.google.events.cloud.audit.v1.Metadata.class)
