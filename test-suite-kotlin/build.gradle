@@ -1,16 +1,15 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.10"
-    id("org.jetbrains.kotlin.kapt") version "1.7.10"
+    id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.kotlin.kapt"
     id "io.micronaut.build.internal.gcp-tests"
 }
 
 dependencies {
-    implementation project(":gcp-pubsub")
-    implementation project(":gcp-function-http")
-    implementation project(":gcp-secret-manager")
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    implementation(libs.reactor.core)
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
+    implementation projects.gcpPubsub
+    implementation projects.gcpFunctionHttp
+    implementation projects.gcpSecretManager
+    implementation(mn.reactor)
+    implementation libs.kotlin.stdlib.jdk8
+    implementation libs.kotlin.reflect
     compileOnly(libs.managed.functions.framework.api)
 }

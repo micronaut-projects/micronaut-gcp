@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api project(":gcp-common")
+    api projects.gcpCommon
     api(mn.micronaut.tracing.zipkin)
 
     implementation(libs.google.auth.library.credentials)
