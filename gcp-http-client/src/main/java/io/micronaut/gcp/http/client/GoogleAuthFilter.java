@@ -15,6 +15,8 @@
  */
 package io.micronaut.gcp.http.client;
 
+import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.http.HttpRequest;
@@ -26,6 +28,7 @@ import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import jakarta.annotation.PreDestroy;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,6 +38,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Optional;
 
 /**
  * A filter that allows service to service communication in GCP (https://cloud.google.com/run/docs/authenticating/service-to-service).
@@ -49,28 +53,28 @@ import java.net.URLEncoder;
 @Requires(property = "gcp.http.client.auth.patterns")
 @Filter(patterns = "${gcp.http.client.auth.patterns:/**}")
 public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
+
     private static final String METADATA_FLAVOR = "Metadata-Flavor";
     private static final String GOOGLE = "Google";
-    private static final String AUDIENCE = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
+    private static final String IDENTITY_TOKEN_URI = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
     private final HttpClient authClient;
+    private final BeanContext beanContext;
 
-    /**
-     * Default constructor.
-     */
-    public GoogleAuthFilter() {
+    public GoogleAuthFilter(BeanContext beanContext) {
         try {
             this.authClient = HttpClient.create(new URL("http://metadata"));
         } catch (MalformedURLException e) {
             throw new HttpClientException("Cannot create Google Auth Client: " + e.getMessage(), e);
         }
+        this.beanContext = beanContext;
     }
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
-        Flux<String> token = Mono.fromCallable(() -> encodeURI(request))
-                .flatMapMany(authURI -> authClient.retrieve(HttpRequest.GET(authURI).header(
-                        METADATA_FLAVOR, GOOGLE
-                )));
+        Flux<String> token = Mono.fromCallable(() -> encodeIdentityTokenURI(request))
+                                 .flatMapMany(authURI -> authClient.retrieve(HttpRequest.GET(authURI).header(
+                                     METADATA_FLAVOR, GOOGLE
+                                 )));
 
         return token.flatMap(t -> chain.proceed(request.bearerAuth(t)));
     }
@@ -81,9 +85,20 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
         authClient.close();
     }
 
-    private String encodeURI(MutableHttpRequest<?> request) throws UnsupportedEncodingException {
+    private String encodeIdentityTokenURI(MutableHttpRequest<?> request) throws UnsupportedEncodingException {
+        return IDENTITY_TOKEN_URI + URLEncoder.encode(getAudience(request), "UTF-8");
+    }
+
+    private String getAudience(MutableHttpRequest<?> request) {
+        return request.getAttribute("micronaut.http.serviceId")
+            .map(Object::toString)
+            .flatMap(serviceId -> beanContext.findBean(GoogleAuthServiceConfig.class, Qualifiers.byName(serviceId)))
+            .map(GoogleAuthServiceConfig::getAudience)
+            .orElseGet(() -> getAudienceFromRequest(request));
+    }
+
+    private String getAudienceFromRequest(final MutableHttpRequest<?> request) {
         URI fullURI = request.getUri();
-        String receivingURI = fullURI.getScheme() + "://" + fullURI.getHost();
-        return AUDIENCE + URLEncoder.encode(receivingURI, "UTF-8");
+        return fullURI.getScheme() + "://" + fullURI.getHost();
     }
 }
