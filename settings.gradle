@@ -22,6 +22,7 @@ include 'gcp-function-http-test'
 include 'gcp-pubsub'
 include 'gcp-logging'
 include 'gcp-secret-manager'
+include 'gcp-serde-cloudevents'
 
 include 'test-suite'
 include 'test-suite-groovy'

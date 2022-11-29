@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.function.cloudevents;
+package io.micronaut.gcp.serde.cloudevents;
 
 import com.google.events.cloud.audit.v1.Auth;
 import com.google.events.cloud.audit.v1.AuthenticationInfo;
@@ -165,5 +165,5 @@ import io.micronaut.serde.annotation.SerdeImport;
 @SerdeImport(Message.class)
 @SerdeImport(MessagePublishedData.class)
 @SerdeImport(CustomerEncryption.class)
-public class CloudEventTypesSerde {
+final class CloudEventTypesSerde {
 }
