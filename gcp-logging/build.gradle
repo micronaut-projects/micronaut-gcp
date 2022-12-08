@@ -6,7 +6,6 @@ dependencies {
     compileOnly projects.gcpTracing
     api projects.gcpCommon
     implementation(libs.logback.json.classic)
-    implementation(libs.jackson.databind)
 
     testImplementation(mn.micronaut.inject.java)
     testImplementation(libs.testcontainers.spock)

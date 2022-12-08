@@ -5,13 +5,15 @@ plugins {
 dependencies {
     api(mn.micronaut.http.server)
     api projects.gcpFunction
+
+    implementation(mn.micronaut.jackson.databind)
     implementation(mn.micronaut.http.netty)
     implementation(mn.micronaut.http.server)
-    implementation(mn.micronaut.servlet.core)
+    implementation(mnServlet.micronaut.servlet.core)
     implementation(mn.micronaut.router)
     compileOnly(libs.managed.functions.framework.api)
 
-    testImplementation(mn.micronaut.rxjava2)
+    testImplementation(mnRxjava2.micronaut.rxjava2)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(libs.managed.functions.framework.api)
 }

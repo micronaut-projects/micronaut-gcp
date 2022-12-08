@@ -7,7 +7,7 @@ dependencies {
     api(libs.managed.functions.framework.api)
     api projects.gcpFunctionHttp
 
-    implementation(mn.micronaut.servlet.core)
+    implementation(mnServlet.micronaut.servlet.core)
     implementation(libs.jetty.servlet)
 
     testAnnotationProcessor(mn.micronaut.inject.java)

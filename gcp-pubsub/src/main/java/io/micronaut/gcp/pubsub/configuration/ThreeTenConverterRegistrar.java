@@ -15,13 +15,13 @@
  */
 package io.micronaut.gcp.pubsub.configuration;
 
-import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.convert.MutableConversionService;
 import io.micronaut.core.convert.TypeConverterRegistrar;
 import io.micronaut.core.util.StringUtils;
+import jakarta.inject.Singleton;
 import org.threeten.bp.DateTimeException;
 import org.threeten.bp.Duration;
 
-import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +39,7 @@ public class ThreeTenConverterRegistrar implements TypeConverterRegistrar {
     private static final int MILLIS = 3;
 
     @Override
-    public void register(ConversionService<?> conversionService) {
+    public void register(MutableConversionService conversionService) {
         conversionService.addConverter(
                 CharSequence.class,
                 Duration.class,

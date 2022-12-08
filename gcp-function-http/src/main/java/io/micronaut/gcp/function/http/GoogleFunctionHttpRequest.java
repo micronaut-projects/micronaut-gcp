@@ -16,28 +16,33 @@
 package io.micronaut.gcp.function.http;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
-import io.micronaut.servlet.http.ServletCookies;
-import io.micronaut.servlet.http.ServletExchange;
-import io.micronaut.servlet.http.ServletHttpRequest;
-import io.micronaut.servlet.http.ServletHttpResponse;
-import io.micronaut.http.*;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpMethod;
+import io.micronaut.http.HttpParameters;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookies;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.simple.cookies.SimpleCookies;
+import io.micronaut.servlet.http.ServletExchange;
+import io.micronaut.servlet.http.ServletHttpRequest;
+import io.micronaut.servlet.http.ServletHttpResponse;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Implementation of the {@link ServletHttpRequest} interface for Google Cloud Function.
@@ -57,7 +62,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private Object body;
-    private ServletCookies cookies;
+    private Cookies cookies;
 
     /**
      * Default constructor.
@@ -111,12 +116,12 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public Cookies getCookies() {
-        ServletCookies cookies = this.cookies;
+        Cookies cookies = this.cookies;
         if (cookies == null) {
             synchronized (this) { // double check
                 cookies = this.cookies;
                 if (cookies == null) {
-                    cookies = new ServletCookies(getPath(), getHeaders(), ConversionService.SHARED);
+                    cookies = new SimpleCookies(ConversionService.SHARED);
                     this.cookies = cookies;
                 }
             }

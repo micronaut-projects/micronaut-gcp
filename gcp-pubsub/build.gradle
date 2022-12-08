@@ -8,8 +8,9 @@ dependencies {
     api(libs.managed.google.cloud.pubsub)
 
     implementation(mn.reactor)
+    implementation(mn.micronaut.http)
 
     testImplementation(mn.micronaut.inject.java)
-    testImplementation(mn.micronaut.rxjava2)
+    testImplementation(mnRxjava2.micronaut.rxjava2)
     testImplementation libs.testcontainers.spock
 }

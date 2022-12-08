@@ -26,7 +26,6 @@ import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.web.router.AnnotatedMethodRouteBuilder;
 import io.micronaut.web.router.UriRoute;
-
 import jakarta.inject.Singleton;
 
 /**
@@ -50,7 +49,7 @@ class GoogleMethodRouteBuilder extends AnnotatedMethodRouteBuilder {
     public GoogleMethodRouteBuilder(
             ExecutionHandleLocator executionHandleLocator,
             UriNamingStrategy uriNamingStrategy,
-            ConversionService<?> conversionService,
+            ConversionService conversionService,
             ServerContextPathProvider contextPathProvider) {
         super(executionHandleLocator, uriNamingStrategy, conversionService);
         this.contextPathProvider = contextPathProvider;

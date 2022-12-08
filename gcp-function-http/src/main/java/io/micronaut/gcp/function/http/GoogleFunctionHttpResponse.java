@@ -19,6 +19,7 @@ import com.google.cloud.functions.HttpResponse;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.util.ArgumentUtils;
@@ -154,6 +155,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
      * Models the headers.
      */
     private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements MutableHttpHeaders {
+        private ConversionService conversionService;
 
         GoogleFunctionHeaders() {
             super(response.getHeaders());
@@ -175,6 +177,11 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
             ArgumentUtils.requireNonNull("header", header);
             response.getHeaders().remove(header.toString());
             return this;
+        }
+
+        @Override
+        public void setConversionService(ConversionService conversionService) {
+            this.conversionService = conversionService;
         }
     }
 }

@@ -7,9 +7,12 @@ dependencies {
     api projects.gcpCommon
     api(libs.managed.google.cloud.secretmanager)
 
-    implementation(mn.micronaut.discovery)
+    implementation mn.micronaut.jackson.databind
+    implementation(mn.micronaut.discovery.core)
     implementation(mn.reactor)
     implementation(mn.snakeyaml)
 
     testImplementation(mn.micronaut.inject.java)
+    testImplementation(mn.snakeyaml)
+
 }

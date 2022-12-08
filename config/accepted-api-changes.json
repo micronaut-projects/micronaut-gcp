@@ -1,0 +1,7 @@
+[
+  {
+    "type": "io.micronaut.gcp.http.client.GoogleAuthFilter",
+    "member": "Constructor io.micronaut.gcp.http.client.GoogleAuthFilter()",
+    "reason": "Default ctor removed for Micronaut 4"
+  }
+]
