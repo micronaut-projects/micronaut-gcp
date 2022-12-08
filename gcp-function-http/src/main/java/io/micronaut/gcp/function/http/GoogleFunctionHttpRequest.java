@@ -62,7 +62,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private Object body;
-    private Cookies cookies;
+    private volatile Cookies cookies;
 
     /**
      * Default constructor.
@@ -116,13 +116,10 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public Cookies getCookies() {
-        Cookies cookies = this.cookies;
         if (cookies == null) {
             synchronized (this) { // double check
-                cookies = this.cookies;
                 if (cookies == null) {
                     cookies = new SimpleCookies(ConversionService.SHARED);
-                    this.cookies = cookies;
                 }
             }
         }

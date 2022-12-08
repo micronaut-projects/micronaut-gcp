@@ -161,9 +161,8 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
     }
 
     private void handleException(PubSubMessageReceiverException ex) {
-        Object bean = ex.getListener();
-        if (bean instanceof PubSubMessageReceiverExceptionHandler) {
-            ((PubSubMessageReceiverExceptionHandler) bean).handle(ex);
+        if (ex.getListener() instanceof PubSubMessageReceiverExceptionHandler bean) {
+            bean.handle(ex);
         } else {
             exceptionHandler.handle(ex);
         }
