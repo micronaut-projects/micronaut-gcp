@@ -43,19 +43,16 @@ import reactor.core.publisher.Mono;
 @Requires(classes = SecretManagerServiceClient.class)
 public class DefaultSecretManagerClient implements SecretManagerClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(DefaultSecretManagerClient.class);
     private final SecretManagerServiceClient client;
-    private final Environment environment;
     private final GoogleCloudConfiguration googleCloudConfiguration;
-    private final Logger logger = LoggerFactory.getLogger(SecretManagerClient.class);
     private final ExecutorService executorService;
 
     public DefaultSecretManagerClient(
             SecretManagerServiceClient client,
-            Environment environment,
             GoogleCloudConfiguration googleCloudConfiguration,
             @Nullable @Named(TaskExecutors.IO) ExecutorService executorService) {
         this.client = client;
-        this.environment = environment;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.executorService = executorService != null ? executorService : Executors.newSingleThreadExecutor()  ;
     }
@@ -72,7 +69,7 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
 
     @Override
     public Mono<VersionedSecret> getSecret(String secretId, String version, String projectId) {
-        logger.debug(String.format("Fetching secret: projects/%s/secrets/%s/%s", projectId, secretId, version));
+        logger.debug("Fetching secret: projects/{}/secrets/{}/{}", projectId, secretId, version);
         SecretVersionName secretVersionName = SecretVersionName.of(projectId, secretId, version);
         AccessSecretVersionRequest request = AccessSecretVersionRequest.newBuilder()
                 .setName(secretVersionName.toString())
@@ -92,6 +89,6 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
 
         return mono
                 .map(response -> new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray()))
-                .onErrorResume((throwable) -> Mono.empty());
+                .onErrorResume(throwable -> Mono.empty());
     }
 }
