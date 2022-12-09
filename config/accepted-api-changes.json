@@ -3,5 +3,10 @@
     "type": "io.micronaut.gcp.http.client.GoogleAuthFilter",
     "member": "Constructor io.micronaut.gcp.http.client.GoogleAuthFilter()",
     "reason": "Default ctor removed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.gcp.secretmanager.client.DefaultSecretManagerClient",
+    "member": "Constructor io.micronaut.gcp.secretmanager.client.DefaultSecretManagerClient(com.google.cloud.secretmanager.v1.SecretManagerServiceClient,io.micronaut.context.env.Environment,io.micronaut.gcp.GoogleCloudConfiguration,java.util.concurrent.ExecutorService)",
+    "reason": "Constructor arg list changed for 4.0.x"
   }
 ]
