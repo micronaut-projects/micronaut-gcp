@@ -32,7 +32,6 @@ import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookies;
-import io.micronaut.http.simple.cookies.SimpleCookies;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpRequest;
 import io.micronaut.servlet.http.ServletHttpResponse;
@@ -121,7 +120,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
             synchronized (this) { // double check
                 cookies = this.cookies;
                 if (cookies == null) {
-                    cookies = new SimpleCookies(ConversionService.SHARED);
+                    cookies = new GoogleCookies(getPath(), getHeaders(), ConversionService.SHARED);
                     this.cookies = cookies;
                 }
             }

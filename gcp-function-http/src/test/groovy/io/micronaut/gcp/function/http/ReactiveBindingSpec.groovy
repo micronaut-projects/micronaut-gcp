@@ -10,8 +10,6 @@ import spock.lang.Specification
 class ReactiveBindingSpec extends Specification {
 
     void "test json array as flowable"() {
-
-
         given:
         def function = new HttpFunction()
         ObjectMapper mapper = function.applicationContext.getBean(ObjectMapper)
@@ -30,5 +28,4 @@ class ReactiveBindingSpec extends Specification {
         googleResponse.contentType.get() == MediaType.APPLICATION_JSON
         googleResponse.text == string
     }
-
 }

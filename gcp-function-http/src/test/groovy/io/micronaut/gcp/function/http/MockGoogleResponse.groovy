@@ -15,12 +15,6 @@ class MockGoogleResponse implements HttpResponse {
 
     @Override
     void setStatusCode(int code, String message) {
-        // I can make the test pass with this, but something is amiss,
-        //  see HttpServletHandler.forStatus. It's doing something similar, but this seems smelly to me
-//        if (statusCode == HttpStatus.OK.code) {
-        // is the status OK because its the default or because it was explicitly set
-//            this.statusCode = code
-//        }
         this.statusCode = code
         this.message = message
     }

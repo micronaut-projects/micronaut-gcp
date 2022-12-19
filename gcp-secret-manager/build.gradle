@@ -8,7 +8,6 @@ dependencies {
     api(libs.managed.google.cloud.secretmanager)
 
     implementation(libs.micronaut.discovery.client)
-    implementation(mn.micronaut.discovery.core)
     implementation(mn.reactor)
     implementation(mn.snakeyaml)
 

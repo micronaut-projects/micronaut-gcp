@@ -21,7 +21,7 @@ micronaut-rxjava2 = "2.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-servlet = "4.0.0-SNAPSHOT"
 micronaut-tracing = "5.0.0-SNAPSHOT"
-micronaut-discovery-client = "3.2.0"
+micronaut-discovery = "4.0.0-SNAPSHOT"
 
 [libraries]
 # micronaut boms
@@ -29,7 +29,8 @@ micronaut-rxjava2 = { module = "io.micronaut.rxjava2:micronaut-rxjava2-bom", ver
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
 micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", version.ref = "micronaut-servlet" }
 micronaut-tracing = { module = "io.micronaut.tracing:micronaut-tracing-bom", version.ref = "micronaut-tracing" }
-micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discovery-client", version.ref = "micronaut-discovery-client" }
+
+micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discovery-client", version.ref = "micronaut-discovery" }
 
 # Managed
 managed-google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "managed-google-auth-library-oauth2http" }
