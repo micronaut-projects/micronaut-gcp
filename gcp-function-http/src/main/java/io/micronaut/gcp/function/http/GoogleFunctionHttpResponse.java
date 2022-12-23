@@ -51,6 +51,8 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
 
     private final HttpResponseWrapper response;
     private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
+
+    private final ConversionService conversionService;
     private MutableConvertibleValues<Object> attributes;
     private B body;
     private int status = HttpStatus.OK.getCode();
@@ -62,9 +64,10 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
      * @param response               The Google response object
      * @param mediaTypeCodecRegistry The media type codec registry
      */
-    GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry) {
+    GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry, ConversionService conversionService) {
         this.response = new HttpResponseWrapper(response);
         this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -88,7 +91,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
 
     @Override
     public MutableHttpHeaders getHeaders() {
-        return new GoogleFunctionHeaders();
+        return new GoogleFunctionHeaders(conversionService);
     }
 
     @NonNull
@@ -155,10 +158,10 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
      * Models the headers.
      */
     private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements MutableHttpHeaders {
-        private ConversionService conversionService;
 
-        GoogleFunctionHeaders() {
+        GoogleFunctionHeaders(ConversionService conversionService) {
             super(response.getHeaders());
+            setConversionService(conversionService);
         }
 
         @Override
@@ -181,7 +184,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
 
         @Override
         public void setConversionService(ConversionService conversionService) {
-            this.conversionService = conversionService;
+            super.setConversionService(conversionService);
         }
     }
 }
