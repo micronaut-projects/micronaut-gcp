@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.function.http;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.http.HttpHeaders;
@@ -29,6 +30,7 @@ import java.util.*;
  * Implementation of {@link Cookies} for serverless.
  *
  */
+@Internal
 public class GoogleCookies implements Cookies {
 
     private final ConversionService conversionService;
