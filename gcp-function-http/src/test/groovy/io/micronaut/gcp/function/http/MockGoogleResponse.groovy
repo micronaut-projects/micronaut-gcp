@@ -2,8 +2,6 @@ package io.micronaut.gcp.function.http
 
 import com.google.cloud.functions.HttpResponse
 import io.micronaut.http.HttpHeaders
-import io.micronaut.http.HttpStatus
-
 import java.nio.charset.StandardCharsets
 
 class MockGoogleResponse implements HttpResponse {
