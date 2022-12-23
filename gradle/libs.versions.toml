@@ -1,17 +1,19 @@
 [versions]
-managed-google-auth-library-oauth2http = "1.13.0"
+managed-google-auth-library-oauth2http = "1.14.0"
 managed-google-functions-framework-api = "1.0.4"
-managed-google-cloud-core = "2.8.28"
-managed-google-cloud-pubsub = "1.122.1"
-managed-google-cloud-secretmanager = "2.6.0"
+managed-google-cloud-core = "2.9.0"
+managed-google-cloud-pubsub = "1.122.2"
+managed-google-cloud-secretmanager = "2.7.0"
 managed-google-cloud-native-image-support = "0.14.1"
+managed-google-cloudevent-types="0.3.0"
 
 brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
-grpc = "1.51.0"
+grpc = "1.51.1"
 kotlin = '1.7.22'
 groovy = "4.0.6"
 
+cloudevents-api = "2.4.0"
 jetty-servlet = "10.0.12"
 logback-json-classic = "0.1.5"
 testcontainers = "1.17.6"
@@ -33,6 +35,7 @@ micronaut-tracing = { module = "io.micronaut.tracing:micronaut-tracing-bom", ver
 micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discovery-client", version.ref = "micronaut-discovery" }
 
 # Managed
+managed-google-cloudevent-types = { module = "com.google.cloud:google-cloudevent-types", version.ref = "managed-google-cloudevent-types" }
 managed-google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "managed-google-auth-library-oauth2http" }
 managed-functions-framework-api = { module = "com.google.cloud.functions:functions-framework-api", version.ref = "managed-google-functions-framework-api" }
 managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
@@ -42,6 +45,8 @@ managed-google-native-image-support = { module = "com.google.cloud:native-image-
 
 brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
 brave-propagation-stackdriver = { module = "io.zipkin.gcp:brave-propagation-stackdriver", version.ref = "brave-propagation-stackdriver" }
+cloudevents-api = { module = "io.cloudevents:cloudevents-api", version.ref = "cloudevents-api" }
+cloudevents-core = { module = "io.cloudevents:cloudevents-core", version.ref = "cloudevents-api" }
 
 google-auth-library-credentials = { module = "com.google.auth:google-auth-library-credentials", version.ref = "managed-google-auth-library-oauth2http" }
 
