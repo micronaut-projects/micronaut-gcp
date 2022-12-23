@@ -63,6 +63,8 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private Object body;
     private Cookies cookies;
 
+    private ConversionService conversionService;
+
     /**
      * Default constructor.
      *
@@ -73,7 +75,8 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     GoogleFunctionHttpRequest(
             com.google.cloud.functions.HttpRequest googleRequest,
             GoogleFunctionHttpResponse<?> googleResponse,
-            MediaTypeCodecRegistry codecRegistry) {
+            MediaTypeCodecRegistry codecRegistry,
+            ConversionService conversionService) {
         this.googleRequest = googleRequest;
         this.googleResponse = googleResponse;
         this.uri = URI.create(googleRequest.getUri());
@@ -86,6 +89,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         this.method = method;
         this.headers = new GoogleFunctionHeaders();
         this.codecRegistry = codecRegistry;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -120,7 +124,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
             synchronized (this) { // double check
                 cookies = this.cookies;
                 if (cookies == null) {
-                    cookies = new GoogleCookies(getPath(), getHeaders(), ConversionService.SHARED);
+                    cookies = new GoogleCookies(getPath(), getHeaders(), conversionService);
                     this.cookies = cookies;
                 }
             }
@@ -224,7 +228,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
                     return (Optional<T>) Optional.of(body);
                 } else {
                     if (body != httpParameters) {
-                        final T result = ConversionService.SHARED.convertRequired(body, arg);
+                        final T result = conversionService.convertRequired(body, arg);
                         return Optional.ofNullable(result);
                     }
                 }
