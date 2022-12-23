@@ -5,10 +5,12 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class ReactiveBindingSpec extends Specification {
 
+    @Ignore
     void "test json array as flowable"() {
         given:
         def function = new HttpFunction()
