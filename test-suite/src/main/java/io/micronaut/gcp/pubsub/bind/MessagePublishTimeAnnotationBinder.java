@@ -26,9 +26,9 @@ import jakarta.inject.Singleton;
 @Singleton // <1>
 public class MessagePublishTimeAnnotationBinder implements PubSubAnnotatedArgumentBinder<MessagePublishTime> { // <2>
 
-    private final ConversionService<?> conversionService;
+    private final ConversionService conversionService;
 
-    public MessagePublishTimeAnnotationBinder(ConversionService<?> conversionService) { // <3>
+    public MessagePublishTimeAnnotationBinder(ConversionService conversionService) { // <3>
         this.conversionService = conversionService;
     }
 

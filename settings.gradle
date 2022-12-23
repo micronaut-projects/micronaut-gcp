@@ -6,11 +6,14 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "5.3.15"
+    id("io.micronaut.build.shared.settings") version "6.1.1"
 }
+
+enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 rootProject.name = 'gcp-parent'
 
+include 'gcp-function-cloudevents'
 include 'gcp-bom'
 include 'gcp-common'
 include 'gcp-tracing'
@@ -21,11 +24,17 @@ include 'gcp-function-http-test'
 include 'gcp-pubsub'
 include 'gcp-logging'
 include 'gcp-secret-manager'
+include 'gcp-serde-cloudevents'
 
 include 'test-suite'
 include 'test-suite-groovy'
 include 'test-suite-kotlin'
-
 micronautBuild {
+    //TODO delete once snapshot no longer needed
+    addSnapshotRepository()
     importMicronautCatalog()
+    importMicronautCatalog("micronaut-rxjava2")
+    importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-servlet")
+    importMicronautCatalog("micronaut-tracing")
 }

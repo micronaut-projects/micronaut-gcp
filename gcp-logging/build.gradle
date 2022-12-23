@@ -1,13 +1,13 @@
 plugins {
-    id("io.micronaut.build.internal.module")
+    id "io.micronaut.build.internal.gcp-module"
 }
 
 dependencies {
-    compileOnly project(":gcp-tracing")
-    api project(":gcp-common")
+    compileOnly projects.gcpTracing
+    api projects.gcpCommon
     implementation(libs.logback.json.classic)
-    implementation(libs.jackson.databind)
 
+    implementation(mn.micronaut.jackson.databind)
     testImplementation(mn.micronaut.inject.java)
     testImplementation(libs.testcontainers.spock)
 }

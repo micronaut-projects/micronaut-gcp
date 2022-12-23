@@ -25,7 +25,7 @@ import jakarta.inject.Singleton
 
 // tag::clazz[]
 @Singleton // <1>
-class MessagePublishTimeAnnotationBinder(private val conversionService: ConversionService<*>) // <3>
+class MessagePublishTimeAnnotationBinder(private val conversionService: ConversionService) // <3>
 	: PubSubAnnotatedArgumentBinder<MessagePublishTime> // <2>
 {
 

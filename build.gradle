@@ -1,10 +1,9 @@
 plugins {
     id "io.micronaut.build.internal.docs"
-    id "io.micronaut.build.internal.dependency-updates"
     id "io.micronaut.build.internal.quality-reporting"
 }
 
-micronautBuild {
-    sourceCompatibility = "11"
-    targetCompatibility = "11"
+repositories {
+    mavenCentral()
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 }

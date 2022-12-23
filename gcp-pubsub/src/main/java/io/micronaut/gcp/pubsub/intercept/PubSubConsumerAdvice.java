@@ -29,7 +29,11 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.bind.*;
+import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement;
+import io.micronaut.gcp.pubsub.bind.PubSubBinderRegistry;
+import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
+import io.micronaut.gcp.pubsub.bind.SubscriberFactory;
+import io.micronaut.gcp.pubsub.bind.SubscriberFactoryConfig;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
@@ -42,12 +46,13 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import jakarta.inject.Qualifier;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Qualifier;
-import jakarta.inject.Singleton;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
 
 
 /**
@@ -73,7 +78,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
     private final PubSubMessageReceiverExceptionHandler exceptionHandler;
 
     public PubSubConsumerAdvice(BeanContext beanContext,
-                                ConversionService<?> conversionService,
+                                ConversionService conversionService,
                                 PubSubMessageSerDesRegistry serDesRegistry,
                                 SubscriberFactory subscriberFactory,
                                 GoogleCloudConfiguration googleCloudConfiguration,
@@ -156,9 +161,8 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
     }
 
     private void handleException(PubSubMessageReceiverException ex) {
-        Object bean = ex.getListener();
-        if (bean instanceof PubSubMessageReceiverExceptionHandler) {
-            ((PubSubMessageReceiverExceptionHandler) bean).handle(ex);
+        if (ex.getListener() instanceof PubSubMessageReceiverExceptionHandler bean) {
+            bean.handle(ex);
         } else {
             exceptionHandler.handle(ex);
         }
