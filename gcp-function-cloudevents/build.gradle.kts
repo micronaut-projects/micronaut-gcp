@@ -15,3 +15,10 @@ micronautBuild {
         enabled.set(false)
     }
 }
+
+//TODO Don't pin version once this module uses MN 3.8.0
+configurations.all {
+    resolutionStrategy {
+        force("io.micronaut.serde:micronaut-serde-jackson:1.5.0")
+    }
+}
