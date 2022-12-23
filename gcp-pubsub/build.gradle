@@ -9,6 +9,7 @@ dependencies {
 
     implementation(mn.reactor)
     implementation(mn.micronaut.http)
+    implementation(mn.micronaut.jackson.databind)
 
     testImplementation(mn.micronaut.inject.java)
     testImplementation(mnRxjava2.micronaut.rxjava2)
