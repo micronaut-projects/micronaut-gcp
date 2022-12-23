@@ -6,11 +6,12 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "5.3.15"
+    id("io.micronaut.build.shared.settings") version "5.3.16"
 }
 
 rootProject.name = 'gcp-parent'
 
+include 'gcp-function-cloudevents'
 include 'gcp-bom'
 include 'gcp-common'
 include 'gcp-tracing'
@@ -21,11 +22,11 @@ include 'gcp-function-http-test'
 include 'gcp-pubsub'
 include 'gcp-logging'
 include 'gcp-secret-manager'
+include 'gcp-serde-cloudevents'
 
 include 'test-suite'
 include 'test-suite-groovy'
 include 'test-suite-kotlin'
-
 micronautBuild {
     importMicronautCatalog()
 }
