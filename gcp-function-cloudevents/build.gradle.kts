@@ -10,12 +10,6 @@ dependencies {
     testImplementation(libs.cloudevents.core)
 }
 
-micronautBuild {
-    binaryCompatibility {
-        enabled.set(false)
-    }
-}
-
 //TODO Don't pin version once this module uses MN 3.8.0
 configurations.all {
     resolutionStrategy {
