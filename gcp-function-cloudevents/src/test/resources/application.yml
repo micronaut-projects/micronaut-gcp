@@ -1,3 +1,0 @@
-micronaut:
-  serde:
-    write-dates-as-timestamps: false
