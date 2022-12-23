@@ -3,6 +3,7 @@ io.micronaut.gcp
 io.micronaut.gcp.condition
 io.micronaut.gcp.credentials
 io.micronaut.gcp.function
+io.micronaut.gcp.function.cloudevents
 io.micronaut.gcp.function.http
 io.micronaut.gcp.function.http.jackson
 io.micronaut.gcp.function.http.test
