@@ -1,10 +1,11 @@
 plugins {
-    id("io.micronaut.build.internal.module")
+    id "io.micronaut.build.internal.gcp-module"
 }
 
 dependencies {
     compileOnly(mn.micronaut.runtime)
 
+    implementation(mn.micronaut.jackson.databind)
     api(libs.managed.google.auth.library.oauth2.http)
     api(libs.managed.google.cloud.core)
 

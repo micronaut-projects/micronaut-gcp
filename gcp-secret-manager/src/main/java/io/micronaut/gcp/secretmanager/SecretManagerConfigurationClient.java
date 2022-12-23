@@ -15,26 +15,31 @@
  */
 package io.micronaut.gcp.secretmanager;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.Set;
+
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.env.*;
-import io.micronaut.context.env.yaml.YamlPropertySourceLoader;
+import io.micronaut.context.env.Environment;
+import io.micronaut.context.env.EnvironmentPropertySource;
+import io.micronaut.context.env.PropertySource;
+import io.micronaut.context.env.PropertySourceLoader;
+import io.micronaut.context.env.PropertySourceReader;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.config.ConfigurationClient;
 import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
-import io.micronaut.jackson.env.JsonPropertySourceLoader;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 /**
  * @author Vinicius Carvalho
@@ -51,13 +56,10 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     private static final String CAMEL_CASE_REPLACE = "$1_$2";
     private static final String DESCRIPTION = "GCP Secret Manager Config Client";
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
-    private static final List<PropertySourceReader> READERS = Arrays.asList(
-            new YamlPropertySourceLoader(),
-            new PropertiesPropertySourceLoader(),
-            new JsonPropertySourceLoader());
+    private static final List<PropertySourceLoader> READERS = ServiceLoader.load(PropertySourceLoader.class)
+            .stream().map(ServiceLoader.Provider::get).toList();
     private final SecretManagerClient secretManagerClient;
     private final SecretManagerConfigurationProperties configurationProperties;
-    private final Logger logger = LoggerFactory.getLogger(SecretManagerConfigurationClient.class);
 
     public SecretManagerConfigurationClient(SecretManagerClient secretManagerClient, SecretManagerConfigurationProperties configurationProperties) {
         this.secretManagerClient = secretManagerClient;
@@ -105,9 +107,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
         Map<Integer, String> candidates = new HashMap<>();
 
         candidates.put(EnvironmentPropertySource.POSITION + 101, "application");
-        if (applicationName.isPresent()) {
-            candidates.put(EnvironmentPropertySource.POSITION + 102, applicationName.get());
-        }
+        applicationName.ifPresent(s -> candidates.put(EnvironmentPropertySource.POSITION + 102, s));
 
         int priority = EnvironmentPropertySource.POSITION + 150;
         for (String e : activeEnv) {

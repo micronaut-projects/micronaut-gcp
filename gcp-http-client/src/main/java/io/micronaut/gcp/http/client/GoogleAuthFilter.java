@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.http.client;
 
-import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.http.HttpRequest;
@@ -27,18 +27,16 @@ import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.inject.qualifiers.Qualifiers;
-import jakarta.inject.Inject;
+import jakarta.annotation.PreDestroy;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PreDestroy;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Optional;
 
 /**
  * A filter that allows service to service communication in GCP (https://cloud.google.com/run/docs/authenticating/service-to-service).
@@ -58,20 +56,15 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     private static final String GOOGLE = "Google";
     private static final String IDENTITY_TOKEN_URI = "/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
     private final HttpClient authClient;
-    private final ApplicationContext applicationContext;
+    private final BeanContext beanContext;
 
-    public GoogleAuthFilter() {
-        this(null);
-    }
-
-    @Inject
-    public GoogleAuthFilter(ApplicationContext applicationContext) {
+    public GoogleAuthFilter(BeanContext beanContext) {
         try {
             this.authClient = HttpClient.create(new URL("http://metadata"));
         } catch (MalformedURLException e) {
             throw new HttpClientException("Cannot create Google Auth Client: " + e.getMessage(), e);
         }
-        this.applicationContext = applicationContext;
+        this.beanContext = beanContext;
     }
 
     @Override
@@ -95,17 +88,11 @@ public class GoogleAuthFilter implements HttpClientFilter, AutoCloseable {
     }
 
     private String getAudience(MutableHttpRequest<?> request) {
-        final Optional<Object> serviceId = request.getAttribute("micronaut.http.serviceId");
-
-        if (applicationContext != null && serviceId.isPresent()) {
-            final Optional<GoogleAuthServiceConfig> config = applicationContext.findBean(GoogleAuthServiceConfig.class, Qualifiers.byName(serviceId.get().toString()));
-
-            if (config.isPresent()) {
-                return config.get().getAudience();
-            }
-        }
-
-        return getAudienceFromRequest(request);
+        return request.getAttribute("micronaut.http.serviceId")
+            .map(Object::toString)
+            .flatMap(serviceId -> beanContext.findBean(GoogleAuthServiceConfig.class, Qualifiers.byName(serviceId)))
+            .map(GoogleAuthServiceConfig::getAudience)
+            .orElseGet(() -> getAudienceFromRequest(request));
     }
 
     private String getAudienceFromRequest(final MutableHttpRequest<?> request) {

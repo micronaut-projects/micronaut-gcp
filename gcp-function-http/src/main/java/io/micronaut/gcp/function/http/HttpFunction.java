@@ -59,17 +59,20 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
     private final ServletHttpHandler<HttpRequest, HttpResponse> httpHandler;
 
+    private final ConversionService conversionService;
+
     /**
      * Default constructor.
      */
     public HttpFunction() {
+        conversionService = applicationContext.getBean(ConversionService.class);
         this.httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
             @Override
             protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
                         new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry());
                 final GoogleFunctionHttpRequest<Object> req =
-                        new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry());
+                        new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry(), conversionService);
 
                 return new DefaultServletExchange<>(req, res);
             }
@@ -118,7 +121,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
      * @return The response object
      */
     public GoogleHttpResponse invoke(HttpRequest request) {
-        HttpResponseImpl response = new HttpResponseImpl();
+        HttpResponseImpl response = new HttpResponseImpl(conversionService);
         httpHandler.service(Objects.requireNonNull(request), response);
         return response;
     }
@@ -131,7 +134,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
      */
     public GoogleHttpResponse invoke(HttpMethod method, String uri) {
         MutableHttpRequest<Object> request = HttpRequestFactory.INSTANCE.create(method, uri);
-        HttpResponseImpl response = new HttpResponseImpl();
+        HttpResponseImpl response = new HttpResponseImpl(conversionService);
         httpHandler.service(toGoogleRequest(request), response);
         return response;
     }
@@ -146,7 +149,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
     public GoogleHttpResponse invoke(HttpMethod method, String uri, Object body) {
         MutableHttpRequest<Object> request = HttpRequestFactory.INSTANCE.create(method, uri);
         request.body(body);
-        HttpResponseImpl response = new HttpResponseImpl();
+        HttpResponseImpl response = new HttpResponseImpl(conversionService);
         httpHandler.service(toGoogleRequest(request), response);
         return response;
     }
@@ -157,7 +160,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
      * @return The response object
      */
     public GoogleHttpResponse invoke(io.micronaut.http.HttpRequest<?> request) {
-        HttpResponseImpl response = new HttpResponseImpl();
+        HttpResponseImpl response = new HttpResponseImpl(conversionService);
         httpHandler.service(toGoogleRequest(Objects.requireNonNull(request)), response);
         return response;
     }
@@ -292,6 +295,12 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         private Map<String, List<String>> headers = new LinkedHashMap<>();
         private String message;
 
+        private final ConversionService conversionService;
+
+        private HttpResponseImpl(ConversionService conversionService) {
+            this.conversionService = conversionService;
+        }
+
         @Override
         public void setStatusCode(int code) {
             this.statusCode = code;
@@ -314,7 +323,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
         @Override
         public <T> Optional<T> getBody(Argument<T> type) {
-            return ConversionService.SHARED.convert(
+            return conversionService.convert(
                     outputStream.toByteArray(),
                     Objects.requireNonNull(type, "Type cannot be null")
             );

@@ -15,17 +15,6 @@
  */
 package io.micronaut.gcp.pubsub.intercept;
 
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-
-import javax.annotation.PreDestroy;
-
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.PublisherInterface;
 import com.google.protobuf.ByteString;
@@ -62,6 +51,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.PreDestroy;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+
 /**
  * Implementation of {@link io.micronaut.gcp.pubsub.annotation.PubSubClient} advice annotation.
  *
@@ -75,7 +74,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     private final ConcurrentHashMap<ExecutableMethod, PubSubPublisherState> publisherStateCache = new ConcurrentHashMap<>();
     private final PublisherFactory publisherFactory;
     private final PubSubMessageSerDesRegistry serDesRegistry;
-    private final ConversionService<?> conversionService;
+    private final ConversionService conversionService;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
     private final ExecutorService executorService;
@@ -83,7 +82,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     public PubSubClientIntroductionAdvice(PublisherFactory publisherFactory,
                                           PubSubMessageSerDesRegistry serDesRegistry,
                                           @Named(TaskExecutors.IO) ExecutorService executorService,
-                                          ConversionService<?> conversionService,
+                                          ConversionService conversionService,
                                           GoogleCloudConfiguration googleCloudConfiguration,
                                           PubSubConfigurationProperties pubSubConfigurationProperties) {
         this.publisherFactory = publisherFactory;

@@ -6,8 +6,10 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "5.3.16"
+    id("io.micronaut.build.shared.settings") version "6.1.1"
 }
+
+enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 rootProject.name = 'gcp-parent'
 
@@ -28,5 +30,11 @@ include 'test-suite'
 include 'test-suite-groovy'
 include 'test-suite-kotlin'
 micronautBuild {
+    //TODO delete once snapshot no longer needed
+    addSnapshotRepository()
     importMicronautCatalog()
+    importMicronautCatalog("micronaut-rxjava2")
+    importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-servlet")
+    importMicronautCatalog("micronaut-tracing")
 }

@@ -1,12 +1,10 @@
 plugins {
-    id("io.micronaut.build.internal.module")
+    id("io.micronaut.build.internal.gcp-module")
 }
 
 dependencies {
-    annotationProcessor(mn.micronaut.serde.processor)
-
-    api(mn.micronaut.serde.api)
+    annotationProcessor(mnSerde.micronaut.serde.processor)
+    api(mnSerde.micronaut.serde.api)
     api(libs.managed.google.cloudevent.types)
-
-    testImplementation(mn.micronaut.serde.jackson)
+    implementation(mnSerde.micronaut.serde.jackson)
 }

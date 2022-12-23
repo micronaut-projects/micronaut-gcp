@@ -1,14 +1,16 @@
 plugins {
-    id("io.micronaut.build.internal.module")
+    id "io.micronaut.build.internal.gcp-module"
 }
 
 dependencies {
     api(mn.micronaut.messaging)
-    api project(":gcp-common")
+    api projects.gcpCommon
     api(libs.managed.google.cloud.secretmanager)
 
-    implementation(mn.micronaut.discovery)
-    implementation(libs.reactor.core)
+    implementation(libs.micronaut.discovery.client)
+    implementation(mn.reactor)
+    implementation(mn.snakeyaml)
 
-    testImplementation(mn.micronaut.inject.java)
+    testImplementation(mn.snakeyaml)
+
 }

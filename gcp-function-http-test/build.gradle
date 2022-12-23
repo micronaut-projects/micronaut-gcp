@@ -1,13 +1,13 @@
 plugins {
-    id("io.micronaut.build.internal.module")
+    id "io.micronaut.build.internal.gcp-module"
 }
 
 dependencies {
     api(mn.micronaut.http.server)
     api(libs.managed.functions.framework.api)
-    api project(":gcp-function-http")
+    api projects.gcpFunctionHttp
 
-    implementation(mn.micronaut.servlet.core)
+    implementation(mnServlet.micronaut.servlet.core)
     implementation(libs.jetty.servlet)
 
     testAnnotationProcessor(mn.micronaut.inject.java)
@@ -17,6 +17,6 @@ dependencies {
 
 micronautBuild {
     resolutionStrategy {
-        force 'org.eclipse.jetty:jetty-servlet:10.0.12'
+        force "org.eclipse.jetty:jetty-servlet:${libs.jetty.servlet}"
     }
 }
