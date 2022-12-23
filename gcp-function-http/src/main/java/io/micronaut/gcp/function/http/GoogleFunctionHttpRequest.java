@@ -87,7 +87,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
             method = HttpMethod.CUSTOM;
         }
         this.method = method;
-        this.headers = new GoogleFunctionHeaders();
+        this.headers = new GoogleFunctionHeaders(conversionService);
         this.codecRegistry = codecRegistry;
         this.conversionService = conversionService;
     }
@@ -140,7 +140,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
             synchronized (this) { // double check
                 httpParameters = this.httpParameters;
                 if (httpParameters == null) {
-                    httpParameters = new GoogleFunctionParameters();
+                    httpParameters = new GoogleFunctionParameters(conversionService);
                     this.httpParameters = httpParameters;
                 }
             }
@@ -258,8 +258,9 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
      * Models the http parameters.
      */
     private final class GoogleFunctionParameters extends GoogleMultiValueMap implements HttpParameters {
-        GoogleFunctionParameters() {
+        GoogleFunctionParameters(ConversionService conversionService) {
             super(googleRequest.getQueryParameters());
+            setConversionService(conversionService);
         }
 
         @Override
@@ -279,8 +280,9 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
      * Models the headers.
      */
     private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements HttpHeaders {
-        GoogleFunctionHeaders() {
+        GoogleFunctionHeaders(ConversionService conversionService) {
             super(googleRequest.getHeaders());
+            setConversionService(conversionService);
         }
     }
 }

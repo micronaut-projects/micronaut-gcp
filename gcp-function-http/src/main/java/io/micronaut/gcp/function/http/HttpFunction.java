@@ -70,7 +70,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
             @Override
             protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
-                        new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry());
+                        new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry(), conversionService);
                 final GoogleFunctionHttpRequest<Object> req =
                         new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry(), conversionService);
 
@@ -313,7 +313,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
         @Override
         public HttpHeaders getHttpHeaders() {
-            return new GoogleFunctionHeaders();
+            return new GoogleFunctionHeaders(conversionService);
         }
 
         @Override
@@ -385,8 +385,9 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
          * Function headers impl.
          */
         private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements HttpHeaders {
-            GoogleFunctionHeaders() {
+            GoogleFunctionHeaders(ConversionService conversionService) {
                 super(getHeaders());
+                setConversionService(conversionService);
             }
         }
     }
