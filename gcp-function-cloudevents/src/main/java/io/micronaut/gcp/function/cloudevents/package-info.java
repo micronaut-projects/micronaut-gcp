@@ -17,6 +17,6 @@
  * Support classes for GCP functions based on Cloud Events.
  *
  * @author Guillermo Calvo
- * @since 4.7.0
+ * @since 4.8.0
  */
 package io.micronaut.gcp.function.cloudevents;

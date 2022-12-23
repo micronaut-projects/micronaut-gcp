@@ -36,7 +36,7 @@ import java.util.Optional;
  * @see <a href="https://github.com/googleapis/google-cloudevents-java">Google Cloud Events</a>.
  *
  * @author Guillermo Calvo
- * @since 4.7.0
+ * @since 4.8.0
  * @param <T> Google Cloud Events Type
  */
 public abstract class GoogleCloudEventsFunction<T> extends GoogleFunctionInitializer implements CloudEventsFunction {
