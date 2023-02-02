@@ -4,24 +4,21 @@ To enable it add the following dependency:
 
 dependency:io.micronaut.gcp:micronaut-gcp-tracing[version="{version}"]
 
-Then enabling Zipkin tracing in your configuration `application.yml`:
+Then enabling Zipkin tracing in your application configuration:
 
 .Enabling Stackdriver Trace
-[source,yaml]
+[configuration]
 ----
 tracing:
     zipkin:
         enabled: true
-        # [Optional] Set sampling probability to 100% for dev/testing purposes to observe traces.
-        #
-        # sampler:
-        #    probability=1.0
-
-# [Optional] configuration to enable/disable Stackdriver Trace configuration.
-# This is defaulted to true.
-#
-# gcp:
-#    tracing:
-#        enabled: true
+        sampler:
+            probability=1.0
+    gcp:
+        tracing:
+            enabled: true
 ----
+
+- `sampler.probability` (optional) Set sampling probability to 100% for dev/testing purposes to observe traces
+- `gcp.tracing.enabled` (optional) Enable/disable Stackdriver Trace configuration, defaults to true
 
