@@ -66,7 +66,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
      */
     public HttpFunction() {
         conversionService = applicationContext.getBean(ConversionService.class);
-        this.httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
+        this.httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext, conversionService) {
             @Override
             protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
