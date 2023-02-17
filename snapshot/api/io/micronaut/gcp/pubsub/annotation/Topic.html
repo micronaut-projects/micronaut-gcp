@@ -192,7 +192,8 @@ loadScripts(document, 'script');</script>
 <h3>endpoint</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">endpoint</span></div>
 <div class="block">Sets the endpoint that PubSub will use to store messages.
- If not specified PubSub stores messages on the nearest endpoint to the client.
+ If not specified the endpoint defined in properties will be used,
+ else PubSub stores messages on the nearest endpoint to the client.
  This is useful when regulations for data locality such as GDPR are in place.</div>
 <dl class="notes">
 <dt>Returns:</dt>

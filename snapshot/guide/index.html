@@ -1514,6 +1514,11 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 <td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">How often to ping the server to keep the channel alive. Defaults to 5 minutes.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.topic-endpoint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Which endpoint the  should publish messages to. Defaults to the global endpoint</p></td>
+</tr>
 </tbody>
 </table>
 
@@ -2311,7 +2316,7 @@ interface CustomReturnClient {
 <div class="paragraph">
 <p>Google Cloud Pub/Sub is a globally distributed event platform. When a client publishes a message, the platform stores the message on the nearest region to the publisher.
 Sometimes regulations such as GDPR impose restrictions on where customer data can live. When using Micronaut integration you can
-specify the endpoint of the topic so that Pub/Sub will persist the message data on the specified region.
+specify the endpoint of the topic, either via the topic annotation or properties, so that Pub/Sub will persist the message data on the specified region.
 To learn more about this feature visit the <a href="https://cloud.google.com/pubsub/docs/resource-location-restriction">resource location restriction</a> page.</p>
 </div>
 <div class="listingblock multi-language-sample">
