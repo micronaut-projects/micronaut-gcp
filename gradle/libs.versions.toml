@@ -1,5 +1,5 @@
 [versions]
-managed-google-auth-library-oauth2http = "1.14.0"
+managed-google-auth-library-oauth2http = "1.16.0"
 managed-google-functions-framework-api = "1.0.4"
 managed-google-cloud-core = "2.9.0"
 managed-google-cloud-pubsub = "1.122.2"
