@@ -2,7 +2,7 @@
 
 Google Cloud Pub/Sub is a globally distributed event platform. When a client publishes a message, the platform stores the message on the nearest region to the publisher.
 Sometimes regulations such as GDPR impose restrictions on where customer data can live. When using Micronaut integration you can
-specify the endpoint of the topic so that Pub/Sub will persist the message data on the specified region.
+specify the endpoint of the topic, either via the topic annotation or properties, so that Pub/Sub will persist the message data on the specified region.
 To learn more about this feature visit the link:https://cloud.google.com/pubsub/docs/resource-location-restriction[resource location restriction] page.
 
 snippet::io.micronaut.gcp.pubsub.ordering.LocationClient[tags="imports, clazz", source="main"]
