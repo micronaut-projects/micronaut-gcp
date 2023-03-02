@@ -8,7 +8,7 @@ IMPORTANT: Pub/Sub client libraries require an  link:{jdkapi}/java/util/concurre
 For example:
 
 .Configuring the `custom` thread pool
-[source,yaml]
+[configuration]
 ----
 micronaut:
     executors:
