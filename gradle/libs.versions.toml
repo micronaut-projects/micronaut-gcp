@@ -5,7 +5,7 @@ managed-google-cloud-core = "2.11.0"
 managed-google-cloud-pubsub = "1.123.4"
 managed-google-cloud-secretmanager = "2.11.0"
 managed-google-cloud-native-image-support = "0.14.1"
-managed-google-cloudevent-types="0.7.0"
+managed-google-cloudevent-types="0.3.0"
 
 brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
