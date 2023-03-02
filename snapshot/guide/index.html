@@ -571,26 +571,101 @@ The environment detection executes a HTTP request to the Google Cloud metadata s
 </div></p>
 </div>
 <div class="paragraph">
-<p>Then enabling Zipkin tracing in your configuration <code>application.yml</code>:</p>
+<p>Then enabling Zipkin tracing in your application configuration:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
 <div class="title">Enabling Stackdriver Trace</div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">tracing.zipkin.enabled=true
+tracing.zipkin.sampler=probability=1.0
+tracing.gcp.tracing.enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">tracing:
     zipkin:
         enabled: true
-        # [Optional] Set sampling probability to 100% for dev/testing purposes to observe traces.
-        #
-        # sampler:
-        #    probability=1.0
-
-# [Optional] configuration to enable/disable Stackdriver Trace configuration.
-# This is defaulted to true.
-#
-# gcp:
-#    tracing:
-#        enabled: true</code></pre>
+        sampler:
+            probability=1.0
+    gcp:
+        tracing:
+            enabled: true</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[tracing]
+  [tracing.zipkin]
+    enabled=true
+    sampler="probability=1.0"
+  [tracing.gcp]
+    [tracing.gcp.tracing]
+      enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">tracing {
+  zipkin {
+    enabled = true
+    sampler = "probability=1.0"
+  }
+  gcp {
+    tracing {
+      enabled = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  tracing {
+    zipkin {
+      enabled = true
+      sampler = "probability=1.0"
+    }
+    gcp {
+      tracing {
+        enabled = true
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "tracing": {
+    "zipkin": {
+      "enabled": true,
+      "sampler": "probability=1.0"
+    },
+    "gcp": {
+      "tracing": {
+        "enabled": true
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sampler.probability</code> (optional) Set sampling probability to 100% for dev/testing purposes to observe traces</p>
+</li>
+<li>
+<p><code>gcp.tracing.enabled</code> (optional) Enable/disable Stackdriver Trace configuration, defaults to true</p>
+</li>
+</ul>
 </div>
 
 <h1 id="authorizingClients"><a class="anchor" href="#authorizingClients"></a>6 Authorizing HTTP Clients</h1>
@@ -624,7 +699,15 @@ The environment detection executes a HTTP request to the Google Cloud metadata s
 <div class="paragraph">
 <p>You should then configure the service accounts as per the <a href="https://cloud.google.com/run/docs/authenticating/service-to-service">documentation on service-to-service</a> communication and the enable the filter for the outgoing URI paths you wish to include the Google-signed OAuth ID token:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">gcp.http.client.auth.patterns[0]=/foo/**
+gcp.http.client.auth.patterns[1]=/bar/**</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">gcp:
   http:
@@ -633,6 +716,63 @@ The environment detection executes a HTTP request to the Google Cloud metadata s
         patterns:
           - /foo/**
           - /bar/**</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[gcp]
+  [gcp.http]
+    [gcp.http.client]
+      [gcp.http.client.auth]
+        patterns=[
+          "/foo/**",
+          "/bar/**"
+        ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">gcp {
+  http {
+    client {
+      auth {
+        patterns = ["/foo/**", "/bar/**"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  gcp {
+    http {
+      client {
+        auth {
+          patterns = ["/foo/**", "/bar/**"]
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "gcp": {
+    "http": {
+      "client": {
+        "auth": {
+          "patterns": ["/foo/**", "/bar/**"]
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 
@@ -2090,7 +2230,16 @@ This is useful when you need to publish messages to topic that uses different SL
 <div class="paragraph">
 <p>For example suppose you have the following configuration:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">gcp.pubsub.publisher.batching.executor=batch-executor
+gcp.pubsub.publisher.immediate.executor=immediate-executor
+gcp.pubsub.publisher.immediate.batching.enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">gcp:
   pubsub:
@@ -2101,6 +2250,82 @@ This is useful when you need to publish messages to topic that uses different SL
         executor: immediate-executor
         batching:
           enabled: false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[gcp]
+  [gcp.pubsub]
+    [gcp.pubsub.publisher]
+      [gcp.pubsub.publisher.batching]
+        executor="batch-executor"
+      [gcp.pubsub.publisher.immediate]
+        executor="immediate-executor"
+        [gcp.pubsub.publisher.immediate.batching]
+          enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">gcp {
+  pubsub {
+    publisher {
+      batching {
+        executor = "batch-executor"
+      }
+      immediate {
+        executor = "immediate-executor"
+        batching {
+          enabled = false
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  gcp {
+    pubsub {
+      publisher {
+        batching {
+          executor = "batch-executor"
+        }
+        immediate {
+          executor = "immediate-executor"
+          batching {
+            enabled = false
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "gcp": {
+    "pubsub": {
+      "publisher": {
+        "batching": {
+          "executor": "batch-executor"
+        },
+        "immediate": {
+          "executor": "immediate-executor",
+          "batching": {
+            "enabled": false
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -2965,7 +3190,15 @@ class CustomHeaderSubscriber {
 <div class="paragraph">
 <p>Suppose you have the following configuration for a subscriber:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">gcp.pubsub.subscriber.custom.executor=custom-executor
+gcp.pubsub.subscriber.custom.parallel-pull-count=4</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">gcp:
   pubsub:
@@ -2973,6 +3206,64 @@ class CustomHeaderSubscriber {
       custom:
         executor: custom-executor
         parallel-pull-count: 4</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[gcp]
+  [gcp.pubsub]
+    [gcp.pubsub.subscriber]
+      [gcp.pubsub.subscriber.custom]
+        executor="custom-executor"
+        parallel-pull-count=4</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">gcp {
+  pubsub {
+    subscriber {
+      custom {
+        executor = "custom-executor"
+        parallelPullCount = 4
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  gcp {
+    pubsub {
+      subscriber {
+        custom {
+          executor = "custom-executor"
+          parallel-pull-count = 4
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "gcp": {
+    "pubsub": {
+      "subscriber": {
+        "custom": {
+          "executor": "custom-executor",
+          "parallel-pull-count": 4
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3783,14 +4074,73 @@ Pub/Sub client libraries require an  <a href="{jdkapi}/java/util/concurrent/Sche
 <div class="paragraph">
 <p>For example:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
 <div class="title">Configuring the <code>custom</code> thread pool</div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.executors.custom.type=scheduled
+micronaut.executors.custom.nThreads=32</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     executors:
         custom:
             type: scheduled
             nThreads: 32</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.executors]
+    [micronaut.executors.custom]
+      type="scheduled"
+      nThreads=32</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  executors {
+    custom {
+      type = "scheduled"
+      nThreads = 32
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    executors {
+      custom {
+        type = "scheduled"
+        nThreads = 32
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "executors": {
+      "custom": {
+        "type": "scheduled",
+        "nThreads": 32
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -3882,16 +4232,75 @@ Applications can also use it to store configuration files and use it as secure d
 <p>You can leverage <a href="https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration">Distributed Configuration</a> and rely on Google Cloud Secret Manager to store your configuration files.</p>
 </div>
 <div class="paragraph">
-<p>To enable it, add a <code>src/main/resources/bootstrap.yml</code> configuration file to your project:</p>
+<p>To enable it, add a bootstrap configuration file to <code>src/main/resources/</code>:</p>
 </div>
-<div class="listingblock">
-<div class="title">bootstrap.yml</div>
+<div class="openblock">
+<div class="title">bootstrap configuration</div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
+micronaut.config-client.enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     application:
         name: hello-world
     config-client:
         enabled: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.application]
+    name="hello-world"
+  [micronaut.config-client]
+    enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  application {
+    name = "hello-world"
+  }
+  configClient {
+    enabled = true
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    application {
+      name = "hello-world"
+    }
+    config-client {
+      enabled = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "application": {
+      "name": "hello-world"
+    },
+    "config-client": {
+      "enabled": true
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -3912,10 +4321,10 @@ And that the service account you designated your application has proper rights t
 <div class="sectionbody">
 <div class="paragraph">
 <p>It&#8217;s important to note that Google Cloud Secret Manager <strong>does not</strong> support file extensions.
-When you upload your <code>application.yml</code> or <code>application.properties</code> you need to remove the extension from its name.</p>
+When you upload your application configuration file (e.g. <code>application.yml</code> or <code>application.properties</code>) remove the file extension.</p>
 </div>
 <div class="paragraph">
-<p>Micronaut tries circumvent this limitation adopting a convention when fetching configuration files.
+<p>Micronaut tries to circumvent this limitation, adopting a convention when fetching configuration files.
 The following table displays the possible secrets that are fetched by default:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -3959,8 +4368,18 @@ The first PropertySourceLoader that succeeds reading the contents of the secrets
 <p>It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.
 You can <code>whitelist</code> secrets that you would like to loaded as PropertySources using the following configuration:</p>
 </div>
-<div class="listingblock">
-<div class="title">bootstrap.yml</div>
+<div class="openblock">
+<div class="title">bootstrap configuration</div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
+micronaut.config-client.enabled=true
+gcp.secret-manager.custom-configs[0]=my-first-config
+gcp.secret-manager.custom-configs[1]=my-second-config</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     application:
@@ -3972,6 +4391,78 @@ gcp:
       custom-configs:
         - my-first-config
         - my-second-config</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.application]
+    name="hello-world"
+  [micronaut.config-client]
+    enabled=true
+[gcp]
+  [gcp.secret-manager]
+    custom-configs=[
+      "my-first-config",
+      "my-second-config"
+    ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  application {
+    name = "hello-world"
+  }
+  configClient {
+    enabled = true
+  }
+}
+gcp {
+  secretManager {
+    customConfigs = ["my-first-config", "my-second-config"]
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    application {
+      name = "hello-world"
+    }
+    config-client {
+      enabled = true
+    }
+  }
+  gcp {
+    secret-manager {
+      custom-configs = ["my-first-config", "my-second-config"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "application": {
+      "name": "hello-world"
+    },
+    "config-client": {
+      "enabled": true
+    }
+  },
+  "gcp": {
+    "secret-manager": {
+      "custom-configs": ["my-first-config", "my-second-config"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -3995,8 +4486,18 @@ For instance one could have a <code>DB_PASSWORD</code> secret, instead of storin
 Because Secret Manager does not offer a hierarchical approach, loading all secrets in a project is not a viable solution.
 Instead you need to whitelist the keys you would like to pre-fetch such as the following config demonstrates:</p>
 </div>
-<div class="listingblock">
-<div class="title">bootstrap.yml</div>
+<div class="openblock">
+<div class="title">bootstrap configuration</div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
+micronaut.config-client.enabled=true
+gcp.secret-manager.keys[0]=DB_PASSWORD
+gcp.secret-manager.keys[1]=dbUser</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     application:
@@ -4008,6 +4509,78 @@ gcp:
       keys:
         - DB_PASSWORD
         - dbUser</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.application]
+    name="hello-world"
+  [micronaut.config-client]
+    enabled=true
+[gcp]
+  [gcp.secret-manager]
+    keys=[
+      "DB_PASSWORD",
+      "dbUser"
+    ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  application {
+    name = "hello-world"
+  }
+  configClient {
+    enabled = true
+  }
+}
+gcp {
+  secretManager {
+    keys = ["DB_PASSWORD", "dbUser"]
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    application {
+      name = "hello-world"
+    }
+    config-client {
+      enabled = true
+    }
+  }
+  gcp {
+    secret-manager {
+      keys = ["DB_PASSWORD", "dbUser"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "application": {
+      "name": "hello-world"
+    },
+    "config-client": {
+      "enabled": true
+    }
+  },
+  "gcp": {
+    "secret-manager": {
+      "keys": ["DB_PASSWORD", "dbUser"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
