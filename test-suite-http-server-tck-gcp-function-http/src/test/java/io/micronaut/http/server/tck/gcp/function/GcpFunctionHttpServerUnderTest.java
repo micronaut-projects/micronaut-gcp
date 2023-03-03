@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
+@SuppressWarnings("java:S2187") // Suppress because despite its name, this is not a Test
 public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
     private final InvokerHttpServer server;
