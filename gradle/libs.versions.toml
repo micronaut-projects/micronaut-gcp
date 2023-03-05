@@ -46,3 +46,6 @@ logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic",
 reactor-core = { module = "io.projectreactor:reactor-core" }
 testcontainers-spock = { module = "org.testcontainers:spock" }
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
+
+junit-jupiter-engine = { module = 'org.junit.jupiter:junit-jupiter-engine' }
+junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }

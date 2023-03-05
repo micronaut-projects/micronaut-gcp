@@ -9,6 +9,8 @@ plugins {
     id("io.micronaut.build.shared.settings") version "5.4.4"
 }
 
+enableFeaturePreview('TYPESAFE_PROJECT_ACCESSORS')
+
 rootProject.name = 'gcp-parent'
 
 include 'gcp-function-cloudevents'
@@ -26,7 +28,9 @@ include 'gcp-serde-cloudevents'
 
 include 'test-suite'
 include 'test-suite-groovy'
+include 'test-suite-http-server-tck-gcp-function-http'
 include 'test-suite-kotlin'
+
 micronautBuild {
     importMicronautCatalog()
 }

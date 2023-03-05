@@ -1,0 +1,20 @@
+plugins {
+    id("java-library")
+}
+
+dependencies {
+    testAnnotationProcessor(platform(mn.micronaut.bom))
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(platform(mn.micronaut.bom))
+    testImplementation(mn.micronaut.inject.java)
+
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.tck)
+    testImplementation(libs.junit.platform.engine)
+    testImplementation(libs.junit.jupiter.engine)
+    testRuntimeOnly(mn.logback)
+}
+
+tasks.named("test") {
+    useJUnitPlatform()
+}
