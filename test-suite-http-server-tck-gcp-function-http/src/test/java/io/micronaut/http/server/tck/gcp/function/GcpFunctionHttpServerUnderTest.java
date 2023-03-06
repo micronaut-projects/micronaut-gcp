@@ -28,7 +28,7 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         this.function = new HttpFunction(ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
             .properties(properties)
             .deduceEnvironment(false)
-            .build());
+            .start());
     }
 
     @Override
