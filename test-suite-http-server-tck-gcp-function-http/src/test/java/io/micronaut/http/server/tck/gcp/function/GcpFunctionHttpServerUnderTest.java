@@ -21,16 +21,14 @@ import java.util.Optional;
 @SuppressWarnings("java:S2187") // Suppress because despite its name, this is not a Test
 public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
-    private final ApplicationContext ctx;
     private final HttpFunction function;
 
     public GcpFunctionHttpServerUnderTest(Map<String, Object> properties) {
         properties.put("micronaut.server.context-path", "/");
-        this.ctx = ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
+        this.function = new HttpFunction(ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
             .properties(properties)
             .deduceEnvironment(false)
-            .build();
-        this.function = new HttpFunction(ctx.start());
+            .build());
     }
 
     @Override
@@ -51,9 +49,6 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
     public void close() throws IOException {
         if (function != null) {
             function.close();
-        }
-        if (ctx != null) {
-            ctx.close();
         }
     }
 
