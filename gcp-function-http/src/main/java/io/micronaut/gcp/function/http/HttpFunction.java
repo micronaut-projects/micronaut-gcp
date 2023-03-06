@@ -63,7 +63,11 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
      * Default constructor.
      */
     public HttpFunction() {
-        this.httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
+        httpHandler = initializeHandler();
+    }
+
+    private ServletHttpHandler<HttpRequest, HttpResponse> initializeHandler() {
+        final ServletHttpHandler<HttpRequest, HttpResponse> httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
             @Override
             protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
@@ -84,6 +88,12 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         Runtime.getRuntime().addShutdownHook(
                 new Thread(httpHandler::close)
         );
+        return httpHandler;
+    }
+
+    public HttpFunction(ApplicationContext context) {
+        super(context);
+        httpHandler = initializeHandler();
     }
 
     @Override

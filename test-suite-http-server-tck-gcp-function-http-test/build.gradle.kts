@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     testImplementation(projects.gcpFunctionHttp)
-    testImplementation(libs.managed.functions.framework.api)
+    testImplementation(projects.gcpFunctionHttpTest)
 }

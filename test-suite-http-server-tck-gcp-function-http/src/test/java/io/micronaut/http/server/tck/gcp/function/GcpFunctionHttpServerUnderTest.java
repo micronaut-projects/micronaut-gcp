@@ -1,13 +1,15 @@
 package io.micronaut.http.server.tck.gcp.function;
 
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.context.env.Environment;
+import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.type.Argument;
-import io.micronaut.gcp.function.http.test.InvokerHttpServer;
+import io.micronaut.gcp.function.http.GoogleHttpResponse;
+import io.micronaut.gcp.function.http.HttpFunction;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.client.BlockingHttpClient;
-import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.server.tck.ServerUnderTest;
 
 import java.io.IOException;
@@ -17,58 +19,71 @@ import java.util.Optional;
 @SuppressWarnings("java:S2187") // Suppress because despite its name, this is not a Test
 public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
-    private final InvokerHttpServer server;
-    private HttpClient httpClient;
-    private BlockingHttpClient client;
+    private final ApplicationContext ctx;
+    private final HttpFunction function;
 
     public GcpFunctionHttpServerUnderTest(Map<String, Object> properties) {
-        server = ApplicationContext.run(InvokerHttpServer.class, properties);
+        properties.put("micronaut.server.context-path", "/");
+        this.ctx = ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
+            .properties(properties)
+            .deduceEnvironment(false)
+            .build();
+        ctx.start();
+        this.function = new HttpFunction(ctx);
     }
 
     @Override
     public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType) {
-        return getBlockingHttpClient().exchange(request, bodyType);
+        return adaptResponse(function.invoke(request), bodyType);
     }
 
-    @Override
-    public <I, O> HttpResponse<O> exchange(HttpRequest<I> request) {
-        return getBlockingHttpClient().exchange(request);
-    }
-
-    @Override
-    public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Class<O> bodyType) {
-        return getBlockingHttpClient().exchange(request, bodyType);
+    private <O> HttpResponse<O> adaptResponse(GoogleHttpResponse invoke, Argument<O> bodyType) {
+        return new HttpResponseAdaptor<>(invoke, bodyType);
     }
 
     @Override
     public ApplicationContext getApplicationContext() {
-        return server.getApplicationContext();
+        return null;
     }
 
     @Override
     public void close() throws IOException {
-        server.close();
-    }
-
-    @Override
-    @NonNull
-    public Optional<Integer> getPort() {
-        return Optional.of(server.getPort());
-    }
-
-    @NonNull
-    private HttpClient getHttpClient() {
-        if (httpClient == null) {
-            this.httpClient = getApplicationContext().createBean(HttpClient.class, server.getURL());
+        if (function != null) {
+            function.close();
         }
-        return httpClient;
+        if (ctx != null) {
+            ctx.close();
+        }
     }
 
-    @NonNull
-    private BlockingHttpClient getBlockingHttpClient() {
-        if (client == null) {
-            this.client = getHttpClient().toBlocking();
+    static class HttpResponseAdaptor<O> implements HttpResponse<O> {
+
+        final GoogleHttpResponse googleHttpResponse;
+        private final Argument<O> bodyType;
+
+        HttpResponseAdaptor(GoogleHttpResponse googleHttpResponse, Argument<O> bodyType) {
+            this.googleHttpResponse = googleHttpResponse;
+            this.bodyType = bodyType;
         }
-        return client;
+
+        @Override
+        public HttpStatus getStatus() {
+            return googleHttpResponse.getStatus();
+        }
+
+        @Override
+        public HttpHeaders getHeaders() {
+            return googleHttpResponse.getHttpHeaders();
+        }
+
+        @Override
+        public MutableConvertibleValues<Object> getAttributes() {
+            return null;
+        }
+
+        @Override
+        public Optional<O> getBody() {
+            return googleHttpResponse.getBody(bodyType);
+        }
     }
 }
