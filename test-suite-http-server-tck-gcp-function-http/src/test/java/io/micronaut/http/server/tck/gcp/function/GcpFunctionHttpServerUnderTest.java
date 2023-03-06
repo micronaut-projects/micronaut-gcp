@@ -28,17 +28,12 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
             .properties(properties)
             .deduceEnvironment(false)
             .build();
-        ctx.start();
-        this.function = new HttpFunction(ctx);
+        this.function = new HttpFunction(ctx.start());
     }
 
     @Override
     public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType) {
-        return adaptResponse(function.invoke(request), bodyType);
-    }
-
-    private <O> HttpResponse<O> adaptResponse(GoogleHttpResponse invoke, Argument<O> bodyType) {
-        return new HttpResponseAdaptor<>(invoke, bodyType);
+        return new HttpResponseAdaptor<>(function.invoke(request), bodyType);
     }
 
     @Override
