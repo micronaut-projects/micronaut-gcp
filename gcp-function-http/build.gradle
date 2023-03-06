@@ -1,5 +1,5 @@
 plugins {
-    id("io.micronaut.build.internal.module")
+    id("io.micronaut.build.internal.gcp-module")
 }
 
 dependencies {
