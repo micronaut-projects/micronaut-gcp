@@ -11,6 +11,7 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.server.tck.ServerUnderTest;
 
 import java.io.IOException;
@@ -34,7 +35,11 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
     @Override
     public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType) {
-        return new HttpResponseAdaptor<>(function.invoke(request), bodyType);
+        HttpResponse<O> response = new HttpResponseAdaptor<>(function.invoke(request), bodyType);
+        if (response.getStatus().getCode() >= 400) {
+            throw new HttpClientResponseException("error", response);
+        }
+        return response;
     }
 
     @Override
@@ -82,6 +87,9 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         @Override
         @NonNull
         public Optional<O> getBody() {
+            if (bodyType == null) {
+                return Optional.empty();
+            }
             if (bodyType.isAssignableFrom(String.class)) {
                 return (Optional<O>) Optional.of(googleHttpResponse.getBodyAsText());
             }
