@@ -30,6 +30,9 @@ micronaut-servlet = "4.0.0-SNAPSHOT"
 micronaut-tracing = "5.0.0-SNAPSHOT"
 micronaut-discovery = "4.0.0-SNAPSHOT"
 
+# Micronaut
+micronaut-gradle-plugin = "3.7.4"
+
 [libraries]
 # micronaut boms
 micronaut-rxjava2 = { module = "io.micronaut.rxjava2:micronaut-rxjava2-bom", version.ref = "micronaut-rxjava2" }
@@ -65,5 +68,8 @@ testcontainers-spock = { module = "org.testcontainers:spock", version.ref = "tes
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
 
 # Plugins
+gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 kotlin-gradle-allopen = { module = 'org.jetbrains.kotlin:kotlin-allopen', version.ref = 'kotlin' }
+junit-jupiter-engine = { module = 'org.junit.jupiter:junit-jupiter-engine' }
+junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
