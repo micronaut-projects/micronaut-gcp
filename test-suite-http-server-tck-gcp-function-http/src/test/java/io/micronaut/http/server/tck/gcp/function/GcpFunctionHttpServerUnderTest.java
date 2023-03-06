@@ -2,6 +2,7 @@ package io.micronaut.http.server.tck.gcp.function;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.env.Environment;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.type.Argument;
 import io.micronaut.gcp.function.http.GoogleHttpResponse;
@@ -67,16 +68,19 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         }
 
         @Override
+        @NonNull
         public HttpHeaders getHeaders() {
             return googleHttpResponse.getHttpHeaders();
         }
 
         @Override
+        @NonNull
         public MutableConvertibleValues<Object> getAttributes() {
             return null;
         }
 
         @Override
+        @NonNull
         public Optional<O> getBody() {
             return googleHttpResponse.getBody(bodyType);
         }
