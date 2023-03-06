@@ -52,6 +52,13 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         }
     }
 
+    @Override
+    @NonNull
+    public Optional<Integer> getPort() {
+        // This port is used in the CorsSimpleRequestTests
+        return Optional.of(1234);
+    }
+
     static class HttpResponseAdaptor<O> implements HttpResponse<O> {
 
         final GoogleHttpResponse googleHttpResponse;
