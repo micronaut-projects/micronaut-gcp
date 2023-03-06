@@ -1,4 +1,0 @@
-
-tasks.withType(Class.forName("io.micronaut.build.compat.FindBaselineTask")).configureEach {
-    baseRepository = "https://repo1.maven.org/maven2"
-}
