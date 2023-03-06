@@ -6,9 +6,9 @@ plugins {
 dependencies {
     compileOnly(mn.micronaut.inject.groovy)
     compileOnly(mn.groovy)
-    implementation projects.gcpPubsub
-    implementation projects.gcpFunctionHttp
-    implementation projects.gcpSecretManager
+    implementation(projects.micronautGcpPubsub)
+    implementation(projects.micronautGcpFunctionHttp)
+    implementation(projects.micronautGcpSecretManager)
     implementation(mn.reactor)
     compileOnly(libs.managed.functions.framework.api)
 }

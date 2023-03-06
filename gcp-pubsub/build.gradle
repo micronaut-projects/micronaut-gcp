@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     api(mn.micronaut.messaging)
-    api projects.gcpCommon
+    api(projects.micronautGcpCommon)
     api(libs.managed.google.cloud.pubsub)
 
     implementation(mn.reactor)

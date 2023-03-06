@@ -6,9 +6,9 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.inject.java)
 
-    implementation projects.gcpFunctionHttp
-    implementation projects.gcpPubsub
-    implementation projects.gcpSecretManager
+    implementation(projects.micronautGcpFunctionHttp)
+    implementation(projects.micronautGcpPubsub)
+    implementation(projects.micronautGcpSecretManager)
     implementation(mn.reactor)
 
     compileOnly(libs.managed.functions.framework.api)

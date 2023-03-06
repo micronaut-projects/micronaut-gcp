@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api projects.gcpCommon
+    api(projects.micronautGcpCommon)
     api(mn.micronaut.http.client)
     implementation(mn.reactor)
     testImplementation(mn.micronaut.http.server.netty)
