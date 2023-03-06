@@ -8,5 +8,5 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @Suite
 @SelectPackages("io.micronaut.http.server.tck.tests")
 @SuiteDisplayName("HTTP Server TCK for for GCP Function HTTP")
-class GcpFunctionHttpHttpServerTestSuite {
+class GcpFunctionHttpServerTestSuite {
 }

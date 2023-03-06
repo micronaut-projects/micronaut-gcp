@@ -13,5 +13,5 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     "io.micronaut.http.server.tck.tests.filter.HttpServerFilterTest",
     "io.micronaut.http.server.tck.tests.FiltersTest",
 })
-class GcpFunctionHttpHttpServerTestSuite {
+class GcpFunctionHttpTestServerTestSuite {
 }
