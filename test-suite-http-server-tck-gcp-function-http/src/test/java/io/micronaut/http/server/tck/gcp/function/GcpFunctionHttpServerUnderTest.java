@@ -44,7 +44,7 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
     @Override
     public ApplicationContext getApplicationContext() {
-        return null;
+        return this.function.getApplicationContext();
     }
 
     @Override
