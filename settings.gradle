@@ -28,6 +28,8 @@ include 'gcp-serde-cloudevents'
 
 include 'test-suite'
 include 'test-suite-groovy'
+//include 'test-suite-http-server-tck-gcp-function-http'
+//include 'test-suite-http-server-tck-gcp-function-http-test'
 include 'test-suite-kotlin'
 micronautBuild {
     //TODO delete once snapshot no longer needed
