@@ -35,7 +35,7 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
     public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType) {
         HttpResponse<O> response = new HttpResponseAdaptor<>(function.invoke(request), bodyType);
         if (response.getStatus().getCode() >= 400) {
-            throw new HttpClientResponseException("error", response);
+            throw new HttpClientResponseException("error " + response.getStatus().getReason() + " (" + response.getStatus().getCode() + ")", response);
         }
         return response;
     }
@@ -72,6 +72,16 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         @Override
         public HttpStatus getStatus() {
             return googleHttpResponse.getStatus();
+        }
+
+        @Override
+        public int code() {
+            return googleHttpResponse.getStatusCode();
+        }
+
+        @Override
+        public String reason() {
+            return getStatus().getReason();
         }
 
         @Override
