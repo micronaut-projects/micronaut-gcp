@@ -8,7 +8,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
-import io.micronaut.http.server.tck.ServerUnderTest;
+import io.micronaut.http.tck.ServerUnderTest;
 
 import java.io.IOException;
 import java.util.Map;
@@ -28,6 +28,11 @@ public class GcpFunctionHttpTestServerUnderTest implements ServerUnderTest {
     @Override
     public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType) {
         return getBlockingHttpClient().exchange(request, bodyType);
+    }
+
+    @Override
+    public <I, O, E> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType, Argument<E> errorType) {
+        return exchange(request, bodyType);
     }
 
     @Override
