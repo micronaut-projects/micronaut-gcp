@@ -6,6 +6,7 @@ spock = "2.3-groovy-4.0"
 
 managed-google-auth-library-oauth2http = "1.16.0"
 managed-google-functions-framework-api = "1.0.4"
+managed-google-function-invoker = "1.2.0"
 managed-google-cloud-core = "2.12.0"
 managed-google-cloud-pubsub = "1.123.5"
 managed-google-cloud-secretmanager = "2.12.0"
@@ -46,6 +47,7 @@ micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discov
 managed-google-cloudevent-types = { module = "com.google.cloud:google-cloudevent-types", version.ref = "managed-google-cloudevent-types" }
 managed-google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "managed-google-auth-library-oauth2http" }
 managed-functions-framework-api = { module = "com.google.cloud.functions:functions-framework-api", version.ref = "managed-google-functions-framework-api" }
+managed-google-function-invoker = { module = "com.google.cloud.functions.invoker:java-function-invoker", version.ref = "managed-google-function-invoker" }
 managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
 managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "managed-google-cloud-pubsub" }
 managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
