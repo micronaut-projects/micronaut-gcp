@@ -31,7 +31,7 @@ micronaut-tracing = "5.0.0-SNAPSHOT"
 micronaut-discovery = "4.0.0-SNAPSHOT"
 
 # Micronaut
-micronaut-gradle-plugin = "3.7.4"
+micronaut-gradle-plugin = "3.7.7"
 
 [libraries]
 # micronaut boms
