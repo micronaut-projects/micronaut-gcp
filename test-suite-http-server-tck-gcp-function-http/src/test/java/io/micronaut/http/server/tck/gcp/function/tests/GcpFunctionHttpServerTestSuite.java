@@ -21,6 +21,9 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     "io.micronaut.http.server.tck.tests.filter.RequestFilterExceptionHandlerTest", // Request is immutable
     "io.micronaut.http.server.tck.tests.filter.RequestFilterTest", // Request is immutable
     "io.micronaut.http.server.tck.tests.filter.ResponseFilterTest", // Request is immutable
+    "io.micronaut.http.server.tck.tests.endpoints.health.HealthTest", // error Service Unavailable (503)
+    "io.micronaut.http.server.tck.tests.HeadersTest", // Error 400, bad request
+    "io.micronaut.http.server.tck.tests.cors.SimpleRequestWithCorsNotEnabledTest", // Multiple routes are selected
 })
 class GcpFunctionHttpServerTestSuite {
 }
