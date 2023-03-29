@@ -42,4 +42,5 @@ micronautBuild {
     importMicronautCatalog("micronaut-serde")
     importMicronautCatalog("micronaut-servlet")
     importMicronautCatalog("micronaut-tracing")
+    importMicronautCatalog("micronaut-validation")
 }
