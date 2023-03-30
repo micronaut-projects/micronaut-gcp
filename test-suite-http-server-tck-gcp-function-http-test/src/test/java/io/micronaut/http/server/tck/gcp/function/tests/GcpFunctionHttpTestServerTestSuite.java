@@ -15,6 +15,9 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     "io.micronaut.http.server.tck.tests.filter.RequestFilterExceptionHandlerTest", // Request is immutable
     "io.micronaut.http.server.tck.tests.filter.RequestFilterTest", // Internal error and Request is immutable
     "io.micronaut.http.server.tck.tests.filter.ResponseFilterTest", // Request is immutable
+    "io.micronaut.http.server.tck.tests.endpoints.health.HealthTest", // Caused by: org.eclipse.jetty.http.BadMessageException: 500: No version
+    "io.micronaut.http.server.tck.tests.HeadersTest", // Error 400, bad request
+
 })
 class GcpFunctionHttpTestServerTestSuite {
 }

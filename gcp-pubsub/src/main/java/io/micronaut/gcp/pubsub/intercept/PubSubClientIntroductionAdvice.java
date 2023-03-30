@@ -186,7 +186,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 return null;
             } else {
                 if (returnTypeInfo.isReactive()) {
-                    return Publishers.convertPublisher(reactiveResult, javaReturnType);
+                    return Publishers.convertPublisher(conversionService, reactiveResult, javaReturnType);
                 } else if (returnTypeInfo.isAsync()) {
                     return reactiveResult.toFuture();
                 } else {
