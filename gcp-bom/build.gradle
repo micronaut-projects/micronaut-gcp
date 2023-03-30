@@ -1,3 +1,11 @@
 plugins {
     id "io.micronaut.build.internal.bom"
 }
+
+// Removed in https://github.com/micronaut-projects/micronaut-gcp/pull/802 until we can fix tracing
+micronautBom {
+    suppressions {
+        acceptedLibraryRegressions.add("micronaut-gcp-tracing")
+        acceptedLibraryRegressions.add("micronaut-gcp-logging")
+    }
+}
