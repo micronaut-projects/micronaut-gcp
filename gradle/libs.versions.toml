@@ -20,7 +20,7 @@ grpc = "1.53.0"
 kotlin = '1.8.10'
 cloudevents-api = "2.4.2"
 
-jetty-servlet = "10.0.12"
+jetty-servlet = "10.0.14"
 logback-json-classic = "0.1.5"
 testcontainers = "1.17.6"
 zipkin-sender-stackdriver = "1.0.4"
