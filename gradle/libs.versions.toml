@@ -7,17 +7,17 @@ spock = "2.3-groovy-4.0"
 managed-google-auth-library-oauth2http = "1.16.0"
 managed-google-functions-framework-api = "1.0.4"
 managed-google-function-invoker = "1.2.0"
-managed-google-cloud-core = "2.12.0"
-managed-google-cloud-pubsub = "1.123.5"
-managed-google-cloud-secretmanager = "2.12.0"
+managed-google-cloud-core = "2.14.0"
+managed-google-cloud-pubsub = "1.123.7"
+managed-google-cloud-secretmanager = "2.14.0"
 managed-google-cloud-native-image-support = "0.14.1"
 managed-google-cloudevent-types="0.3.0"
 
 brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
 
-grpc = "1.53.0"
-kotlin = '1.8.10'
+grpc = "1.54.0"
+kotlin = '1.8.20'
 cloudevents-api = "2.4.2"
 
 jetty-servlet = "11.0.14"
