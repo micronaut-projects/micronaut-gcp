@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.toMap;
 
 import com.google.cloud.functions.HttpResponse;
 import io.micronaut.core.annotation.Internal;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,7 +30,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Forked from the invoker.
