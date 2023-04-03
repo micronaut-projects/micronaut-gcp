@@ -20,6 +20,9 @@ import static java.util.stream.Collectors.toMap;
 
 import com.google.cloud.functions.HttpRequest;
 import io.micronaut.core.annotation.Internal;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,9 +39,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 
 /**
  * Forked from the invoker.
