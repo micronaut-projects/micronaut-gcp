@@ -60,7 +60,6 @@ loadScripts(document, 'script');</script>
 <li><a href="io/micronaut/gcp/function/http/jackson/package-tree.html">io.micronaut.gcp.function.http.jackson</a>, </li>
 <li><a href="io/micronaut/gcp/function/http/test/package-tree.html">io.micronaut.gcp.function.http.test</a>, </li>
 <li><a href="io/micronaut/gcp/http/client/package-tree.html">io.micronaut.gcp.http.client</a>, </li>
-<li><a href="io/micronaut/gcp/logging/package-tree.html">io.micronaut.gcp.logging</a>, </li>
 <li><a href="io/micronaut/gcp/pubsub/annotation/package-tree.html">io.micronaut.gcp.pubsub.annotation</a>, </li>
 <li><a href="io/micronaut/gcp/pubsub/bind/package-tree.html">io.micronaut.gcp.pubsub.bind</a>, </li>
 <li><a href="io/micronaut/gcp/pubsub/configuration/package-tree.html">io.micronaut.gcp.pubsub.configuration</a>, </li>
@@ -70,8 +69,7 @@ loadScripts(document, 'script');</script>
 <li><a href="io/micronaut/gcp/pubsub/support/package-tree.html">io.micronaut.gcp.pubsub.support</a>, </li>
 <li><a href="io/micronaut/gcp/secretmanager/package-tree.html">io.micronaut.gcp.secretmanager</a>, </li>
 <li><a href="io/micronaut/gcp/secretmanager/client/package-tree.html">io.micronaut.gcp.secretmanager.client</a>, </li>
-<li><a href="io/micronaut/gcp/secretmanager/configuration/package-tree.html">io.micronaut.gcp.secretmanager.configuration</a>, </li>
-<li><a href="io/micronaut/gcp/tracing/zipkin/package-tree.html">io.micronaut.gcp.tracing.zipkin</a></li>
+<li><a href="io/micronaut/gcp/secretmanager/configuration/package-tree.html">io.micronaut.gcp.secretmanager.configuration</a></li>
 </ul>
 </div>
 <section class="hierarchy">
@@ -94,28 +92,6 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" class="type-name-link" title="class in io.micronaut.gcp.function.http">HttpFunction</a> (implements com.google.cloud.functions.HttpFunction)</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="circle">ch.qos.logback.core.spi.ContextAwareBase (implements ch.qos.logback.core.spi.ContextAware)
-<ul>
-<li class="circle">ch.qos.logback.core.LayoutBase&lt;E&gt; (implements ch.qos.logback.core.Layout&lt;E&gt;)
-<ul>
-<li class="circle">ch.qos.logback.contrib.json.JsonLayoutBase&lt;E&gt;
-<ul>
-<li class="circle">ch.qos.logback.contrib.json.classic.JsonLayout
-<ul>
-<li class="circle">io.micronaut.gcp.logging.<a href="io/micronaut/gcp/logging/StackdriverJsonLayout.html" class="type-name-link" title="class in io.micronaut.gcp.logging">StackdriverJsonLayout</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="circle">ch.qos.logback.core.PropertyDefinerBase (implements ch.qos.logback.core.spi.PropertyDefiner)
-<ul>
-<li class="circle">io.micronaut.gcp.logging.<a href="io/micronaut/gcp/logging/GoogleCloudPropertyDefiner.html" class="type-name-link" title="class in io.micronaut.gcp.logging">GoogleCloudPropertyDefiner</a></li>
 </ul>
 </li>
 </ul>
@@ -160,7 +136,6 @@ loadScripts(document, 'script');</script>
 <li class="circle">io.micronaut.gcp.secretmanager.<a href="io/micronaut/gcp/secretmanager/SecretManagerConfigurationClient.html" class="type-name-link" title="class in io.micronaut.gcp.secretmanager">SecretManagerConfigurationClient</a> (implements io.micronaut.discovery.config.ConfigurationClient)</li>
 <li class="circle">io.micronaut.gcp.secretmanager.configuration.<a href="io/micronaut/gcp/secretmanager/configuration/SecretManagerConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.gcp.secretmanager.configuration">SecretManagerConfigurationProperties</a></li>
 <li class="circle">io.micronaut.gcp.secretmanager.<a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" class="type-name-link" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></li>
-<li class="circle">io.micronaut.gcp.tracing.zipkin.<a href="io/micronaut/gcp/tracing/zipkin/StackdriverSenderFactory.html" class="type-name-link" title="class in io.micronaut.gcp.tracing.zipkin">StackdriverSenderFactory</a></li>
 <li class="circle">io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.gcp.pubsub.configuration">SubscriberConfigurationProperties</a></li>
 <li class="circle">io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/SubscriberFactoryConfig.html" class="type-name-link" title="class in io.micronaut.gcp.pubsub.bind">SubscriberFactoryConfig</a></li>
 <li class="circle">io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/ThreeTenConverterRegistrar.html" class="type-name-link" title="class in io.micronaut.gcp.pubsub.configuration">ThreeTenConverterRegistrar</a> (implements io.micronaut.core.convert.TypeConverterRegistrar)</li>
@@ -235,7 +210,6 @@ loadScripts(document, 'script');</script>
 <li class="circle">io.micronaut.gcp.pubsub.serdes.<a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html" class="type-name-link" title="interface in io.micronaut.gcp.pubsub.serdes">PubSubMessageSerDes</a></li>
 <li class="circle">io.micronaut.gcp.pubsub.serdes.<a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDesRegistry.html" class="type-name-link" title="interface in io.micronaut.gcp.pubsub.serdes">PubSubMessageSerDesRegistry</a></li>
 <li class="circle">io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/SecretManagerClient.html" class="type-name-link" title="interface in io.micronaut.gcp.secretmanager.client">SecretManagerClient</a></li>
-<li class="circle">io.micronaut.gcp.logging.<a href="io/micronaut/gcp/logging/StackdriverTraceConstants.html" class="type-name-link" title="interface in io.micronaut.gcp.logging">StackdriverTraceConstants</a></li>
 <li class="circle">io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/SubscriberFactory.html" class="type-name-link" title="interface in io.micronaut.gcp.pubsub.bind">SubscriberFactory</a></li>
 </ul>
 </section>
