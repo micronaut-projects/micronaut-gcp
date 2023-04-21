@@ -185,7 +185,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public Optional<B> getBody() {
-        return (Optional<B>) getBody(Argument.STRING);
+        return (Optional<B>) getBody(Argument.OBJECT_ARGUMENT);
     }
 
     @NonNull
@@ -198,7 +198,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
 
                 if (isFormSubmission(contentType)) {
                     body = getParameters();
-                    if (ConvertibleValues.class == type) {
+                    if (ConvertibleValues.class == type || Object.class == type) {
                         return (Optional<T>) Optional.of(body);
                     } else {
                         return Optional.empty();
