@@ -44,15 +44,13 @@ public class PubSubBinderRegistry implements ArgumentBinderRegistry<PubSubConsum
      * @param binders List of registered {@link PubSubArgumentBinder} binders
      */
     public PubSubBinderRegistry(PubSubDefaultArgumentBinder defaultBinder,
-                                PubSubArgumentBinder... binders) {
+                                PubSubArgumentBinder<?>... binders) {
         this.defaultBinder = defaultBinder;
         if (ArrayUtils.isNotEmpty(binders)) {
-            for (PubSubArgumentBinder binder : binders) {
-                if (binder instanceof PubSubAnnotatedArgumentBinder) {
-                    PubSubAnnotatedArgumentBinder annotatedArgumentBinder = (PubSubAnnotatedArgumentBinder) binder;
+            for (PubSubArgumentBinder<?> binder : binders) {
+                if (binder instanceof PubSubAnnotatedArgumentBinder<?> annotatedArgumentBinder) {
                     byAnnotation.putIfAbsent(annotatedArgumentBinder.getAnnotationType(), binder);
-                } else if (binder instanceof PubSubTypeArgumentBinder) {
-                    PubSubTypeArgumentBinder typeBinder = (PubSubTypeArgumentBinder) binder;
+                } else if (binder instanceof PubSubTypeArgumentBinder<?> typeBinder) {
                     byType.put(typeBinder.argumentType().typeHashCode(), typeBinder);
                 }
             }
@@ -60,7 +58,7 @@ public class PubSubBinderRegistry implements ArgumentBinderRegistry<PubSubConsum
     }
 
     @Override
-    public <T> Optional<ArgumentBinder<T, PubSubConsumerState>> findArgumentBinder(Argument<T> argument, PubSubConsumerState source) {
+    public <T> Optional<ArgumentBinder<T, PubSubConsumerState>> findArgumentBinder(Argument<T> argument) {
         Optional<Class<? extends Annotation>> opt = argument.getAnnotationMetadata().getAnnotationTypeByStereotype(Bindable.class);
         if (opt.isPresent()) {
             Class<? extends Annotation> annotationType = opt.get();
