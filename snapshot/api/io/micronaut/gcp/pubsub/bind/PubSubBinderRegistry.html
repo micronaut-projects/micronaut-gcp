@@ -101,7 +101,7 @@ implements io.micronaut.core.bind.ArgumentBinderRegistry&lt;<a href="PubSubConsu
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.gcp.pubsub.bind.PubSubDefaultArgumentBinder,io.micronaut.gcp.pubsub.bind.PubSubArgumentBinder...)" class="member-name-link">PubSubBinderRegistry</a><wbr>(<a href="PubSubDefaultArgumentBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubDefaultArgumentBinder</a>&nbsp;defaultBinder,
- <a href="PubSubArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubArgumentBinder</a>...&nbsp;binders)</code></div>
+ <a href="PubSubArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubArgumentBinder</a>&lt;?&gt;...&nbsp;binders)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Default constructor.</div>
 </div>
@@ -120,8 +120,7 @@ implements io.micronaut.core.bind.ArgumentBinderRegistry&lt;<a href="PubSubConsu
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;io.micronaut.core.bind.ArgumentBinder&lt;T,<wbr><a href="PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findArgumentBinder(io.micronaut.core.type.Argument,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)" class="member-name-link">findArgumentBinder</a><wbr>(io.micronaut.core.type.Argument&lt;T&gt;&nbsp;argument,
- <a href="PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a>&nbsp;source)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findArgumentBinder(io.micronaut.core.type.Argument)" class="member-name-link">findArgumentBinder</a><wbr>(io.micronaut.core.type.Argument&lt;T&gt;&nbsp;argument)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -131,7 +130,7 @@ implements io.micronaut.core.bind.ArgumentBinderRegistry&lt;<a href="PubSubConsu
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.core.bind.ArgumentBinderRegistry">Methods inherited from interface&nbsp;io.micronaut.core.bind.ArgumentBinderRegistry</h3>
-<code>addRequestArgumentBinder</code></div>
+<code>addArgumentBinder, addRequestArgumentBinder, findArgumentBinder</code></div>
 </section>
 </li>
 </ul>
@@ -147,7 +146,7 @@ implements io.micronaut.core.bind.ArgumentBinderRegistry&lt;<a href="PubSubConsu
 <section class="detail" id="&lt;init&gt;(io.micronaut.gcp.pubsub.bind.PubSubDefaultArgumentBinder,io.micronaut.gcp.pubsub.bind.PubSubArgumentBinder...)">
 <h3>PubSubBinderRegistry</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PubSubBinderRegistry</span><wbr><span class="parameters">(<a href="PubSubDefaultArgumentBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubDefaultArgumentBinder</a>&nbsp;defaultBinder,
- <a href="PubSubArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubArgumentBinder</a>...&nbsp;binders)</span></div>
+ <a href="PubSubArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubArgumentBinder</a>&lt;?&gt;...&nbsp;binders)</span></div>
 <div class="block">Default constructor.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -165,11 +164,10 @@ implements io.micronaut.core.bind.ArgumentBinderRegistry&lt;<a href="PubSubConsu
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="findArgumentBinder(io.micronaut.core.type.Argument,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)">
+<section class="detail" id="findArgumentBinder(io.micronaut.core.type.Argument)">
 <h3>findArgumentBinder</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>
-<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;io.micronaut.core.bind.ArgumentBinder&lt;T,<wbr><a href="PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a>&gt;&gt;</span>&nbsp;<span class="element-name">findArgumentBinder</span><wbr><span class="parameters">(io.micronaut.core.type.Argument&lt;T&gt;&nbsp;argument,
- <a href="PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a>&nbsp;source)</span></div>
+<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;io.micronaut.core.bind.ArgumentBinder&lt;T,<wbr><a href="PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a>&gt;&gt;</span>&nbsp;<span class="element-name">findArgumentBinder</span><wbr><span class="parameters">(io.micronaut.core.type.Argument&lt;T&gt;&nbsp;argument)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>findArgumentBinder</code>&nbsp;in interface&nbsp;<code>io.micronaut.core.bind.ArgumentBinderRegistry&lt;<a href="PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a>&gt;</code></dd>
