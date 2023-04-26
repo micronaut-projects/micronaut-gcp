@@ -17,7 +17,7 @@ gcp.pubsub.subscriber.*.flow-control.limit-exceeded-behavior,com.google.api.gax.
 
 Suppose you have the following configuration for a subscriber:
 
-[source,yaml]
+[configuration]
 ----
 gcp:
   pubsub:

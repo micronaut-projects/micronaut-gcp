@@ -1,9 +1,9 @@
 plugins {
-    id "io.micronaut.build.internal.gcp-module"
+    id("io.micronaut.build.internal.gcp-module")
 }
 
 dependencies {
-    api projects.gcpCommon
+    api(projects.micronautGcpCommon)
     api(mnTracing.micronaut.tracing.zipkin)
 
     implementation(libs.google.auth.library.credentials)

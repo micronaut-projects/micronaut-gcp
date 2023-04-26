@@ -59,7 +59,8 @@ public @interface Topic {
 
     /**
      * Sets the endpoint that PubSub will use to store messages.
-     * If not specified PubSub stores messages on the nearest endpoint to the client.
+     * If not specified the endpoint defined in properties will be used,
+     * else PubSub stores messages on the nearest endpoint to the client.
      * This is useful when regulations for data locality such as GDPR are in place.
      * @return the remote endpoint to use
      */

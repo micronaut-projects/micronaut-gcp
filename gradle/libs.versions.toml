@@ -1,29 +1,39 @@
 [versions]
-managed-google-auth-library-oauth2http = "1.14.0"
+micronaut-docs = "2.0.0"
+micronaut = "4.0.0-M2"
+groovy = "4.0.11"
+spock = "2.3-groovy-4.0"
+
+managed-google-auth-library-oauth2http = "1.16.1"
 managed-google-functions-framework-api = "1.0.4"
-managed-google-cloud-core = "2.9.0"
-managed-google-cloud-pubsub = "1.122.2"
-managed-google-cloud-secretmanager = "2.7.0"
+managed-google-function-invoker = "1.2.1"
+managed-google-cloud-core = "2.15.0"
+managed-google-cloud-pubsub = "1.123.10"
+managed-google-cloud-secretmanager = "2.15.0"
 managed-google-cloud-native-image-support = "0.14.1"
 managed-google-cloudevent-types="0.3.0"
 
 brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
-grpc = "1.51.1"
-kotlin = '1.7.22'
-groovy = "4.0.6"
 
-cloudevents-api = "2.4.0"
-jetty-servlet = "10.0.12"
+grpc = "1.54.1"
+kotlin = '1.8.20'
+cloudevents-api = "2.4.2"
+
+jetty-servlet = "11.0.15"
 logback-json-classic = "0.1.5"
-testcontainers = "1.17.6"
+testcontainers = "1.18.0"
 zipkin-sender-stackdriver = "1.0.4"
 
-micronaut-rxjava2 = "2.0.0-SNAPSHOT"
-micronaut-serde = "2.0.0-SNAPSHOT"
-micronaut-servlet = "4.0.0-SNAPSHOT"
+micronaut-rxjava2 = "2.0.0-M1"
+micronaut-serde = "2.0.0-M1"
+micronaut-servlet = "4.0.0-M2"
 micronaut-tracing = "5.0.0-SNAPSHOT"
-micronaut-discovery = "4.0.0-SNAPSHOT"
+micronaut-discovery = "4.0.0-M1"
+micronaut-validation = "4.0.0-M4"
+
+# Micronaut
+micronaut-gradle-plugin = "4.0.0-SNAPSHOT"
 
 [libraries]
 # micronaut boms
@@ -31,6 +41,7 @@ micronaut-rxjava2 = { module = "io.micronaut.rxjava2:micronaut-rxjava2-bom", ver
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
 micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", version.ref = "micronaut-servlet" }
 micronaut-tracing = { module = "io.micronaut.tracing:micronaut-tracing-bom", version.ref = "micronaut-tracing" }
+micronaut-validation = { module = 'io.micronaut.validation:micronaut-validation-bom', version.ref = "micronaut-validation" }
 
 micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discovery-client", version.ref = "micronaut-discovery" }
 
@@ -38,6 +49,7 @@ micronaut-discovery-client = { module = "io.micronaut.discovery:micronaut-discov
 managed-google-cloudevent-types = { module = "com.google.cloud:google-cloudevent-types", version.ref = "managed-google-cloudevent-types" }
 managed-google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "managed-google-auth-library-oauth2http" }
 managed-functions-framework-api = { module = "com.google.cloud.functions:functions-framework-api", version.ref = "managed-google-functions-framework-api" }
+managed-google-function-invoker = { module = "com.google.cloud.functions.invoker:java-function-invoker", version.ref = "managed-google-function-invoker" }
 managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
 managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "managed-google-cloud-pubsub" }
 managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
@@ -60,5 +72,8 @@ testcontainers-spock = { module = "org.testcontainers:spock", version.ref = "tes
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
 
 # Plugins
+gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 kotlin-gradle-allopen = { module = 'org.jetbrains.kotlin:kotlin-allopen', version.ref = 'kotlin' }
+junit-jupiter-engine = { module = 'org.junit.jupiter:junit-jupiter-engine' }
+junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }

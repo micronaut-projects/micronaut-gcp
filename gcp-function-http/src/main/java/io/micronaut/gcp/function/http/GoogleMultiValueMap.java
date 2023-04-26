@@ -18,10 +18,14 @@ package io.micronaut.gcp.function.http;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.convert.ConversionServiceAware;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.util.ArgumentUtils;
 
 import io.micronaut.core.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 /**
@@ -31,8 +35,10 @@ import java.util.*;
  * @since 1.2.0
  */
 @Internal
-class GoogleMultiValueMap implements ConvertibleMultiValues<String> {
+class GoogleMultiValueMap implements ConvertibleMultiValues<String>, ConversionServiceAware {
+    private static final Logger LOG = LoggerFactory.getLogger(GoogleMultiValueMap.class);
     private final Map<String, List<String>> map;
+    private ConversionService conversionService;
 
     /**
      * Default constructor.
@@ -77,8 +83,17 @@ class GoogleMultiValueMap implements ConvertibleMultiValues<String> {
     public <T> Optional<T> get(CharSequence name, ArgumentConversionContext<T> conversionContext) {
         final String v = get(name);
         if (v != null) {
-            return ConversionService.SHARED.convert(v, conversionContext);
+            if (conversionService == null) {
+                LOG.warn("could not convert because conversion service is null");
+                return Optional.empty();
+            }
+            return conversionService.convert(v, conversionContext);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
     }
 }

@@ -87,7 +87,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
             method = HttpMethod.CUSTOM;
         }
         this.method = method;
-        this.headers = new GoogleFunctionHeaders();
+        this.headers = new GoogleFunctionHeaders(conversionService);
         this.codecRegistry = codecRegistry;
         this.conversionService = conversionService;
     }
@@ -140,7 +140,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
             synchronized (this) { // double check
                 httpParameters = this.httpParameters;
                 if (httpParameters == null) {
-                    httpParameters = new GoogleFunctionParameters();
+                    httpParameters = new GoogleFunctionParameters(conversionService);
                     this.httpParameters = httpParameters;
                 }
             }
@@ -185,7 +185,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public Optional<B> getBody() {
-        return (Optional<B>) getBody(Argument.STRING);
+        return (Optional<B>) getBody(Argument.OBJECT_ARGUMENT);
     }
 
     @NonNull
@@ -198,7 +198,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
 
                 if (isFormSubmission(contentType)) {
                     body = getParameters();
-                    if (ConvertibleValues.class == type) {
+                    if (ConvertibleValues.class == type || Object.class == type) {
                         return (Optional<T>) Optional.of(body);
                     } else {
                         return Optional.empty();
@@ -258,8 +258,9 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
      * Models the http parameters.
      */
     private final class GoogleFunctionParameters extends GoogleMultiValueMap implements HttpParameters {
-        GoogleFunctionParameters() {
+        GoogleFunctionParameters(ConversionService conversionService) {
             super(googleRequest.getQueryParameters());
+            setConversionService(conversionService);
         }
 
         @Override
@@ -279,8 +280,9 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
      * Models the headers.
      */
     private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements HttpHeaders {
-        GoogleFunctionHeaders() {
+        GoogleFunctionHeaders(ConversionService conversionService) {
             super(googleRequest.getHeaders());
+            setConversionService(conversionService);
         }
     }
 }

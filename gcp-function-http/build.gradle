@@ -1,10 +1,10 @@
 plugins {
-    id "io.micronaut.build.internal.gcp-module"
+    id("io.micronaut.build.internal.gcp-module")
 }
 
 dependencies {
     api(mn.micronaut.http.server)
-    api projects.gcpFunction
+    api(projects.micronautGcpFunction)
 
     implementation(mn.micronaut.jackson.databind)
     implementation(mn.micronaut.http.netty)

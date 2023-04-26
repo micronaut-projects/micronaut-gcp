@@ -36,6 +36,8 @@ public class PubSubConfigurationProperties {
 
     private String subscribingExecutor = TaskExecutors.SCHEDULED;
 
+    private String topicEndpoint = "";
+
     /**
      *
      * @return the name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances. Default: "scheduled"
@@ -86,4 +88,19 @@ public class PubSubConfigurationProperties {
         this.keepAliveIntervalMinutes = keepAliveIntervalMinutes;
     }
 
+    /**
+     * Which endpoint the {@link com.google.cloud.pubsub.v1.Publisher} should publish messages to. Defaults to the global endpoint
+     * @return endpoint
+     */
+    public String getTopicEndpoint() {
+        return this.topicEndpoint;
+    }
+
+    /**
+     *
+     * @param topicEndpoint to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances. Default: "" (i.e. the global endpoint)
+     */
+    public void setTopicEndpoint(String topicEndpoint) {
+        this.topicEndpoint = topicEndpoint;
+    }
 }

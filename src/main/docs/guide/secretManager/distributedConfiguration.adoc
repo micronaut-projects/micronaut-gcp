@@ -1,9 +1,9 @@
 You can leverage https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration[Distributed Configuration] and rely on Google Cloud Secret Manager to store your configuration files.
 
-To enable it, add a `src/main/resources/bootstrap.yml` configuration file to your project:
+To enable it, add a bootstrap configuration file to `src/main/resources/`:
 
-.bootstrap.yml
-[source,yaml]
+.bootstrap configuration
+[configuration]
 ----
 micronaut:
     application:
@@ -19,9 +19,9 @@ And that the service account you designated your application has proper rights t
 == Configuration file resolution
 
 It's important to note that Google Cloud Secret Manager *does not* support file extensions.
-When you upload your `application.yml` or `application.properties` you need to remove the extension from its name.
+When you upload your application configuration file (e.g. `application.yml` or `application.properties`) remove the file extension.
 
-Micronaut tries circumvent this limitation adopting a convention when fetching configuration files.
+Micronaut tries to circumvent this limitation, adopting a convention when fetching configuration files.
 The following table displays the possible secrets that are fetched by default:
 
 |===
@@ -47,8 +47,8 @@ The first PropertySourceLoader that succeeds reading the contents of the secrets
 It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.
 You can `whitelist` secrets that you would like to loaded as PropertySources using the following configuration:
 
-.bootstrap.yml
-[source,yaml]
+.bootstrap configuration
+[configuration]
 ----
 micronaut:
     application:
@@ -71,8 +71,8 @@ For instance one could have a `DB_PASSWORD` secret, instead of storing it on a c
 Because Secret Manager does not offer a hierarchical approach, loading all secrets in a project is not a viable solution.
 Instead you need to whitelist the keys you would like to pre-fetch such as the following config demonstrates:
 
-.bootstrap.yml
-[source,yaml]
+.bootstrap configuration
+[configuration]
 ----
 micronaut:
     application:

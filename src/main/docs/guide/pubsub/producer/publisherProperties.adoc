@@ -29,7 +29,7 @@ gcp.pubsub.publisher.*.flow-control.limit-exceeded-behavior,com.google.api.gax.b
 
 For example suppose you have the following configuration:
 
-[source,yaml]
+[configuration]
 ----
 gcp:
   pubsub:

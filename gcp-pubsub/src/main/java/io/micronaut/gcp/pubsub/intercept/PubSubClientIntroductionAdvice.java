@@ -102,7 +102,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 String projectId = method.stringValue(PubSubClient.class).orElse(googleCloudConfiguration.getProjectId());
                 Optional<Argument> orderingArgument = Arrays.stream(method.getArguments()).filter(argument -> argument.getAnnotationMetadata().hasAnnotation(OrderingKey.class)).findFirst();
                 String topic = method.stringValue(Topic.class).orElse(context.getName());
-                String endpoint = method.stringValue(Topic.class, "endpoint").orElse("");
+                String endpoint = method.stringValue(Topic.class, "endpoint").orElse(pubSubConfigurationProperties.getTopicEndpoint());
                 String configurationName = method.stringValue(Topic.class, "configuration").orElse("");
                 String contentType = method.stringValue(Topic.class, "contentType").orElse(MediaType.APPLICATION_JSON);
                 ProjectTopicName projectTopicName = PubSubTopicUtils.toProjectTopicName(topic, projectId);
@@ -186,7 +186,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
                 return null;
             } else {
                 if (returnTypeInfo.isReactive()) {
-                    return Publishers.convertPublisher(reactiveResult, javaReturnType);
+                    return Publishers.convertPublisher(conversionService, reactiveResult, javaReturnType);
                 } else if (returnTypeInfo.isAsync()) {
                     return reactiveResult.toFuture();
                 } else {
