@@ -30,20 +30,29 @@ class HttpResponseWrapper implements HttpResponse {
     private final HttpResponse response;
     private HttpStatus httpStatus = HttpStatus.OK;
 
+    // When open, it is possible to set the status for the response.
+    // As soon as a writer or output stream is obtained, the status is fixed, so open is set to false.
+    // This reproduces the behavior of Tomcat, Jetty, etc. and prevents the status from being changed by the RouteExecutor.
+    private boolean open = true;
+
     HttpResponseWrapper(HttpResponse response) {
         this.response = response;
     }
 
     @Override
     public void setStatusCode(int code) {
-        this.httpStatus = HttpStatus.valueOf(code);
-        response.setStatusCode(code);
+        if (open) {
+            this.httpStatus = HttpStatus.valueOf(code);
+            response.setStatusCode(code);
+        }
     }
 
     @Override
     public void setStatusCode(int code, String message) {
-        this.httpStatus = HttpStatus.valueOf(code);
-        response.setStatusCode(code, message);
+        if (open) {
+            this.httpStatus = HttpStatus.valueOf(code);
+            response.setStatusCode(code, message);
+        }
     }
 
     public HttpStatus getStatus() {
@@ -72,11 +81,13 @@ class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public OutputStream getOutputStream() throws IOException {
+        open = false;
         return response.getOutputStream();
     }
 
     @Override
     public BufferedWriter getWriter() throws IOException {
+        open = false;
         return response.getWriter();
     }
 }
