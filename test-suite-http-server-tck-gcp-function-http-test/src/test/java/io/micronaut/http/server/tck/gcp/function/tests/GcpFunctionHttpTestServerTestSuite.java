@@ -13,6 +13,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     "io.micronaut.http.server.tck.tests.filter.HttpServerFilterTest",
     "io.micronaut.http.server.tck.tests.FiltersTest",
     "io.micronaut.http.server.tck.tests.endpoints.health.HealthTest",
+    "io.micronaut.http.server.tck.tests.StatusTest", // Fails in GraalVM Test Suite
 })
 class GcpFunctionHttpTestServerTestSuite {
 }
