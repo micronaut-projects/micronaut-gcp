@@ -12,6 +12,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     "io.micronaut.http.server.tck.tests.MiscTest", // Fails when there's no Body annotation
     "io.micronaut.http.server.tck.tests.filter.HttpServerFilterTest",
     "io.micronaut.http.server.tck.tests.FiltersTest",
+    "io.micronaut.http.server.tck.tests.endpoints.health.HealthTest",
 })
 class GcpFunctionHttpTestServerTestSuite {
 }

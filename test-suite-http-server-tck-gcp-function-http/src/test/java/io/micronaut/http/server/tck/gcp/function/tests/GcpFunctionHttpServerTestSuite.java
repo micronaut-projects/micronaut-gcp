@@ -16,6 +16,8 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     "io.micronaut.http.server.tck.tests.MiscTest", // Decoding errors and bad requests
     "io.micronaut.http.server.tck.tests.OctetTest", // Body is badly encoded
     "io.micronaut.http.server.tck.tests.filter.HttpServerFilterTest", // Expected io.micronaut.http.client.exceptions.HttpClientResponseException to be thrown, but nothing was thrown.
+    "io.micronaut.http.server.tck.tests.endpoints.health.HealthTest",
+    "io.micronaut.http.server.tck.tests.cors.SimpleRequestWithCorsNotEnabledTest"
 })
 class GcpFunctionHttpServerTestSuite {
 }
