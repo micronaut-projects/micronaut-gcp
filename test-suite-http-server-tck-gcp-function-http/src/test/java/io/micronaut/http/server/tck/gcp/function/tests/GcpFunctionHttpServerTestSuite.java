@@ -6,7 +6,10 @@ import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
-@SelectPackages("io.micronaut.http.server.tck.tests")
+@SelectPackages({
+    "io.micronaut.http.server.tck.tests",
+    "io.micronaut.http.server.tck.gcp.function.tests"
+})
 @SuiteDisplayName("HTTP Server TCK for for GCP Function HTTP")
 @ExcludeClassNamePatterns({
     "io.micronaut.http.server.tck.tests.BodyTest", // Bad Request 400 errors
