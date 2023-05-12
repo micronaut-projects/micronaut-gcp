@@ -2,6 +2,7 @@ package io.micronaut.gcp.function.http;
 
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.io.IOUtils;
 import io.micronaut.core.io.Writable;
 import io.micronaut.http.*;

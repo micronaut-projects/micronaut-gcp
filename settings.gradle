@@ -38,6 +38,7 @@ micronautBuild {
     //TODO delete once snapshot no longer needed
     addSnapshotRepository()
     importMicronautCatalog()
+    importMicronautCatalog("micronaut-logging")
     importMicronautCatalog("micronaut-rxjava2")
     importMicronautCatalog("micronaut-serde")
     importMicronautCatalog("micronaut-servlet")
