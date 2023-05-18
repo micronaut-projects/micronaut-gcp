@@ -18,7 +18,7 @@ class ParameterBindingSpec extends Specification {
 
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
-        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
         googleResponse.text == 'Hello Foo'
     }
 
@@ -46,7 +46,7 @@ class ParameterBindingSpec extends Specification {
 
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
-        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
         googleResponse.text == 'Hello Foo'
     }
 
@@ -62,7 +62,7 @@ class ParameterBindingSpec extends Specification {
 
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
-        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
         googleResponse.text == 'Hello Foo 20'
     }
 
@@ -77,7 +77,7 @@ class ParameterBindingSpec extends Specification {
 
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
-        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
         googleResponse.text == 'Hello text/plain;q=1.0'
     }
 
@@ -106,7 +106,7 @@ class ParameterBindingSpec extends Specification {
 
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
-        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
         googleResponse.text == 'Hello Foo'
     }
 

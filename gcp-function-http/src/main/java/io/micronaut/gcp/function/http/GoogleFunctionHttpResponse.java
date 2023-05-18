@@ -25,7 +25,6 @@ import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
@@ -118,11 +117,6 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
 
     @Override
     public <T> MutableHttpResponse<T> body(@Nullable T body) {
-        if (body instanceof CharSequence) {
-            if (!getContentType().isPresent()) {
-                contentType(MediaType.TEXT_PLAIN_TYPE);
-            }
-        }
         this.body = (B) body;
         return (MutableHttpResponse<T>) this;
     }
