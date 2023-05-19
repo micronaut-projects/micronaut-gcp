@@ -17,7 +17,7 @@ brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
 
 grpc = "1.55.1"
-kotlin = '1.8.20'
+kotlin = '1.8.21'
 cloudevents-api = "2.4.2"
 
 jetty-servlet = "11.0.15"
