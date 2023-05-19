@@ -1,6 +1,6 @@
 [versions]
 micronaut-docs = "2.0.0"
-micronaut = "4.0.0-M3"
+micronaut = "4.0.0-M4"
 groovy = "4.0.11"
 spock = "2.3-groovy-4.0"
 
@@ -25,9 +25,9 @@ logback-json-classic = "0.1.5"
 testcontainers = "1.18.1"
 zipkin-sender-stackdriver = "1.0.4"
 
-micronaut-logging = "1.0.0-M1"
+micronaut-logging = "1.0.0-M2"
 micronaut-rxjava2 = "2.0.0-M1"
-micronaut-serde = "2.0.0-M6"
+micronaut-serde = "2.0.0-M7"
 micronaut-servlet = "4.0.0-M5"
 micronaut-tracing = "5.0.0-SNAPSHOT"
 micronaut-test = "4.0.0-M3"
