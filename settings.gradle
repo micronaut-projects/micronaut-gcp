@@ -6,7 +6,7 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "6.4.4"
+    id("io.micronaut.build.shared.settings") version "6.5.0"
 }
 
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
@@ -35,10 +35,7 @@ include 'test-suite-kotlin'
 micronautBuild {
     useStandardizedProjectNames=true
 
-    //TODO delete once snapshot no longer needed
-    addSnapshotRepository()
     importMicronautCatalog()
-    importMicronautCatalog("micronaut-logging")
     importMicronautCatalog("micronaut-rxjava2")
     importMicronautCatalog("micronaut-serde")
     importMicronautCatalog("micronaut-servlet")
