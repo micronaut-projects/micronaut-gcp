@@ -206,7 +206,7 @@ class ParameterBindingSpec extends Specification {
 
         expect:
         googleResponse.statusCode == HttpStatus.BAD_REQUEST.code
-        googleResponse.text.contains("Error decoding JSON stream for type")
+        googleResponse.text.contains("Error decoding request body")
     }
 
     void "test multipart binding"() {
