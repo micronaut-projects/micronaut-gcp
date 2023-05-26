@@ -23,6 +23,8 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     "io.micronaut.http.server.tck.tests.endpoints.health.HealthTest", // error Service Unavailable (503)
     "io.micronaut.http.server.tck.tests.HeadersTest", // Error 400, bad request
     "io.micronaut.http.server.tck.tests.cors.SimpleRequestWithCorsNotEnabledTest", // Multiple routes are selected
+    "io.micronaut.http.server.tck.tests.codec.JsonCodecAdditionalTypeTest", // https://github.com/micronaut-projects/micronaut-core/pull/9308
+    "io.micronaut.http.server.tck.tests.constraintshandler.ControllerConstraintHandlerTest" // Broken in servlet
 })
 class GcpFunctionHttpServerTestSuite {
 }
