@@ -11,7 +11,6 @@ import com.google.cloud.pubsub.v1.TopicAdminClient
 import com.google.cloud.pubsub.v1.TopicAdminSettings
 import com.google.pubsub.v1.ProjectSubscriptionName
 import com.google.pubsub.v1.PushConfig
-import com.google.pubsub.v1.Subscription
 import com.google.pubsub.v1.TopicName
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
@@ -19,13 +18,12 @@ import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.Modules
-import io.micronaut.gcp.pubsub.annotation.Topic
+import jakarta.inject.Named
+import jakarta.inject.Singleton
+import org.testcontainers.DockerClientFactory
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import spock.lang.Specification
-
-import jakarta.inject.Named
-import jakarta.inject.Singleton
 
 class IntegrationTestSpec  extends Specification {
 
@@ -34,25 +32,26 @@ class IntegrationTestSpec  extends Specification {
     static TransportChannelProvider TRANSPORT_CHANNEL_PROVIDER
     static PubSubResourceAdmin pubSubResourceAdmin
 
-    static GenericContainer pubSubContainer = new GenericContainer("google/cloud-sdk:292.0.0")
-            .withCommand("gcloud", "beta", "emulators", "pubsub", "start", "--project=test-project",
-                    "--host-port=0.0.0.0:8085")
-            .withExposedPorts(8085)
-
-            .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*Server started, listening on.*"))
+    static GenericContainer pubSubContainer
 
     static {
-        pubSubContainer.start()
-        CONTAINER_PORT = pubSubContainer.getMappedPort(8085)
-        CREDENTIALS_PROVIDER = NoCredentialsProvider.create()
-        def host = "localhost:" + IntegrationTest.CONTAINER_PORT
-        ManagedChannel channel = ManagedChannelBuilder.forTarget(host).usePlaintext().build()
-        TRANSPORT_CHANNEL_PROVIDER =
-                FixedTransportChannelProvider.create(GrpcTransportChannel.create(channel))
-        pubSubResourceAdmin = new PubSubResourceAdmin(TRANSPORT_CHANNEL_PROVIDER, CREDENTIALS_PROVIDER)
+        if (DockerClientFactory.instance().isDockerAvailable()) {
+            pubSubContainer = new GenericContainer("google/cloud-sdk:292.0.0")
+                    .withCommand("gcloud", "beta", "emulators", "pubsub", "start", "--project=test-project",
+                            "--host-port=0.0.0.0:8085")
+                    .withExposedPorts(8085)
+
+                    .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*Server started, listening on.*"))
+            pubSubContainer.start()
+            CONTAINER_PORT = pubSubContainer.getMappedPort(8085)
+            CREDENTIALS_PROVIDER = NoCredentialsProvider.create()
+            def host = "localhost:" + IntegrationTest.CONTAINER_PORT
+            ManagedChannel channel = ManagedChannelBuilder.forTarget(host).usePlaintext().build()
+            TRANSPORT_CHANNEL_PROVIDER =
+                    FixedTransportChannelProvider.create(GrpcTransportChannel.create(channel))
+            pubSubResourceAdmin = new PubSubResourceAdmin(TRANSPORT_CHANNEL_PROVIDER, CREDENTIALS_PROVIDER)
+        }
     }
-
-
 }
 
 @Factory
