@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.micronaut.gcp.function.http;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.http.bind.binders.DefaultBodyAnnotationBinder;
 import io.micronaut.servlet.http.ServletBinderRegistry;
 import io.micronaut.http.annotation.Part;
 import io.micronaut.http.bind.DefaultRequestBinderRegistry;
@@ -30,28 +31,32 @@ import java.util.List;
 /**
  * Implementation of {@link ServletBinderRegistry} for Google.
  *
+ * @param <T> The body type
+ *
  * @author graemerocher
  * @since 1.2.0
  */
 @Singleton
 @Replaces(DefaultRequestBinderRegistry.class)
 @Internal
-class GoogleBinderRegistry extends ServletBinderRegistry {
+class GoogleBinderRegistry<T> extends ServletBinderRegistry<T> {
 
     /**
-     * Defautl constructor.
+     * Default constructor.
      *
      * @param mediaTypeCodecRegistry The media type codec registry
      * @param conversionService      The conversion service
      * @param binders                The binders
+     * @param defaultBodyAnnotationBinder The delegate default body binder
      */
     GoogleBinderRegistry(
             MediaTypeCodecRegistry mediaTypeCodecRegistry,
             ConversionService conversionService,
-            List<RequestArgumentBinder> binders) {
-        super(mediaTypeCodecRegistry, conversionService, binders);
+            List<RequestArgumentBinder> binders,
+            DefaultBodyAnnotationBinder<T> defaultBodyAnnotationBinder) {
+        super(mediaTypeCodecRegistry, conversionService, binders, defaultBodyAnnotationBinder);
         this.byType.put(com.google.cloud.functions.HttpRequest.class, new GoogleRequestBinder());
         this.byType.put(com.google.cloud.functions.HttpResponse.class, new GoogleResponseBinder());
-        this.byAnnotation.put(Part.class, new GooglePartBinder(mediaTypeCodecRegistry));
+        this.byAnnotation.put(Part.class, new GooglePartBinder<T>(mediaTypeCodecRegistry));
     }
 }

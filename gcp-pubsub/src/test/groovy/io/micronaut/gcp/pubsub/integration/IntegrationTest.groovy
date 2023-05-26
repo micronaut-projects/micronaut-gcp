@@ -9,10 +9,13 @@ import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Person
+import org.testcontainers.DockerClientFactory
+import spock.lang.Requires
 import spock.util.concurrent.PollingConditions
 
-class IntegrationTest extends IntegrationTestSpec{
+class IntegrationTest extends IntegrationTestSpec {
 
+    @Requires({ DockerClientFactory.instance().isDockerAvailable() })
     void "simple publishing integration"(){
         TopicName topicName = TopicName.of("test-project", "test-topic")
         ProjectSubscriptionName subscriptionName = ProjectSubscriptionName.of("test-project", "test-subscription")

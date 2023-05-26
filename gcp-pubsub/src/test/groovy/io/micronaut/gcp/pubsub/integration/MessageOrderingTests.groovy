@@ -9,10 +9,13 @@ import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Person
+import org.testcontainers.DockerClientFactory
+import spock.lang.Requires
 import spock.util.concurrent.PollingConditions
 
 class MessageOrderingTests extends IntegrationTestSpec {
 
+    @Requires({ DockerClientFactory.instance().isDockerAvailable() })
     void "publish message to specific location"() {
         TopicName topicName = TopicName.of("test-project", "test-topic-east")
         ProjectSubscriptionName subscriptionName = ProjectSubscriptionName.of("test-project", "test-subscription-east")
@@ -38,6 +41,7 @@ class MessageOrderingTests extends IntegrationTestSpec {
             ctx.close()
     }
 
+    @Requires({ DockerClientFactory.instance().isDockerAvailable() })
     void "publish message to with ordering key"() {
         TopicName topicName = TopicName.of("test-project", "test-topic-ordering")
         ProjectSubscriptionName subscriptionName = ProjectSubscriptionName.of("test-project", "test-subscription-ordering")

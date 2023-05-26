@@ -19,19 +19,16 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
-import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpParameters;
-import io.micronaut.http.MediaType;
-import io.micronaut.http.codec.CodecException;
-import io.micronaut.http.codec.MediaTypeCodec;
-import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookies;
+import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpRequest;
 import io.micronaut.servlet.http.ServletHttpResponse;
@@ -40,8 +37,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Implementation of the {@link ServletHttpRequest} interface for Google Cloud Function.
@@ -57,10 +54,9 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private final HttpMethod method;
     private final GoogleFunctionHeaders headers;
     private final GoogleFunctionHttpResponse<?> googleResponse;
-    private final MediaTypeCodecRegistry codecRegistry;
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
-    private Object body;
+    private Supplier<Optional<B>> body;
     private Cookies cookies;
 
     private ConversionService conversionService;
@@ -70,13 +66,14 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
      *
      * @param googleRequest  The native google request
      * @param googleResponse The {@link GoogleFunctionHttpResponse} object
-     * @param codecRegistry  The codec registry
+     * @param conversionService Conversion Service
+     * @param bodyBuilder Body Builder
      */
     GoogleFunctionHttpRequest(
-            com.google.cloud.functions.HttpRequest googleRequest,
-            GoogleFunctionHttpResponse<?> googleResponse,
-            MediaTypeCodecRegistry codecRegistry,
-            ConversionService conversionService) {
+        com.google.cloud.functions.HttpRequest googleRequest,
+        GoogleFunctionHttpResponse<?> googleResponse,
+        ConversionService conversionService,
+        BodyBuilder bodyBuilder) {
         this.googleRequest = googleRequest;
         this.googleResponse = googleResponse;
         this.uri = URI.create(googleRequest.getUri());
@@ -88,8 +85,12 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         }
         this.method = method;
         this.headers = new GoogleFunctionHeaders(conversionService);
-        this.codecRegistry = codecRegistry;
         this.conversionService = conversionService;
+
+        this.body = SupplierUtil.memoizedNonEmpty(() -> {
+            B built = (B) bodyBuilder.buildBody(this::getInputStream, this);
+            return Optional.ofNullable(built);
+        });
     }
 
     @Override
@@ -185,61 +186,13 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public Optional<B> getBody() {
-        return (Optional<B>) getBody(Argument.OBJECT_ARGUMENT);
+        return this.body.get();
     }
 
     @NonNull
     @Override
     public <T> Optional<T> getBody(@NonNull Argument<T> arg) {
-        if (arg != null) {
-            final Class<T> type = arg.getType();
-            final MediaType contentType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
-            if (body == null) {
-
-                if (isFormSubmission(contentType)) {
-                    body = getParameters();
-                    if (ConvertibleValues.class == type || Object.class == type) {
-                        return (Optional<T>) Optional.of(body);
-                    } else {
-                        return Optional.empty();
-                    }
-                } else {
-
-                    final MediaTypeCodec codec = codecRegistry.findCodec(contentType, type).orElse(null);
-                    if (codec != null) {
-                        try (InputStream inputStream = googleRequest.getInputStream()) {
-                            if (ConvertibleValues.class == type) {
-                                final Map map = codec.decode(Map.class, inputStream);
-                                body = ConvertibleValues.of(map);
-                                return (Optional<T>) Optional.of(body);
-                            } else {
-                                final T value = codec.decode(arg, inputStream);
-                                body = value;
-                                return Optional.ofNullable(value);
-                            }
-                        } catch (IOException e) {
-                            throw new CodecException("Error decoding request body: " + e.getMessage(), e);
-                        }
-
-                    }
-                }
-            } else {
-                if (type.isInstance(body)) {
-                    return (Optional<T>) Optional.of(body);
-                } else {
-                    if (body != httpParameters) {
-                        final T result = conversionService.convertRequired(body, arg);
-                        return Optional.ofNullable(result);
-                    }
-                }
-
-            }
-        }
-        return Optional.empty();
-    }
-
-    private boolean isFormSubmission(MediaType contentType) {
-        return MediaType.MULTIPART_FORM_DATA_TYPE.equals(contentType) || MediaType.MULTIPART_FORM_DATA_TYPE.equals(contentType);
+        return getBody().map(t -> conversionService.convertRequired(t, arg));
     }
 
     @SuppressWarnings("unchecked")

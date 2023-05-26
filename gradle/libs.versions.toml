@@ -1,7 +1,7 @@
 [versions]
 micronaut-docs = "2.0.0"
-micronaut = "4.0.0-M2"
-groovy = "4.0.11"
+micronaut = "4.0.0-M5"
+groovy = "4.0.12"
 spock = "2.3-groovy-4.0"
 
 managed-google-auth-library-oauth2http = "1.16.1"
@@ -25,15 +25,17 @@ logback-json-classic = "0.1.5"
 testcontainers = "1.18.1"
 zipkin-sender-stackdriver = "1.0.4"
 
+micronaut-logging = "1.0.0-M2"
 micronaut-rxjava2 = "2.0.0-M1"
-micronaut-serde = "2.0.0-M5"
-micronaut-servlet = "4.0.0-M4"
-micronaut-tracing = "5.0.0-SNAPSHOT"
-micronaut-discovery = "4.0.0-M1"
-micronaut-validation = "4.0.0-M5"
+micronaut-serde = "2.0.0-M8"
+micronaut-servlet = "4.0.0-M6"
+micronaut-tracing = "5.0.0-M1"
+micronaut-test = "4.0.0-M4"
+micronaut-discovery = "4.0.0-M2"
+micronaut-validation = "4.0.0-M7"
 
 # Micronaut
-micronaut-gradle-plugin = "4.0.0-M1"
+micronaut-gradle-plugin = "4.0.0-M4"
 
 [libraries]
 # Core

@@ -18,7 +18,7 @@ class CookiesSpec extends Specification {
 
         expect:
         googleResponse.statusCode == HttpStatus.OK.code
-        googleResponse.contentType.get() == MediaType.TEXT_PLAIN
+        googleResponse.contentType.get() == MediaType.APPLICATION_JSON
         googleResponse.bodyAsText == 'someValue'
         googleResponse.headers[HttpHeaders.SET_COOKIE] == ['foo=bar; Domain=https://foo.com; HTTPOnly']
     }
