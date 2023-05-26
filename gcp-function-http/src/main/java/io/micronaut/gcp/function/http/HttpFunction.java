@@ -83,7 +83,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
                 final GoogleFunctionHttpResponse<Object> res =
                         new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry(), conversionService);
                 final GoogleFunctionHttpRequest<Object> req =
-                        new GoogleFunctionHttpRequest<>(request, res, getMediaTypeCodecRegistry(), conversionService, applicationContext.getBean(BodyBuilder.class));
+                        new GoogleFunctionHttpRequest<>(request, res, conversionService, applicationContext.getBean(BodyBuilder.class));
 
                 return new DefaultServletExchange<>(req, res);
             }

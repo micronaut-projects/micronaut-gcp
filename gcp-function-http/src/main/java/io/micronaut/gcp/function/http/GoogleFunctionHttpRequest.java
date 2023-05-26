@@ -27,7 +27,6 @@ import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpParameters;
-import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookies;
 import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.ServletExchange;
@@ -55,7 +54,6 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private final HttpMethod method;
     private final GoogleFunctionHeaders headers;
     private final GoogleFunctionHttpResponse<?> googleResponse;
-    private final MediaTypeCodecRegistry codecRegistry;
     private HttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private Supplier<Optional<B>> body;
@@ -68,12 +66,12 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
      *
      * @param googleRequest  The native google request
      * @param googleResponse The {@link GoogleFunctionHttpResponse} object
-     * @param codecRegistry  The codec registry
+     * @param conversionService Conversion Service
+     * @param bodyBuilder Body Builder
      */
     GoogleFunctionHttpRequest(
         com.google.cloud.functions.HttpRequest googleRequest,
         GoogleFunctionHttpResponse<?> googleResponse,
-        MediaTypeCodecRegistry codecRegistry,
         ConversionService conversionService,
         BodyBuilder bodyBuilder) {
         this.googleRequest = googleRequest;
@@ -87,7 +85,6 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         }
         this.method = method;
         this.headers = new GoogleFunctionHeaders(conversionService);
-        this.codecRegistry = codecRegistry;
         this.conversionService = conversionService;
 
         this.body = SupplierUtil.memoizedNonEmpty(() -> {
