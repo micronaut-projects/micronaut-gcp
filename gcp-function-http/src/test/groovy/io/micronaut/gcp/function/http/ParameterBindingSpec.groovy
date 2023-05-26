@@ -1,5 +1,7 @@
 package io.micronaut.gcp.function.http
 
+import com.google.cloud.functions.HttpRequest
+import com.google.cloud.functions.HttpResponse
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
@@ -11,8 +13,8 @@ class ParameterBindingSpec extends Specification {
     void "test URI parameters"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/uri/Foo")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/uri/Foo")
         new HttpFunction()
                 .service(googleRequest, googleResponse)
 
@@ -24,8 +26,8 @@ class ParameterBindingSpec extends Specification {
 
     void "test invalid HTTP method"() {
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/uri/Foo")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/uri/Foo")
         new HttpFunction()
                 .service(googleRequest, googleResponse)
 
@@ -38,8 +40,8 @@ class ParameterBindingSpec extends Specification {
     void "test query value"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/query")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/query")
         googleRequest.addParameter("q", "Foo")
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -53,8 +55,8 @@ class ParameterBindingSpec extends Specification {
     void "test all parameters"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/allParams")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/allParams")
         googleRequest.addParameter("name", "Foo")
         googleRequest.addParameter("age", "20")
         new HttpFunction()
@@ -69,8 +71,8 @@ class ParameterBindingSpec extends Specification {
     void "test header value"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/header")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/header")
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain;q=1.0")
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -84,8 +86,8 @@ class ParameterBindingSpec extends Specification {
     void "test request and response"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/reqAndRes")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.GET, "/parameters/reqAndRes")
         new HttpFunction()
                 .service(googleRequest, googleResponse)
 
@@ -98,8 +100,8 @@ class ParameterBindingSpec extends Specification {
     void "test string body"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/stringBody", "Foo")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/stringBody", "Foo")
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -114,8 +116,8 @@ class ParameterBindingSpec extends Specification {
     void "test writable"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/writable", "Foo")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/writable", "Foo")
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -131,9 +133,9 @@ class ParameterBindingSpec extends Specification {
     void "test JSON POJO body"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def json = '{"name":"bar","age":30}'
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", json)
+        HttpResponse googleResponse = new MockGoogleResponse()
+        String json = '{"name":"bar","age":30}'
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -147,9 +149,9 @@ class ParameterBindingSpec extends Specification {
     void "test JSON POJO body - invalid JSON"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def json = '{"name":"bar","age":30'
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", json)
+        HttpResponse googleResponse = new MockGoogleResponse()
+        String json = '{"name":"bar","age":30'
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBody", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -163,9 +165,9 @@ class ParameterBindingSpec extends Specification {
     void "test JSON POJO body with no @Body binds to arguments"() {
 
         given:
-        def googleResponse = new MockGoogleResponse()
-        def json = '{"name":"bar","age":20}'
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBodySpread", json)
+        HttpResponse googleResponse = new MockGoogleResponse()
+        String json = '{"name":"bar","age":20}'
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/jsonBodySpread", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -178,9 +180,9 @@ class ParameterBindingSpec extends Specification {
 
     void "full Micronaut request and response"() {
         given:
-        def googleResponse = new MockGoogleResponse()
-        def json = '{"name":"bar","age":20}'
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
+        HttpResponse googleResponse = new MockGoogleResponse()
+        String json = '{"name":"bar","age":20}'
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -195,9 +197,9 @@ class ParameterBindingSpec extends Specification {
 
     void "full Micronaut request and response - invalid JSON"() {
         given:
-        def googleResponse = new MockGoogleResponse()
-        def json = '{"name":"bar","age":20'
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
+        HttpResponse googleResponse = new MockGoogleResponse()
+        String json = '{"name":"bar","age":20'
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/fullRequest", json)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         new HttpFunction()
                 .service(googleRequest, googleResponse)
@@ -209,14 +211,14 @@ class ParameterBindingSpec extends Specification {
 
     void "test multipart binding"() {
         given:
-        def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart")
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart")
         googleRequest.addParameter("foo", "bar")
         googleRequest.parts.put("one", new MockGoogleHttpPart("one.json", '{"name":"bar","age":20}', "application/json"))
         googleRequest.parts.put("two", new MockGoogleHttpPart("two.txt", 'Whatever', "text/plain"))
         googleRequest.parts.put("three", new MockGoogleHttpPart("some.doc", 'My Doc', "application/octet-stream"))
         googleRequest.parts.put("four", new MockGoogleHttpPart("raw.doc", 'Another Doc', "application/octet-stream"))
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
-        def googleResponse = new MockGoogleResponse()
+        HttpResponse googleResponse = new MockGoogleResponse()
         new HttpFunction()
                 .service(googleRequest, googleResponse)
 
