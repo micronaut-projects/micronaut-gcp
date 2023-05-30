@@ -1611,7 +1611,7 @@ class AnimalListener {
 
 <div class="paragraph">
 <p>You can customize certain aspects of the client.
-Pub/Sub client libraries leverage a <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ScheduledExecutorService.html">ScheduledExecutorService</a> for both message publishing and consumption.</p>
+Pub/Sub client libraries leverage a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html">ScheduledExecutorService</a> for both message publishing and consumption.</p>
 </div>
 <div class="paragraph">
 <p>If not specified the framework will configure the framework default <code>Scheduled</code> executor service to be used for both Publishers and Subscribers.
@@ -4057,7 +4057,7 @@ class JavaMessageSerDes : PubSubMessageSerDes {
 <div class="paragraph">
 <p>The framework allows users to configure separate thread pools to be used for <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Publisher.html">Publishers</a> and <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a>.
 You can set a reference to a pre-defined executor at <a href="#pubsubProperties">Pub/Sub configuration properties</a>, or create custom configurations for <a href="#publisherProperties">publishers</a> and <a href="#subscriberProperties">subscribers</a>.
-Micronaut supports definition of custom <a href="{jdkapi}/java/util/concurrent/ExecutorService.html">ExecutorService</a> implementations, see <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">ExecutorConfiguration</a> for the full list of options.</p>
+Micronaut supports definition of custom <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java/util/concurrent/ExecutorService.html">ExecutorService</a> implementations, see <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">ExecutorConfiguration</a> for the full list of options.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -4066,7 +4066,7 @@ Micronaut supports definition of custom <a href="{jdkapi}/java/util/concurrent/E
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Pub/Sub client libraries require an  <a href="{jdkapi}/java/util/concurrent/ScheduledExecutorService.html">ScheduledExecutorService</a> for both <code>Publisher</code> and <code>Subscriber</code> make sure your custom executor is of type <code>scheduled</code> or an error will be thrown.
+Pub/Sub client libraries require an  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java/util/concurrent/ScheduledExecutorService.html">ScheduledExecutorService</a> for both <code>Publisher</code> and <code>Subscriber</code> make sure your custom executor is of type <code>scheduled</code> or an error will be thrown.
 </td>
 </tr>
 </table>
