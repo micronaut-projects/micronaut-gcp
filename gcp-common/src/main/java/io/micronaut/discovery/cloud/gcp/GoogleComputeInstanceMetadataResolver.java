@@ -185,8 +185,16 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                 // I'm not even sure this is needed? Why collect the string properties of GoogleComputeInstanceMetadata into a map
                 // only to set the GoogleComputeInstanceMetadata.metadata property with that map?
                 // Anyway, all tests of this module pass without it
+                //
 //                final Map<?, ?> metadata = new com.fasterxml.jackson.databind.ObjectMapper().convertValue(instanceMetadata, Map.class);
 //                populateMetadata(instanceMetadata, metadata);
+
+
+                // Hmmm...I wonder if the real intent was to take the string nodes of instanceMetadataJson that haven't already been parsed
+                // and put those into instanceMetadata.setMetadata()? Something like:
+                //
+                // Map<String,String> extraNonSTdStuff = whatsLeftOverOf(instanceMetadataJson);
+                // instanceMetadata.setMetadata(extraNonSTdStuff)
 
                 cachedMetadata = instanceMetadata;
 
