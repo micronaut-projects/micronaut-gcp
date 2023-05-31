@@ -15,8 +15,6 @@
  */
 package io.micronaut.discovery.cloud.gcp;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
@@ -24,6 +22,8 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.cloud.ComputeInstanceMetadata;
 import io.micronaut.discovery.cloud.ComputeInstanceMetadataResolver;
 import io.micronaut.discovery.cloud.NetworkInterface;
+import io.micronaut.json.tree.JsonNode;
+import io.micronaut.serde.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.micronaut.discovery.cloud.ComputeInstanceMetadataResolverUtils.*;
+import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.*;
 
 /**
  * Resolves {@link ComputeInstanceMetadata} for Google Cloud Platform.
@@ -77,7 +77,7 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
      * Construct with default settings.
      */
     public GoogleComputeInstanceMetadataResolver() {
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = ObjectMapper.getDefault();
         this.configuration = new GoogleComputeMetadataConfiguration();
     }
 
@@ -152,21 +152,21 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                 stringValue(instanceMetadataJson, GoogleComputeMetadataKeys.HOSTNAME.getName()).ifPresent(instanceMetadata::setLocalHostname);
                 stringValue(instanceMetadataJson, GoogleComputeMetadataKeys.NAME.getName()).ifPresent(instanceMetadata::setName);
 
-                JsonNode networkInterfaces = instanceMetadataJson.findValue(GoogleComputeMetadataKeys.NETWORK_INTERFACES.getName());
+                JsonNode networkInterfaces = instanceMetadataJson.get(GoogleComputeMetadataKeys.NETWORK_INTERFACES.getName());
                 if (networkInterfaces != null) {
 
                     List<NetworkInterface> interfaces = new ArrayList<>();
                     AtomicInteger networkCounter = new AtomicInteger(0);
                     GoogleComputeInstanceMetadata finalInstanceMetadata = instanceMetadata;
-                    networkInterfaces.elements().forEachRemaining(
+                    networkInterfaces.values().forEach(
                             jsonNode -> {
                                 GoogleComputeNetworkInterface networkInterface = new GoogleComputeNetworkInterface();
                                 networkInterface.setId(String.valueOf(networkCounter.getAndIncrement()));
 
-                                if (jsonNode.findValue(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName()) != null) {
-                                    JsonNode accessConfigs = jsonNode.findValue(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName());
+                                if (jsonNode.get(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName()) != null) {
+                                    JsonNode accessConfigs = jsonNode.get(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName());
                                     // we just grab the first one
-                                    finalInstanceMetadata.setPublicIpV4(accessConfigs.get(0).findValue("externalIp").textValue());
+                                    stringValue(accessConfigs.get(0), "externalIp").ifPresent(finalInstanceMetadata::setPublicIpV4);
                                 }
 
                                 stringValue(jsonNode, GoogleComputeMetadataKeys.IP.getName()).ifPresent(finalInstanceMetadata::setPrivateIpV4);
@@ -179,8 +179,15 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                             });
                     instanceMetadata.setInterfaces(interfaces);
                 }
-                final Map<?, ?> metadata = objectMapper.convertValue(instanceMetadata, Map.class);
-                populateMetadata(instanceMetadata, metadata);
+
+                // I don't know the idiomatic way to do this with serde instead of jacksopn-databind
+                //
+                // I'm not even sure this is needed? Why collect the string properties of GoogleComputeInstanceMetadata into a map
+                // only to set the GoogleComputeInstanceMetadata.metadata property with that map?
+                // Anyway, all tests of this module pass without it
+//                final Map<?, ?> metadata = new com.fasterxml.jackson.databind.ObjectMapper().convertValue(instanceMetadata, Map.class);
+//                populateMetadata(instanceMetadata, metadata);
+
                 cachedMetadata = instanceMetadata;
 
                 return Optional.of(instanceMetadata);
@@ -201,5 +208,4 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
 
         return Optional.ofNullable(instanceMetadata);
     }
-
 }

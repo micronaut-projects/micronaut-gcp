@@ -13,5 +13,10 @@
     "type": "io.micronaut.gcp.http.client.GoogleAuthFilter",
     "member": "Constructor io.micronaut.gcp.http.client.GoogleAuthFilter(io.micronaut.context.ApplicationContext)",
     "reason": "Removed constructor in MN 4"
+  },
+  {
+    "type": "io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolver",
+    "member": "Constructor io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolver(com.fasterxml.jackson.databind.ObjectMapper,io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration)",
+    "reason": "Removed jackson-databind in MN 4"
   }
 ]
