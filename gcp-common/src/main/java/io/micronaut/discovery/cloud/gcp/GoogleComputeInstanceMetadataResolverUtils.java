@@ -40,7 +40,12 @@ import java.util.stream.Collectors;
  * @since 5.0.0
  */
 @Internal
-class GoogleComputeInstanceMetadataResolverUtils {
+final class GoogleComputeInstanceMetadataResolverUtils {
+
+    private GoogleComputeInstanceMetadataResolverUtils() {
+
+    }
+
     /**
      * Resolve a value as a string from the metadata json.
      *
@@ -66,7 +71,7 @@ class GoogleComputeInstanceMetadataResolverUtils {
      */
     public static JsonNode readMetadataUrl(URL url, int connectionTimeoutMs, int readTimeoutMs, ObjectMapper objectMapper, Map<String, String> requestProperties) throws IOException {
         try (InputStream in = openMetadataUrl(url, connectionTimeoutMs, readTimeoutMs, requestProperties)) {
-            return objectMapper.readValue(in,JsonNode.class);
+            return objectMapper.readValue(in, JsonNode.class);
         }
     }
 
