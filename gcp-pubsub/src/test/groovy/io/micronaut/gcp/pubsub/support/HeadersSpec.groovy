@@ -1,6 +1,5 @@
 package io.micronaut.gcp.pubsub.support
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
@@ -8,9 +7,9 @@ import io.micronaut.gcp.pubsub.AbstractPublisherSpec
 import io.micronaut.gcp.pubsub.DataHolder
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.json.JsonMapper
 import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-
 import jakarta.inject.Inject
 
 @MicronautTest
@@ -22,7 +21,7 @@ class HeadersSpec extends AbstractPublisherSpec {
     ClientWithoutHeaders clientWithoutHeaders
 
     @Inject
-    ObjectMapper objectMapper
+    JsonMapper jsonMapper
 
     void "client with no extra headers"() {
         Person person = new Person()
@@ -48,7 +47,7 @@ class HeadersSpec extends AbstractPublisherSpec {
     void "method with dynamic header value"(){
         Person person = new Person()
         person.name = "alf"
-        def serialized = objectMapper.writeValueAsBytes(person)
+        def serialized = jsonMapper.writeValueAsBytes(person)
         when:
             clientWithoutHeaders.sendWithDynamicHeaderValue(person, "foo")
         then:

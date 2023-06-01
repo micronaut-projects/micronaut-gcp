@@ -1,6 +1,5 @@
 package io.micronaut.gcp.pubsub.support
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.aop.MethodInvocationContext
 import io.micronaut.context.annotation.Property
@@ -11,11 +10,12 @@ import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.exception.PubSubClientException
 import io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice
+import io.micronaut.json.JsonMapper
 import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.messaging.annotation.MessageHeaders
+import io.micronaut.serde.annotation.Serdeable
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.reactivex.Single
-
 import jakarta.inject.Inject
 
 @MicronautTest
@@ -30,7 +30,7 @@ class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
     TestPubSubClient pubSubClient
 
     @Inject
-    ObjectMapper objectMapper;
+    JsonMapper jsonMapper;
 
     void "client without annotation invoked"() {
         given:
@@ -53,7 +53,7 @@ class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
     void "publish without return"() {
         Person person = new Person()
         person.name = "alf"
-        byte[] serialized = objectMapper.writeValueAsBytes(person)
+        byte[] serialized = jsonMapper.writeValueAsBytes(person)
         when:
             pubSubClient.send(person)
         then:
@@ -102,6 +102,7 @@ interface TestPubSubClient {
 
 }
 
+@Serdeable
 class Person {
     String name;
 }

@@ -18,5 +18,10 @@
     "type": "io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolver",
     "member": "Constructor io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolver(com.fasterxml.jackson.databind.ObjectMapper,io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration)",
     "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.pubsub.serdes.JsonPubSubMessageSerDes",
+    "member": "Constructor io.micronaut.gcp.pubsub.serdes.JsonPubSubMessageSerDes(com.fasterxml.jackson.databind.ObjectMapper)",
+    "reason": "Removed jackson-databind in MN 4"
   }
 ]
