@@ -16,6 +16,7 @@
 package io.micronaut.discovery.cloud.gcp;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.type.Argument;
 import io.micronaut.discovery.cloud.AbstractComputeInstanceMetadata;
 import io.micronaut.http.HttpMethod;
@@ -52,7 +53,7 @@ final class GoogleComputeInstanceMetadataResolverUtils {
      * @param key  The key
      * @return An optional value
      */
-    public static Optional<String> stringValue(JsonNode json, String key) {
+    static Optional<String> stringValue(JsonNode json, String key) {
         return Optional.ofNullable(json.get(key)).map(JsonNode::coerceStringValue);
     }
 
@@ -68,7 +69,7 @@ final class GoogleComputeInstanceMetadataResolverUtils {
      * @throws IOException if any I/O error occurs
      * @since 3.3.0
      */
-    public static JsonNode readMetadataUrl(URL url, int connectionTimeoutMs, int readTimeoutMs, JsonMapper jsonMapper, Map<String, String> requestProperties) throws IOException {
+    static JsonNode readMetadataUrl(URL url, int connectionTimeoutMs, int readTimeoutMs, JsonMapper jsonMapper, Map<String, String> requestProperties) throws IOException {
         try (InputStream in = openMetadataUrl(url, connectionTimeoutMs, readTimeoutMs, requestProperties)) {
             return jsonMapper.readValue(in, Argument.of(JsonNode.class));
         }
@@ -92,19 +93,17 @@ final class GoogleComputeInstanceMetadataResolverUtils {
     }
 
     /**
-     * Populates the instance metadata's {@link AbstractComputeInstanceMetadata#setMetadata(Map)} property.
+     * Populates the instance {@link AbstractComputeInstanceMetadata#setMetadata(Map)} property.
      *
      * @param instanceMetadata The instance metadata
      * @param metadata         A map of metadata
      */
-    public static void populateMetadata(AbstractComputeInstanceMetadata instanceMetadata, Map<?, ?> metadata) {
-        if (metadata != null) {
-            Map<String, String> stringMetadata = metadata.entrySet().stream()
-                .filter(e -> e.getValue() instanceof String)
-                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey().toString(), e.getValue().toString()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    static void populateMetadata(@NonNull AbstractComputeInstanceMetadata instanceMetadata, @NonNull Map<?, ?> metadata) {
+        Map<String, String> stringMetadata = metadata.entrySet().stream()
+            .filter(e -> e.getValue() instanceof String)
+            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey().toString(), e.getValue().toString()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-            instanceMetadata.setMetadata(stringMetadata);
-        }
+        instanceMetadata.setMetadata(stringMetadata);
     }
 }
