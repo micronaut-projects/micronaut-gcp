@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.populateMetadata;
 import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.readMetadataUrl;
 import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.stringValue;
 
@@ -198,11 +199,13 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                 // Hmmm...I wonder if the real intent was to take the string nodes of instanceMetadataJson that haven't already been parsed
                 // and put those into instanceMetadata.setMetadata()? Something like:
                 //
-                // Map<String,String> extraNonSTdStuff = whatsLeftOverOf(instanceMetadataJson);
-                // instanceMetadata.setMetadata(extraNonSTdStuff)
+                //      Map<String,String> extraNonSTdStuff = whatsLeftOverOf(instanceMetadataJson);
+                //      instanceMetadata.setMetadata(extraNonSTdStuff)
+                // or this...
+                final Map<?, ?> metadata = jsonMapper.readValueFromTree(instanceMetadataJson, Map.class);
+                populateMetadata(instanceMetadata, metadata);
 
                 cachedMetadata = instanceMetadata;
-
                 return Optional.of(instanceMetadata);
             }
         } catch (MalformedURLException me) {
