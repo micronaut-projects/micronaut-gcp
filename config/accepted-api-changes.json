@@ -23,5 +23,105 @@
     "type": "io.micronaut.gcp.pubsub.serdes.JsonPubSubMessageSerDes",
     "member": "Constructor io.micronaut.gcp.pubsub.serdes.JsonPubSubMessageSerDes(com.fasterxml.jackson.databind.ObjectMapper)",
     "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference",
+    "member": "Constructor io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference()",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$GoogleJacksonConfiguration$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference",
+    "member": "Constructor io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference()",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.$ObjectMapperCustomizer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.GoogleJacksonConfiguration",
+    "member": "Constructor io.micronaut.gcp.function.http.jackson.GoogleJacksonConfiguration()",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.GoogleJacksonConfiguration",
+    "member": "Implemented interface java.util.EventListener",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.GoogleJacksonConfiguration",
+    "member": "Implemented interface io.micronaut.context.event.BeanCreatedEventListener",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.ObjectMapperCustomizer",
+    "member": "Constructor io.micronaut.gcp.function.http.jackson.ObjectMapperCustomizer()",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.ObjectMapperCustomizer",
+    "member": "Implemented interface java.util.EventListener",
+    "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.function.http.jackson.ObjectMapperCustomizer",
+    "member": "Implemented interface io.micronaut.context.event.BeanCreatedEventListener",
+    "reason": "Removed jackson-databind in MN 4"
   }
 ]

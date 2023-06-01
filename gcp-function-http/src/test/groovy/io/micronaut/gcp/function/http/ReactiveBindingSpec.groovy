@@ -1,10 +1,10 @@
 package io.micronaut.gcp.function.http
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.serde.ObjectMapper
 import spock.lang.Specification
 
 class ReactiveBindingSpec extends Specification {
@@ -17,7 +17,7 @@ class ReactiveBindingSpec extends Specification {
                 new Person("Fred"),
                 new Person("Bob")
         ]
-        def string = mapper.writeValueAsString(json)
+        def string = new String(mapper.writeValueAsBytes(json))
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/reactive/jsonArray", string)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)

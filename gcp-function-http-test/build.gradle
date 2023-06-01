@@ -13,6 +13,7 @@ dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
 
     testImplementation(mn.micronaut.http.client)
+    testRuntimeOnly(mn.micronaut.jackson.databind)
 }
 
 micronautBuild {
