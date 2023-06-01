@@ -7,7 +7,6 @@ dependencies {
     testAnnotationProcessor(platform(mn.micronaut.core.bom))
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(platform(mn.micronaut.core.bom))
-    testImplementation(mn.micronaut.inject.java)
 
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.tck)
