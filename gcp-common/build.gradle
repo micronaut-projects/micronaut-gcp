@@ -7,7 +7,6 @@ dependencies {
     compileOnly(mn.micronaut.discovery.core)
     implementation(mnSerde.micronaut.serde.api)
     implementation(mnSerde.micronaut.serde.jackson)
-//    implementation(mn.micronaut.jackson.databind)
     api(libs.managed.google.auth.library.oauth2.http)
     api(libs.managed.google.cloud.core)
 

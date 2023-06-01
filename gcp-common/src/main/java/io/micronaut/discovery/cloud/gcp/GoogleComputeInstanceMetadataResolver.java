@@ -22,21 +22,26 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.cloud.ComputeInstanceMetadata;
 import io.micronaut.discovery.cloud.ComputeInstanceMetadataResolver;
 import io.micronaut.discovery.cloud.NetworkInterface;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.json.tree.JsonNode;
-import io.micronaut.serde.ObjectMapper;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.*;
+import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.readMetadataUrl;
+import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.stringValue;
 
 /**
  * Resolves {@link ComputeInstanceMetadata} for Google Cloud Platform.
@@ -58,18 +63,18 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
 
     private static final Logger LOG = LoggerFactory.getLogger(GoogleComputeInstanceMetadataResolver.class);
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
     private final GoogleComputeMetadataConfiguration configuration;
     private GoogleComputeInstanceMetadata cachedMetadata;
 
     /**
      *
-     * @param objectMapper To read and write JSON
+     * @param jsonMapper To read and write JSON
      * @param configuration The configuration for computing Google Metadata
      */
     @Inject
-    public GoogleComputeInstanceMetadataResolver(ObjectMapper objectMapper, GoogleComputeMetadataConfiguration configuration) {
-        this.objectMapper = objectMapper;
+    public GoogleComputeInstanceMetadataResolver(JsonMapper jsonMapper, GoogleComputeMetadataConfiguration configuration) {
+        this.jsonMapper = jsonMapper;
         this.configuration = configuration;
     }
 
@@ -77,7 +82,7 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
      * Construct with default settings.
      */
     public GoogleComputeInstanceMetadataResolver() {
-        this.objectMapper = ObjectMapper.getDefault();
+        this.jsonMapper = JsonMapper.createDefault();
         this.configuration = new GoogleComputeMetadataConfiguration();
     }
 
@@ -107,7 +112,7 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                         new URL(configuration.getProjectMetadataUrl() + "?recursive=true"),
                         connectionTimeoutMs,
                         readTimeoutMs,
-                        objectMapper,
+                        jsonMapper,
                         requestProperties);
             } catch (MalformedURLException me) {
                 if (LOG.isErrorEnabled()) {
@@ -122,7 +127,7 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                     LOG.debug("Error connecting to" + configuration.getProjectMetadataUrl() + "?recursive=true reading project metadata. Not a Google environment?", ioe);
                 }
             }
-            JsonNode instanceMetadataJson = readMetadataUrl(new URL(configuration.getMetadataUrl() + "?recursive=true"), connectionTimeoutMs, readTimeoutMs, objectMapper, requestProperties);
+            JsonNode instanceMetadataJson = readMetadataUrl(new URL(configuration.getMetadataUrl() + "?recursive=true"), connectionTimeoutMs, readTimeoutMs, jsonMapper, requestProperties);
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Read compute instance metadata from URL [{}]. Resulting JSON: {}", configuration.getMetadataUrl(), instanceMetadataJson);

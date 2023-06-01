@@ -19,7 +19,7 @@ import io.micronaut.context.env.ComputePlatform
 import io.micronaut.context.env.Environment
 import io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolver
 import io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration
-import io.micronaut.serde.ObjectMapper
+import io.micronaut.json.JsonMapper
 import spock.lang.Specification
 
 import java.nio.file.Path
@@ -67,7 +67,7 @@ class GoogleComputeInstanceResolverSpec extends Specification {
         configuration.metadataUrl = "file:///${s}/src/test/groovy/io/micronaut/discovery/cloud/gcInstanceMetadata.json"
         configuration.projectMetadataUrl = "file:///${s}/src/test/groovy/io/micronaut/discovery/cloud/projectMetadata.json"
         GoogleComputeInstanceMetadataResolver resolver = new GoogleComputeInstanceMetadataResolver(
-                ObjectMapper.getDefault(),
+                JsonMapper.createDefault(),
                 configuration
 
         )

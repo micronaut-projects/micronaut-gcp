@@ -16,11 +16,11 @@
 package io.micronaut.discovery.cloud.gcp;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.type.Argument;
 import io.micronaut.discovery.cloud.AbstractComputeInstanceMetadata;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.json.tree.JsonNode;
-import io.micronaut.serde.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
 final class GoogleComputeInstanceMetadataResolverUtils {
 
     private GoogleComputeInstanceMetadataResolverUtils() {
-
     }
 
     /**
@@ -63,15 +62,15 @@ final class GoogleComputeInstanceMetadataResolverUtils {
      * @param url                 the URL to read
      * @param connectionTimeoutMs connection timeout, in milliseconds
      * @param readTimeoutMs       read timeout, in milliseconds
-     * @param objectMapper        JSON mapper to use for parsing
+     * @param jsonMapper        JSON mapper to use for parsing
      * @param requestProperties   any request properties to pass
      * @return a {@link JsonNode} instance
      * @throws IOException if any I/O error occurs
      * @since 3.3.0
      */
-    public static JsonNode readMetadataUrl(URL url, int connectionTimeoutMs, int readTimeoutMs, ObjectMapper objectMapper, Map<String, String> requestProperties) throws IOException {
+    public static JsonNode readMetadataUrl(URL url, int connectionTimeoutMs, int readTimeoutMs, JsonMapper jsonMapper, Map<String, String> requestProperties) throws IOException {
         try (InputStream in = openMetadataUrl(url, connectionTimeoutMs, readTimeoutMs, requestProperties)) {
-            return objectMapper.readValue(in, JsonNode.class);
+            return jsonMapper.readValue(in, Argument.of(JsonNode.class));
         }
     }
 
