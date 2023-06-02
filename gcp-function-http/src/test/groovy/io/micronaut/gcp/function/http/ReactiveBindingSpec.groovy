@@ -17,7 +17,7 @@ class ReactiveBindingSpec extends Specification {
                 new Person("Fred"),
                 new Person("Bob")
         ]
-        def string = new String(mapper.writeValueAsBytes(json))
+        def string = mapper.writeValueAsString(json)
         def googleResponse = new MockGoogleResponse()
         def googleRequest = new MockGoogleRequest(HttpMethod.POST, "/reactive/jsonArray", string)
         googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
