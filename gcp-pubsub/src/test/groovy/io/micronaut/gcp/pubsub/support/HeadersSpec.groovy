@@ -31,7 +31,6 @@ class HeadersSpec extends AbstractPublisherSpec {
         then:
             def pubsubMessage = (PubsubMessage)DataHolder.getInstance().getData()
             pubsubMessage.getAttributesMap().size() == 1
-objectMapper.cloneWithFeatures()
     }
 
     void "method with extra headers"(){
