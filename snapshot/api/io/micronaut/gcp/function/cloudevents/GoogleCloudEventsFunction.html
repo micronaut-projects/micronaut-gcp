@@ -155,21 +155,21 @@ implements com.google.cloud.functions.CloudEventsFunction</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accept(io.cloudevents.CloudEvent)" class="member-name-link">accept</a><wbr>(io.cloudevents.CloudEvent&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#accept(io.cloudevents.CloudEventContext,T)" class="member-name-link">accept</a><wbr>(io.cloudevents.CloudEventContext&nbsp;context,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#accept(io.cloudevents.CloudEventContext,T)" class="member-name-link">accept</a><wbr>(@NonNull io.cloudevents.CloudEventContext&nbsp;context,
  <a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&nbsp;data)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Called to service an incoming event.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accept(io.cloudevents.CloudEvent)" class="member-name-link">accept</a><wbr>(io.cloudevents.CloudEvent&nbsp;event)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#map(io.cloudevents.CloudEvent,java.lang.Class)" class="member-name-link">map</a><wbr>(io.cloudevents.CloudEvent&nbsp;event,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;&nbsp;type)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#map(io.cloudevents.CloudEvent,java.lang.Class)" class="member-name-link">map</a><wbr>(@NonNull io.cloudevents.CloudEvent&nbsp;event,
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;&nbsp;type)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Maps a cloud event to the target type.</div>
 </div>
@@ -230,7 +230,7 @@ implements com.google.cloud.functions.CloudEventsFunction</span></div>
 <section class="detail" id="accept(io.cloudevents.CloudEventContext,T)">
 <h3 id="accept(io.cloudevents.CloudEventContext,java.lang.Object)">accept</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">accept</span><wbr><span class="parameters">(@NonNull
- io.cloudevents.CloudEventContext&nbsp;context,
+ @NonNull io.cloudevents.CloudEventContext&nbsp;context,
  @Nullable
  <a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&nbsp;data)</span>
                         throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
@@ -249,7 +249,7 @@ implements com.google.cloud.functions.CloudEventsFunction</span></div>
 <section class="detail" id="getType()">
 <h3>getType</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</span>&nbsp;<span class="element-name">getType</span>()</div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</span>&nbsp;<span class="element-name">getType</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Google Cloud Event Type.</dd>
@@ -260,10 +260,10 @@ implements com.google.cloud.functions.CloudEventsFunction</span></div>
 <section class="detail" id="map(io.cloudevents.CloudEvent,java.lang.Class)">
 <h3>map</h3>
 <div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</span>&nbsp;<span class="element-name">map</span><wbr><span class="parameters">(@NonNull
- io.cloudevents.CloudEvent&nbsp;event,
+</span><span class="modifiers">protected</span>&nbsp;<span class="return-type">@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;</span>&nbsp;<span class="element-name">map</span><wbr><span class="parameters">(@NonNull
+ @NonNull io.cloudevents.CloudEvent&nbsp;event,
  @NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;&nbsp;type)</span></div>
+ @NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="GoogleCloudEventsFunction.html" title="type parameter in GoogleCloudEventsFunction">T</a>&gt;&nbsp;type)</span></div>
 <div class="block">Maps a cloud event to the target type.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
