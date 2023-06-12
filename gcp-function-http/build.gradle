@@ -11,6 +11,7 @@ dependencies {
     implementation(mnServlet.micronaut.servlet.core)
     implementation(mn.micronaut.router)
     compileOnly(libs.managed.functions.framework.api)
+    compileOnly(mn.micronaut.jackson.databind)
 
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
