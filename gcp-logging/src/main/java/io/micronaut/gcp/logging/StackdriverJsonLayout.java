@@ -20,7 +20,7 @@ import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.contrib.json.classic.JsonLayout;
 import com.google.cloud.ServiceOptions;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.serde.ObjectMapper;
+import io.micronaut.json.JsonMapper;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +54,7 @@ public class StackdriverJsonLayout extends JsonLayout {
         this.includeException = false;
         this.includeTraceId = true;
         this.includeSpanId = true;
-        ObjectMapper mapper = ObjectMapper.getDefault();
+        JsonMapper mapper = JsonMapper.createDefault();
         setJsonFormatter(mapper::writeValueAsString);
     }
 
