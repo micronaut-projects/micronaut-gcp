@@ -37,7 +37,5 @@ secretManager:
   title: Google Cloud Secret Manager Support
   distributedConfiguration: Distributed Configuration
   secretManagerClient: Low-Level Secret Manager Client access
-nativeImage:
-  title: Generating Native Images
 cloudStorage: Google Cloud Storage Support
 repository: Repository

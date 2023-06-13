@@ -10,7 +10,6 @@ managed-google-function-invoker = "1.2.1"
 managed-google-cloud-core = "2.18.1"
 managed-google-cloud-pubsub = "1.123.14"
 managed-google-cloud-secretmanager = "2.18.0"
-managed-google-cloud-native-image-support = "0.14.1"
 managed-google-cloudevent-types="0.3.0"
 
 brave-opentracing = "1.0.0"
@@ -58,7 +57,6 @@ managed-google-function-invoker = { module = "com.google.cloud.functions.invoker
 managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
 managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "managed-google-cloud-pubsub" }
 managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
-managed-google-native-image-support = { module = "com.google.cloud:native-image-support", version.ref = "managed-google-cloud-native-image-support" }
 
 brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
 brave-propagation-stackdriver = { module = "io.zipkin.gcp:brave-propagation-stackdriver", version.ref = "brave-propagation-stackdriver" }
