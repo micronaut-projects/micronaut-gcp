@@ -22,7 +22,7 @@ cloudevents-api = "2.5.0"
 
 jetty-servlet = "11.0.15"
 logback-json-classic = "0.1.5"
-testcontainers = "1.18.1"
+testcontainers = "1.18.3"
 zipkin-sender-stackdriver = "1.0.4"
 
 micronaut-logging = "1.0.0-M4"
