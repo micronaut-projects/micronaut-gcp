@@ -2,10 +2,19 @@ plugins {
     id "io.micronaut.build.internal.bom"
 }
 
-// Removed in https://github.com/micronaut-projects/micronaut-gcp/pull/802 until we can fix tracing
 micronautBom {
     suppressions {
+        // Removed in https://github.com/micronaut-projects/micronaut-gcp/pull/802 until we can fix tracing
         acceptedLibraryRegressions.add("micronaut-gcp-tracing")
         acceptedLibraryRegressions.add("micronaut-gcp-logging")
+
+        // Native Image Support for Google Cloud Libraries
+        // https://github.com/GoogleCloudPlatform/native-image-support-java
+        // This project is no longer actively developed or maintained.
+        // If you are using version 25.4.0 or later of the libraries-bom,
+        //  the Cloud Client Libraries for Java come with the native image configurations built-in.
+        acceptedVersionRegressions.add("google-cloud-native-image-support")
+        acceptedLibraryRegressions.add("google-native-image-support")
+
     }
 }
