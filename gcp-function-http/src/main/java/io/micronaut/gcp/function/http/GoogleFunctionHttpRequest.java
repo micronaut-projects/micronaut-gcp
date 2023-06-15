@@ -18,15 +18,22 @@ package io.micronaut.gcp.function.http;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpParameters;
+import io.micronaut.http.MutableHttpHeaders;
+import io.micronaut.http.MutableHttpParameters;
+import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.Cookies;
 import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.ServletExchange;
@@ -37,7 +44,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -54,10 +67,10 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private final HttpMethod method;
     private final GoogleFunctionHeaders headers;
     private final GoogleFunctionHttpResponse<?> googleResponse;
-    private HttpParameters httpParameters;
+    private MutableHttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private Supplier<Optional<B>> body;
-    private Cookies cookies;
+    private volatile GoogleCookies cookies;
 
     private ConversionService conversionService;
 
@@ -120,13 +133,10 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public Cookies getCookies() {
-        Cookies cookies = this.cookies;
         if (cookies == null) {
             synchronized (this) { // double check
-                cookies = this.cookies;
                 if (cookies == null) {
                     cookies = new GoogleCookies(getPath(), getHeaders(), conversionService);
-                    this.cookies = cookies;
                 }
             }
         }
@@ -136,12 +146,12 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public HttpParameters getParameters() {
-        HttpParameters httpParameters = this.httpParameters;
+        MutableHttpParameters httpParameters = this.httpParameters;
         if (httpParameters == null) {
             synchronized (this) { // double check
                 httpParameters = this.httpParameters;
                 if (httpParameters == null) {
-                    httpParameters = new GoogleFunctionParameters(conversionService);
+                    httpParameters = new GoogleFunctionParameters();
                     this.httpParameters = httpParameters;
                 }
             }
@@ -207,19 +217,26 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         return (ServletHttpResponse<com.google.cloud.functions.HttpResponse, ? super Object>) googleResponse;
     }
 
+    @Override
+    public MutableHttpRequest<B> mutate() {
+        return new GoogleFunctionMutableHttpRequest();
+    }
+
     /**
      * Models the http parameters.
      */
-    private final class GoogleFunctionParameters extends GoogleMultiValueMap implements HttpParameters {
-        GoogleFunctionParameters(ConversionService conversionService) {
-            super(googleRequest.getQueryParameters());
-            setConversionService(conversionService);
-        }
+    private final class GoogleFunctionParameters implements MutableHttpParameters {
+        private final Map<String, List<String>> params = googleRequest.getQueryParameters();
 
         @Override
-        public Optional<String> getFirst(CharSequence name) {
-            ArgumentUtils.requireNonNull("name", name);
-            return googleRequest.getFirstQueryParameter(name.toString());
+        public List<String> getAll(CharSequence name) {
+            if (StringUtils.isNotEmpty(name)) {
+                final List<String> strings = params.get(name.toString());
+                if (CollectionUtils.isNotEmpty(strings)) {
+                    return strings;
+                }
+            }
+            return Collections.emptyList();
         }
 
         @Nullable
@@ -227,15 +244,143 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         public String get(CharSequence name) {
             return getFirst(name).orElse(null);
         }
+
+        @Nullable
+        @Override
+        public Optional<String> getFirst(CharSequence name) {
+            ArgumentUtils.requireNonNull("name", name);
+            return googleRequest.getFirstQueryParameter(name.toString());
+        }
+
+        @Override
+        public Set<String> names() {
+            return params.keySet();
+        }
+
+        @Override
+        public Collection<List<String>> values() {
+            return params.values();
+        }
+
+        @Override
+        public <T> Optional<T> get(CharSequence name, ArgumentConversionContext<T> conversionContext) {
+            final String v = get(name);
+            if (v != null) {
+                if (conversionService == null) {
+                    return Optional.empty();
+                }
+                return conversionService.convert(v, conversionContext);
+            }
+            return Optional.empty();
+        }
+
+        @Override
+        public MutableHttpParameters add(CharSequence name, List<CharSequence> values) {
+            params.put(name.toString(), values.stream().map(CharSequence::toString).toList());
+            return this;
+        }
+
+        @Override
+        public void setConversionService(@NonNull ConversionService conversionService) {
+            // Not used
+        }
     }
 
     /**
      * Models the headers.
      */
-    private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements HttpHeaders {
+    private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements MutableHttpHeaders {
         GoogleFunctionHeaders(ConversionService conversionService) {
             super(googleRequest.getHeaders());
             setConversionService(conversionService);
+        }
+
+        @Override
+        public MutableHttpHeaders add(CharSequence header, CharSequence value) {
+            ArgumentUtils.requireNonNull("header", header);
+            if (value != null) {
+                googleRequest.getHeaders()
+                    .computeIfAbsent(header.toString(), s -> new ArrayList<>())
+                    .add(value.toString());
+            } else {
+                googleRequest.getHeaders().remove(header.toString());
+            }
+            return this;
+        }
+
+        @Override
+        public MutableHttpHeaders remove(CharSequence header) {
+            ArgumentUtils.requireNonNull("header", header);
+            googleRequest.getHeaders().remove(header.toString());
+            return this;
+        }
+    }
+
+    private class GoogleFunctionMutableHttpRequest implements MutableHttpRequest<B> {
+        private URI uri = GoogleFunctionHttpRequest.this.getUri();
+
+        @Nullable
+        private Object body;
+
+        @Override
+        public MutableHttpRequest<B> cookie(Cookie cookie) {
+            GoogleFunctionHttpRequest.this.cookies.put(cookie.getName(), cookie);
+            return this;
+        }
+
+        @Override
+        public MutableHttpRequest<B> uri(URI uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        @Override
+        public <B1> MutableHttpRequest<B1> body(B1 body) {
+            this.body = body;
+            return (MutableHttpRequest<B1>) this;
+        }
+
+        @Override
+        public MutableHttpHeaders getHeaders() {
+            return GoogleFunctionHttpRequest.this.headers;
+        }
+
+        @Override
+        public @NonNull MutableConvertibleValues<Object> getAttributes() {
+            return GoogleFunctionHttpRequest.this.getAttributes();
+        }
+
+        @Override
+        public @NonNull Optional<B> getBody() {
+            if (body != null) {
+                return Optional.of((B) body);
+            }
+            return GoogleFunctionHttpRequest.this.getBody();
+        }
+
+        @Override
+        public @NonNull Cookies getCookies() {
+            return GoogleFunctionHttpRequest.this.cookies;
+        }
+
+        @Override
+        public MutableHttpParameters getParameters() {
+            return GoogleFunctionHttpRequest.this.httpParameters;
+        }
+
+        @Override
+        public @NonNull HttpMethod getMethod() {
+            return GoogleFunctionHttpRequest.this.getMethod();
+        }
+
+        @Override
+        public @NonNull URI getUri() {
+            return this.uri;
+        }
+
+        @Override
+        public void setConversionService(@NonNull ConversionService conversionService) {
+            // ignored, we use the parent
         }
     }
 }
