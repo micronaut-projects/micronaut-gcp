@@ -70,7 +70,7 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private MutableHttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private Supplier<Optional<B>> body;
-    private volatile GoogleCookies cookies;
+    private GoogleCookies cookies;
 
     private ConversionService conversionService;
 
