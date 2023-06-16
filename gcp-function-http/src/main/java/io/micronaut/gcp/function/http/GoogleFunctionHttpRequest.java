@@ -27,6 +27,7 @@ import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
+import io.micronaut.http.CaseInsensitiveMutableHttpHeaders;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpParameters;
@@ -44,7 +45,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -289,30 +289,55 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     /**
      * Models the headers.
      */
-    private final class GoogleFunctionHeaders extends GoogleMultiValueMap implements MutableHttpHeaders {
+    private final class GoogleFunctionHeaders implements MutableHttpHeaders {
+
+        private final CaseInsensitiveMutableHttpHeaders headers;
+
         GoogleFunctionHeaders(ConversionService conversionService) {
-            super(googleRequest.getHeaders());
-            setConversionService(conversionService);
+            headers = new CaseInsensitiveMutableHttpHeaders(googleRequest.getHeaders(), conversionService);
         }
 
         @Override
         public MutableHttpHeaders add(CharSequence header, CharSequence value) {
-            ArgumentUtils.requireNonNull("header", header);
-            if (value != null) {
-                googleRequest.getHeaders()
-                    .computeIfAbsent(header.toString(), s -> new ArrayList<>())
-                    .add(value.toString());
-            } else {
-                googleRequest.getHeaders().remove(header.toString());
-            }
+            headers.add(header, value);
             return this;
         }
 
         @Override
         public MutableHttpHeaders remove(CharSequence header) {
             ArgumentUtils.requireNonNull("header", header);
-            googleRequest.getHeaders().remove(header.toString());
+            headers.remove(header);
             return this;
+        }
+
+        @Override
+        public void setConversionService(@NonNull ConversionService conversionService) {
+            headers.setConversionService(conversionService);
+        }
+
+        @Override
+        public List<String> getAll(CharSequence name) {
+            return headers.getAll(name);
+        }
+
+        @Override
+        public @Nullable String get(CharSequence name) {
+            return headers.get(name);
+        }
+
+        @Override
+        public Set<String> names() {
+            return headers.names();
+        }
+
+        @Override
+        public Collection<List<String>> values() {
+            return headers.values();
+        }
+
+        @Override
+        public <T> Optional<T> get(CharSequence name, ArgumentConversionContext<T> conversionContext) {
+            return headers.get(name, conversionContext);
         }
     }
 
