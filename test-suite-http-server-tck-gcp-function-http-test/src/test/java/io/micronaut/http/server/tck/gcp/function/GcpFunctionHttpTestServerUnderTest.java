@@ -3,6 +3,7 @@ package io.micronaut.http.server.tck.gcp.function;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.type.Argument;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.function.http.test.InvokerHttpServer;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -22,6 +23,7 @@ public class GcpFunctionHttpTestServerUnderTest implements ServerUnderTest {
     private BlockingHttpClient client;
 
     public GcpFunctionHttpTestServerUnderTest(Map<String, Object> properties) {
+        properties.put("endpoints.health.service-ready-indicator-enabled", StringUtils.FALSE);
         server = ApplicationContext.run(InvokerHttpServer.class, properties);
     }
 

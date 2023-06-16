@@ -5,6 +5,7 @@ import io.micronaut.context.env.Environment;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.type.Argument;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.function.http.GoogleHttpResponse;
 import io.micronaut.gcp.function.http.HttpFunction;
 import io.micronaut.http.HttpHeaders;
@@ -25,6 +26,7 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
     public GcpFunctionHttpServerUnderTest(Map<String, Object> properties) {
         properties.put("micronaut.server.context-path", "/");
+        properties.put("endpoints.health.service-ready-indicator-enabled", StringUtils.FALSE);
         this.function = new HttpFunction(ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
             .properties(properties)
             .deduceEnvironment(false)

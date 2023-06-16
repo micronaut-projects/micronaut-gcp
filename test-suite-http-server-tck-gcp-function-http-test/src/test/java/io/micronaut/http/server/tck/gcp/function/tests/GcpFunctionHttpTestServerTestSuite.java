@@ -10,7 +10,6 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SuiteDisplayName("HTTP Server TCK for GCP Function HTTP Test")
 @ExcludeClassNamePatterns({
     "io.micronaut.http.server.tck.tests.filter.RequestFilterTest", // Unbindable argument [byte[] bytes] to method [void requestFilterBinding(String contentType,byte[] bytes,FilterContinuation<HttpResponse<Object>> continuation)]
-    "io.micronaut.http.server.tck.tests.endpoints.health.HealthTest", // Caused by: org.eclipse.jetty.http.BadMessageException: 500: No version
     "io.micronaut.http.server.tck.tests.HeadersTest", // Error 400, bad request
     "io.micronaut.http.server.tck.tests.constraintshandler.ControllerConstraintHandlerTest" // Broken in servlet
 })
