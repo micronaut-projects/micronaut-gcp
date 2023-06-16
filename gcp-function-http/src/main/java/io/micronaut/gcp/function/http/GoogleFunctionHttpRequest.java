@@ -133,14 +133,17 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public Cookies getCookies() {
-        if (cookies == null) {
+        GoogleCookies localCookies = this.cookies;
+        if (localCookies == null) {
             synchronized (this) { // double check
-                if (cookies == null) {
-                    cookies = new GoogleCookies(getPath(), getHeaders(), conversionService);
+                localCookies = this.cookies;
+                if (localCookies == null) {
+                    localCookies = new GoogleCookies(getPath(), getHeaders(), conversionService);
+                    this.cookies = localCookies;
                 }
             }
         }
-        return cookies;
+        return localCookies;
     }
 
     @NonNull
