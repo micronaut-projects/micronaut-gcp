@@ -149,17 +149,17 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public HttpParameters getParameters() {
-        MutableHttpParameters httpParameters = this.httpParameters;
-        if (httpParameters == null) {
+        MutableHttpParameters localHttpParameters = this.httpParameters;
+        if (localHttpParameters == null) {
             synchronized (this) { // double check
-                httpParameters = this.httpParameters;
-                if (httpParameters == null) {
-                    httpParameters = new GoogleFunctionParameters();
-                    this.httpParameters = httpParameters;
+                localHttpParameters = this.httpParameters;
+                if (localHttpParameters == null) {
+                    localHttpParameters = new GoogleFunctionParameters();
+                    this.httpParameters = localHttpParameters;
                 }
             }
         }
-        return httpParameters;
+        return localHttpParameters;
     }
 
     @NonNull
