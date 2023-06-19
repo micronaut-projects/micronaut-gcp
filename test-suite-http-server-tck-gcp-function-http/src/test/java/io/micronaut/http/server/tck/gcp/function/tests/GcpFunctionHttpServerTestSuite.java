@@ -12,9 +12,6 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 })
 @SuiteDisplayName("HTTP Server TCK for for GCP Function HTTP")
 @ExcludeClassNamePatterns({
-    "io.micronaut.http.server.tck.tests.BodyTest", // Bad Request 400 errors
-    "io.micronaut.http.server.tck.tests.ConsumesTest", // Bad Request 400 errors
-    "io.micronaut.http.server.tck.tests.ErrorHandlerTest", // testCustomGlobalExceptionHandlersForPOSTWithBody fails; cannot get ErrorHandlerTest$RequestObject no String-argument constructor/factory method to deserialize from String value ('{\"numberField\":101}')
     "io.micronaut.http.server.tck.tests.MiscTest", // Bad Request 400 errors
     "io.micronaut.http.server.tck.tests.filter.RequestFilterTest", // Unbindable argument [byte[] bytes] to method [void requestFilterBinding(String contentType,byte[] bytes,FilterContinuation<HttpResponse<Object>> continuation)]
     "io.micronaut.http.server.tck.tests.cors.SimpleRequestWithCorsNotEnabledTest", // Multiple routes are selected
