@@ -27,6 +27,7 @@ import io.micronaut.http.*;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.cookie.Cookies;
 import io.micronaut.http.netty.cookies.NettyCookie;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.DefaultServletExchange;
 import io.micronaut.servlet.http.ServletExchange;
@@ -108,7 +109,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
             super.startThis(applicationContext);
         } finally {
             if (LOG.isInfoEnabled()) {
-                LOG.info("Initialized function in: " + (System.currentTimeMillis() - time) + "ms");
+                LOG.info("Initialized function in: {}ms", (System.currentTimeMillis() - time));
             }
         }
     }
@@ -147,7 +148,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
     public GoogleHttpResponse invoke(HttpMethod method, String uri) {
         MutableHttpRequest<Object> request = HttpRequestFactory.INSTANCE.create(method, uri);
         HttpResponseImpl response = new HttpResponseImpl(conversionService);
-        httpHandler.service(toGoogleRequest(request), response);
+        httpHandler.service(toGoogleRequest(request, applicationContext.getBean(JsonMapper.class)), response);
         return response;
     }
 
@@ -162,7 +163,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         MutableHttpRequest<Object> request = HttpRequestFactory.INSTANCE.create(method, uri);
         request.body(body);
         HttpResponseImpl response = new HttpResponseImpl(conversionService);
-        httpHandler.service(toGoogleRequest(request), response);
+        httpHandler.service(toGoogleRequest(request, applicationContext.getBean(JsonMapper.class)), response);
         return response;
     }
 
@@ -173,11 +174,11 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
      */
     public GoogleHttpResponse invoke(io.micronaut.http.HttpRequest<?> request) {
         HttpResponseImpl response = new HttpResponseImpl(conversionService);
-        httpHandler.service(toGoogleRequest(Objects.requireNonNull(request)), response);
+        httpHandler.service(toGoogleRequest(Objects.requireNonNull(request), applicationContext.getBean(JsonMapper.class)), response);
         return response;
     }
 
-    private HttpRequest toGoogleRequest(io.micronaut.http.HttpRequest<?> request) {
+    private HttpRequest toGoogleRequest(io.micronaut.http.HttpRequest<?> request, JsonMapper jsonMapper) {
         Map<String, List<String>> headers = new LinkedHashMap<>();
         Map<String, List<String>> parameters = new LinkedHashMap<>();
         request.getHeaders().forEach(headers::put);
@@ -264,21 +265,28 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
             @Override
             public InputStream getInputStream() {
                 if (body != null) {
-                    if (body instanceof byte[]) {
-                        return new ByteArrayInputStream((byte[]) body);
+                    if (body instanceof byte[] byteBody) {
+                        return new ByteArrayInputStream(byteBody);
                     } else {
                         MediaType mediaType = getContentType().map(MediaType::new).orElse(null);
                         if (mediaType != null) {
-
-                            MediaTypeCodec codec = httpHandler.getMediaTypeCodecRegistry().findCodec(
-                                    mediaType
-                            ).orElse(null);
+                            MediaTypeCodec codec = httpHandler.getMediaTypeCodecRegistry()
+                                .findCodec(mediaType)
+                                .orElse(null);
                             if (codec != null) {
                                 byte[] bytes = codec.encode(body);
                                 return new ByteArrayInputStream(bytes);
                             }
                         } else {
-                            return new ByteArrayInputStream(body.toString().getBytes(StandardCharsets.UTF_8));
+                            // No mediatype, so try and convert the body to a byte array from whatever it may be
+                            return BodyUtils.bodyAsByteArray(
+                                    jsonMapper,
+                                    () -> request.getContentType().orElse(null),
+                                    request::getCharacterEncoding,
+                                    () -> body
+                                )
+                                .map(ByteArrayInputStream::new)
+                                .orElseGet(() -> new ByteArrayInputStream(new byte[0]));
                         }
                     }
                 }
