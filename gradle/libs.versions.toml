@@ -25,7 +25,7 @@ testcontainers = "1.18.3"
 zipkin-sender-stackdriver = "1.0.4"
 
 micronaut-logging = "1.0.0-M4"
-micronaut-rxjava2 = "2.0.0-M5"
+micronaut-rxjava2 = "2.0.0-M6"
 micronaut-serde = "2.0.0-M12"
 micronaut-servlet = "4.0.0-M9"
 micronaut-tracing = "5.0.0-M5"
