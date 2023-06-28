@@ -24,7 +24,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.reflect.GenericTypeUtils;
 import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.gcp.function.GoogleFunctionInitializer;
-import io.micronaut.serde.ObjectMapper;
+import io.micronaut.json.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +41,11 @@ import java.util.Optional;
  */
 public abstract class GoogleCloudEventsFunction<T> extends GoogleFunctionInitializer implements CloudEventsFunction {
     private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudEventsFunction.class);
-    private final ObjectMapper objectMapper;
+    private final JsonMapper objectMapper;
     private final Class<T> type = initTypeArgument(0);
 
     protected GoogleCloudEventsFunction() {
-        objectMapper = applicationContext.getBean(ObjectMapper.class);
+        objectMapper = applicationContext.getBean(JsonMapper.class);
     }
 
     @Override

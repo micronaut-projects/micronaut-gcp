@@ -8,6 +8,7 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
 import io.micronaut.http.annotation.Get
+import io.micronaut.serde.annotation.Serdeable
 import spock.lang.Specification
 
 class ErrorHandlingSpec extends Specification {
@@ -132,6 +133,7 @@ class ErrorHandlingSpec extends Specification {
         }
     }
 
+    @Serdeable
     static class MyError {
         String description
 

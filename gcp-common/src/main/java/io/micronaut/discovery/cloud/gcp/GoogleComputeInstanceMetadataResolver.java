@@ -15,8 +15,6 @@
  */
 package io.micronaut.discovery.cloud.gcp;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
@@ -24,19 +22,27 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.cloud.ComputeInstanceMetadata;
 import io.micronaut.discovery.cloud.ComputeInstanceMetadataResolver;
 import io.micronaut.discovery.cloud.NetworkInterface;
+import io.micronaut.json.JsonMapper;
+import io.micronaut.json.tree.JsonNode;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.micronaut.discovery.cloud.ComputeInstanceMetadataResolverUtils.*;
+import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.populateMetadata;
+import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.readMetadataUrl;
+import static io.micronaut.discovery.cloud.gcp.GoogleComputeInstanceMetadataResolverUtils.stringValue;
 
 /**
  * Resolves {@link ComputeInstanceMetadata} for Google Cloud Platform.
@@ -58,18 +64,18 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
 
     private static final Logger LOG = LoggerFactory.getLogger(GoogleComputeInstanceMetadataResolver.class);
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
     private final GoogleComputeMetadataConfiguration configuration;
     private GoogleComputeInstanceMetadata cachedMetadata;
 
     /**
      *
-     * @param objectMapper To read and write JSON
+     * @param jsonMapper To read and write JSON
      * @param configuration The configuration for computing Google Metadata
      */
     @Inject
-    public GoogleComputeInstanceMetadataResolver(ObjectMapper objectMapper, GoogleComputeMetadataConfiguration configuration) {
-        this.objectMapper = objectMapper;
+    public GoogleComputeInstanceMetadataResolver(JsonMapper jsonMapper, GoogleComputeMetadataConfiguration configuration) {
+        this.jsonMapper = jsonMapper;
         this.configuration = configuration;
     }
 
@@ -77,7 +83,7 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
      * Construct with default settings.
      */
     public GoogleComputeInstanceMetadataResolver() {
-        this.objectMapper = new ObjectMapper();
+        this.jsonMapper = JsonMapper.createDefault();
         this.configuration = new GoogleComputeMetadataConfiguration();
     }
 
@@ -107,7 +113,7 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                         new URL(configuration.getProjectMetadataUrl() + "?recursive=true"),
                         connectionTimeoutMs,
                         readTimeoutMs,
-                        objectMapper,
+                        jsonMapper,
                         requestProperties);
             } catch (MalformedURLException me) {
                 if (LOG.isErrorEnabled()) {
@@ -122,7 +128,7 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                     LOG.debug("Error connecting to" + configuration.getProjectMetadataUrl() + "?recursive=true reading project metadata. Not a Google environment?", ioe);
                 }
             }
-            JsonNode instanceMetadataJson = readMetadataUrl(new URL(configuration.getMetadataUrl() + "?recursive=true"), connectionTimeoutMs, readTimeoutMs, objectMapper, requestProperties);
+            JsonNode instanceMetadataJson = readMetadataUrl(new URL(configuration.getMetadataUrl() + "?recursive=true"), connectionTimeoutMs, readTimeoutMs, jsonMapper, requestProperties);
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Read compute instance metadata from URL [{}]. Resulting JSON: {}", configuration.getMetadataUrl(), instanceMetadataJson);
@@ -152,21 +158,21 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                 stringValue(instanceMetadataJson, GoogleComputeMetadataKeys.HOSTNAME.getName()).ifPresent(instanceMetadata::setLocalHostname);
                 stringValue(instanceMetadataJson, GoogleComputeMetadataKeys.NAME.getName()).ifPresent(instanceMetadata::setName);
 
-                JsonNode networkInterfaces = instanceMetadataJson.findValue(GoogleComputeMetadataKeys.NETWORK_INTERFACES.getName());
+                JsonNode networkInterfaces = instanceMetadataJson.get(GoogleComputeMetadataKeys.NETWORK_INTERFACES.getName());
                 if (networkInterfaces != null) {
 
                     List<NetworkInterface> interfaces = new ArrayList<>();
                     AtomicInteger networkCounter = new AtomicInteger(0);
                     GoogleComputeInstanceMetadata finalInstanceMetadata = instanceMetadata;
-                    networkInterfaces.elements().forEachRemaining(
+                    networkInterfaces.values().forEach(
                             jsonNode -> {
                                 GoogleComputeNetworkInterface networkInterface = new GoogleComputeNetworkInterface();
                                 networkInterface.setId(String.valueOf(networkCounter.getAndIncrement()));
 
-                                if (jsonNode.findValue(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName()) != null) {
-                                    JsonNode accessConfigs = jsonNode.findValue(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName());
+                                if (jsonNode.get(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName()) != null) {
+                                    JsonNode accessConfigs = jsonNode.get(GoogleComputeMetadataKeys.ACCESS_CONFIGS.getName());
                                     // we just grab the first one
-                                    finalInstanceMetadata.setPublicIpV4(accessConfigs.get(0).findValue("externalIp").textValue());
+                                    stringValue(accessConfigs.get(0), "externalIp").ifPresent(finalInstanceMetadata::setPublicIpV4);
                                 }
 
                                 stringValue(jsonNode, GoogleComputeMetadataKeys.IP.getName()).ifPresent(finalInstanceMetadata::setPrivateIpV4);
@@ -179,10 +185,11 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
                             });
                     instanceMetadata.setInterfaces(interfaces);
                 }
-                final Map<?, ?> metadata = objectMapper.convertValue(instanceMetadata, Map.class);
-                populateMetadata(instanceMetadata, metadata);
-                cachedMetadata = instanceMetadata;
 
+                final Map<?, ?> metadata = jsonMapper.readValueFromTree(instanceMetadataJson, Map.class);
+                populateMetadata(instanceMetadata, metadata);
+
+                cachedMetadata = instanceMetadata;
                 return Optional.of(instanceMetadata);
             }
         } catch (MalformedURLException me) {
@@ -201,5 +208,4 @@ public class GoogleComputeInstanceMetadataResolver implements ComputeInstanceMet
 
         return Optional.ofNullable(instanceMetadata);
     }
-
 }

@@ -7,4 +7,7 @@ dependencies {
     api(mn.micronaut.http.client)
     implementation(mn.reactor)
     testImplementation(mn.micronaut.http.server.netty)
+
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }
