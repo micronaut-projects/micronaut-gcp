@@ -10,9 +10,9 @@ import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.exception.PubSubClientException
 import io.micronaut.gcp.pubsub.intercept.PubSubClientIntroductionAdvice
+import io.micronaut.json.JsonMapper
 import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.messaging.annotation.MessageHeaders
-import io.micronaut.serde.ObjectMapper
 import io.micronaut.serde.annotation.Serdeable
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.reactivex.Single
@@ -30,7 +30,7 @@ class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
     TestPubSubClient pubSubClient
 
     @Inject
-    ObjectMapper objectMapper
+    JsonMapper objectMapper
 
     void "client without annotation invoked"() {
         given:

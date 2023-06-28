@@ -4,7 +4,7 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
-import io.micronaut.serde.ObjectMapper
+import io.micronaut.json.JsonMapper
 import spock.lang.Specification
 
 class ReactiveBindingSpec extends Specification {
@@ -12,7 +12,7 @@ class ReactiveBindingSpec extends Specification {
     void "test json array as flowable"() {
         given:
         def function = new HttpFunction()
-        ObjectMapper mapper = function.applicationContext.getBean(ObjectMapper)
+        JsonMapper mapper = function.applicationContext.getBean(JsonMapper)
         def json = [
                 new Person("Fred"),
                 new Person("Bob")

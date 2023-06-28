@@ -7,8 +7,8 @@ import io.micronaut.gcp.pubsub.AbstractPublisherSpec
 import io.micronaut.gcp.pubsub.DataHolder
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.json.JsonMapper
 import io.micronaut.messaging.annotation.MessageHeader
-import io.micronaut.serde.ObjectMapper
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 
@@ -21,7 +21,7 @@ class HeadersSpec extends AbstractPublisherSpec {
     ClientWithoutHeaders clientWithoutHeaders
 
     @Inject
-    ObjectMapper objectMapper
+    JsonMapper objectMapper
 
     void "client with no extra headers"() {
         Person person = new Person()
