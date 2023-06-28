@@ -6,8 +6,8 @@ dependencies {
     compileOnly(projects.micronautGcpTracing)
     api(projects.micronautGcpCommon)
     implementation(libs.logback.json.classic)
+    implementation(mn.micronaut.json.core)
 
-    implementation(mn.micronaut.jackson.databind)
-    testImplementation(mn.micronaut.inject.java)
+    testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(libs.testcontainers.spock)
 }

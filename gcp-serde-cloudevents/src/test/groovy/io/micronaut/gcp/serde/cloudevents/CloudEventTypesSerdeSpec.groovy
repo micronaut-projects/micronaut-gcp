@@ -2,7 +2,7 @@ package io.micronaut.gcp.serde.cloudevents
 
 import com.google.events.cloud.storage.v1.StorageObjectData
 import io.micronaut.context.annotation.Property
-import io.micronaut.serde.ObjectMapper
+import io.micronaut.json.JsonMapper
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
@@ -13,7 +13,7 @@ import java.time.OffsetDateTime
 @Property(name = "micronaut.serde.write-dates-as-timestamps", value = "false")
 class CloudEventTypesSerdeSpec extends Specification {
     @Inject
-    ObjectMapper jsonMapper
+    JsonMapper jsonMapper
 
     void "deserialize storage object"() {
 

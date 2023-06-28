@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.function.http.jackson;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import io.micronaut.jackson.JacksonConfiguration;
@@ -27,6 +28,7 @@ import jakarta.inject.Singleton;
  * @author graemerocher
  * @since 1.2.0
  */
+@Requires(classes = JacksonConfiguration.class)
 @Singleton
 public class GoogleJacksonConfiguration implements BeanCreatedEventListener<JacksonConfiguration> {
     @Override

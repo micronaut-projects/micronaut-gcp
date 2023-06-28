@@ -18,9 +18,11 @@ package io.micronaut.gcp.function.http.jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 
+import io.micronaut.jackson.JacksonConfiguration;
 import jakarta.inject.Singleton;
 
 /**
@@ -29,6 +31,7 @@ import jakarta.inject.Singleton;
  * @author graemerocher
  * @since 1.2.0
  */
+@Requires(classes = JacksonConfiguration.class)
 @Singleton
 public class ObjectMapperCustomizer implements BeanCreatedEventListener<ObjectMapper> {
     @Override

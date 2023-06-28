@@ -1,6 +1,5 @@
 package io.micronaut.gcp.pubsub.bind
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.ByteString
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
@@ -13,12 +12,13 @@ import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Person
+import io.micronaut.json.JsonMapper
 import io.micronaut.messaging.Acknowledgement
 import io.micronaut.messaging.annotation.MessageBody
 import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import spock.util.concurrent.PollingConditions
 import jakarta.inject.Inject
+import spock.util.concurrent.PollingConditions
 
 @MicronautTest
 @Property(name = "spec.name", value = "SimpleConsumerSpec")
@@ -32,7 +32,7 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
     SimpleReceiver receiver
 
     @Inject
-    ObjectMapper mapper
+    JsonMapper jsonMapper
 
     @Inject MockPubSubEngine mockPubSubEngine
 
@@ -93,7 +93,7 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
         PollingConditions conditions = new PollingConditions(timeout: 3)
         def person = new Person()
         person.name = "alf"
-        def bytes = mapper.writeValueAsBytes(person)
+        def bytes = jsonMapper.writeValueAsBytes(person)
         when:
             pubSubClient.publishPojoWithoutContentType(bytes)
         then:
@@ -120,7 +120,7 @@ class SimpleConsumerSpec extends AbstractConsumerSpec {
         person.name = "alf"
         def message = PubsubMessage
                 .newBuilder()
-                .setData(ByteString.copyFrom(mapper.writeValueAsBytes(person)))
+                .setData(ByteString.copyFrom(jsonMapper.writeValueAsBytes(person)))
                 .build()
 
         when:

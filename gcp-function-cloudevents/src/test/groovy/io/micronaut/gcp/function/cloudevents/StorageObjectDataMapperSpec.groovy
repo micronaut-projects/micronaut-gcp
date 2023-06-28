@@ -6,7 +6,7 @@ import io.cloudevents.CloudEventContext
 import io.cloudevents.core.builder.CloudEventBuilder
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
-import io.micronaut.serde.ObjectMapper
+import io.micronaut.json.JsonMapper
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
@@ -17,7 +17,7 @@ import java.time.OffsetDateTime
 class StorageObjectDataMapperSpec extends Specification {
 
     @Inject
-    ObjectMapper objectMapper
+    JsonMapper objectMapper
 
     void "deserialize storage object"() {
 
