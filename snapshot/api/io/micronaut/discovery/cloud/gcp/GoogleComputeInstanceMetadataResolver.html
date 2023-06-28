@@ -124,7 +124,7 @@ implements io.micronaut.discovery.cloud.ComputeInstanceMetadataResolver</span></
 <div class="col-last even-row-color">
 <div class="block">Construct with default settings.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.fasterxml.jackson.databind.ObjectMapper,io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration)" class="member-name-link">GoogleComputeInstanceMetadataResolver</a><wbr>(com.fasterxml.jackson.databind.ObjectMapper&nbsp;objectMapper,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(io.micronaut.json.JsonMapper,io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration)" class="member-name-link">GoogleComputeInstanceMetadataResolver</a><wbr>(io.micronaut.json.JsonMapper&nbsp;jsonMapper,
  <a href="GoogleComputeMetadataConfiguration.html" title="class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataConfiguration</a>&nbsp;configuration)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -185,14 +185,14 @@ implements io.micronaut.discovery.cloud.ComputeInstanceMetadataResolver</span></
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.fasterxml.jackson.databind.ObjectMapper,io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration)">
+<section class="detail" id="&lt;init&gt;(io.micronaut.json.JsonMapper,io.micronaut.discovery.cloud.gcp.GoogleComputeMetadataConfiguration)">
 <h3>GoogleComputeInstanceMetadataResolver</h3>
 <div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">GoogleComputeInstanceMetadataResolver</span><wbr><span class="parameters">(com.fasterxml.jackson.databind.ObjectMapper&nbsp;objectMapper,
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">GoogleComputeInstanceMetadataResolver</span><wbr><span class="parameters">(io.micronaut.json.JsonMapper&nbsp;jsonMapper,
  <a href="GoogleComputeMetadataConfiguration.html" title="class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataConfiguration</a>&nbsp;configuration)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>objectMapper</code> - To read and write JSON</dd>
+<dd><code>jsonMapper</code> - To read and write JSON</dd>
 <dd><code>configuration</code> - The configuration for computing Google Metadata</dd>
 </dl>
 </section>
