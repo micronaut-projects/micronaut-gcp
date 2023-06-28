@@ -14,6 +14,8 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.tck.ServerUnderTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
@@ -22,21 +24,26 @@ import java.util.Optional;
 @SuppressWarnings("java:S2187") // Suppress because despite its name, this is not a Test
 public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GcpFunctionHttpServerUnderTest.class);
+
     private final HttpFunction function;
 
     public GcpFunctionHttpServerUnderTest(Map<String, Object> properties) {
         properties.put("micronaut.server.context-path", "/");
         properties.put("endpoints.health.service-ready-indicator-enabled", StringUtils.FALSE);
-        this.function = new HttpFunction(ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
-            .properties(properties)
-            .deduceEnvironment(false)
-            .start());
+        this.function = new HttpFunction(
+            ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
+                .properties(properties)
+                .deduceEnvironment(false)
+                .start()
+        );
     }
 
     @Override
     public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType) {
         HttpResponse<O> response = new HttpResponseAdaptor<>(function.invoke(request), bodyType);
         if (response.getStatus().getCode() >= 400) {
+            LOG.error("Response body: {}", response.getBody(String.class).orElse(null));
             throw new HttpClientResponseException("error " + response.getStatus().getReason() + " (" + response.getStatus().getCode() + ")", response);
         }
         return response;
@@ -49,7 +56,7 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
     @Override
     public ApplicationContext getApplicationContext() {
-        return this.function.getApplicationContext();
+        return function.getApplicationContext();
     }
 
     @Override
