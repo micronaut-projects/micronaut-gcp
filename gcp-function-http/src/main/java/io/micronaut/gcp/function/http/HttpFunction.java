@@ -265,8 +265,8 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
             @Override
             public InputStream getInputStream() {
                 if (body != null) {
-                    if (body instanceof String strBody) {
-                        return new ByteArrayInputStream(strBody.getBytes());
+                    if (body instanceof CharSequence csBody) {
+                        return new ByteArrayInputStream(csBody.toString().getBytes());
                     }
                     if (body instanceof byte[] byteBody) {
                         return new ByteArrayInputStream(byteBody);
@@ -341,7 +341,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
         @Override
         public String getBodyAsText() {
-            return new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
+            return outputStream.toString(StandardCharsets.UTF_8);
         }
 
         @Override
