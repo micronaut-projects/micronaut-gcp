@@ -3,12 +3,16 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(mnSerde.micronaut.serde.processor)
     compileOnly(mn.micronaut.discovery.core)
-    implementation(mnSerde.micronaut.serde.jackson)
     api(libs.managed.google.auth.library.oauth2.http)
     api(libs.managed.google.cloud.core)
 
+    implementation(mn.micronaut.json.core)
+    implementation(mn.jackson.annotations)
+
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.discovery.core)
+
+    testImplementation(mnSerde.micronaut.serde.jackson)
+
 }

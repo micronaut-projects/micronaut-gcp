@@ -3,12 +3,10 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(mnSerde.micronaut.serde.processor)
-    implementation(mnSerde.micronaut.serde.support)
-
     api(mn.micronaut.messaging)
     api(projects.micronautGcpCommon)
     api(libs.managed.google.cloud.pubsub)
+    implementation(mn.micronaut.json.core)
 
     implementation(mn.reactor)
     implementation(mn.micronaut.http)
@@ -17,4 +15,7 @@ dependencies {
     testRuntimeOnly(mn.micronaut.discovery.core)
     testImplementation(mnRxjava2.micronaut.rxjava2)
     testImplementation libs.testcontainers.spock
+
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }
