@@ -31,15 +31,20 @@ import io.micronaut.http.CaseInsensitiveMutableHttpHeaders;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpParameters;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.MutableHttpParameters;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.Cookies;
+import io.micronaut.http.simple.SimpleHttpParameters;
 import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpRequest;
 import io.micronaut.servlet.http.ServletHttpResponse;
+import io.netty.handler.codec.http.QueryStringDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,11 +52,14 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+
+import static io.micronaut.servlet.http.BodyBuilder.isFormSubmission;
 
 /**
  * Implementation of the {@link ServletHttpRequest} interface for Google Cloud Function.
@@ -62,6 +70,9 @@ import java.util.function.Supplier;
  */
 @Internal
 final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.google.cloud.functions.HttpRequest, B>, ServletExchange<com.google.cloud.functions.HttpRequest, com.google.cloud.functions.HttpResponse> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GoogleFunctionHttpRequest.class);
+
     private final com.google.cloud.functions.HttpRequest googleRequest;
     private final URI uri;
     private final HttpMethod method;
@@ -149,17 +160,22 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @NonNull
     @Override
     public HttpParameters getParameters() {
-        MutableHttpParameters localHttpParameters = this.httpParameters;
-        if (localHttpParameters == null) {
-            synchronized (this) { // double check
-                localHttpParameters = this.httpParameters;
-                if (localHttpParameters == null) {
-                    localHttpParameters = new GoogleFunctionParameters();
-                    this.httpParameters = localHttpParameters;
+        MediaType mediaType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
+        Map<CharSequence, List<String>> values = new HashMap<>(3);
+        values.putAll(googleRequest.getQueryParameters());
+        if (isFormSubmission(mediaType)) {
+            Map<String, List<String>> parameters = null;
+            try {
+                parameters = new QueryStringDecoder(new String(getInputStream().readAllBytes(), getCharacterEncoding()), false).parameters();
+            } catch (IOException ex) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Error decoding form data: " + ex.getMessage(), ex);
                 }
+                parameters = new HashMap<>();
             }
+            values.putAll(parameters);
         }
-        return localHttpParameters;
+        return new SimpleHttpParameters(values, conversionService);
     }
 
     @NonNull
