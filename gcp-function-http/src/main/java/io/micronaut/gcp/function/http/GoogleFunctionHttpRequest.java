@@ -26,8 +26,6 @@ import io.micronaut.core.execution.ExecutionFlow;
 import io.micronaut.core.io.buffer.ByteBuffer;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
-import io.micronaut.core.util.CollectionUtils;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.CaseInsensitiveMutableHttpHeaders;
 import io.micronaut.http.FullHttpRequest;
@@ -57,7 +55,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -278,70 +275,6 @@ final class GoogleFunctionHttpRequest<B> implements
     @Override
     public @Nullable ExecutionFlow<ByteBuffer<?>> bufferContents() {
         return ExecutionFlow.just(contents());
-    }
-
-    /**
-     * Models the http parameters.
-     */
-    private final class GoogleFunctionParameters implements MutableHttpParameters {
-        private final Map<String, List<String>> params = googleRequest.getQueryParameters();
-
-        @Override
-        public List<String> getAll(CharSequence name) {
-            if (StringUtils.isNotEmpty(name)) {
-                final List<String> strings = params.get(name.toString());
-                if (CollectionUtils.isNotEmpty(strings)) {
-                    return strings;
-                }
-            }
-            return Collections.emptyList();
-        }
-
-        @Nullable
-        @Override
-        public String get(CharSequence name) {
-            return getFirst(name).orElse(null);
-        }
-
-        @Nullable
-        @Override
-        public Optional<String> getFirst(CharSequence name) {
-            ArgumentUtils.requireNonNull("name", name);
-            return googleRequest.getFirstQueryParameter(name.toString());
-        }
-
-        @Override
-        public Set<String> names() {
-            return params.keySet();
-        }
-
-        @Override
-        public Collection<List<String>> values() {
-            return params.values();
-        }
-
-        @Override
-        public <T> Optional<T> get(CharSequence name, ArgumentConversionContext<T> conversionContext) {
-            final String v = get(name);
-            if (v != null) {
-                if (conversionService == null) {
-                    return Optional.empty();
-                }
-                return conversionService.convert(v, conversionContext);
-            }
-            return Optional.empty();
-        }
-
-        @Override
-        public MutableHttpParameters add(CharSequence name, List<CharSequence> values) {
-            params.put(name.toString(), values.stream().map(CharSequence::toString).toList());
-            return this;
-        }
-
-        @Override
-        public void setConversionService(@NonNull ConversionService conversionService) {
-            // Not used
-        }
     }
 
     /**
