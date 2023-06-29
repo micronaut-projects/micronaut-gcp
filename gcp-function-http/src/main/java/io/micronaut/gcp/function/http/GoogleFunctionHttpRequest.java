@@ -22,12 +22,15 @@ import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
+import io.micronaut.core.execution.ExecutionFlow;
+import io.micronaut.core.io.buffer.ByteBuffer;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.CaseInsensitiveMutableHttpHeaders;
+import io.micronaut.http.FullHttpRequest;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpParameters;
@@ -39,6 +42,8 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.Cookies;
 import io.micronaut.http.simple.SimpleHttpParameters;
 import io.micronaut.servlet.http.BodyBuilder;
+import io.micronaut.servlet.http.ByteArrayByteBuffer;
+import io.micronaut.servlet.http.ParsedBodyHolder;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpRequest;
 import io.micronaut.servlet.http.ServletHttpResponse;
@@ -47,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -69,7 +75,11 @@ import static io.micronaut.servlet.http.BodyBuilder.isFormSubmission;
  * @since 1.2.0
  */
 @Internal
-final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.google.cloud.functions.HttpRequest, B>, ServletExchange<com.google.cloud.functions.HttpRequest, com.google.cloud.functions.HttpResponse> {
+final class GoogleFunctionHttpRequest<B> implements
+    ServletHttpRequest<com.google.cloud.functions.HttpRequest, B>,
+    ServletExchange<com.google.cloud.functions.HttpRequest, com.google.cloud.functions.HttpResponse>,
+    FullHttpRequest<B>,
+    ParsedBodyHolder<B> {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoogleFunctionHttpRequest.class);
 
@@ -80,10 +90,13 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     private final GoogleFunctionHttpResponse<?> googleResponse;
     private MutableHttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
+    private B parsedBody;
     private Supplier<Optional<B>> body;
     private GoogleCookies cookies;
 
     private ConversionService conversionService;
+
+    private ByteArrayByteBuffer<B> servletByteBuffer;
 
     /**
      * Default constructor.
@@ -112,14 +125,18 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
         this.conversionService = conversionService;
 
         this.body = SupplierUtil.memoizedNonEmpty(() -> {
-            B built = (B) bodyBuilder.buildBody(this::getInputStream, this);
+            B built = parsedBody != null ? parsedBody :  (B) bodyBuilder.buildBody(this::getInputStream, this);
             return Optional.ofNullable(built);
         });
     }
 
+    public byte[] getBodyBytes() throws IOException {
+        return googleRequest.getInputStream().readAllBytes();
+    }
+
     @Override
     public InputStream getInputStream() throws IOException {
-        return googleRequest.getInputStream();
+        return servletByteBuffer != null ? servletByteBuffer.toInputStream() : new ByteArrayInputStream(getBodyBytes());
     }
 
     @Override
@@ -239,6 +256,28 @@ final class GoogleFunctionHttpRequest<B> implements ServletHttpRequest<com.googl
     @Override
     public MutableHttpRequest<B> mutate() {
         return new GoogleFunctionMutableHttpRequest();
+    }
+
+    @Override
+    public void setParsedBody(B body) {
+        this.parsedBody = body;
+    }
+
+    @Override
+    public @Nullable ByteBuffer<?> contents() {
+        try {
+            if (servletByteBuffer == null) {
+                this.servletByteBuffer = new ByteArrayByteBuffer<>(getInputStream().readAllBytes());
+            }
+            return servletByteBuffer;
+        } catch (IOException e) {
+            throw new IllegalStateException("Error getting all body contents", e);
+        }
+    }
+
+    @Override
+    public @Nullable ExecutionFlow<ByteBuffer<?>> bufferContents() {
+        return ExecutionFlow.just(contents());
     }
 
     /**

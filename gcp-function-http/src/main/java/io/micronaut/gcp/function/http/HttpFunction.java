@@ -345,6 +345,11 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         }
 
         @Override
+        public byte[] getBodyAsBytes() {
+            return outputStream.toByteArray();
+        }
+
+        @Override
         public <T> Optional<T> getBody(Argument<T> type) {
             return conversionService.convert(
                     outputStream.toByteArray(),

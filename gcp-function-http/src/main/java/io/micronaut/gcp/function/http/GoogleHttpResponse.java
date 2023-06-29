@@ -46,6 +46,11 @@ public interface GoogleHttpResponse extends HttpResponse {
     String getBodyAsText();
 
     /**
+     * @return The body as bytes
+     */
+    byte[] getBodyAsBytes();
+
+    /**
      * @return The body as the given type
      * @param type  The type required
      * @param <T> The body type

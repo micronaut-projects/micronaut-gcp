@@ -113,13 +113,11 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         @Override
         @NonNull
         public Optional<O> getBody() {
-            if (bodyType == null) {
-                return Optional.empty();
-            }
-            if (bodyType.isAssignableFrom(String.class)) {
+            if (bodyType != null && bodyType.isAssignableFrom(byte[].class)) {
+                return (Optional<O>) Optional.of(googleHttpResponse.getBodyAsBytes());
+            } else {
                 return (Optional<O>) Optional.of(googleHttpResponse.getBodyAsText());
             }
-            return googleHttpResponse.getBody(bodyType);
         }
     }
 }
