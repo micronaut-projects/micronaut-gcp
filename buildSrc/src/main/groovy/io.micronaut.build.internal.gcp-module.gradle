@@ -2,3 +2,10 @@ plugins {
     id("io.micronaut.build.internal.gcp-base")
     id("io.micronaut.build.internal.module")
 }
+
+micronautBuild {
+    binaryCompatibility {
+        baselineVersion = "5.0.0-M9"
+        enabled = true
+    }
+}
