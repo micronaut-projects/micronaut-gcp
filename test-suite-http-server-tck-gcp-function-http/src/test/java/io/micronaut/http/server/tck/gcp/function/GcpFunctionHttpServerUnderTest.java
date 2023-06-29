@@ -30,6 +30,7 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
     public GcpFunctionHttpServerUnderTest(Map<String, Object> properties) {
         properties.put("micronaut.server.context-path", "/");
+        properties.put("endpoints.refresh.enabled", StringUtils.FALSE);
         properties.put("endpoints.health.service-ready-indicator-enabled", StringUtils.FALSE);
         this.function = new HttpFunction(
             ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)
