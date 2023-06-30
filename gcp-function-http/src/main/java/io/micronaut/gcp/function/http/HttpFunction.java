@@ -265,6 +265,9 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
             @Override
             public InputStream getInputStream() {
                 if (body != null) {
+                    if (body instanceof CharSequence csBody) {
+                        return new ByteArrayInputStream(csBody.toString().getBytes());
+                    }
                     if (body instanceof byte[] byteBody) {
                         return new ByteArrayInputStream(byteBody);
                     } else {
@@ -308,7 +311,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
     /**
      * Implementation of {@link GoogleHttpResponse}.
      */
-    private static class HttpResponseImpl implements GoogleHttpResponse {
+    private static final class HttpResponseImpl implements GoogleHttpResponse {
 
         private int statusCode = HttpStatus.OK.getCode();
         private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -338,7 +341,12 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
         @Override
         public String getBodyAsText() {
-            return new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
+            return outputStream.toString(StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public byte[] getBodyAsBytes() {
+            return outputStream.toByteArray();
         }
 
         @Override
