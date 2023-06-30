@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package io.micronaut.gcp.function.http;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.http.HttpHeaders;
@@ -24,7 +25,13 @@ import io.micronaut.http.cookie.Cookies;
 import io.micronaut.http.netty.cookies.NettyCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Implementation of {@link Cookies} for serverless.
@@ -91,5 +98,16 @@ public class GoogleCookies implements Cookies {
     @Override
     public Collection<Cookie> values() {
         return Collections.unmodifiableCollection(cookies.values());
+    }
+
+    /**
+     * Put a new cookie.
+     * @param name the name of the cookie
+     * @param cookie the cookie itself
+     * @return previous value for given name
+     */
+    @Nullable
+    public Cookie put(CharSequence name, Cookie cookie) {
+        return this.cookies.put(name, cookie);
     }
 }
