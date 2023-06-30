@@ -136,9 +136,15 @@ implements io.micronaut.http.cookie.Cookies</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;io.micronaut.http.cookie.Cookie&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAll()" class="member-name-link">getAll</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;io.micronaut.http.cookie.Cookie&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable io.micronaut.http.cookie.Cookie</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#put(java.lang.CharSequence,io.micronaut.http.cookie.Cookie)" class="member-name-link">put</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name,
+ io.micronaut.http.cookie.Cookie&nbsp;cookie)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Put a new cookie.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;io.micronaut.http.cookie.Cookie&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -239,6 +245,22 @@ implements io.micronaut.http.cookie.Cookies</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>values</code>&nbsp;in interface&nbsp;<code>io.micronaut.core.convert.value.ConvertibleValues&lt;io.micronaut.http.cookie.Cookie&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="put(java.lang.CharSequence,io.micronaut.http.cookie.Cookie)">
+<h3>put</h3>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable io.micronaut.http.cookie.Cookie</span>&nbsp;<span class="element-name">put</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name,
+ io.micronaut.http.cookie.Cookie&nbsp;cookie)</span></div>
+<div class="block">Put a new cookie.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the cookie</dd>
+<dd><code>cookie</code> - the cookie itself</dd>
+<dt>Returns:</dt>
+<dd>previous value for given name</dd>
 </dl>
 </section>
 </li>
