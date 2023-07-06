@@ -1,6 +1,6 @@
 [versions]
 micronaut-docs = "2.0.0"
-micronaut = "4.0.0-RC1"
+micronaut = "4.0.0-RC5"
 groovy = "4.0.12"
 spock = "2.3-groovy-4.0"
 
@@ -24,14 +24,14 @@ logback-json-classic = "0.1.5"
 testcontainers = "1.18.3"
 zipkin-sender-stackdriver = "1.0.4"
 
-micronaut-logging = "1.0.0-M4"
+micronaut-logging = "1.0.0-M5"
 micronaut-rxjava2 = "2.0.0-M6"
-micronaut-serde = "2.0.0-M12"
-micronaut-servlet = "4.0.0-M10"
+micronaut-serde = "2.0.0-M13"
+micronaut-servlet = "4.0.0-M11"
 micronaut-tracing = "5.0.0-M6"
-micronaut-test = "4.0.0-M7"
-micronaut-discovery = "4.0.0-M4"
-micronaut-validation = "4.0.0-M11"
+micronaut-test = "4.0.0-M9"
+micronaut-discovery = "4.0.0-M5"
+micronaut-validation = "4.0.0-M12"
 
 # Micronaut
 micronaut-gradle-plugin = "4.0.0-M8"
