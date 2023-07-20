@@ -99,7 +99,7 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
         if (context.hasAnnotation(Topic.class)) {
 
             PubSubPublisherState publisherState = publisherStateCache.computeIfAbsent(context.getExecutableMethod(), method -> {
-                String projectId = method.stringValue(PubSubClient.class).orElse(googleCloudConfiguration.getProjectId());
+                String projectId = method.stringValue(PubSubClient.class, "project").orElse(googleCloudConfiguration.getProjectId());
                 Optional<Argument> orderingArgument = Arrays.stream(method.getArguments()).filter(argument -> argument.getAnnotationMetadata().hasAnnotation(OrderingKey.class)).findFirst();
                 String topic = method.stringValue(Topic.class).orElse(context.getName());
                 String endpoint = method.stringValue(Topic.class, "endpoint").orElse(pubSubConfigurationProperties.getTopicEndpoint());
