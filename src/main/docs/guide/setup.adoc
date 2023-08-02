@@ -1,6 +1,6 @@
 The `micronaut-gcp-common` module includes basic setup for running applications on Google Cloud.
 
-dependency:io.micronaut.gcp:micronaut-gcp-common[version="{version}"]
+dependency:io.micronaut.gcp:micronaut-gcp-common[]
 
 Prerequisites:
 

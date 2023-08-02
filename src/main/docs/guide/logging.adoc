@@ -2,7 +2,7 @@ https://cloud.google.com/logging[Google Cloud Logging] integration is available 
 
 To enable it add the following dependency to your project:
 
-dependency:io.micronaut.gcp:micronaut-gcp-logging[version="{version}"]
+dependency:io.micronaut.gcp:micronaut-gcp-logging[]
 
 By default if an application is using a CONSOLE appender Stackdriver log parser will
 consider the entire payload of the message as a text entry, making searching and correlation with tracing impractical.

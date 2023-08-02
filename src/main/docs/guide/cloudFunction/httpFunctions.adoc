@@ -6,11 +6,11 @@ To facilitate this model, Micronaut GCP includes an additional module that allow
 
 With this model you need to add the `micronaut-gcp-function-http` dependency to your application:
 
-dependency:io.micronaut.gcp:micronaut-gcp-function-http[version="{version}"]
+dependency:io.micronaut.gcp:micronaut-gcp-function-http[]
 
 And define the Google Function API as a development only dependency:
 
-dependency:com.google.cloud.functions:functions-framework-api[version="1.0.1", scope="developmentOnly"]
+dependency:com.google.cloud.functions:functions-framework-api[scope="developmentOnly"]
 
 === Running Functions Locally
 
