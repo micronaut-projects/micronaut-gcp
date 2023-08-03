@@ -7,6 +7,7 @@ public class DataHolder {
     private DataHolder() { }
 
     private Object data;
+    private String projectId;
 
     synchronized public static DataHolder getInstance() {
         if (instance == null) {
@@ -19,7 +20,16 @@ public class DataHolder {
         return data;
     }
 
+    public String getProjectId() {
+        return projectId;
+    }
+
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public DataHolder setProjectId(String projectId) {
+        this.projectId = projectId;
+        return this;
     }
 }
