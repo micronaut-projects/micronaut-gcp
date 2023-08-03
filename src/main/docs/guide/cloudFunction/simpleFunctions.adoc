@@ -4,7 +4,7 @@ dependency:io.micronaut.gcp:micronaut-gcp-function[]
 
 Then add the Cloud Function API as a `compileOnly` dependency (`provided` with Maven):
 
-dependency:com.google.cloud.functions:functions-framework-api[version="1.0.1", scope="compileOnly"]
+dependency:com.google.cloud.functions:functions-framework-api[scope="compileOnly"]
 
 Now define a class that implements one of Google Cloud Found's interfaces, for example `com.google.cloud.functions.BackgroundFunction`, and extends from `io.micronaut.function.executor.FunctionInitializer`.
 

@@ -2,7 +2,7 @@ The `micronaut-gcp-tracing` integrates Micronaut with https://cloud.google.com/t
 
 To enable it add the following dependency:
 
-dependency:io.micronaut.gcp:micronaut-gcp-tracing[version="{version}"]
+dependency:io.micronaut.gcp:micronaut-gcp-tracing[]
 
 Then enabling Zipkin tracing in your application configuration:
 
