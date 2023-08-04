@@ -30,6 +30,9 @@ class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
     TestPubSubClient pubSubClient
 
     @Inject
+    TestPubSubClientWithProjectId pubSubClientWithProjectId
+
+    @Inject
     JsonMapper objectMapper
 
     void "client without annotation invoked"() {
@@ -66,6 +69,13 @@ class PublisherIntroductionAdviceSpec extends AbstractPublisherSpec {
         person.name = "alf"
         expect:
             pubSubClient.sendAndWait(person) == "1234"
+            DataHolder.instance.projectId == 'test-project'
+    }
+
+    void "publish using a client with a different project id"() {
+        expect:
+        pubSubClientWithProjectId.sendAndWait("hello") == "1234"
+        DataHolder.instance.projectId == 'a-different-project'
     }
 
     void "reactive publish with valid return"() {
@@ -100,6 +110,14 @@ interface TestPubSubClient {
     @MessageHeaders(  @MessageHeader(name = "x-header-added", value = "foo")  )
     String withExtraHeaders(Object data)
 
+}
+
+@PubSubClient(project = "a-different-project")
+@Requires(property = "spec.name", value = "PublisherIntroductionAdviceSpec")
+interface TestPubSubClientWithProjectId {
+
+    @Topic(value = "testTopic", contentType = "application/json")
+    String sendAndWait(Object data)
 }
 
 @Serdeable

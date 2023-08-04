@@ -5,6 +5,7 @@ import com.google.cloud.pubsub.v1.Publisher
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.gcp.pubsub.support.PublisherFactory
+import io.micronaut.gcp.pubsub.support.PublisherFactoryConfig
 import io.micronaut.test.annotation.MockBean
 import spock.lang.Specification
 
@@ -19,11 +20,17 @@ abstract class AbstractPublisherSpec extends Specification {
     @Replaces(PublisherFactory)
     PublisherFactory publisherFactory() {
         def factory = Mock(PublisherFactory)
-        def publisher = Mock(Publisher)
         def future = new SettableApiFuture<String>()
         future.set("1234")
-        publisher.publish(_) >> { PubsubMessage message -> DataHolder.getInstance().setData(message); return future; }
-        factory.createPublisher(_) >> publisher
+        factory.createPublisher(_) >> {
+            PublisherFactoryConfig config -> {
+                return Mock(Publisher) {
+                    publish(_) >> {
+                        PubsubMessage message -> DataHolder.getInstance().setProjectId(config?.topicState?.projectTopicName?.project).setData(message); return future;
+                    }
+                }
+            }
+        }
         return factory
     }
 }
