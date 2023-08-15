@@ -167,6 +167,7 @@ public class InvokerHttpServer implements EmbeddedServer {
     public EmbeddedServer stop() {
         if (running.compareAndSet(true, false)) {
             try {
+                applicationContext.close();
                 server.stop();
             } catch (Exception e) {
                 if (LOGGER.isWarnEnabled()) {
