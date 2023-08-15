@@ -54,6 +54,7 @@ public class GcpFunctionHttpTestServerUnderTest implements ServerUnderTest {
 
     @Override
     public void close() throws IOException {
+        server.getApplicationContext().close();
         server.close();
     }
 
