@@ -17,13 +17,16 @@ package io.micronaut.gcp.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.contrib.json.JsonFormatter;
 import ch.qos.logback.contrib.json.classic.JsonLayout;
 import com.google.cloud.ServiceOptions;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.json.JsonMapper;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Logback JsonLayout class to include tracing and other MDC fields.
@@ -37,6 +40,10 @@ public class StackdriverJsonLayout extends JsonLayout {
             StackdriverTraceConstants.MDC_FIELD_TRACE_ID,
             StackdriverTraceConstants.MDC_FIELD_SPAN_ID,
             StackdriverTraceConstants.MDC_FIELD_SPAN_EXPORT));
+
+    // Inline in the constructor, JsonMapper.createDefault() cannot find an implementation via the ServiceLoader, so do it lazily.
+    private static final Supplier<JsonFormatter> JSON_FORMATTER_SUPPLIER = SupplierUtil
+        .memoized(() -> JsonMapper.createDefault()::writeValueAsString);
 
     private String projectId;
 
@@ -54,8 +61,11 @@ public class StackdriverJsonLayout extends JsonLayout {
         this.includeException = false;
         this.includeTraceId = true;
         this.includeSpanId = true;
-        JsonMapper mapper = JsonMapper.createDefault();
-        setJsonFormatter(mapper::writeValueAsString);
+    }
+
+    @Override
+    public JsonFormatter getJsonFormatter() {
+        return JSON_FORMATTER_SUPPLIER.get();
     }
 
     @Override

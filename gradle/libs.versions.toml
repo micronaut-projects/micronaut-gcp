@@ -1,7 +1,7 @@
 [versions]
 micronaut-docs = "2.0.0"
-micronaut = "4.0.0"
-groovy = "4.0.12"
+micronaut = "4.1.1"
+groovy = "4.0.13"
 spock = "2.3-groovy-4.0"
 
 managed-google-auth-library-oauth2http = "1.17.0"
@@ -26,10 +26,10 @@ zipkin-sender-stackdriver = "1.0.4"
 
 micronaut-logging = "1.0.0"
 micronaut-rxjava2 = "2.0.1"
-micronaut-serde = "2.0.0"
-micronaut-servlet = "4.0.2"
+micronaut-serde = "2.2.0"
+micronaut-servlet = "4.0.3"
 micronaut-tracing = "5.0.1"
-micronaut-test = "4.0.0"
+micronaut-test = "4.0.1"
 micronaut-discovery = "4.0.1"
 micronaut-validation = "4.0.1"
 
