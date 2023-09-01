@@ -1,7 +1,7 @@
 [versions]
 micronaut-docs = "2.0.0"
 micronaut = "4.1.3"
-groovy = "4.0.13"
+groovy = "4.0.14"
 spock = "2.3-groovy-4.0"
 
 managed-google-auth-library-oauth2http = "1.17.0"
