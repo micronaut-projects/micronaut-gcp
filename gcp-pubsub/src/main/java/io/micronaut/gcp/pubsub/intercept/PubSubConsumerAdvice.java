@@ -128,7 +128,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                         BoundExecutable executable = null;
                         try {
                             executable = binder.bind(method, binderRegistry, consumerState);
-                        } catch (Throwable ex) {
+                        } catch (Exception ex) {
                             handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState, autoAcknowledge));
                         }
                         executable.invoke(bean); // Discard result
@@ -146,7 +146,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                                 }
                             }
                         }
-                    } catch (Throwable e) {
+                    } catch (Exception e) {
                         handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState, autoAcknowledge));
                     }
                 };
