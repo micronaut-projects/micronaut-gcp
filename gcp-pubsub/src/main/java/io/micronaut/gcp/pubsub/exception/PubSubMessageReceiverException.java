@@ -27,16 +27,32 @@ public class PubSubMessageReceiverException extends MessageListenerException {
     private final PubSubConsumerState state;
     private final Object listener;
 
+    private boolean autoAcknowledge = true;
+
     public PubSubMessageReceiverException(String message, Object bean, PubSubConsumerState state) {
         super(message);
         this.state = state;
         this.listener = bean;
     }
 
+    public PubSubMessageReceiverException(String message, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
+        super(message);
+        this.state = state;
+        this.listener = bean;
+        this.autoAcknowledge = autoAcknowledge;
+    }
+
     public PubSubMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state) {
         super(message, cause);
         this.state = state;
         this.listener = bean;
+    }
+
+    public PubSubMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
+        super(message, cause);
+        this.state = state;
+        this.listener = bean;
+        this.autoAcknowledge = autoAcknowledge;
     }
 
     /**
@@ -53,5 +69,13 @@ public class PubSubMessageReceiverException extends MessageListenerException {
      */
     public PubSubConsumerState getState() {
         return state;
+    }
+
+    /**
+     *
+     * @return whether the subscription is set to automatically acknowledge messages after processing
+     */
+    public boolean isAutoAcknowledge() {
+        return autoAcknowledge;
     }
 }
