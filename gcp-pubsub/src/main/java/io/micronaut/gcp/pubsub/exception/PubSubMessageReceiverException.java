@@ -27,12 +27,13 @@ public class PubSubMessageReceiverException extends MessageListenerException {
     private final PubSubConsumerState state;
     private final Object listener;
 
-    private boolean autoAcknowledge = true;
+    private final boolean autoAcknowledge;
 
     public PubSubMessageReceiverException(String message, Object bean, PubSubConsumerState state) {
         super(message);
         this.state = state;
         this.listener = bean;
+        this.autoAcknowledge = false;
     }
 
     public PubSubMessageReceiverException(String message, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
@@ -46,6 +47,7 @@ public class PubSubMessageReceiverException extends MessageListenerException {
         super(message, cause);
         this.state = state;
         this.listener = bean;
+        this.autoAcknowledge = false;
     }
 
     public PubSubMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
