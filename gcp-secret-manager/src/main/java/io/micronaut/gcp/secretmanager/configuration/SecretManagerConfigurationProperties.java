@@ -35,6 +35,7 @@ public class SecretManagerConfigurationProperties {
 
     private Set<String> customConfigs = new LinkedHashSet<>();
     private Set<String> keys = new HashSet<>();
+    private boolean defaultConfigEnabled = true;
 
     /**
      *
@@ -66,5 +67,23 @@ public class SecretManagerConfigurationProperties {
      */
     public void setKeys(Set<String> keys) {
         this.keys = keys;
+    }
+
+    /**
+     *
+     * @return Whether to load the default config files.
+     * @since 6.1.0
+     */
+    public boolean isDefaultConfigEnabled() {
+        return defaultConfigEnabled;
+    }
+
+    /**
+     *
+     * @param defaultConfigEnabled Whether to load the default config files.
+     * @since 6.1.0
+     */
+    public void setDefaultConfigEnabled(boolean defaultConfigEnabled) {
+        this.defaultConfigEnabled = defaultConfigEnabled;
     }
 }

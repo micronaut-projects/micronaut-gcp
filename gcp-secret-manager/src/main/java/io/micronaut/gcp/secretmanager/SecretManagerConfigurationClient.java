@@ -102,18 +102,19 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
      * @return a map of all possible combinations of files with their position to be queried. For each active environment.
      */
     private Map<Integer, String> configCandidates(Environment environment) {
-        Optional<String> applicationName = environment.getProperty("micronaut.application.name", String.class);
-        Set<String> activeEnv = environment.getActiveNames();
         Map<Integer, String> candidates = new HashMap<>();
-
-        candidates.put(EnvironmentPropertySource.POSITION + 101, "application");
-        applicationName.ifPresent(s -> candidates.put(EnvironmentPropertySource.POSITION + 102, s));
-
         int priority = EnvironmentPropertySource.POSITION + 150;
-        for (String e : activeEnv) {
-            candidates.put(++priority, "application_" + e);
-            if (applicationName.isPresent()) {
-                candidates.put(++priority, applicationName.get() + "_" + e);
+
+        if (configurationProperties.isDefaultConfigEnabled()) {
+            Optional<String> applicationName = environment.getProperty("micronaut.application.name", String.class);
+            candidates.put(EnvironmentPropertySource.POSITION + 101, "application");
+            applicationName.ifPresent(s -> candidates.put(EnvironmentPropertySource.POSITION + 102, s));
+
+            for (String e : environment.getActiveNames()) {
+                candidates.put(++priority, "application_" + e);
+                if (applicationName.isPresent()) {
+                    candidates.put(++priority, applicationName.get() + "_" + e);
+                }
             }
         }
 
