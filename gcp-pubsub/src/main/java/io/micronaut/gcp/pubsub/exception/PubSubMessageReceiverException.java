@@ -29,6 +29,19 @@ public class PubSubMessageReceiverException extends MessageListenerException {
 
     private final boolean autoAcknowledge;
 
+    /**
+     * Constructor for PubSubMessageReceiverException.
+     *
+     * @deprecated
+     * This exception is expected to only ever be created internally by the framework, and this form is no longer used.
+     * <p> {@link #PubSubMessageReceiverException(String, Object, PubSubConsumerState, boolean)} is now used instead. Any outside appropriate usage of
+     * this class (such as in exception handler tests) should be updated accordingly.
+     *
+     * @param message the exception message
+     * @param bean the bean with the targeted {@link io.micronaut.gcp.pubsub.annotation.Subscription} method
+     * @param state the consumer state at the time of message reception
+     */
+    @Deprecated(since = "5.1.0")
     public PubSubMessageReceiverException(String message, Object bean, PubSubConsumerState state) {
         super(message);
         this.state = state;
@@ -36,6 +49,18 @@ public class PubSubMessageReceiverException extends MessageListenerException {
         this.autoAcknowledge = false;
     }
 
+    /**
+     * Constructor for PubSubMessageReceiverException.
+     *
+     * <p>This exception is expected to only ever be created internally by the framework.
+     *
+     * @param message the exception message
+     * @param bean the bean with the targeted {@link io.micronaut.gcp.pubsub.annotation.Subscription} method
+     * @param state the consumer state at the time of message reception
+     * @param autoAcknowledge whether the targeted {@link io.micronaut.gcp.pubsub.annotation.Subscription} method is set for auto acknowledgement.
+     *                        NOTE - custom exception handlers are responsible for handling acknowledgement on their own, regardless of the value
+     *                        of this property
+     */
     public PubSubMessageReceiverException(String message, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
         super(message);
         this.state = state;
@@ -43,6 +68,21 @@ public class PubSubMessageReceiverException extends MessageListenerException {
         this.autoAcknowledge = autoAcknowledge;
     }
 
+    /**
+     * Constructor for PubSubMessageReceiverException.
+     *
+     * @deprecated
+     * This exception is expected to only ever be created internally by the framework, and this form is no longer used.
+     *
+     * <p>{@link #PubSubMessageReceiverException(String, Throwable, Object, PubSubConsumerState, boolean)} is now used instead. Any outside appropriate usage of
+     * this class (such as in exception handler tests) should be updated accordingly.
+     *
+     * @param message the exception message
+     * @param cause the exception cause
+     * @param bean the bean with the targeted {@link io.micronaut.gcp.pubsub.annotation.Subscription} method
+     * @param state the consumer state at the time of message reception
+     */
+    @Deprecated(since = "5.1.0")
     public PubSubMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state) {
         super(message, cause);
         this.state = state;
@@ -50,6 +90,19 @@ public class PubSubMessageReceiverException extends MessageListenerException {
         this.autoAcknowledge = false;
     }
 
+    /**
+     * Constructor for PubSubMessageReceiverException.
+     *
+     * <p>This exception is expected to only ever be created internally by the framework.
+     *
+     * @param message the exception message
+     * @param cause the exception cause
+     * @param bean the bean with the targeted {@link io.micronaut.gcp.pubsub.annotation.Subscription} method
+     * @param state the consumer state at the time of message reception
+     * @param autoAcknowledge whether the targeted {@link io.micronaut.gcp.pubsub.annotation.Subscription} method is set for auto acknowledgement.
+     *                        NOTE - custom exception handlers are responsible for handling acknowledgement on their own, regardless of the value
+     *                        of this property
+     */
     public PubSubMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
         super(message, cause);
         this.state = state;

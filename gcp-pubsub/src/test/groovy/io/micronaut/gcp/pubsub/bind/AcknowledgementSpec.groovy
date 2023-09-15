@@ -128,6 +128,16 @@ class AcknowledgementSpec extends AbstractConsumerSpec {
             !mockPubSubEngine.acknowledgements.containsKey(msg)
         }
     }
+
+    void "backwards-compatible behavior of auto acknowledge is retained for user tests"() {
+        when:
+        PubSubMessageReceiverException ex1 = new PubSubMessageReceiverException("test message 1", listener, null)
+        PubSubMessageReceiverException ex2 = new PubSubMessageReceiverException("test message 2", new IllegalStateException(), listener, null)
+
+        then:
+        !ex1.isAutoAcknowledge()
+        !ex2.isAutoAcknowledge()
+    }
 }
 
 @PubSubClient
