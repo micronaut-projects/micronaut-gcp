@@ -32,10 +32,11 @@ import java.util.Set;
 @BootstrapContextCompatible
 public class SecretManagerConfigurationProperties {
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".secret-manager";
+    private static final boolean DEFAULT_DEFAULT_CONFIG_ENABLED = true;
 
     private Set<String> customConfigs = new LinkedHashSet<>();
     private Set<String> keys = new HashSet<>();
-    private boolean defaultConfigEnabled = true;
+    private boolean defaultConfigEnabled = DEFAULT_DEFAULT_CONFIG_ENABLED;
 
     /**
      *
@@ -70,7 +71,7 @@ public class SecretManagerConfigurationProperties {
     }
 
     /**
-     *
+     * Whether to load the default config files. Default value: {@value #DEFAULT_DEFAULT_CONFIG_ENABLED}.
      * @return Whether to load the default config files.
      * @since 6.1.0
      */
