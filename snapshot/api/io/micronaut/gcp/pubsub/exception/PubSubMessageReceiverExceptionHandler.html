@@ -31,6 +31,7 @@ loadScripts(document, 'script');</script>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
 <li><a href="../../../../../help-doc.html#class">Help</a></li>
 </ul>
@@ -79,7 +80,11 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">PubSubMessageReceiverExceptionHandler</span><span class="extends-implements">
 extends io.micronaut.core.exceptions.ExceptionHandler&lt;<a href="PubSubMessageReceiverException.html" title="class in io.micronaut.gcp.pubsub.exception">PubSubMessageReceiverException</a>&gt;</span></div>
 <div class="block">Marker interface that <a href="../annotation/PubSubListener.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation"><code>PubSubListener</code></a> beans can implement
- to handle exceptions.</div>
+ to handle exceptions.
+
+ Implementations of this interface are responsible for deciding whether to ack/nack the message and should do so
+ via the supplied <code>AckReplyConsumer</code> that can be retrieved via the exception's
+ <a href="../bind/PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind"><code>PubSubConsumerState</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>2.0.0</dd>
