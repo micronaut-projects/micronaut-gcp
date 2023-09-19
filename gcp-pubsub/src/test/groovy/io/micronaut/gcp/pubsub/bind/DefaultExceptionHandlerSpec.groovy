@@ -74,6 +74,8 @@ class DefaultExceptionHandlerSpec extends AbstractConsumerSpec {
         }
     }
 
+
+
     @PubSubClient
     @Requires(property = "spec.name", value = "DefaultExceptionHandlerSpec")
     static interface SimpleClient {

@@ -12,6 +12,11 @@ import java.util.stream.Collectors
 @Singleton
 class MockPubSubEngine implements AutoCloseable {
 
+
+    public final Map<PubsubMessage, String> acknowledgements = new ConcurrentHashMap<>();
+    public static final String ACK = "ack";
+    public static final String NACK = "nack";
+
     private final List<PublisherMessage> messages = new ArrayList<>(100);
     private final Map<String, MessageReceiver> receivers = new ConcurrentHashMap<>();
     private Worker worker = new Worker();
@@ -61,12 +66,12 @@ class MockPubSubEngine implements AutoCloseable {
                             entry.getValue().receiveMessage(availableMessage.message, new AckReplyConsumer() {
                                 @Override
                                 public void ack() {
-
+                                    acknowledgements.put(availableMessage.message, ACK)
                                 }
 
                                 @Override
                                 public void nack() {
-
+                                    acknowledgements.put(availableMessage.message, NACK)
                                 }
                             });
                             availableMessage.published = true;

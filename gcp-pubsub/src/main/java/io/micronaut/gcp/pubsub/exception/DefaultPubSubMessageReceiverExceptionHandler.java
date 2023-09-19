@@ -24,8 +24,13 @@ import jakarta.inject.Singleton;
 /**
  * Handles any exception on beans of type {@link io.micronaut.gcp.pubsub.annotation.PubSubListener} that do not
  * implement {@link PubSubMessageReceiverExceptionHandler} interface.
- * Only logs the error. Messages will not be acked and will be redelivered for as long the subscription configuration
- * is set for message retries.
+ * <p>
+ * Logs the error, and explicitly sends a nack signal (if the targeted {@link io.micronaut.gcp.pubsub.annotation.Subscription} has not declared an
+ * {@link io.micronaut.messaging.Acknowledgement} parameter to indicate manually handled acknowledgement) so that PubSub will immediately process the
+ * failure and attempt re-delivery if the subscription is so configured.
+ * <p>
+ * For {@link io.micronaut.gcp.pubsub.annotation.Subscription} methods that do manually handle acknowledgement, the user should provide a custom
+ * implementation of {@link PubSubMessageReceiverExceptionHandler}.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
@@ -39,5 +44,8 @@ public class DefaultPubSubMessageReceiverExceptionHandler implements PubSubMessa
     @Override
     public void handle(PubSubMessageReceiverException exception) {
         logger.error(String.format("Error processing message on bean %s listening for subscription: %s", exception.getListener().getClass().getName(), exception.getState().getSubscriptionName()), exception);
+        if (exception.isAutoAcknowledge()) {
+            exception.getState().getAckReplyConsumer().nack();
+        }
     }
 }

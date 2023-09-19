@@ -20,6 +20,11 @@ import io.micronaut.core.exceptions.ExceptionHandler;
 /**
  * Marker interface that {@link io.micronaut.gcp.pubsub.annotation.PubSubListener} beans can implement
  * to handle exceptions.
+ *
+ * Implementations of this interface are responsible for deciding whether to ack/nack the message and should do so
+ * via the supplied {@link com.google.cloud.pubsub.v1.AckReplyConsumer} that can be retrieved via the exception's
+ * {@link io.micronaut.gcp.pubsub.bind.PubSubConsumerState}.
+ *
  * @author Vinicius Carvalho
  * @since 2.0.0
  */

@@ -61,7 +61,7 @@ import java.util.Optional;
  * and invoke methods annotated by @{@link io.micronaut.gcp.pubsub.annotation.Subscription}.
  * <p>
  * There can be only one subscriber for any given subscription (in order to avoid issues with message
- * Ack control). Having more than one method using the same subscription raises a {@link io.micronaut.gcp.pubsub.exception.PubSubListenerException}.
+ * acknowledgement control). Having more than one method using the same subscription raises a {@link io.micronaut.gcp.pubsub.exception.PubSubListenerException}.
  *
  * @author Vinicius Carvalho
  * @since 2.0.0
@@ -123,15 +123,16 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
 
                     PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer,
                             projectSubscriptionName, contentType);
+                    boolean autoAcknowledge = !hasAckArg;
                     try {
                         BoundExecutable executable = null;
                         try {
                             executable = binder.bind(method, binderRegistry, consumerState);
                         } catch (Exception ex) {
-                            handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState));
+                            handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState, autoAcknowledge));
                         }
                         executable.invoke(bean); // Discard result
-                        if (!hasAckArg) { // if manual ack is not specified we auto ack message after method execution
+                        if (autoAcknowledge) { // if manual ack is not specified we auto ack message after method execution
                             pubSubAcknowledgement.ack();
                         } else {
                             Optional<Object> boundAck = Arrays
@@ -146,7 +147,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                             }
                         }
                     } catch (Exception e) {
-                        handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState));
+                        handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState, autoAcknowledge));
                     }
                 };
                 try {
@@ -154,7 +155,6 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                 } catch (Exception e) {
                     throw new PubSubListenerException("Failed to create subscriber", e);
                 }
-
             }
         }
 
