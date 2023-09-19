@@ -71,7 +71,7 @@ public class SecretManagerConfigurationProperties {
     }
 
     /**
-     * Whether to load the default config files. Default value: {@value #DEFAULT_DEFAULT_CONFIG_ENABLED}.
+     * Whether to load the default config files (`application`, `application_${env}`, `[APPLICATION_NAME], `[APPLICATION_NAME]_${env}`). Default value: {@value #DEFAULT_DEFAULT_CONFIG_ENABLED}.
      * @return Whether to load the default config files.
      * @since 6.1.0
      */
