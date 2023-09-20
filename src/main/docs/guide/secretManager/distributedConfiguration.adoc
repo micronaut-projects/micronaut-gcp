@@ -42,6 +42,23 @@ The following table displays the possible secrets that are fetched by default:
 Internally the framework will try to read the files (that lack extensions) on the following order: `yaml`, `json`, `properties`.
 The first PropertySourceLoader that succeeds reading the contents of the secrets interrupts the chain.
 
+=== Avoid loading default config files
+
+If, for some reason, you don't want to fetch these default config files, you can set `gcp.secret-manager.default-config-enabled` to `false`:
+
+.bootstrap configuration
+[configuration]
+----
+micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+        default-config-enabled: false
+----
+
 === Loading non default config files
 
 It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.

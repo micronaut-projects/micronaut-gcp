@@ -20,9 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ServiceLoader;
-import java.util.Set;
 
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
@@ -58,6 +56,9 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
     private static final List<PropertySourceLoader> READERS = ServiceLoader.load(PropertySourceLoader.class)
             .stream().map(ServiceLoader.Provider::get).toList();
+    private static final String UNDERSCORE = "_";
+    private static final String APPLICATION = "application";
+    private static final String MICRONAUT_APPLICATION_NAME = "micronaut.application.name";
     private final SecretManagerClient secretManagerClient;
     private final SecretManagerConfigurationProperties configurationProperties;
 
@@ -102,18 +103,20 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
      * @return a map of all possible combinations of files with their position to be queried. For each active environment.
      */
     private Map<Integer, String> configCandidates(Environment environment) {
-        Optional<String> applicationName = environment.getProperty("micronaut.application.name", String.class);
-        Set<String> activeEnv = environment.getActiveNames();
         Map<Integer, String> candidates = new HashMap<>();
-
-        candidates.put(EnvironmentPropertySource.POSITION + 101, "application");
-        applicationName.ifPresent(s -> candidates.put(EnvironmentPropertySource.POSITION + 102, s));
-
         int priority = EnvironmentPropertySource.POSITION + 150;
-        for (String e : activeEnv) {
-            candidates.put(++priority, "application_" + e);
-            if (applicationName.isPresent()) {
-                candidates.put(++priority, applicationName.get() + "_" + e);
+
+        if (configurationProperties.isDefaultConfigEnabled()) {
+            String applicationName = environment.getProperty(MICRONAUT_APPLICATION_NAME, String.class).orElse(null);
+            candidates.put(EnvironmentPropertySource.POSITION + 101, APPLICATION);
+            if (applicationName != null) {
+                candidates.put(EnvironmentPropertySource.POSITION + 102, applicationName);
+            }
+            for (String e : environment.getActiveNames()) {
+                candidates.put(++priority, APPLICATION + UNDERSCORE + e);
+                if (applicationName != null) {
+                    candidates.put(++priority, applicationName + UNDERSCORE + e);
+                }
             }
         }
 
