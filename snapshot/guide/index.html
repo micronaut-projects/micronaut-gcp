@@ -4353,6 +4353,103 @@ The first PropertySourceLoader that succeeds reading the contents of the secrets
 </div>
 </div>
 <div class="sect2">
+<h3 id="_avoid_loading_default_config_files">Avoid loading default config files</h3>
+<div class="paragraph">
+<p>If, for some reason, you don&#8217;t want to fetch these default config files, you can set <code>gcp.secret-manager.default-config-enabled</code> to <code>false</code>:</p>
+</div>
+<div class="openblock">
+<div class="title">bootstrap configuration</div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
+micronaut.config-client.enabled=true
+gcp.secret-manager.default-config-enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+        default-config-enabled: false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.application]
+    name="hello-world"
+  [micronaut.config-client]
+    enabled=true
+[gcp]
+  [gcp.secret-manager]
+    default-config-enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  application {
+    name = "hello-world"
+  }
+  configClient {
+    enabled = true
+  }
+}
+gcp {
+  secretManager {
+    defaultConfigEnabled = false
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    application {
+      name = "hello-world"
+    }
+    config-client {
+      enabled = true
+    }
+  }
+  gcp {
+    secret-manager {
+      default-config-enabled = false
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "application": {
+      "name": "hello-world"
+    },
+    "config-client": {
+      "enabled": true
+    }
+  },
+  "gcp": {
+    "secret-manager": {
+      "default-config-enabled": false
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_loading_non_default_config_files">Loading non default config files</h3>
 <div class="paragraph">
 <p>It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.
