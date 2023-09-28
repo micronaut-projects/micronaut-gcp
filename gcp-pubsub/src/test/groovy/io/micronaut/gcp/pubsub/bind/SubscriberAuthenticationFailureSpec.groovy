@@ -1,6 +1,5 @@
 package io.micronaut.gcp.pubsub.bind
 
-
 import com.google.auth.oauth2.GoogleCredentials
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
@@ -21,7 +20,8 @@ import spock.util.concurrent.PollingConditions
 
 import java.security.PrivateKey
 
-import static io.micronaut.gcp.credentials.fixture.ServiceAccountCredentialsTestHelper.*
+import static io.micronaut.gcp.credentials.fixture.ServiceAccountCredentialsTestHelper.encodeServiceCredentials
+import static io.micronaut.gcp.credentials.fixture.ServiceAccountCredentialsTestHelper.generatePrivateKey
 
 class SubscriberAuthenticationFailureSpec extends Specification {
 
@@ -39,14 +39,6 @@ class SubscriberAuthenticationFailureSpec extends Specification {
         capturer.start()
     }
 
-    def cleanup() {
-        GoogleCredentials gc = GoogleCredentials.getApplicationDefault()
-        ReflectionUtils.getFieldValue(GoogleCredentials.class, "defaultCredentialsProvider", gc)
-                .ifPresent {
-                    ReflectionUtils.setField(it.getClass(), "cachedCredentials", it, null)
-                }
-    }
-
     void "authentication failure on subscription should be logged as a warning"() {
         given:
         PrivateKey pk = generatePrivateKey()
@@ -62,9 +54,11 @@ class SubscriberAuthenticationFailureSpec extends Specification {
         ])
 
         when:
+        def gc = ctx.getBean(GoogleCredentials)
         listener = ctx.getBean(ServiceAccountTestListener)
 
         then:
+        gc != null
         listener != null
         conditions.eventually {
             captured.messages.any {
@@ -75,6 +69,10 @@ class SubscriberAuthenticationFailureSpec extends Specification {
         }
 
         cleanup:
+        ReflectionUtils.getFieldValue(GoogleCredentials.class, "defaultCredentialsProvider", gc)
+                .ifPresent {
+                    ReflectionUtils.setField(it.getClass(), "cachedCredentials", it, null)
+                }
         ctx.close()
         gcp.close()
     }
