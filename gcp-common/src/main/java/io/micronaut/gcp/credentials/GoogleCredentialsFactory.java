@@ -21,13 +21,13 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.StringUtils;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.micronaut.core.annotation.NonNull;
-import jakarta.inject.Singleton;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -83,11 +83,11 @@ public class GoogleCredentialsFactory {
      * @return The {@link GoogleCredentials}
      * @throws IOException An exception if an error occurs
      */
-    @Requires(missingBeans = GoogleCredentials.class)
     @Requires(classes = com.google.auth.oauth2.GoogleCredentials.class)
     @Requires(property = GoogleCredentialsConfiguration.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
     @Primary
     @Singleton
+    @LogAuthenticationFailures
     protected GoogleCredentials defaultGoogleCredentials() throws IOException {
         final List<String> scopes = configuration.getScopes().stream()
                 .map(URI::toString).collect(Collectors.toList());

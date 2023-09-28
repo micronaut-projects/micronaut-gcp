@@ -23,6 +23,7 @@ jetty-servlet = "11.0.16"
 logback-json-classic = "0.1.5"
 testcontainers = "1.18.3"
 zipkin-sender-stackdriver = "1.0.4"
+system-stubs-core = "2.1.2"
 
 micronaut-logging = "1.0.0"
 micronaut-rxjava2 = "2.0.1"
@@ -73,6 +74,7 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic", version.ref = "logback-json-classic" }
 testcontainers-spock = { module = "org.testcontainers:spock", version.ref = "testcontainers" }
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
+system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 
 # Plugins
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
