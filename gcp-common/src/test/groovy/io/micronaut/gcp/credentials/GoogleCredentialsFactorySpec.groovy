@@ -45,11 +45,15 @@ class GoogleCredentialsFactorySpec extends Specification {
     }
 
     def cleanup() {
-        GoogleCredentials gc = GoogleCredentials.getApplicationDefault()
-        ReflectionUtils.getFieldValue(GoogleCredentials.class, "defaultCredentialsProvider", gc)
-                .ifPresent {
-                    ReflectionUtils.setField(it.getClass(), "cachedCredentials", it, null)
-                }
+        URL testCredentialsFile = this.getClass().getResource("/test-user-account/.config/gcloud/application_default_credentials.json")
+        EnvironmentVariables env = new EnvironmentVariables("GOOGLE_APPLICATION_CREDENTIALS", testCredentialsFile.getPath())
+        env.execute {
+            GoogleCredentials gc = GoogleCredentials.getApplicationDefault()
+            ReflectionUtils.getFieldValue(GoogleCredentials.class, "defaultCredentialsProvider", gc)
+                    .ifPresent {
+                        ReflectionUtils.setField(it.getClass(), "cachedCredentials", it, null)
+                    }
+        }
     }
 
     void "GoogleCredentials factory method can be disabled via configuration"() {
