@@ -54,9 +54,11 @@ public class ServiceAccountCredentialsTestHelper {
     }
 
     public static GenericJson buildServiceAccountJson(PrivateKey pk) throws IOException {
-        String base64PK = Base64.getEncoder().encodeToString(pk.getEncoded());
-        String privateKeyTemplate = "-----BEGIN PRIVATE KEY-----\nREPLACE_ME\n-----END PRIVATE KEY-----\n";
-        String jsonPrivateKey = privateKeyTemplate.replaceFirst("REPLACE_ME", base64PK);
+        String jsonPrivateKey = """
+            -----BEGIN PRIVATE KEY-----
+            %s
+            -----END PRIVATE KEY-----
+            """.formatted(Base64.getEncoder().encodeToString(pk.getEncoded()));
 
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
