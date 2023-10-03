@@ -83,7 +83,7 @@ public class GoogleCredentialsFactory {
      * @return The {@link GoogleCredentials}
      * @throws IOException An exception if an error occurs
      */
-    @Requires(classes = com.google.auth.oauth2.GoogleCredentials.class)
+    @Requires(classes = GoogleCredentials.class)
     @Requires(property = GoogleCredentialsConfiguration.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
     @Primary
     @Singleton
