@@ -26,7 +26,7 @@ zipkin-sender-stackdriver = "1.0.4"
 
 micronaut-logging = "1.0.0"
 micronaut-rxjava2 = "2.0.1"
-micronaut-serde = "2.2.4"
+micronaut-serde = "2.2.5"
 micronaut-servlet = "4.0.3"
 micronaut-tracing = "5.0.2"
 micronaut-test = "4.0.1"
