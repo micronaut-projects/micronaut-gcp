@@ -15,6 +15,7 @@ dependencies {
     testRuntimeOnly(mn.micronaut.discovery.core)
     testImplementation(mnRxjava2.micronaut.rxjava2)
     testImplementation libs.testcontainers.spock
+    testImplementation(mn.micronaut.http.server.netty)
 
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)

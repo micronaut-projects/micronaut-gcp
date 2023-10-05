@@ -46,6 +46,7 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Qualifier;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -53,6 +54,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -76,6 +78,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
     private final PubSubBinderRegistry binderRegistry;
     private final PubSubMessageReceiverExceptionHandler exceptionHandler;
+    private final AtomicBoolean shutDownMode = new AtomicBoolean(false);
 
     public PubSubConsumerAdvice(BeanContext beanContext,
                                 ConversionService conversionService,
@@ -115,6 +118,12 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                 String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse(MediaType.APPLICATION_JSON);
                 String configuration = subscriptionAnnotation.stringValue("configuration").orElse("");
                 MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
+
+                    if (pubSubConfigurationProperties.isNackOnShutdown() && shutDownMode.get()) {
+                        ackReplyConsumer.nack();
+                        return;
+                    }
+
                     String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
                     String contentType = Optional.of(messageContentType)
                             .filter(StringUtils::isNotEmpty)
@@ -158,6 +167,11 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
             }
         }
 
+    }
+
+    @PreDestroy
+    public final void shutDown() {
+        shutDownMode.set(true);
     }
 
     private void handleException(PubSubMessageReceiverException ex) {

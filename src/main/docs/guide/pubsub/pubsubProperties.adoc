@@ -8,4 +8,6 @@ You can override it at PubSubConfigurationProperties to make a default value for
 
 Creating a custom executor is presented on the section <<executors, Configuring Thread pools >>.
 
+When the application is shutting down, `stopAsync()` is invoked on all of the running GCP library link:https://cloud.google.com/java/docs/reference/google-cloud-pubsub/latest/com.google.cloud.pubsub.v1.Subscriber[Subscriber] instances. The subscribers will attempt to fully process all pending in-memory messages before releasing the configured executor threads. By default, the framework will in turn continue to invoke the bound subscription methods on all <<pullConsumer, @PubSubListener>> beans until all messages have been processed. To discontinue processing of messages and enable faster shutdown, the `gcp.pubsub.nack-on-shutdown` property can be set to `true`, which will cause all pending unprocessed messages that have not yet reached a subscriber method to be eagerly nacked, which will cause PubSub to redeliver them according to each subscription's configuration.
+
 include::{includedir}configurationProperties/io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties.adoc[]
