@@ -1,6 +1,6 @@
 plugins {
     id("io.micronaut.build.internal.gcp-module")
-    id 'io.micronaut.build.internal.test-fixtures'
+    id("java-test-fixtures")
 }
 
 dependencies {
