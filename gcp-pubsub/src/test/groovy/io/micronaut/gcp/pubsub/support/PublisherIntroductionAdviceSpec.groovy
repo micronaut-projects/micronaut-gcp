@@ -15,7 +15,7 @@ import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.messaging.annotation.MessageHeaders
 import io.micronaut.serde.annotation.Serdeable
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import jakarta.inject.Inject
 
 @MicronautTest

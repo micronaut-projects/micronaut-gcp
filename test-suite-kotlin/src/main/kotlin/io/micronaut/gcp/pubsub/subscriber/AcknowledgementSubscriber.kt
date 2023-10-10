@@ -20,15 +20,29 @@ import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.messaging.Acknowledgement
+import reactor.core.publisher.Mono
+
 // end::imports[]
 
 // tag::clazz[]
 @PubSubListener
-class AcknowledgementSubscriber {
+class AcknowledgementSubscriber (private val messageProcessor: MessageProcessor) {
 
 	@Subscription("animals")
-	fun onMessage(animal: Animal, acknowledgement: Acknowledgement) { // <1>
-
+	fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
+        val processed = messageProcessor.handleAnimalMessage(animal).block()
+        if (processed == true) {
+            acknowledgement.ack()
+        } else {
+            acknowledgement.nack()
+        }
 	}
+
+    @Subscription("animals-async")
+    fun onMessageAsync(message: Mono<Animal>, acknowledgement: Acknowledgement): Mono<Boolean> {
+        return message.flatMap { animal -> messageProcessor.handleAnimalMessage(animal) }
+            .doOnSuccess { acknowledgement.ack() }
+            .doOnError { acknowledgement.nack() }
+    }
 }
 // tag::clazz[]

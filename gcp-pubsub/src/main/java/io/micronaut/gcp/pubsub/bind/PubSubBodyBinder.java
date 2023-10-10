@@ -16,15 +16,19 @@
 package io.micronaut.gcp.pubsub.bind;
 
 import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.convert.ArgumentConversionContext;
+import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.convert.MutableConversionService;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
-
 import io.micronaut.messaging.annotation.MessageBody;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.util.Optional;
 
 /**
@@ -37,9 +41,34 @@ import java.util.Optional;
 @Singleton
 public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBody> {
 
+    private final ConversionService conversionService;
+
     private final PubSubMessageSerDesRegistry serDesRegistry;
 
+    /**
+     * Constructs a PubSub body binder instance.
+     *
+     * @deprecated
+     * An instance of {@link ConversionService} is needed for binding the full range of supported
+     * types (including reactive) to PubSub subscriber methods.
+     *
+     * @param serDesRegistry the SerDe registry
+     */
+    @Deprecated(since = "5.2.0")
     public PubSubBodyBinder(PubSubMessageSerDesRegistry serDesRegistry) {
+        this.conversionService = MutableConversionService.create();
+        this.serDesRegistry = serDesRegistry;
+    }
+
+    /**
+     * Constructs a PubSub body binder instance.
+     *
+     * @param conversionService the conversion service
+     * @param serDesRegistry the SerDe registry
+     */
+    @Inject
+    public PubSubBodyBinder(ConversionService conversionService, PubSubMessageSerDesRegistry serDesRegistry) {
+        this.conversionService = conversionService;
         this.serDesRegistry = serDesRegistry;
     }
 
@@ -50,7 +79,10 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBo
 
     @Override
     public BindingResult<Object> bind(ArgumentConversionContext<Object> context, PubSubConsumerState state) {
-        Argument<Object> bodyType = context.getArgument();
+        boolean isPublisher = Publishers.isConvertibleToPublisher(context.getArgument().getType());
+        Argument<?> bodyType =  isPublisher ?
+            context.getArgument().getFirstTypeVariable().orElseThrow(() -> new PubSubListenerException("Could not determine publisher's argument type for PubSub message deserialization")) :
+            context.getArgument();
         Object result = null;
         if (bodyType.getType().equals(byte[].class)) {
             result = state.getPubsubMessage().getData().toByteArray();
@@ -64,7 +96,8 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBo
                     .orElseThrow(() -> new PubSubListenerException("Could not locate a valid SerDes implementation for type: " + state.getContentType()));
             result = serDes.deserialize(state.getPubsubMessage().getData().toByteArray(), bodyType);
         }
-        Object finalResult = result;
-        return () -> Optional.ofNullable(finalResult);
+
+        Optional<Object> finalResult = conversionService.convert(result, context);
+        return () -> finalResult;
     }
 }

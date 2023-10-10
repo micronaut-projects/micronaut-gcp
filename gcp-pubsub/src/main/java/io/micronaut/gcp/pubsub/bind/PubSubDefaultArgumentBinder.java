@@ -20,7 +20,7 @@ import io.micronaut.core.convert.ArgumentConversionContext;
 import jakarta.inject.Singleton;
 
 /**
- * Default body binder of PubSub consumers. If no @{@link io.micronaut.messaging.annotation.Body} arguments are annotated.
+ * Default body binder of PubSub consumers. If no @{@link io.micronaut.messaging.annotation.MessageBody} arguments are annotated.
  * Delegates to {@link PubSubBodyBinder}
  * @author Vinicius Carvalho
  */

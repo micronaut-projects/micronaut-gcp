@@ -16,37 +16,42 @@
 package io.micronaut.gcp.pubsub.subscriber;
 //tag::imports[]
 
+import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
-import io.micronaut.messaging.Acknowledgement;
 import reactor.core.publisher.Mono;
 // end::imports[]
 
 // tag::clazz[]
 @PubSubListener
-public class AcknowledgementSubscriber {
+public class ReactiveSubscriber {
 
     private final MessageProcessor messageProcessor;
 
-    public AcknowledgementSubscriber(MessageProcessor messageProcessor) {
+    public ReactiveSubscriber(MessageProcessor messageProcessor) {
         this.messageProcessor = messageProcessor;
     }
 
-    @Subscription("animals")
-    public void onMessage(Animal animal, Acknowledgement acknowledgement) {
-        if (Boolean.TRUE.equals(messageProcessor.handleAnimalMessage(animal).block())) {
-            acknowledgement.ack();
-        } else {
-            acknowledgement.nack();
-        }
+    @Subscription("raw-subscription") // <1>
+    Mono<Object> receiveRaw(Mono<byte[]> data, @MessageId String id) {
+        return data.flatMap(messageProcessor::handleByteArrayMessage);
     }
 
-    @Subscription("animals-async")
-    public Mono<Boolean> onReactiveMessage(Mono<Animal> animal, Acknowledgement acknowledgement) {
-        return animal.flatMap(messageProcessor::handleAnimalMessage)
-            .doOnSuccess(result -> acknowledgement.ack()).doOnError(ex -> acknowledgement.nack());
+    @Subscription("native-subscription") // <2>
+    Mono<Object> receiveNative(Mono<PubsubMessage> message) {
+        return message.flatMap(messageProcessor::handlePubSubMessage);
     }
 
+    @Subscription("animals") // <3>
+    Mono<Object> receivePojo(Mono<Animal> animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage);
+    }
+
+    @Subscription(value = "animals-legacy", contentType = "application/xml") // <4>
+    Mono<Object> receiveXML(Mono<Animal> animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage);
+    }
 }
 // end::clazz[]

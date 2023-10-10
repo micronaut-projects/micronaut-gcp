@@ -13,21 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.subscriber;
-//tag::imports[]
+package io.micronaut.gcp.pubsub.subscriber
+
+
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.support.Animal;
-import io.micronaut.messaging.Acknowledgement;
+//tag::imports[]
+
+import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.support.Animal
+import io.micronaut.messaging.Acknowledgement
+
 // end::imports[]
 
 // tag::clazz[]
 @PubSubListener
 class AcknowledgementSubscriber {
 
-    @Subscription("animals")
-    void onMessage(Animal animal, Acknowledgement acknowledgement) { // <1>
+    private final MessageProcessor messageProcessor
 
+    AcknowledgementSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
+    @Subscription("animals")
+    void onMessage(Animal animal, Acknowledgement acknowledgement) {
+        messageProcessor.handleAnimalMessage(animal).block() ? acknowledgement.ack() : acknowledgement.nack()
     }
 
 }

@@ -1,0 +1,14 @@
+In addition to byte[], PubsubMessage, and POJOs you can also define listener methods that receive a Reactive type such as a Reactor reactor:Mono[] or a RxJava rx:Single[]. The same deserialization rules as above will be applied using the type parameter of the Reactive type.
+
+For the conversion to Reactive types to work correctly, you must add either the library https://micronaut-projects.github.io/micronaut-reactor/latest/guide/[Micronaut Reactor] or https://micronaut-projects.github.io/micronaut-rxjava3/latest/guide/[Micronaut RxJava 3] to your application's dependencies.
+
+For example, using Reactor:
+
+.Using Reactive Types
+snippet::io.micronaut.gcp.pubsub.subscriber.ReactiveSubscriber[tags="imports, clazz", source="main"]
+<1> Bytes are copied and wrapped in a `Mono`, SerDes is bypassed, message id injected for usage
+<2> SerDes is bypassed, `PubSubMessage` object is copied and wrapped in a `Mono`, no need to use `@MessageId`
+<3> The framework will try to deserialize this payload into `Mono<Animal>`. If no `Content-Type` header is found, will default to `application/json`
+<4> Uses a custom SerDes and the framework will find a api:serdes.PubSubMessageSerDes[] that can handle `application/xml` and then pass the deserialized payload as `Mono<Animal>`.
+
+Note that the above examples all return a `Mono<Object>` to allow for a fully non-blocking reactive message processing pipeline. When a `Publisher` is returned from a `@Subscription` method, it will be subscribed to by the framework and the message will not be auto-acknowledged until the `Publisher` completes successfully. If the `Publisher` completes with an error, the framework will `nack()` the message for re-delivery.
