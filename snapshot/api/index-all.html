@@ -170,6 +170,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The default metadata url value.</div>
 </dd>
+<dt><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html#DEFAULT_NACK_ON_SHUTDOWN" class="member-name-link">DEFAULT_NACK_ON_SHUTDOWN</a> - Static variable in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataConfiguration.html#DEFAULT_PROJECTMETADATAURL" class="member-name-link">DEFAULT_PROJECTMETADATAURL</a> - Static variable in class io.micronaut.discovery.cloud.gcp.<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataConfiguration.html" title="class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataConfiguration</a></dt>
 <dd>
 <div class="block">The default project metadata url value.</div>
@@ -419,7 +421,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.html#getPublisher()" class="member-name-link">getPublisher()</a> - Method in class io.micronaut.gcp.pubsub.support.<a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.html" title="class in io.micronaut.gcp.pubsub.support">PubSubPublisherState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html#getPublishingExecutor()" class="member-name-link">getPublishingExecutor()</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Publisher</code> instances.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html#getPubsubMessage()" class="member-name-link">getPubsubMessage()</a> - Method in class io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataConfiguration.html#getReadTimeout()" class="member-name-link">getReadTimeout()</a> - Method in class io.micronaut.discovery.cloud.gcp.<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataConfiguration.html" title="class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataConfiguration</a></dt>
@@ -469,7 +473,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/gcp/pubsub/bind/SubscriberFactoryConfig.html#getSubscriberConfiguration()" class="member-name-link">getSubscriberConfiguration()</a> - Method in class io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/SubscriberFactoryConfig.html" title="class in io.micronaut.gcp.pubsub.bind">SubscriberFactoryConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html#getSubscribingExecutor()" class="member-name-link">getSubscribingExecutor()</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Subscriber</code> instances.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html#getSubscriptionName()" class="member-name-link">getSubscriptionName()</a> - Method in class io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/bind/SubscriberFactoryConfig.html#getSubscriptionName()" class="member-name-link">getSubscriptionName()</a> - Method in class io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/SubscriberFactoryConfig.html" title="class in io.micronaut.gcp.pubsub.bind">SubscriberFactoryConfig</a></dt>
@@ -737,6 +743,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/logging/StackdriverJsonLayout.html#isIncludeTraceId()" class="member-name-link">isIncludeTraceId()</a> - Method in class io.micronaut.gcp.logging.<a href="io/micronaut/gcp/logging/StackdriverJsonLayout.html" title="class in io.micronaut.gcp.logging">StackdriverJsonLayout</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html#isNackOnShutdown()" class="member-name-link">isNackOnShutdown()</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></dt>
+<dd>
+<div class="block">Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/function/http/test/InvokerHttpServer.html#isRunning()" class="member-name-link">isRunning()</a> - Method in class io.micronaut.gcp.function.http.test.<a href="io/micronaut/gcp/function/http/test/InvokerHttpServer.html" title="class in io.micronaut.gcp.function.http.test">InvokerHttpServer</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -1209,6 +1219,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Default value (<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataConfiguration.html#DEFAULT_METADATAURL">"http://metadata.google.internal/computeMetadata/v1/project/"</a>).</div>
 </dd>
+<dt><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html#setNackOnShutdown(boolean)" class="member-name-link">setNackOnShutdown(boolean)</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html#setParallelPullCount(java.lang.Integer)" class="member-name-link">setParallelPullCount(Integer)</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">SubscriberConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/GoogleCloudConfiguration.html#setProjectId(java.lang.String)" class="member-name-link">setProjectId(String)</a> - Method in class io.micronaut.gcp.<a href="io/micronaut/gcp/GoogleCloudConfiguration.html" title="class in io.micronaut.gcp">GoogleCloudConfiguration</a></dt>
@@ -1243,6 +1255,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The JSON field name for the log level (severity).</div>
 </dd>
+<dt><a href="io/micronaut/gcp/pubsub/intercept/PubSubConsumerAdvice.html#shutDown()" class="member-name-link">shutDown()</a> - Method in class io.micronaut.gcp.pubsub.intercept.<a href="io/micronaut/gcp/pubsub/intercept/PubSubConsumerAdvice.html" title="class in io.micronaut.gcp.pubsub.intercept">PubSubConsumerAdvice</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/logging/StackdriverTraceConstants.html#SPAN_ID_ATTRIBUTE" class="member-name-link">SPAN_ID_ATTRIBUTE</a> - Static variable in interface io.micronaut.gcp.logging.<a href="io/micronaut/gcp/logging/StackdriverTraceConstants.html" title="interface in io.micronaut.gcp.logging">StackdriverTraceConstants</a></dt>
 <dd>
 <div class="block">The JSON field name for the span-id.</div>

@@ -98,9 +98,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#PREFIX" class="member-name-link">PREFIX</a></code></div>
+<div class="col-first even-row-color"><code>static final boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_NACK_ON_SHUTDOWN" class="member-name-link">DEFAULT_NACK_ON_SHUTDOWN</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#PREFIX" class="member-name-link">PREFIX</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -135,20 +138,32 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPublishingExecutor()" class="member-name-link">getPublishingExecutor</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Publisher</code> instances.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSubscribingExecutor()" class="member-name-link">getSubscribingExecutor</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Subscriber</code> instances.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTopicEndpoint()" class="member-name-link">getTopicEndpoint</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Which endpoint the <code>Publisher</code> should publish messages to.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setKeepAliveIntervalMinutes(int)" class="member-name-link">setKeepAliveIntervalMinutes</a><wbr>(int&nbsp;keepAliveIntervalMinutes)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isNackOnShutdown()" class="member-name-link">isNackOnShutdown</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setKeepAliveIntervalMinutes(int)" class="member-name-link">setKeepAliveIntervalMinutes</a><wbr>(int&nbsp;keepAliveIntervalMinutes)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">How often to ping the server to keep the channel alive.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNackOnShutdown(boolean)" class="member-name-link">setNackOnShutdown</a><wbr>(boolean&nbsp;nackOnShutdown)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPublishingExecutor(java.lang.String)" class="member-name-link">setPublishingExecutor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;publishingExecutor)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -189,6 +204,20 @@ loadScripts(document, 'script');</script>
 </dl>
 </section>
 </li>
+<li>
+<section class="detail" id="DEFAULT_NACK_ON_SHUTDOWN">
+<h3>DEFAULT_NACK_ON_SHUTDOWN</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">DEFAULT_NACK_ON_SHUTDOWN</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../../constant-values.html#io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties.DEFAULT_NACK_ON_SHUTDOWN">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -215,9 +244,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getPublishingExecutor()">
 <h3>getPublishingExecutor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getPublishingExecutor</span>()</div>
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Publisher</code> instances. Defaults to "scheduled".</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Publisher</code> instances. Default: "scheduled"</dd>
+<dd>the name of the publishing executor</dd>
 </dl>
 </section>
 </li>
@@ -235,10 +265,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getSubscribingExecutor()">
 <h3>getSubscribingExecutor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSubscribingExecutor</span>()</div>
+<div class="block">The name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Subscriber</code> instances. Defaults to "scheduled".</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the name of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" title="class or interface in java.util.concurrent" class="external-link"><code>ScheduledExecutorService</code></a> to be used by all <code>Subscriber</code> instances. Default: "scheduled"
- Defaults to "scheduled"</dd>
+<dd>the name of the subscribing executor</dd>
 </dl>
 </section>
 </li>
@@ -292,6 +322,31 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>topicEndpoint</code> - to be used by all <code>Publisher</code> instances. Default: "" (i.e. the global endpoint)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isNackOnShutdown()">
+<h3>isNackOnShutdown</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isNackOnShutdown</span>()</div>
+<div class="block">Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown. Defaults to <a href="#DEFAULT_NACK_ON_SHUTDOWN">false</a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>nack on shutdown configuration</dd>
+<dt>Since:</dt>
+<dd>5.2.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setNackOnShutdown(boolean)">
+<h3>setNackOnShutdown</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setNackOnShutdown</span><wbr><span class="parameters">(boolean&nbsp;nackOnShutdown)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>nackOnShutdown</code> - whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown.</dd>
+<dt>Since:</dt>
+<dd>5.2.0</dd>
 </dl>
 </section>
 </li>

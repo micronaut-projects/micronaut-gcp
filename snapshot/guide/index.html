@@ -1613,6 +1613,9 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 <div class="paragraph">
 <p>Creating a custom executor is presented on the section <a href="#executors">Configuring Thread pools </a>.</p>
 </div>
+<div class="paragraph">
+<p>When the application is shutting down, <code>stopAsync()</code> is invoked on all of the running GCP library <a href="https://cloud.google.com/java/docs/reference/google-cloud-pubsub/latest/com.google.cloud.pubsub.v1.Subscriber">Subscriber</a> instances. The subscribers will attempt to fully process all pending in-memory messages before releasing the configured executor threads. By default, the framework will in turn continue to invoke the bound subscription methods on all <a href="#pullConsumer">@PubSubListener</a> beans until all messages have been processed. To discontinue processing of messages and enable faster shutdown, the <code>gcp.pubsub.nack-on-shutdown</code> property can be set to <code>true</code>, which will cause all pending unprocessed messages that have not yet reached a subscriber method to be eagerly nacked, which will cause PubSub to redeliver them according to each subscription&#8217;s configuration.</p>
+</div>
 <a id="io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties" href="#io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html">PubSubConfigurationProperties</a></caption>
@@ -1632,12 +1635,12 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.publishing-executor</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances. Defaults to "scheduled".</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscribing-executor</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Subscriber} instances. Defaults to "scheduled".</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.keep-alive-interval-minutes</code></p></td>
@@ -1648,6 +1651,11 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.topic-endpoint</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Which endpoint the {@link com.google.cloud.pubsub.v1.Publisher} should publish messages to. Defaults to the global endpoint</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.nack-on-shutdown</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown. Defaults to false.</p></td>
 </tr>
 </tbody>
 </table>
