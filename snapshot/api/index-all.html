@@ -67,6 +67,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html#ATTRIBUTES" class="member-name-link">ATTRIBUTES</a> - Enum constant in enum class io.micronaut.discovery.cloud.gcp.<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html" title="enum class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataKeys</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/credentials/AuthenticationLoggingInterceptor.html" class="type-name-link" title="class in io.micronaut.gcp.credentials">AuthenticationLoggingInterceptor</a> - Class in <a href="io/micronaut/gcp/credentials/package-summary.html">io.micronaut.gcp.credentials</a></dt>
+<dd>
+<div class="block">An interceptor for managed instances of <code>GoogleCredentials</code> that logs certain types of
+ authentication errors that the GCP libraries handle silently as infinitely retryable events.</div>
+</dd>
+<dt><a href="io/micronaut/gcp/credentials/AuthenticationLoggingInterceptor.html#%3Cinit%3E()" class="member-name-link">AuthenticationLoggingInterceptor()</a> - Constructor for class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/AuthenticationLoggingInterceptor.html" title="class in io.micronaut.gcp.credentials">AuthenticationLoggingInterceptor</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
@@ -612,6 +619,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html#IMAGE" class="member-name-link">IMAGE</a> - Enum constant in enum class io.micronaut.discovery.cloud.gcp.<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html" title="enum class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataKeys</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/credentials/AuthenticationLoggingInterceptor.html#intercept(io.micronaut.aop.MethodInvocationContext)" class="member-name-link">intercept(MethodInvocationContext&lt;Object, Object&gt;)</a> - Method in class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/AuthenticationLoggingInterceptor.html" title="class in io.micronaut.gcp.credentials">AuthenticationLoggingInterceptor</a></dt>
+<dd>
+<div class="block">Intercepts the "getRequestMetadata" call and logs any retryable errors before allowing the GCP library to continue
+ its normal retry algorithm.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/pubsub/intercept/PubSubClientIntroductionAdvice.html#intercept(io.micronaut.aop.MethodInvocationContext)" class="member-name-link">intercept(MethodInvocationContext&lt;Object, Object&gt;)</a> - Method in class io.micronaut.gcp.pubsub.intercept.<a href="io/micronaut/gcp/pubsub/intercept/PubSubClientIntroductionAdvice.html" title="class in io.micronaut.gcp.pubsub.intercept">PubSubClientIntroductionAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/function/http/HttpFunction.html#invoke(com.google.cloud.functions.HttpRequest)" class="member-name-link">invoke(HttpRequest)</a> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
@@ -750,6 +762,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/function/http/HttpFunction.html#LOG" class="member-name-link">LOG</a> - Static variable in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/credentials/LogAuthenticationFailures.html" class="type-name-link" title="annotation interface in io.micronaut.gcp.credentials">LogAuthenticationFailures</a> - Annotation Interface in <a href="io/micronaut/gcp/credentials/package-summary.html">io.micronaut.gcp.credentials</a></dt>
+<dd>
+<div class="block">Annotation for applying authentication failure logging AOP advice to a managed instance of
+ <code>GoogleCredentials</code>.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
