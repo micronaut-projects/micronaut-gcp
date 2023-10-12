@@ -48,9 +48,8 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBo
     /**
      * Constructs a PubSub body binder instance.
      *
-     * @deprecated
-     * An instance of {@link ConversionService} is needed for binding the full range of supported
-     * types (including reactive) to PubSub subscriber methods.
+     * @deprecated An instance of {@link ConversionService} is needed for binding the full range of supported
+     * types (including reactive) to PubSub subscriber methods. <p>{@link #PubSubBodyBinder(ConversionService, PubSubMessageSerDesRegistry)} should be used instead.
      *
      * @param serDesRegistry the SerDe registry
      */
