@@ -54,7 +54,7 @@ class ReactiveSubscriber(private val messageProcessor: MessageProcessor) {
         return message.flatMap { animal ->
             messageProcessor.handleAnimalMessage(animal)
         }
-	}
+    }
 }
 // end::clazz[]
 
