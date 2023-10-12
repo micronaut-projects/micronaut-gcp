@@ -28,8 +28,8 @@ import reactor.core.publisher.Mono
 @PubSubListener
 class ReactiveSubscriber(private val messageProcessor: MessageProcessor) {
 
-	@Subscription("raw-subscription")
-	fun	receiveRaw(data: Mono<ByteArray>, @MessageId id: String): Mono<Any> { // <1>
+    @Subscription("raw-subscription")
+    fun receiveRaw(data: Mono<ByteArray>, @MessageId id: String): Mono<Any> { // <1>
         return data.flatMap { payload ->
             messageProcessor.handleByteArrayMessage(payload)
         }
