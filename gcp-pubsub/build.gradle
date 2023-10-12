@@ -17,7 +17,6 @@ dependencies {
     testImplementation libs.testcontainers.spock
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(testFixtures(project(":micronaut-gcp-common")))
-
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
 }

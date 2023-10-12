@@ -29,7 +29,7 @@ import io.micronaut.scheduling.TaskExecutors;
 public class PubSubConfigurationProperties {
 
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".pubsub";
-
+    public static final boolean DEFAULT_NACK_ON_SHUTDOWN = false;
     private int keepAliveIntervalMinutes = 5;
 
     private String publishingExecutor = TaskExecutors.SCHEDULED;
@@ -38,9 +38,11 @@ public class PubSubConfigurationProperties {
 
     private String topicEndpoint = "";
 
+    private boolean nackOnShutdown = DEFAULT_NACK_ON_SHUTDOWN;
+
     /**
-     *
-     * @return the name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances. Default: "scheduled"
+     * The name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances. Defaults to "scheduled".
+     * @return the name of the publishing executor
      *
      */
     public String getPublishingExecutor() {
@@ -56,9 +58,8 @@ public class PubSubConfigurationProperties {
     }
 
     /**
-     *
-     * @return the name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Subscriber} instances. Default: "scheduled"
-     * Defaults to "scheduled"
+     * The name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Subscriber} instances. Defaults to "scheduled".
+     * @return the name of the subscribing executor
      */
     public String getSubscribingExecutor() {
         return subscribingExecutor;
@@ -102,5 +103,23 @@ public class PubSubConfigurationProperties {
      */
     public void setTopicEndpoint(String topicEndpoint) {
         this.topicEndpoint = topicEndpoint;
+    }
+
+    /**
+     * Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown. Defaults to {@value #DEFAULT_NACK_ON_SHUTDOWN}.
+     * @return nack on shutdown configuration
+     * @since 5.2.0
+     */
+    public boolean isNackOnShutdown() {
+        return this.nackOnShutdown;
+    }
+
+    /**
+     *
+     * @param nackOnShutdown whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown.
+     * @since 5.2.0
+     */
+    public void setNackOnShutdown(boolean nackOnShutdown) {
+        this.nackOnShutdown = nackOnShutdown;
     }
 }
