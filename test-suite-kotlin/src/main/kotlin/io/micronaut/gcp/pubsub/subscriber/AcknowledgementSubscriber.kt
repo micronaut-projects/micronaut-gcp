@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono
 
 // tag::clazz[]
 @PubSubListener
-class AcknowledgementSubscriber (private val messageProcessor: MessageProcessor) {
+class AcknowledgementSubscriber(private val messageProcessor: MessageProcessor) {
 
 	@Subscription("animals")
 	fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
