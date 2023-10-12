@@ -29,7 +29,7 @@ import io.micronaut.scheduling.TaskExecutors;
 public class PubSubConfigurationProperties {
 
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".pubsub";
-
+    public static final boolean DEFAULT_NACK_ON_SHUTDOWN = false;
     private int keepAliveIntervalMinutes = 5;
 
     private String publishingExecutor = TaskExecutors.SCHEDULED;
@@ -38,7 +38,7 @@ public class PubSubConfigurationProperties {
 
     private String topicEndpoint = "";
 
-    private boolean nackOnShutdown = false;
+    private boolean nackOnShutdown = DEFAULT_NACK_ON_SHUTDOWN;
 
     /**
      * The name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances. Defaults to "scheduled".
@@ -106,7 +106,7 @@ public class PubSubConfigurationProperties {
     }
 
     /**
-     * Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown. Defaults to false.
+     * Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown. Defaults to {@value #DEFAULT_NACK_ON_SHUTDOWN}.
      * @return nack on shutdown configuration
      * @since 5.2.0
      */
