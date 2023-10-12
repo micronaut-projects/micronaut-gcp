@@ -47,10 +47,10 @@ class ReactiveSubscriber(private val messageProcessor: MessageProcessor) {
         return message.flatMap { animal ->
             messageProcessor.handleAnimalMessage(animal)
         }
-	}
+    }
 
-	@Subscription(value = "animals-legacy", contentType = "application/xml")
-	fun  receiveXML(message: Mono<Animal>, @MessageId id: String): Mono<Any> { // <4>
+    @Subscription(value = "animals-legacy", contentType = "application/xml")
+    fun receiveXML(message: Mono<Animal>, @MessageId id: String): Mono<Any> { // <4>
         return message.flatMap { animal ->
             messageProcessor.handleAnimalMessage(animal)
         }
