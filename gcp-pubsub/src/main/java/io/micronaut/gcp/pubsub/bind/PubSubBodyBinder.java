@@ -54,7 +54,7 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBo
      *
      * @param serDesRegistry the SerDe registry
      */
-    @Deprecated(since = "5.2.0")
+    @Deprecated(since = "5.2.0", forRemoval = true)
     public PubSubBodyBinder(PubSubMessageSerDesRegistry serDesRegistry) {
         this.conversionService = MutableConversionService.create();
         this.serDesRegistry = serDesRegistry;
