@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "micronaut-gcp-testing",
+  "private_key_id": "private-key-id-1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nREPLACE_WITH_TEST_PRIVATE_KEY\n-----END PRIVATE KEY-----\n",
+  "client_email": "sa-test1@micronaut-gcp-testing.iam.gserviceaccount.com",
+  "client_id": "client-id-1",
+  "auth_uri": "https://localhost:8080/o/oauth2/auth",
+  "token_uri": "http://localhost:8080/token",
+  "auth_provider_x509_cert_url": "https://localhost:8080/oauth2/v1/certs",
+  "client_x509_cert_url": "https://localhost:8080/robot/v1/metadata/x509/sa-test1%40micronaut-gcp-testing.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
