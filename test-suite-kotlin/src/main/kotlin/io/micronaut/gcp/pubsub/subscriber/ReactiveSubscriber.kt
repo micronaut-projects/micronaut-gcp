@@ -40,10 +40,10 @@ class ReactiveSubscriber(private val messageProcessor: MessageProcessor) {
         return message.flatMap { payload ->
             messageProcessor.handlePubsubMessage(payload)
         }
-	}
+    }
 
-	@Subscription("animals")
-	fun receivePojo(message: Mono<Animal>, @MessageId id: String): Mono<Any> { // <3>
+    @Subscription("animals")
+    fun receivePojo(message: Mono<Animal>, @MessageId id: String): Mono<Any> { // <3>
         return message.flatMap { animal ->
             messageProcessor.handleAnimalMessage(animal)
         }
