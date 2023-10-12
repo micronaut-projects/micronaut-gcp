@@ -28,9 +28,18 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         PollingConditions conditions = new PollingConditions(timeout: 10)
         EmbeddedServer subscriberServer = ApplicationContext.run(EmbeddedServer, [
                 "server.name" : "ShutdownSubscriberServer",
-                "gcp.projectId" : "test-project"
+                "gcp.projectId" : "test-project",
+                "micronaut.executors.scheduled.core-pool-size" : 10
 
         ], "integration")
+
+        /*
+        micronaut:
+  executors:
+    scheduled:
+      type: scheduled
+      core-pool-size: 30
+         */
 
         def ctx = ApplicationContext.run([
                 "spec.name" : "SubscriberShutdownSpec",
@@ -136,15 +145,15 @@ class MyPubSubListener {
     public void onMessage(PubsubMessage message) {
         var messageId = message.getMessageId();
         LOG.debug("Received message with ID " + messageId + ". Invoking message processor.")
-
+        int currentCount = count.get()
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1000)
+            currentCount = count.incrementAndGet()
         } catch (InterruptedException e) {
             LOG.debug("Message processing interrupted", e)
         }
         LOG.debug("Message with ID " + messageId + " contents: " + message.getData() + ".")
 
-        int currentCount = count.incrementAndGet()
         LOG.debug("Processor finished processing message with ID " + messageId + ".")
         LOG.debug("Total Messages {}", currentCount)
     }
