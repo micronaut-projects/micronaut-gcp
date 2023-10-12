@@ -28,8 +28,8 @@ import reactor.core.publisher.Mono
 @PubSubListener
 class AcknowledgementSubscriber(private val messageProcessor: MessageProcessor) {
 
-	@Subscription("animals")
-	fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
+    @Subscription("animals")
+    fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
         val processed = messageProcessor.handleAnimalMessage(animal).block()
         if (processed == true) {
             acknowledgement.ack()
