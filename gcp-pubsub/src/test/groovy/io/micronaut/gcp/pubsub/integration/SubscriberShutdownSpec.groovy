@@ -33,14 +33,6 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
 
         ], "integration")
 
-        /*
-        micronaut:
-  executors:
-    scheduled:
-      type: scheduled
-      core-pool-size: 30
-         */
-
         def ctx = ApplicationContext.run([
                 "spec.name" : "SubscriberShutdownSpec",
                 "gcp.projectId" : "test-project"
