@@ -36,7 +36,7 @@ class AcknowledgementSubscriber(private val messageProcessor: MessageProcessor) 
         } else {
             acknowledgement.nack()
         }
-	}
+    }
 
     @Subscription("animals-async")
     fun onMessageAsync(message: Mono<Animal>, acknowledgement: Acknowledgement): Mono<Boolean> {
