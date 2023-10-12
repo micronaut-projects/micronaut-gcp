@@ -35,8 +35,8 @@ class ReactiveSubscriber(private val messageProcessor: MessageProcessor) {
         }
     }
 
-	@Subscription("native-subscription")
-	fun  receiveNative(message: Mono<PubsubMessage>): Mono<Any> { // <2>
+    @Subscription("native-subscription")
+    fun receiveNative(message: Mono<PubsubMessage>): Mono<Any> { // <2>
         return message.flatMap { payload ->
             messageProcessor.handlePubsubMessage(payload)
         }
