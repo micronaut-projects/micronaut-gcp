@@ -1,5 +1,6 @@
 plugins {
     id("io.micronaut.build.internal.gcp-module")
+    id("java-test-fixtures")
 }
 
 dependencies {
@@ -10,9 +11,14 @@ dependencies {
     implementation(mn.micronaut.json.core)
     implementation(mn.jackson.annotations)
 
+    testFixturesApi(platform(mn.micronaut.core.bom))
+
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.discovery.core)
+    testImplementation(mn.micronaut.http.server.netty)
 
     testImplementation(mnSerde.micronaut.serde.jackson)
+
+    testImplementation(libs.system.stubs.core)
 
 }
