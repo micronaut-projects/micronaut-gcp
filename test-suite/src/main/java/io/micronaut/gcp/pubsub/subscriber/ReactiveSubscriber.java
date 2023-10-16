@@ -17,6 +17,7 @@ package io.micronaut.gcp.pubsub.subscriber;
 //tag::imports[]
 
 import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
@@ -24,6 +25,7 @@ import io.micronaut.gcp.pubsub.support.Animal;
 import reactor.core.publisher.Mono;
 // end::imports[]
 
+@Requires(property = "spec.name", value = "ReactiveSubscriberTest")
 // tag::clazz[]
 @PubSubListener
 public class ReactiveSubscriber {

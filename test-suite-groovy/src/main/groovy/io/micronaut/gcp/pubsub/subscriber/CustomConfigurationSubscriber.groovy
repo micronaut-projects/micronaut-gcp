@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.subscriber;
+package io.micronaut.gcp.pubsub.subscriber
+
+import io.micronaut.context.annotation.Requires;
 //tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 //end::imports[]
 
+@Requires(notEnv = "test")
 //tag::clazz[]
 @PubSubListener
 class CustomConfigurationSubscriber {

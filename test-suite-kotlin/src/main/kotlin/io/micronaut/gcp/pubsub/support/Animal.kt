@@ -15,5 +15,8 @@
  */
 package io.micronaut.gcp.pubsub.support
 
+import io.micronaut.serde.annotation.Serdeable
+
+@Serdeable
 data class Animal(val name: String) {
 }

@@ -15,6 +15,9 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
 public final class Animal {
     private String name;
 

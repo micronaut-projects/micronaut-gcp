@@ -16,29 +16,35 @@
 package io.micronaut.gcp.pubsub.subscriber
 //tag::imports[]
 import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.MessageId
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 // end::imports[]
 
+@Requires(property = "spec.name", value = "ContentTypeSubscriberSpec")
 // tag::clazz[]
 @PubSubListener
-class ContentTypeSubscriber {
+class ContentTypeSubscriber(private val messageProcessor: MessageProcessor)  {
 	@Subscription("raw-subscription")
 	fun	receiveRaw(data: ByteArray, @MessageId id: String) { // <1>
+        messageProcessor.handleByteArrayMessage(data).block()
 	}
 
 	@Subscription("native-subscription")
 	fun  receiveNative(message: PubsubMessage) { // <2>
+        messageProcessor.handlePubsubMessage(message).block()
 	}
 
 	@Subscription("animals")
 	fun receivePojo(animal: Animal, @MessageId id: String) { // <3>
+        messageProcessor.handleAnimalMessage(animal).block()
 	}
 
 	@Subscription(value = "animals-legacy", contentType = "application/xml")
 	fun  receiveXML(animal: Animal, @MessageId id: String) { // <4>
+        messageProcessor.handleAnimalMessage(animal).block()
 	}
 }
 // end::clazz[]

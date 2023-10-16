@@ -24,6 +24,10 @@ logback-json-classic = "0.1.5"
 testcontainers = "1.18.3"
 zipkin-sender-stackdriver = "1.0.4"
 
+awaitility = '4.2.0'
+mockito = '5.6.0'
+
+micronaut-jackson-xml = "4.0.1"
 micronaut-logging = "1.0.0"
 micronaut-reactor = "3.0.2"
 micronaut-rxjava3 = "3.0.1"
@@ -42,6 +46,7 @@ micronaut-gradle-plugin = "4.0.3"
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 
 # micronaut boms
+micronaut-jackson-xml = { module = "io.micronaut.xml:micronaut-jackson-xml-bom", version.ref = "micronaut-jackson-xml" }
 micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
 micronaut-rxjava3 = { module = "io.micronaut.rxjava3:micronaut-rxjava3-bom", version.ref = "micronaut-rxjava3" }
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
@@ -75,6 +80,8 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic", version.ref = "logback-json-classic" }
 testcontainers-spock = { module = "org.testcontainers:spock", version.ref = "testcontainers" }
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
+awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
+mockito = { module = 'org.mockito:mockito-core', version.ref = 'mockito' }
 
 # Plugins
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }

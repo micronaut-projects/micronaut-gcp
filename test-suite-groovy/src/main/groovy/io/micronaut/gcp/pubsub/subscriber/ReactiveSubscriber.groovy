@@ -15,7 +15,8 @@
  */
 package io.micronaut.gcp.pubsub.subscriber
 
-import com.google.pubsub.v1.PubsubMessage;
+import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Requires;
 //tag::imports[]
 
 import io.micronaut.gcp.pubsub.annotation.MessageId
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono
 
 // end::imports[]
 
+@Requires(property = "spec.name", value = "ReactiveSubscriberSpec")
 // tag::clazz[]
 @PubSubListener
 class ReactiveSubscriber {
@@ -38,22 +40,22 @@ class ReactiveSubscriber {
 
     @Subscription("raw-subscription") // <1>
     Mono<Object> receiveRaw(Mono<byte[]> data, @MessageId String id) {
-        return data.flatMap(messageProcessor::handleByteArrayMessage);
+        return data.flatMap(messageProcessor::handleByteArrayMessage)
     }
 
     @Subscription("native-subscription") // <2>
     Mono<Object> receiveNative(Mono<PubsubMessage> message) {
-        return message.flatMap(messageProcessor::handlePubSubMessage);
+        return message.flatMap(messageProcessor::handlePubSubMessage)
     }
 
     @Subscription("animals") // <3>
     Mono<Object> receivePojo(Mono<Animal> animal, @MessageId String id) {
-        return animal.flatMap(messageProcessor::handleAnimalMessage);
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
     }
 
     @Subscription(value = "animals-legacy", contentType = "application/xml") // <4>
     Mono<Object> receiveXML(Mono<Animal> animal, @MessageId String id) {
-        return animal.flatMap(messageProcessor::handleAnimalMessage);
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
     }
 
 }

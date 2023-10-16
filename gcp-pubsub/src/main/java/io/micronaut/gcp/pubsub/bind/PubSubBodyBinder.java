@@ -28,6 +28,7 @@ import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.messaging.annotation.MessageBody;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -79,7 +80,7 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBo
     @Override
     public BindingResult<Object> bind(ArgumentConversionContext<Object> context, PubSubConsumerState state) {
         boolean isPublisher = Publishers.isConvertibleToPublisher(context.getArgument().getType());
-        Argument<?> bodyType =  isPublisher ?
+        Argument<?> bodyType = isPublisher ?
             context.getArgument().getFirstTypeVariable().orElseThrow(() -> new PubSubListenerException("Could not determine publisher's argument type for PubSub message deserialization")) :
             context.getArgument();
         Object result = null;
@@ -89,11 +90,15 @@ public class PubSubBodyBinder implements PubSubAnnotatedArgumentBinder<MessageBo
             result = state.getPubsubMessage();
         } else {
             if (StringUtils.isEmpty(state.getContentType()) && !state.getPubsubMessage().containsAttributes("Content-Type")) {
-                throw  new PubSubListenerException("Could not detect Content-Type header at message and no Content-Type specified on method.");
+                throw new PubSubListenerException("Could not detect Content-Type header at message and no Content-Type specified on method.");
             }
             PubSubMessageSerDes serDes = serDesRegistry.find(state.getContentType())
-                    .orElseThrow(() -> new PubSubListenerException("Could not locate a valid SerDes implementation for type: " + state.getContentType()));
+                .orElseThrow(() -> new PubSubListenerException("Could not locate a valid SerDes implementation for type: " + state.getContentType()));
             result = serDes.deserialize(state.getPubsubMessage().getData().toByteArray(), bodyType);
+        }
+
+        if (isPublisher && result.getClass().isArray()) {
+            result = Mono.just(result);
         }
 
         Optional<Object> finalResult = conversionService.convert(result, context);

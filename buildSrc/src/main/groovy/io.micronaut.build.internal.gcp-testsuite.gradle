@@ -1,0 +1,29 @@
+plugins {
+    id "io.micronaut.build.internal.gcp-base"
+    id "io.micronaut.test-resources"
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+dependencies {
+    annotationProcessor(mn.micronaut.inject.java)
+
+    implementation(projects.micronautGcpFunctionHttp)
+    implementation(projects.micronautGcpPubsub)
+    implementation(projects.micronautGcpSecretManager)
+    implementation(mn.reactor)
+    implementation mnSerde.micronaut.serde.jackson
+    implementation mnJacksonXml.micronaut.jackson.xml
+
+    compileOnly(libs.managed.functions.framework.api)
+
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly mnLogging.logback.classic
+    testRuntimeOnly mn.snakeyaml
+}
+
+micronaut {
+    importMicronautPlatform.set(false)
+}

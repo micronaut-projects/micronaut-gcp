@@ -148,7 +148,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                 try {
                     this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
                 } catch (Exception e) {
-                    throw new PubSubListenerException("Failed to create subscriber", e);
+                    throw new PubSubListenerException("Failed to create subscriber for %s with subscription method %s".formatted(beanDefinition.getBeanType(), method.getName()), e);
                 }
             }
         }

@@ -15,12 +15,15 @@
  */
 package io.micronaut.gcp.pubsub.subscriber
 //tag::imports[]
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler
 import io.micronaut.gcp.pubsub.support.Animal
 // end::imports[]
 
+
+@Requires(notEnv = ["test"])
 // tag::clazz[]
 @PubSubListener
 class ErrorHandlingSubscriber : PubSubMessageReceiverExceptionHandler { // <1>
