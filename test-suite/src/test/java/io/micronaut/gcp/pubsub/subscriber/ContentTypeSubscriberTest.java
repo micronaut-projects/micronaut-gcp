@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 
 @MicronautTest
 @Property(name = "spec.name", value = "ContentTypeSubscriberTest")
-public class ContentTypeSubscriberTest {
+class ContentTypeSubscriberTest {
 
     @Inject
     TestPublisher publisher;

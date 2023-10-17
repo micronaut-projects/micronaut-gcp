@@ -138,7 +138,7 @@ class AcknowledgementSubscriberSpec extends Specification {
     @PubSubClient
     @Requires(property = "spec.name", value = "AcknowledgementSubscriberSpec")
     static interface TestPublisher {
-        @Topic("animals") void publishAnimal(Animal animal);
-        @Topic("animals-async") void publishAnimalAsync(Animal animal);
+        @Topic("animals") void publishAnimal(Animal animal)
+        @Topic("animals-async") void publishAnimalAsync(Animal animal)
     }
 }

@@ -31,10 +31,9 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 @MicronautTest
 @Property(name = "spec.name", value = "AcknowledgementSubscriberTest")
-public class AcknowledgementSubscriberTest {
+class AcknowledgementSubscriberTest {
 
     @Inject
     TestPublisher publisher;

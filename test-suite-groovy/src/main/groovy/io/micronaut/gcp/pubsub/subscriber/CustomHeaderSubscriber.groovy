@@ -15,12 +15,12 @@
  */
 package io.micronaut.gcp.pubsub.subscriber
 
-import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Requires
 //tag::imports[]
-import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
-import io.micronaut.messaging.annotation.MessageHeader;
+import io.micronaut.messaging.annotation.MessageHeader
 // end::imports[]
 
 @Requires(notEnv = "test")

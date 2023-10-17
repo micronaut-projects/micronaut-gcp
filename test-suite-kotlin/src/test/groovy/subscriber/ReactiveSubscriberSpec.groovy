@@ -124,9 +124,9 @@ class ReactiveSubscriberSpec extends Specification {
     @PubSubClient
     @Requires(property = "spec.name", value = "ReactiveSubscriberSpec")
     static interface TestPublisher {
-        @Topic("raw-subscription") void publishRaw(byte[] payload);
-        @Topic("native-subscription") void publishNative(byte[] payload);
-        @Topic("animals") void publishAnimal(Animal animal);
-        @Topic(value = "animals-legacy", contentType = MediaType.APPLICATION_XML) void publishAnimalAsXml(Animal animal);
+        @Topic("raw-subscription") void publishRaw(byte[] payload)
+        @Topic("native-subscription") void publishNative(byte[] payload)
+        @Topic("animals") void publishAnimal(Animal animal)
+        @Topic(value = "animals-legacy", contentType = MediaType.APPLICATION_XML) void publishAnimalAsXml(Animal animal)
     }
 }

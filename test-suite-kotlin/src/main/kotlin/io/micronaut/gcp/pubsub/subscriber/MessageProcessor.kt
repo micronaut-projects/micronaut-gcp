@@ -13,5 +13,5 @@ open class MessageProcessor {
 
     open fun handleAnimalMessage(message: Animal) = Mono.just(java.lang.Boolean.TRUE)
 
-    open fun recordAcknowledgement(acknowledgement: Acknowledgement) {}
+    open fun recordAcknowledgement(acknowledgement: Acknowledgement) = Unit
 }

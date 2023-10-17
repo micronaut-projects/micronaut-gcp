@@ -23,7 +23,7 @@ import static org.awaitility.Awaitility.await;
 
 @MicronautTest
 @Property(name = "spec.name", value = "ReactiveSubscriberTest")
-public class ReactiveSubscriberTest {
+class ReactiveSubscriberTest {
 
     @Inject
     TestPublisher publisher;

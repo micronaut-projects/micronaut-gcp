@@ -15,7 +15,6 @@
  */
 package io.micronaut.gcp.pubsub.support;
 
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
 import java.io.Serializable;
