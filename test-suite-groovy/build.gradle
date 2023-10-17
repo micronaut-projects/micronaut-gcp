@@ -10,3 +10,10 @@ dependencies {
     testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(mnTest.micronaut.test.spock)
 }
+
+micronaut {
+    testResources {
+        // 10 minutes as this image is massive
+        clientTimeout = 600
+    }
+}

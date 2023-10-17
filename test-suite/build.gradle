@@ -10,3 +10,10 @@ dependencies {
     testImplementation(libs.awaitility)
     testImplementation(libs.mockito)
 }
+
+micronaut {
+    testResources {
+        // 10 minutes as this image is massive
+        clientTimeout = 600
+    }
+}
