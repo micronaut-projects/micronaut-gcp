@@ -1,16 +1,26 @@
 package io.micronaut.gcp.pubsub.integration
 
+import com.google.api.gax.core.CredentialsProvider
+import com.google.api.gax.rpc.TransportChannelProvider
+import com.google.cloud.pubsub.v1.AckReplyConsumer
+import com.google.cloud.pubsub.v1.MessageReceiver
+import com.google.cloud.pubsub.v1.Subscriber
 import com.google.pubsub.v1.ProjectSubscriptionName
 import com.google.pubsub.v1.PubsubMessage
 import com.google.pubsub.v1.TopicName
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.BeanContext
+import io.micronaut.context.annotation.Primary
 import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.annotation.Topic
+import io.micronaut.gcp.pubsub.bind.DefaultSubscriberFactory
+import io.micronaut.gcp.pubsub.bind.SubscriberFactoryConfig
 import io.micronaut.runtime.server.EmbeddedServer
 import jakarta.annotation.PreDestroy
+import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.util.concurrent.PollingConditions
@@ -39,13 +49,16 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
 
         when:
         def listener = subscriberServer.getApplicationContext().getBean(MyPubSubListener.class)
-        def publisher = ctx.getBean(PubSubShutdownClient);
+        def subscriberFactory = subscriberServer.getApplicationContext().getBean(MessageTrackingSubscriberFactory)
+        def publisher = ctx.getBean(PubSubShutdownClient)
 
         then:
         listener != null
-        listener.count.get() == 0
+        listener.messagesProcessed.get() == 0
         publisher != null
         subscriberServer.isRunning()
+        subscriberFactory != null
+        subscriberFactory.messagesReceived.get() == 0
 
         when:
         for(int i = 0; i<100; i++) {
@@ -54,7 +67,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
 
         then:
         conditions.eventually {
-            listener.count.intValue() > 1
+            listener.messagesProcessed.intValue() > 1
         }
 
         when:
@@ -64,7 +77,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         conditions.eventually {
             !subscriberServer.isRunning()
         }
-        listener.count.get() == 100
+        subscriberFactory.messagesReceived.get() == listener.messagesProcessed.get()
     }
 
     void "subscribers can eagerly nack messages on shutdown when configured"() {
@@ -93,7 +106,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
 
         then:
         listener != null
-        listener.count.get() == 0
+        listener.messagesProcessed.get() == 0
         publisher != null
         subscriberServer.isRunning()
 
@@ -104,7 +117,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
 
         then:
         conditions.eventually {
-            listener.count.intValue() > 2
+            listener.messagesProcessed.intValue() > 2
         }
 
         when:
@@ -114,7 +127,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         conditions.eventually {
             !subscriberServer.isRunning()
         }
-        listener.count.get() < 100
+        listener.messagesProcessed.get() < 100
     }
 }
 
@@ -131,16 +144,16 @@ class MyPubSubListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(MyPubSubListener.class);
 
-    AtomicInteger count = new AtomicInteger(0)
+    AtomicInteger messagesProcessed = new AtomicInteger(0)
 
     @Subscription(value = "topic-sub", configuration = "test")
     public void onMessage(PubsubMessage message) {
         var messageId = message.getMessageId();
         LOG.debug("Received message with ID " + messageId + ". Invoking message processor.")
-        int currentCount = count.get()
+        int currentCount = messagesProcessed.get()
         try {
             Thread.sleep(1000)
-            currentCount = count.incrementAndGet()
+            currentCount = messagesProcessed.incrementAndGet()
         } catch (InterruptedException e) {
             LOG.debug("Message processing interrupted", e)
         }
@@ -153,5 +166,28 @@ class MyPubSubListener {
     @PreDestroy
     void onShutdown() {
         LOG.info("PreDestroy");
+    }
+}
+
+@Requires(property = "server.name", value = "ShutdownSubscriberServer")
+@Primary
+@Singleton
+class MessageTrackingSubscriberFactory extends DefaultSubscriberFactory {
+
+    AtomicInteger messagesReceived = new AtomicInteger(0)
+
+    MessageTrackingSubscriberFactory(TransportChannelProvider transportChannelProvider, CredentialsProvider credentialsProvider, BeanContext beanContext) {
+        super(transportChannelProvider, credentialsProvider, beanContext)
+    }
+
+    @Override
+    Subscriber createSubscriber(SubscriberFactoryConfig config) {
+        MessageReceiver targetReceiver = config.receiver
+        MessageReceiver countingReceiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
+            int count = messagesReceived.incrementAndGet()
+            targetReceiver.receiveMessage(message, ackReplyConsumer)
+        }
+        SubscriberFactoryConfig modifiedConfig = new SubscriberFactoryConfig(config.subscriptionName, countingReceiver, config.subscriberConfiguration, config.defaultExecutor)
+        return super.createSubscriber(modifiedConfig)
     }
 }
