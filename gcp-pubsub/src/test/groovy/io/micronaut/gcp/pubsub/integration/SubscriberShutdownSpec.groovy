@@ -28,8 +28,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         PollingConditions conditions = new PollingConditions(timeout: 10)
         EmbeddedServer subscriberServer = ApplicationContext.run(EmbeddedServer, [
                 "server.name" : "ShutdownSubscriberServer",
-                "gcp.projectId" : "test-project",
-                "micronaut.executors.scheduled.core-pool-size" : 10
+                "gcp.projectId" : "test-project"
 
         ], "integration")
 
@@ -78,6 +77,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         EmbeddedServer subscriberServer = ApplicationContext.run(EmbeddedServer, [
                 "server.name" : "ShutdownSubscriberServer",
                 "gcp.projectId" : "test-project",
+                "micronaut.executors.scheduled.core-pool-size" : 5,
                 "gcp.pubsub.nack-on-shutdown" : true
 
         ], "integration")
