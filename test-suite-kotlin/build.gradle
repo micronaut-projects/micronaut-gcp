@@ -13,3 +13,9 @@ dependencies {
     implementation libs.kotlin.reflect
     compileOnly(libs.managed.functions.framework.api)
 }
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
