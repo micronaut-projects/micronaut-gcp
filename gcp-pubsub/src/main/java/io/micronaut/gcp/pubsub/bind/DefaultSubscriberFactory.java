@@ -26,12 +26,12 @@ import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
@@ -106,8 +106,8 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
                     logger.error("Failed stopping subscriber for " + entry.getKey(), e);
                 } finally {
                     it.remove();
+                    logger.debug("Subscriber for {} was shut down successfully.", entry.getKey());
                 }
-
             }
         }
     }
