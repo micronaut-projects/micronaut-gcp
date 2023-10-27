@@ -24,6 +24,7 @@ pubsub:
   pullConsumer:
     title: Receiving messages via @PubSubListener methods
     subscriberContentType: Content-Type and message deserialization
+    subscriberReactive: Receiving and Returning Reactive Types
     subscriberHeaders: Message Headers
     subscriberProperties: Subscriber properties
     messageAcknowledge: Handling message acknowledgement

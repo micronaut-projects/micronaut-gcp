@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.subscriber;
 //tag::imports[]
 import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
@@ -23,6 +24,9 @@ import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
 import io.micronaut.gcp.pubsub.support.Animal;
 // end::imports[]
 
+// There are currently no tests for this class. It is disabled in the test environment
+// in order to prevent clashes with other subscribers.
+@Requires(notEnv = "test")
 // tag::clazz[]
 @PubSubListener
 public class ErrorHandlingSubscriber implements PubSubMessageReceiverExceptionHandler { // <1>

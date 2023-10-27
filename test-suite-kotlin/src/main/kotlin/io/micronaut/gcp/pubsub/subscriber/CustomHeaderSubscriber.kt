@@ -15,12 +15,16 @@
  */
 package io.micronaut.gcp.pubsub.subscriber
 //tag::imports[]
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.messaging.annotation.MessageHeader
 // end::imports[]
 
+// There are currently no tests for this class. It is disabled in the test environment
+// in order to prevent clashes with other subscribers.
+@Requires(notEnv = ["test"])
 // tag::clazz[]
 @PubSubListener
 class CustomHeaderSubscriber {

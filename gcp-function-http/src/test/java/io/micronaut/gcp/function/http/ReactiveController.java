@@ -3,7 +3,7 @@ package io.micronaut.gcp.function.http;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 @Controller("/reactive")
 public class ReactiveController {

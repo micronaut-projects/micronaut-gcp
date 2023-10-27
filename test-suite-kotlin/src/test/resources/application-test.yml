@@ -1,0 +1,19 @@
+gcp:
+  project-id: gcp-test-suite
+
+test-resources:
+  containers:
+    pubsub-emulator:
+      image-name: thekevjames/gcloud-pubsub-emulator:446.0.0
+      startup-timeout: 600s # 10 minutes as this image is massive
+      hostnames:
+        - pubsub.host
+      exposed-ports:
+        - pubsub.port: 8681
+        - pubsub.subscription.port: 8682
+      env:
+        - PUBSUB_PROJECT1: gcp-test-suite,animals:animals,animals-async:animals-async,raw-subscription:raw-subscription,native-subscription:native-subscription,animals-legacy:animals-legacy
+
+pubsub:
+  emulator:
+    host: ${pubsub.host}:${pubsub.port}

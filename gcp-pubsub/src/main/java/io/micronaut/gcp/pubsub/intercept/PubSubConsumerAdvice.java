@@ -22,8 +22,10 @@ import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.bind.DefaultExecutableBinder;
+import io.micronaut.core.bind.exceptions.UnsatisfiedArgumentException;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
@@ -49,10 +51,13 @@ import io.micronaut.messaging.exceptions.MessageListenerException;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Qualifier;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -73,6 +78,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
 
     private final Logger logger = LoggerFactory.getLogger(PubSubConsumerAdvice.class);
     private final BeanContext beanContext;
+    private final ConversionService conversionService;
     private final SubscriberFactory subscriberFactory;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
@@ -89,6 +95,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                                 PubSubBinderRegistry binderRegistry,
                                 PubSubMessageReceiverExceptionHandler exceptionHandler) {
         this.beanContext = beanContext;
+        this.conversionService = conversionService;
         this.subscriberFactory = subscriberFactory;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
@@ -97,6 +104,7 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
         if (beanDefinition.hasDeclaredAnnotation(PubSubListener.class)) {
             AnnotationValue<Subscription> subscriptionAnnotation = method.getAnnotation(Subscription.class);
@@ -134,27 +142,14 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                             projectSubscriptionName, contentType);
                     boolean autoAcknowledge = !hasAckArg;
                     try {
-                        BoundExecutable executable = null;
-                        try {
-                            executable = binder.bind(method, binderRegistry, consumerState);
-                        } catch (Exception ex) {
-                            handleException(new PubSubMessageReceiverException("Error binding message to the method", ex, bean, consumerState, autoAcknowledge));
-                        }
-                        executable.invoke(bean); // Discard result
-                        if (autoAcknowledge) { // if manual ack is not specified we auto ack message after method execution
-                            pubSubAcknowledgement.ack();
-                        } else {
-                            Optional<Object> boundAck = Arrays
-                                    .stream(executable.getBoundArguments())
-                                    .filter(o -> (o instanceof DefaultPubSubAcknowledgement))
-                                    .findFirst();
-                            if (boundAck.isPresent()) {
-                                DefaultPubSubAcknowledgement manualAck = (DefaultPubSubAcknowledgement) boundAck.get();
-                                if (!manualAck.isClientAck()) {
-                                    logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", method.getName());
-                                }
-                            }
-                        }
+                        @SuppressWarnings("rawtypes")
+                        BoundExecutable executable = binder.bind(method, binderRegistry, consumerState);
+                        Flux<?> resultPublisher = resultAsFlux(Objects.requireNonNull(executable).invoke(bean));
+                        resultPublisher.subscribe(data -> { }, //no-op
+                            ex -> handleException(new PubSubMessageReceiverException("Error handling message", ex, bean, consumerState, autoAcknowledge)),
+                            autoAcknowledge ? pubSubAcknowledgement::ack : () -> this.verifyManualAcknowledgment(executable, method.getName()));
+                    } catch (UnsatisfiedArgumentException e) {
+                        handleException(new PubSubMessageReceiverException("Error binding message to the method", e, bean, consumerState, autoAcknowledge));
                     } catch (Exception e) {
                         handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState, autoAcknowledge));
                     }
@@ -162,11 +157,23 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
                 try {
                     this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
                 } catch (Exception e) {
-                    throw new PubSubListenerException("Failed to create subscriber", e);
+                    throw new PubSubListenerException("Failed to create subscriber for %s with subscription method %s".formatted(beanDefinition.getBeanType(), method.getName()), e);
                 }
             }
         }
+    }
 
+    private void verifyManualAcknowledgment(@SuppressWarnings("rawtypes") BoundExecutable executable, String methodName) {
+        Optional<Object> boundAck = Arrays
+            .stream(executable.getBoundArguments())
+            .filter(o -> (o instanceof DefaultPubSubAcknowledgement))
+            .findFirst();
+        if (boundAck.isPresent()) {
+            DefaultPubSubAcknowledgement manualAck = (DefaultPubSubAcknowledgement) boundAck.get();
+            if (!manualAck.isClientAck()) {
+                logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", methodName);
+            }
+        }
     }
 
     @PreDestroy
@@ -180,6 +187,14 @@ public class PubSubConsumerAdvice implements ExecutableMethodProcessor<Subscript
         } else {
             exceptionHandler.handle(ex);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Flux<T> resultAsFlux(T result) {
+        if (!Publishers.isConvertibleToPublisher(result)) {
+            return Flux.empty();
+        }
+        return Flux.from(Publishers.convertPublisher(conversionService, result, Publisher.class));
     }
 
 }

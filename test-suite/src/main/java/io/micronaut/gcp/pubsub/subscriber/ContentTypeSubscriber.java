@@ -16,12 +16,15 @@
 package io.micronaut.gcp.pubsub.subscriber;
 //tag::imports[]
 import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
+import io.micronaut.http.MediaType;
 // end::imports[]
 
+@Requires(property = "spec.name", value = "ContentTypeSubscriberTest")
 // tag::clazz[]
 @PubSubListener
 public class ContentTypeSubscriber {
@@ -38,7 +41,7 @@ public class ContentTypeSubscriber {
     void receivePojo(Animal animal, @MessageId String id) {
     }
 
-    @Subscription(value = "animals-legacy", contentType = "application/xml") // <4>
+    @Subscription(value = "animals-legacy", contentType = MediaType.APPLICATION_XML) // <4>
     void receiveXML(Animal animal, @MessageId String id) {
     }
 

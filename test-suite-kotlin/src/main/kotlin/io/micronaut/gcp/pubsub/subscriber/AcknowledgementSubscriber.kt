@@ -16,19 +16,43 @@
 package io.micronaut.gcp.pubsub.subscriber
 
 //tag::imports[]
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.messaging.Acknowledgement
+import reactor.core.publisher.Mono
+
 // end::imports[]
 
+@Requires(property = "spec.name", value = "AcknowledgementSubscriberSpec")
 // tag::clazz[]
 @PubSubListener
-class AcknowledgementSubscriber {
+class AcknowledgementSubscriber(private val messageProcessor: MessageProcessor) {
 
-	@Subscription("animals")
-	fun onMessage(animal: Animal, acknowledgement: Acknowledgement) { // <1>
+    @Subscription("animals")
+    fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
+        if (messageProcessor.handleAnimalMessage(animal).block() == true) {
+            acknowledgement.ack()
+            messageProcessor.recordAcknowledgement(acknowledgement)
+        } else {
+            acknowledgement.nack()
+            messageProcessor.recordAcknowledgement(acknowledgement)
+        }
+    }
 
-	}
+    @Subscription("animals-async")
+    fun onReactiveMessage(message: Mono<Animal>, acknowledgement: Acknowledgement): Mono<Boolean> {
+        return message.flatMap { animal -> messageProcessor.handleAnimalMessage(animal) }
+            .doOnNext { result ->
+                if (result) {
+                    acknowledgement.ack()
+                    messageProcessor.recordAcknowledgement(acknowledgement)
+                } else {
+                    acknowledgement.nack()
+                    messageProcessor.recordAcknowledgement(acknowledgement)
+                }
+            }
+    }
 }
 // tag::clazz[]

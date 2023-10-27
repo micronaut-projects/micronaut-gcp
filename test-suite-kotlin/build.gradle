@@ -1,17 +1,23 @@
 plugins {
     id "org.jetbrains.kotlin.jvm"
     id "org.jetbrains.kotlin.kapt"
-    id "io.micronaut.build.internal.gcp-tests"
+    id "groovy"
+    id "io.micronaut.build.internal.gcp-testsuite"
 }
 
 dependencies {
-    implementation(projects.micronautGcpPubsub)
-    implementation(projects.micronautGcpFunctionHttp)
-    implementation(projects.micronautGcpSecretManager)
-    implementation(mn.reactor)
-    implementation libs.kotlin.stdlib.jdk8
-    implementation libs.kotlin.reflect
-    compileOnly(libs.managed.functions.framework.api)
+    kapt(platform(mn.micronaut.core.bom))
+    kapt(mn.micronaut.inject.java)
+    testImplementation(platform(mn.micronaut.core.bom))
+    testCompileOnly(mn.micronaut.inject.groovy)
+    testImplementation(mnTest.micronaut.test.spock)
+}
+
+micronaut {
+    testResources {
+        // 10 minutes as this image is massive
+        clientTimeout = 600
+    }
 }
 
 kotlin {

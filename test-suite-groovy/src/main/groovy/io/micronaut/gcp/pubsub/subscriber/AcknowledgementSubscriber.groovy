@@ -13,21 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.subscriber;
-//tag::imports[]
+package io.micronaut.gcp.pubsub.subscriber
+
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.support.Animal;
-import io.micronaut.messaging.Acknowledgement;
+//tag::imports[]
+
+import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.support.Animal
+import io.micronaut.messaging.Acknowledgement
+import reactor.core.publisher.Mono
+
 // end::imports[]
 
+@Requires(property = "spec.name", value = "AcknowledgementSubscriberSpec")
 // tag::clazz[]
 @PubSubListener
 class AcknowledgementSubscriber {
 
-    @Subscription("animals")
-    void onMessage(Animal animal, Acknowledgement acknowledgement) { // <1>
+    MessageProcessor messageProcessor
 
+    AcknowledgementSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
+    @Subscription("animals")
+    void onMessage(Animal animal, Acknowledgement acknowledgement) {
+        if (Boolean.TRUE == messageProcessor.handleAnimalMessage(animal).block()) {
+            acknowledgement.ack()
+        } else {
+            acknowledgement.nack()
+        }
+    }
+
+    @Subscription("animals-async")
+    Mono<Boolean> onReactiveMessage(Mono<Animal> animal, Acknowledgement acknowledgement) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+                .doOnNext(result -> {
+                    if (Boolean.TRUE == result) {
+                        acknowledgement.ack()
+                    } else {
+                        acknowledgement.nack()
+                    }
+                })
     }
 
 }

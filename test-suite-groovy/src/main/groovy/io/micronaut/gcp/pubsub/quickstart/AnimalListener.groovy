@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.quickstart;
+package io.micronaut.gcp.pubsub.quickstart
+
+import io.micronaut.context.annotation.Requires;
 //tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 // end::imports[]
 
+// There are currently no tests for this class. It is disabled in the test environment
+// in order to prevent clashes with other subscribers.
+@Requires(notEnv = "test")
 // tag::clazz[]
 @PubSubListener // <1>
 class AnimalListener {
