@@ -942,8 +942,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Binds arguments annotated with <code>MessageBody</code> and uses the appropriate
  <a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html" title="interface in io.micronaut.gcp.pubsub.serdes"><code>PubSubMessageSerDes</code></a> to deserialize the contents of the PubSubMessage data.</div>
 </dd>
+<dt><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html#%3Cinit%3E(io.micronaut.core.convert.ConversionService,io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry)" class="member-name-link">PubSubBodyBinder(ConversionService, PubSubMessageSerDesRegistry)</a> - Constructor for class io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubBodyBinder</a></dt>
+<dd>
+<div class="block">Constructs a PubSub body binder instance.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html#%3Cinit%3E(io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry)" class="member-name-link">PubSubBodyBinder(PubSubMessageSerDesRegistry)</a> - Constructor for class io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubBodyBinder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">An instance of <code>ConversionService</code> is needed for binding the full range of supported
+ types (including reactive) to PubSub subscriber methods. <p><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html#%3Cinit%3E(io.micronaut.core.convert.ConversionService,io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry)"><code>PubSubBodyBinder(ConversionService, PubSubMessageSerDesRegistry)</code></a> should be used instead.</div>
+</div>
+</dd>
 <dt><a href="io/micronaut/gcp/pubsub/annotation/PubSubClient.html" class="type-name-link" title="annotation interface in io.micronaut.gcp.pubsub.annotation">PubSubClient</a> - Annotation Interface in <a href="io/micronaut/gcp/pubsub/annotation/package-summary.html">io.micronaut.gcp.pubsub.annotation</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/exception/PubSubClientException.html" class="type-name-link" title="class in io.micronaut.gcp.pubsub.exception">PubSubClientException</a> - Exception in <a href="io/micronaut/gcp/pubsub/exception/package-summary.html">io.micronaut.gcp.pubsub.exception</a></dt>

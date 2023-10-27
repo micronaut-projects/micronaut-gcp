@@ -139,15 +139,17 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberContentType"><a href="#subscriberContentType"><strong>8.6.1</strong><span>Content-Type and message deserialization</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberHeaders"><a href="#subscriberHeaders"><strong>8.6.2</strong><span>Message Headers</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberReactive"><a href="#subscriberReactive"><strong>8.6.2</strong><span>Receiving and Returning Reactive Types</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>8.6.3</strong><span>Subscriber properties</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberHeaders"><a href="#subscriberHeaders"><strong>8.6.3</strong><span>Message Headers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>8.6.4</strong><span>Handling message acknowledgement</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>8.6.4</strong><span>Subscriber properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>8.6.5</strong><span>Consumer error handling</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>8.6.5</strong><span>Handling message acknowledgement</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>8.6.6</strong><span>Custom Parameter Binding</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>8.6.6</strong><span>Consumer error handling</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>8.6.7</strong><span>Custom Parameter Binding</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-serdes"><a href="#serdes"><strong>8.7</strong><span>Message Serialization/Deserialization (SerDes)</span></a></div>
         
@@ -1520,7 +1522,8 @@ class AnimalService(private val animalClient: AnimalClient)  { // <b class="conu
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 
 @PubSubListener // <b class="conum">(1)</b>
@@ -1557,7 +1560,8 @@ class AnimalListener {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 
 @PubSubListener // <b class="conum">(1)</b>
@@ -2779,7 +2783,8 @@ This is helpful when you need to listen to subscriptions from different projects
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 
@@ -2801,9 +2806,9 @@ public class SimpleSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.support.Animal;
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.support.Animal
 
 @PubSubListener // <b class="conum">(1)</b>
 class SimpleSubscriber {
@@ -2822,7 +2827,8 @@ class SimpleSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 
@@ -2932,10 +2938,12 @@ PubSubMessage ids are always of type <code>String</code> for that reason your an
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
+import io.micronaut.http.MediaType;
 
 @PubSubListener
 public class ContentTypeSubscriber {
@@ -2952,7 +2960,7 @@ public class ContentTypeSubscriber {
     void receivePojo(Animal animal, @MessageId String id) {
     }
 
-    @Subscription(value = "animals-legacy", contentType = "application/xml") // <b class="conum">(4)</b>
+    @Subscription(value = "animals-legacy", contentType = MediaType.APPLICATION_XML) // <b class="conum">(4)</b>
     void receiveXML(Animal animal, @MessageId String id) {
     }
 
@@ -2961,7 +2969,8 @@ public class ContentTypeSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.google.pubsub.v1.PubsubMessage;
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
@@ -2992,27 +3001,32 @@ class ContentTypeSubscriber {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.MessageId
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 
 @PubSubListener
-class ContentTypeSubscriber {
+class ContentTypeSubscriber(private val messageProcessor: MessageProcessor)  {
 	@Subscription("raw-subscription")
 	fun	receiveRaw(data: ByteArray, @MessageId id: String) { // <b class="conum">(1)</b>
+        messageProcessor.handleByteArrayMessage(data).block()
 	}
 
 	@Subscription("native-subscription")
 	fun  receiveNative(message: PubsubMessage) { // <b class="conum">(2)</b>
+        messageProcessor.handlePubsubMessage(message).block()
 	}
 
 	@Subscription("animals")
 	fun receivePojo(animal: Animal, @MessageId id: String) { // <b class="conum">(3)</b>
+        messageProcessor.handleAnimalMessage(animal).block()
 	}
 
 	@Subscription(value = "animals-legacy", contentType = "application/xml")
 	fun  receiveXML(animal: Animal, @MessageId id: String) { // <b class="conum">(4)</b>
+        messageProcessor.handleAnimalMessage(animal).block()
 	}
 }</code></pre>
 </div>
@@ -3038,7 +3052,178 @@ class ContentTypeSubscriber {
 </table>
 </div>
 
-<h2 id="subscriberHeaders"><a class="anchor" href="#subscriberHeaders"></a>8.6.2 Message Headers</h2>
+<h2 id="subscriberReactive"><a class="anchor" href="#subscriberReactive"></a>8.6.2 Receiving and Returning Reactive Types</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberReactive.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In addition to byte[], PubsubMessage, and POJOs you can also define listener methods that receive a Reactive type such as a Reactor <a href="https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html">Mono</a> or a RxJava <a href="http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Single.html">Single</a>. The same deserialization rules as above will be applied using the type parameter of the Reactive type.</p>
+</div>
+<div class="paragraph">
+<p>For the conversion to Reactive types to work correctly, you must add either the library <a href="https://micronaut-projects.github.io/micronaut-reactor/latest/guide/">Micronaut Reactor</a> or <a href="https://micronaut-projects.github.io/micronaut-rxjava3/latest/guide/">Micronaut RxJava 3</a> to your application&#8217;s dependencies.</p>
+</div>
+<div class="paragraph">
+<p>For example, using Reactor:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.MessageId;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+import io.micronaut.gcp.pubsub.annotation.Subscription;
+import io.micronaut.gcp.pubsub.support.Animal;
+import reactor.core.publisher.Mono;
+
+@PubSubListener
+public class ReactiveSubscriber {
+
+    private final MessageProcessor messageProcessor;
+
+    public ReactiveSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor;
+    }
+
+    @Subscription("raw-subscription") // <b class="conum">(1)</b>
+    Mono&lt;Object&gt; receiveRaw(Mono&lt;byte[]&gt; data, @MessageId String id) {
+        return data.flatMap(messageProcessor::handleByteArrayMessage);
+    }
+
+    @Subscription("native-subscription") // <b class="conum">(2)</b>
+    Mono&lt;Object&gt; receiveNative(Mono&lt;PubsubMessage&gt; message) {
+        return message.flatMap(messageProcessor::handlePubSubMessage);
+    }
+
+    @Subscription("animals") // <b class="conum">(3)</b>
+    Mono&lt;Object&gt; receivePojo(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage);
+    }
+
+    @Subscription(value = "animals-legacy", contentType = "application/xml") // <b class="conum">(4)</b>
+    Mono&lt;Object&gt; receiveXML(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.MessageId
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.support.Animal
+import reactor.core.publisher.Mono
+
+
+@PubSubListener
+class ReactiveSubscriber {
+
+    private final MessageProcessor messageProcessor
+
+    ReactiveSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
+    @Subscription("raw-subscription") // <b class="conum">(1)</b>
+    Mono&lt;Object&gt; receiveRaw(Mono&lt;byte[]&gt; data, @MessageId String id) {
+        return data.flatMap(messageProcessor::handleByteArrayMessage)
+    }
+
+    @Subscription("native-subscription") // <b class="conum">(2)</b>
+    Mono&lt;Object&gt; receiveNative(Mono&lt;PubsubMessage&gt; message) {
+        return message.flatMap(messageProcessor::handlePubSubMessage)
+    }
+
+    @Subscription("animals") // <b class="conum">(3)</b>
+    Mono&lt;Object&gt; receivePojo(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+    }
+
+    @Subscription(value = "animals-legacy", contentType = "application/xml") // <b class="conum">(4)</b>
+    Mono&lt;Object&gt; receiveXML(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.MessageId
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.support.Animal
+import reactor.core.publisher.Mono
+
+
+@PubSubListener
+class ReactiveSubscriber(private val messageProcessor: MessageProcessor) {
+
+    @Subscription("raw-subscription")
+    fun receiveRaw(data: Mono&lt;ByteArray&gt;, @MessageId id: String): Mono&lt;Any&gt; { // <b class="conum">(1)</b>
+        return data.flatMap { payload -&gt;
+            messageProcessor.handleByteArrayMessage(payload)
+        }
+    }
+
+    @Subscription("native-subscription")
+    fun receiveNative(message: Mono&lt;PubsubMessage&gt;): Mono&lt;Any&gt; { // <b class="conum">(2)</b>
+        return message.flatMap { payload -&gt;
+            messageProcessor.handlePubsubMessage(payload)
+        }
+    }
+
+    @Subscription("animals")
+    fun receivePojo(message: Mono&lt;Animal&gt;, @MessageId id: String): Mono&lt;Any&gt; { // <b class="conum">(3)</b>
+        return message.flatMap { animal -&gt;
+            messageProcessor.handleAnimalMessage(animal)
+        }
+    }
+
+    @Subscription(value = "animals-legacy", contentType = "application/xml")
+    fun receiveXML(message: Mono&lt;Animal&gt;, @MessageId id: String): Mono&lt;Any&gt; { // <b class="conum">(4)</b>
+        return message.flatMap { animal -&gt;
+            messageProcessor.handleAnimalMessage(animal)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Bytes are copied and wrapped in a <code>Mono</code>, SerDes is bypassed, message id injected for usage</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>SerDes is bypassed, <code>PubSubMessage</code> object is copied and wrapped in a <code>Mono</code>, no need to use <code>@MessageId</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The framework will try to deserialize this payload into <code>Mono&lt;Animal&gt;</code>. If no <code>Content-Type</code> header is found, will default to <code>application/json</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Uses a custom SerDes and the framework will find a <a href="../api/io/micronaut/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a> that can handle <code>application/xml</code> and then pass the deserialized payload as <code>Mono&lt;Animal&gt;</code>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Note that the above examples all return a <code>Mono&lt;Object&gt;</code> to allow for a fully non-blocking reactive message processing pipeline. When a <code>Publisher</code> is returned from a <code>@Subscription</code> method, it will be subscribed to by the framework and the message will not be auto-acknowledged until the <code>Publisher</code> completes successfully. If the <code>Publisher</code> completes with an error, the framework will <code>nack()</code> the message for re-delivery.</p>
+</div>
+
+<h2 id="subscriberHeaders"><a class="anchor" href="#subscriberHeaders"></a>8.6.3 Message Headers</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberHeaders.adoc"'>
@@ -3058,7 +3243,8 @@ class ContentTypeSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 import io.micronaut.messaging.annotation.MessageHeader;
@@ -3076,10 +3262,10 @@ public class CustomHeaderSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
-import io.micronaut.messaging.annotation.MessageHeader;
+import io.micronaut.messaging.annotation.MessageHeader
 
 @PubSubListener
 class CustomHeaderSubscriber {
@@ -3094,7 +3280,8 @@ class CustomHeaderSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.messaging.annotation.MessageHeader
@@ -3118,7 +3305,7 @@ class CustomHeaderSubscriber {
 </table>
 </div>
 
-<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>8.6.3 Subscriber properties</h2>
+<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>8.6.4 Subscriber properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberProperties.adoc"'>
@@ -3266,7 +3453,8 @@ gcp.pubsub.subscriber.custom.parallel-pull-count=4</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 
@@ -3283,9 +3471,9 @@ public class CustomConfigurationSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.support.Animal;
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.support.Animal
 
 @PubSubListener
 class CustomConfigurationSubscriber {
@@ -3300,7 +3488,8 @@ class CustomConfigurationSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 
@@ -3324,7 +3513,7 @@ class CustomConfigurationSubscriber {
 </table>
 </div>
 
-<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>8.6.4 Handling message acknowledgement</h2>
+<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>8.6.5 Handling message acknowledgement</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/messageAcknowledge.adoc"'>
@@ -3355,17 +3544,41 @@ If you provide an <code>Acknowledge</code> type in your method and forget to inv
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 import io.micronaut.messaging.Acknowledgement;
+import reactor.core.publisher.Mono;
 
 @PubSubListener
 public class AcknowledgementSubscriber {
 
-    @Subscription("animals")
-    public void onMessage(Animal animal, Acknowledgement acknowledgement) { // <b class="conum">(1)</b>
+    private final MessageProcessor messageProcessor;
 
+    public AcknowledgementSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor;
+    }
+
+    @Subscription("animals")
+    public void onMessage(Animal animal, Acknowledgement acknowledgement) {
+        if (Boolean.TRUE.equals(messageProcessor.handleAnimalMessage(animal).block())) {
+            acknowledgement.ack();
+        } else {
+            acknowledgement.nack();
+        }
+    }
+
+    @Subscription("animals-async")
+    public Mono&lt;Boolean&gt; onReactiveMessage(Mono&lt;Animal&gt; animal, Acknowledgement acknowledgement) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+            .doOnNext(result -&gt; {
+                if (Boolean.TRUE.equals(result)) {
+                    acknowledgement.ack();
+                } else {
+                    acknowledgement.nack();
+                }
+            });
     }
 
 }</code></pre>
@@ -3373,17 +3586,40 @@ public class AcknowledgementSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
-import io.micronaut.gcp.pubsub.support.Animal;
-import io.micronaut.messaging.Acknowledgement;
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.support.Animal
+import io.micronaut.messaging.Acknowledgement
+import reactor.core.publisher.Mono
+
 
 @PubSubListener
 class AcknowledgementSubscriber {
 
-    @Subscription("animals")
-    void onMessage(Animal animal, Acknowledgement acknowledgement) { // <b class="conum">(1)</b>
+    MessageProcessor messageProcessor
 
+    AcknowledgementSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
+    @Subscription("animals")
+    void onMessage(Animal animal, Acknowledgement acknowledgement) {
+        if (Boolean.TRUE == messageProcessor.handleAnimalMessage(animal).block()) {
+            acknowledgement.ack()
+        } else {
+            acknowledgement.nack()
+        }
+    }
+
+    @Subscription("animals-async")
+    Mono&lt;Boolean&gt; onReactiveMessage(Mono&lt;Animal&gt; animal, Acknowledgement acknowledgement) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+                .doOnNext(result -&gt; {
+                    if (Boolean.TRUE == result) {
+                        acknowledgement.ack()
+                    } else {
+                        acknowledgement.nack()
+                    }
+                })
     }
 
 }</code></pre>
@@ -3391,23 +3627,46 @@ class AcknowledgementSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.messaging.Acknowledgement
+import reactor.core.publisher.Mono
+
 
 @PubSubListener
-class AcknowledgementSubscriber {
+class AcknowledgementSubscriber(private val messageProcessor: MessageProcessor) {
 
-	@Subscription("animals")
-	fun onMessage(animal: Animal, acknowledgement: Acknowledgement) { // <b class="conum">(1)</b>
+    @Subscription("animals")
+    fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
+        if (messageProcessor.handleAnimalMessage(animal).block() == true) {
+            acknowledgement.ack()
+            messageProcessor.recordAcknowledgement(acknowledgement)
+        } else {
+            acknowledgement.nack()
+            messageProcessor.recordAcknowledgement(acknowledgement)
+        }
+    }
 
-	}
+    @Subscription("animals-async")
+    fun onReactiveMessage(message: Mono&lt;Animal&gt;, acknowledgement: Acknowledgement): Mono&lt;Boolean&gt; {
+        return message.flatMap { animal -&gt; messageProcessor.handleAnimalMessage(animal) }
+            .doOnNext { result -&gt;
+                if (result) {
+                    acknowledgement.ack()
+                    messageProcessor.recordAcknowledgement(acknowledgement)
+                } else {
+                    acknowledgement.nack()
+                    messageProcessor.recordAcknowledgement(acknowledgement)
+                }
+            }
+    }
 }</code></pre>
 </div>
 </div>
 
-<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>8.6.5 Consumer error handling</h2>
+<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>8.6.6 Consumer error handling</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/errorHandling.adoc"'>
@@ -3457,6 +3716,7 @@ class AcknowledgementSubscriber {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
@@ -3517,7 +3777,8 @@ class ErrorHandlingSubscriber implements PubSubMessageReceiverExceptionHandler {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler
 import io.micronaut.gcp.pubsub.support.Animal
@@ -3567,7 +3828,7 @@ class ErrorHandlingSubscriber : PubSubMessageReceiverExceptionHandler { // <b cl
 </table>
 </div>
 
-<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>8.6.6 Custom Parameter Binding</h2>
+<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>8.6.7 Custom Parameter Binding</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/customParameter.adoc"'>
