@@ -25,3 +25,31 @@ You can inject this bean and use the `getProjectId()` method to retrieve the con
 The module will setup a bean of exposing the `com.google.auth.oauth2.GoogleCredentials` instance that are either detected from the local environment or configured by api:gcp.credentials.GoogleCredentialsConfiguration[]:
 
 include::{includedir}configurationProperties/io.micronaut.gcp.credentials.GoogleCredentialsConfiguration.adoc[]
+
+=== Debug Logging
+
+The underlying GCP SDK libraries use the standard `java.util.logging` package (JUL) for log statements. The libraries are fairly conservative in what they log by default. If you need to debug the GCP libraries' activity, especially their GRPC-based communication with the GCP cloud services, it can be useful to turn up the logging level. In order to do this in conjunction with the framework's SLF4J-based logging, it is necessary to perform some additional setup to https://www.slf4j.org/legacy.html#jul-to-slf4jBridge[enable the JUL bridge library for SLF4J].
+
+WARNING: There is an unavoidable performance impact to enabled JUL log statements when using the `jul-to-slf4j` bridge, thus it is advised to be conservative in enabling this configuration, preferably only for debugging purposes.
+
+To enable the GCP library debug logging, first add the `jul-to-slf4j.jar` dependency to your classpath:
+dependency:org.slf4j:jul-to-slf4j:2.0.9[scope="runtimeOnly"]
+
+Next you can either enable the JUL bridge class `SLF4JBridgeHandler` programmatically during application initialization (such as in the `main` method of your application), or by adding the following line to a `logging.properties` file on your classpath (see the https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html[SLF4JBridgeHandler javadocs] for more details):
+[source,properties]
+----
+ handlers = org.slf4j.bridge.SLF4JBridgeHandler
+----
+
+Next add the following configuration for https://logback.qos.ch/manual/configuration.html#LevelChangePropagator[`LevelChangePropagator`] (which eliminates the performance impact of disabled JUL log statements) to your SLF4J configuration:
+[source,xml]
+----
+<configuration>
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+   <!-- rest of the configuration file .... -->
+</configuration>
+----
+
+Once this is done, you can set the logging level for GCP library classes in the usual manner using SLF4J configuration.
+
+
