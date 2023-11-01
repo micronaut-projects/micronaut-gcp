@@ -323,6 +323,65 @@
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="_debug_logging">Debug Logging</h3>
+<div class="paragraph">
+<p>The underlying GCP SDK libraries use the standard <code>java.util.logging</code> package (JUL) for log statements. The libraries are fairly conservative in what they log by default. If you need to debug the GCP libraries' activity, especially their GRPC-based communication with the GCP cloud services, it can be useful to turn up the logging level. In order to do this in conjunction with the framework&#8217;s SLF4J-based logging, it is necessary to perform some additional setup to <a href="https://www.slf4j.org/legacy.html#jul-to-slf4jBridge">enable the JUL bridge library for SLF4J</a>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+There is an unavoidable performance impact to enabled JUL log statements when using the <code>jul-to-slf4j</code> bridge, thus it is advised to be conservative in enabling this configuration, preferably only for debugging purposes.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To enable the GCP library debug logging, first add the <code>jul-to-slf4j.jar</code> dependency to your classpath:
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">runtimeOnly(<span class="hljs-string">"org.slf4j:jul-to-slf4j:2.0.9")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;jul-to-slf4j&lt;/artifactId&gt;
+    &lt;version&gt;2.0.9&lt;/version&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+<div class="paragraph">
+<p>Next you can either enable the JUL bridge class <code>SLF4JBridgeHandler</code> programmatically during application initialization (such as in the <code>main</code> method of your application), or by adding the following line to a <code>logging.properties</code> file on your classpath (see the <a href="https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html">SLF4JBridgeHandler javadocs</a> for more details):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"> handlers = org.slf4j.bridge.SLF4JBridgeHandler</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next add the following configuration for <a href="https://logback.qos.ch/manual/configuration.html#LevelChangePropagator"><code>LevelChangePropagator</code></a> (which eliminates the performance impact of disabled JUL log statements) to your SLF4J configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+  &lt;contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/&gt;
+   &lt;!-- rest of the configuration file .... --&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once this is done, you can set the logging level for GCP library classes in the usual manner using SLF4J configuration.</p>
+</div>
+</div>
 
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>3 Release History</h1>
 
