@@ -40,7 +40,7 @@ micronaut-discovery = "4.0.3"
 micronaut-validation = "4.0.3"
 
 # Micronaut
-micronaut-gradle-plugin = "4.0.3"
+micronaut-gradle-plugin = "4.1.2"
 
 [libraries]
 # Core
