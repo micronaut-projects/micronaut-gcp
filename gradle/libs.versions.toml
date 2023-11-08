@@ -30,7 +30,7 @@ mockito = '5.6.0'
 
 micronaut-jackson-xml = "4.0.1"
 micronaut-logging = "1.0.0"
-micronaut-reactor = "3.0.2"
+micronaut-reactor = "3.1.0"
 micronaut-rxjava3 = "3.0.1"
 micronaut-serde = "2.2.6"
 micronaut-servlet = "4.0.3"
