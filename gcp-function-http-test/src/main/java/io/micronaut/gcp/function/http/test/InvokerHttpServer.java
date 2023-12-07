@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import io.micronaut.context.env.Environment;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.io.socket.SocketUtils;
 import io.micronaut.gcp.function.http.HttpFunction;
 import io.micronaut.http.server.HttpServerConfiguration;
 import io.micronaut.http.server.exceptions.HttpServerException;
 import io.micronaut.http.server.exceptions.ServerStartupException;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.runtime.server.EmbeddedServer;
+import jakarta.inject.Singleton;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -41,10 +41,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Singleton;
-
 import java.io.IOException;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -63,33 +64,34 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Internal
 @Experimental
 public class InvokerHttpServer implements EmbeddedServer {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(InvokerHttpServer.class);
     private final ApplicationContext applicationContext;
-    private final HttpServerConfiguration serverConfiguration;
-    private final boolean randomPort;
+    private final ServerPort serverPort;
     private final AtomicBoolean running = new AtomicBoolean(false);
-    private int port;
     private Server server;
+    private HttpFunction httpFunction;
 
-    public InvokerHttpServer(ApplicationContext applicationContext, HttpServerConfiguration serverConfiguration) {
+    public InvokerHttpServer(ApplicationContext applicationContext, HttpServerConfiguration httpServerConfiguration) {
         this.applicationContext = applicationContext;
-        this.serverConfiguration = serverConfiguration;
-        Optional<Integer> port = serverConfiguration.getPort();
-        if (port.isPresent()) {
-            this.port = port.get();
-            if (this.port == -1) {
-                this.port = SocketUtils.findAvailableTcpPort();
-                this.randomPort = true;
+        this.serverPort = createServerPort(httpServerConfiguration);
+    }
+
+    private ServerPort createServerPort(HttpServerConfiguration httpServerConfiguration) {
+        Optional<Integer> portOpt = httpServerConfiguration.getPort();
+        if (portOpt.isPresent()) {
+            Integer port = portOpt.get();
+            if (port == -1) {
+                return new ServerPort(true, 0);
+
             } else {
-                this.randomPort = false;
+                return new ServerPort(false, port);
             }
         } else {
             if (applicationContext.getEnvironment().getActiveNames().contains(Environment.TEST)) {
-                this.randomPort = true;
-                this.port = SocketUtils.findAvailableTcpPort();
+                return new ServerPort(true, 0);
             } else {
-                this.randomPort = false;
-                this.port = 8080;
+                return new ServerPort(false, 8080);
             }
         }
     }
@@ -97,61 +99,50 @@ public class InvokerHttpServer implements EmbeddedServer {
     @Override
     public EmbeddedServer start() {
         if (running.compareAndSet(false, true)) {
-            int retryCount = 0;
-            while (retryCount <= 3) {
-                try {
-                    this.server = new Server(port);
+            int port = serverPort.port();
+            try {
+                this.server = new Server(port);
 
-                    ServletContextHandler servletContextHandler = new ServletContextHandler();
-                    servletContextHandler.setContextPath("/");
-                    server.setHandler(NotFoundHandler.forServlet(servletContextHandler));
+                ServletContextHandler servletContextHandler = new ServletContextHandler();
+                servletContextHandler.setContextPath("/");
+                server.setHandler(NotFoundHandler.forServlet(servletContextHandler));
 
-                    HttpFunction httpFunction = new HttpFunction() {
-                        @Override
-                        protected ApplicationContext buildApplicationContext(@Nullable Object context) {
-                            ApplicationContext ctx = InvokerHttpServer.this.getApplicationContext();
-                            this.applicationContext = ctx;
-                            return ctx;
-                        }
-                    };
-                    HttpServlet servlet = new HttpServlet() {
-                        @Override
-                        protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
-
-                            try {
-                                httpFunction.service(
-                                        new HttpRequestImpl(req),
-                                        new HttpResponseImpl(resp)
-                                );
-                            } catch (Exception e) {
-                                throw new ServletException(e);
-                            }
-                        }
-                    };
-                    ServletHolder servletHolder = new ServletHolder(servlet);
-                    servletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(""));
-                    servletContextHandler.addServlet(servletHolder, "/*");
-
-                    server.start();
-                    logServerInfo();
-                    break;
-                } catch (BindException e) {
-                    if (randomPort) {
-                        this.port = SocketUtils.findAvailableTcpPort();
-                        retryCount++;
-                    } else {
-                        throw new ServerStartupException(e.getMessage(), e);
+                httpFunction = new HttpFunction() {
+                    @Override
+                    protected ApplicationContext buildApplicationContext(@Nullable Object context) {
+                        ApplicationContext ctx = InvokerHttpServer.this.getApplicationContext();
+                        this.applicationContext = ctx;
+                        return ctx;
                     }
-                } catch (Exception e) {
-                    throw new ServerStartupException(
-                            "Error starting Google Cloud Function server: " + e.getMessage(),
-                            e
-                    );
-                }
-            }
+                };
+                ServletHolder servletHolder = getServletHolder();
+                servletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(""));
+                servletContextHandler.addServlet(servletHolder, "/*");
 
+                this.server.start();
+            } catch (Exception e) {
+                throw new ServerStartupException(e.getMessage(), e);
+            }
         }
         return this;
+    }
+
+    private ServletHolder getServletHolder() {
+        HttpServlet servlet = new HttpServlet() {
+
+            @Override
+            protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+                try {
+                    httpFunction.service(
+                        new HttpRequestImpl(req),
+                        new HttpResponseImpl(resp)
+                    );
+                } catch (Exception e) {
+                    throw new ServletException(e);
+                }
+            }
+        };
+        return new ServletHolder(servlet);
     }
 
     /**
@@ -167,6 +158,7 @@ public class InvokerHttpServer implements EmbeddedServer {
     public EmbeddedServer stop() {
         if (running.compareAndSet(true, false)) {
             try {
+                httpFunction.close();
                 applicationContext.close();
                 server.stop();
             } catch (Exception e) {
@@ -181,7 +173,7 @@ public class InvokerHttpServer implements EmbeddedServer {
 
     @Override
     public int getPort() {
-        return port;
+        return server.getURI().getPort();
     }
 
     @Override
@@ -220,18 +212,12 @@ public class InvokerHttpServer implements EmbeddedServer {
 
     @Override
     public ApplicationConfiguration getApplicationConfiguration() {
-        return serverConfiguration.getApplicationConfiguration();
+        return applicationContext.getBean(ApplicationConfiguration.class);
     }
 
     @Override
     public boolean isRunning() {
         return running.get();
-    }
-
-    private void logServerInfo() {
-        LOGGER.info("Serving function...");
-        LOGGER.info("Function: {}", getFunctionClass().getName());
-        LOGGER.info("URL: http://localhost:{}/", port);
     }
 
     /**
@@ -241,8 +227,8 @@ public class InvokerHttpServer implements EmbeddedServer {
      * can see two requests, one for {@code /favicon.ico} and one for {@code /} (or whatever).
      */
     private static class NotFoundHandler extends HandlerWrapper {
-        private static final Set<String> NOT_FOUND_PATHS =
-                new HashSet<>(Arrays.asList("/favicon.ico", "/robots.txt"));
+
+        private static final Set<String> NOT_FOUND_PATHS = new HashSet<>(Arrays.asList("/favicon.ico", "/robots.txt"));
 
         @Override
         public void handle(String target, Request baseRequest, HttpServletRequest request,
@@ -259,5 +245,8 @@ public class InvokerHttpServer implements EmbeddedServer {
             handler.setHandler(servletHandler);
             return handler;
         }
+    }
+
+    private record ServerPort(boolean random, Integer port) {
     }
 }
