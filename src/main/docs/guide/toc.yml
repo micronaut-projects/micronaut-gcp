@@ -39,4 +39,5 @@ secretManager:
   distributedConfiguration: Distributed Configuration
   secretManagerClient: Low-Level Secret Manager Client access
 cloudStorage: Google Cloud Storage Support
+gcpGuides: Guides
 repository: Repository

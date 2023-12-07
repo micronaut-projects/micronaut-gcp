@@ -1,0 +1,4 @@
+Read the following guides to learn more about working with Google Cloud Platform in the Micronaut Framework:
+
+- https://guides.micronaut.io/latest/tag-gcp.html[Google Cloud]
+- https://guides.micronaut.io/latest/tag-google_cloud_run.html[Google Cloud Run]
