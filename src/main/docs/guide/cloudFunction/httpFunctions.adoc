@@ -85,4 +85,6 @@ You can then use this variable to test the function invocation:
 $ curl -i $YOUR_HTTP_TRIGGER_URL/hello/John
 ```
 
+TIP: See the guide for https://guides.micronaut.io/latest/micronaut-google-cloud-http-function.html[Deploy an HTTP Function to Google Cloud Functions] to learn more.
+
 

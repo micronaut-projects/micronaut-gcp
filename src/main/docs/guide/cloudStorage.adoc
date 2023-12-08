@@ -5,3 +5,5 @@ To get started, select the `object-storage-gcp` feature in https://micronaut.io/
 dependency:io.micronaut.objectstorage:micronaut-object-storage-gcp[]
 
 For more information, check the https://micronaut-projects.github.io/micronaut-object-storage/latest/guide/#gcp[Micronaut Object Storage GCP support] documentation.
+
+TIP: See the guide for https://guides.micronaut.io/latest/micronaut-object-storage-gcp.html[Use the Micronaut Object Storage API to store files in Google Cloud Storage] to learn more.
