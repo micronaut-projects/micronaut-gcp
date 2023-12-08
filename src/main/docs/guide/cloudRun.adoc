@@ -1,0 +1,3 @@
+https://cloud.google.com/run[Google Cloud Run] ia a fully-managed serverless platform for containerized applications.
+
+To learn more see the Micronaut guides for https://guides.micronaut.io/latest/tag-google_cloud_run.html[Google Cloud Run]
