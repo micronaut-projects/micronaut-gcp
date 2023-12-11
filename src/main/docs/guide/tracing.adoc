@@ -22,3 +22,4 @@ tracing:
 - `sampler.probability` (optional) Set sampling probability to 100% for dev/testing purposes to observe traces
 - `gcp.tracing.enabled` (optional) Enable/disable Stackdriver Trace configuration, defaults to true
 
+TIP: See the guide for https://guides.micronaut.io/latest/micronaut-cloud-trace-google.html[OpenTelemetry Tracing with Google Cloud Trace and the Micronaut Framework] to learn more.

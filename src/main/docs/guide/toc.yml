@@ -9,6 +9,7 @@ cloudFunction:
   simpleFunctions: Simple Functions
   httpFunctions: HTTP Functions
   cloudEventsFunctions: CloudEvents Functions
+cloudRun: Google Cloud Run
 pubsub:
   title: Google Cloud Pub/Sub Support
   pubsubIntroduction: Introduction
@@ -39,4 +40,5 @@ secretManager:
   distributedConfiguration: Distributed Configuration
   secretManagerClient: Low-Level Secret Manager Client access
 cloudStorage: Google Cloud Storage Support
+gcpGuides: Guides
 repository: Repository
