@@ -7,6 +7,7 @@ import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.bind.DefaultExecutableBinder;
@@ -27,17 +28,23 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import io.micronaut.scheduling.TaskExecutors;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Named;
 import jakarta.inject.Qualifier;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> implements ExecutableMethodProcessor<A> {
@@ -69,6 +76,7 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
                     .getAnnotationTypeByStereotype(Qualifier.class)
                     .map(type -> Qualifiers.byAnnotation(beanDefinition, type))
                     .orElse(null);
+            boolean isBlocking = beanDefinition.hasDeclaredAnnotation(Blocking.class) || method.hasDeclaredAnnotation(Blocking.class);
             boolean hasAckArg = Arrays.stream(method.getArguments())
                     .anyMatch(arg -> Acknowledgement.class.isAssignableFrom(arg.getType()));
 
@@ -100,7 +108,7 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
                     try {
                         @SuppressWarnings("rawtypes")
                         BoundExecutable executable = binder.bind(method, binderRegistry, consumerState);
-                        Flux<?> resultPublisher = resultAsFlux(Objects.requireNonNull(executable).invoke(bean));
+                        Flux<?> resultPublisher = executeSubscriberMethod(executable, bean, isBlocking);
                         resultPublisher.subscribe(data -> { }, //no-op
                             ex -> handleException(new PubSubMessageReceiverException("Error handling message", ex, bean, consumerState, autoAcknowledge)),
                             autoAcknowledge ? pubSubAcknowledgement::ack : () -> this.verifyManualAcknowledgment(executable, method.getName()));
@@ -115,7 +123,9 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
         }
     }
 
-    protected abstract boolean doBeforeSubscriber(PubsubMessage message, AckReplyConsumer ackReplyConsumer);
+    protected boolean doBeforeSubscriber(PubsubMessage message, AckReplyConsumer ackReplyConsumer) {
+        return true;
+    }
 
     protected abstract void addSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver, String configuration);
 
@@ -141,7 +151,7 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
         shutDownMode.set(true);
     }
 
-    private void handleException(PubSubMessageReceiverException ex) {
+    protected void handleException(PubSubMessageReceiverException ex) {
         if (ex.getListener() instanceof PubSubMessageReceiverExceptionHandler bean) {
             bean.handle(ex);
         } else {
@@ -149,8 +159,9 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> Flux<T> resultAsFlux(T result) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected Flux<?> executeSubscriberMethod(BoundExecutable executable, Object bean, boolean isBlocking) {
+        Object result = Objects.requireNonNull(executable).invoke(bean);
         if (!Publishers.isConvertibleToPublisher(result)) {
             return Flux.empty();
         }

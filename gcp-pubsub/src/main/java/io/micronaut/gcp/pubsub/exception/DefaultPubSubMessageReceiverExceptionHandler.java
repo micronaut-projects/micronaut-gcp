@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.exception;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.gcp.pubsub.push.PubSubPushMessageReceiverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ public class DefaultPubSubMessageReceiverExceptionHandler implements PubSubMessa
     @Override
     public void handle(PubSubMessageReceiverException exception) {
         logger.error(String.format("Error processing message on bean %s listening for subscription: %s", exception.getListener().getClass().getName(), exception.getState().getSubscriptionName()), exception);
-        if (exception.isAutoAcknowledge()) {
+        if (exception.isAutoAcknowledge() || exception instanceof PubSubPushMessageReceiverException) {
             exception.getState().getAckReplyConsumer().nack();
         }
     }

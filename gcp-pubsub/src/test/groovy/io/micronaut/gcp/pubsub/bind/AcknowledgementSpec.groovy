@@ -46,7 +46,8 @@ class AcknowledgementSpec extends AbstractConsumerSpec {
     def setup() {
         listener.msg = null
         listener.manuallyProcessed = false
-        listenerWithHandler.ex = null;
+        exceptionHandler.ex = null
+        listenerWithHandler.ex = null
     }
 
     void "automatically ack successfully processed message"() {
