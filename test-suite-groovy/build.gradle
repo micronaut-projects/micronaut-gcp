@@ -9,6 +9,8 @@ dependencies {
     testImplementation(platform(mn.micronaut.core.bom))
     testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
 }
 
 micronaut {

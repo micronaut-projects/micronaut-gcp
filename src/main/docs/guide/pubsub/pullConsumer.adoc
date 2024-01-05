@@ -1,13 +1,28 @@
-To start receiving messages you annotate a class with ann:gcp.pubsub.annotation.PubSubListener[], the framework will then use AOP to deliver messages to methods annotated with ann:gcp.pubsub.annotation.Subscription[].
+To start receiving messages you annotate a class with ann:gcp.pubsub.annotation.PubSubListener[], the framework will then use AOP to deliver messages to methods annotated with either ann:gcp.pubsub.annotation.Subscription[] or ann:gcp.pubsub.annotation.PushSubscription[].
+
+NOTE: The semantics for how methods work when annotated with these two different subscription annotations are identical, differing only by the infrastructure that the framework transparently sets up to deliver the messages. In the following examples, ann:gcp.pubsub.annotation.Subscription[] can be exchanged for ann:gcp.pubsub.annotation.PushSubscription[] and the behavior will be the same except for some minor differences noted in the following sections.
 
 == Subscriptions
 
-
-All methods annotated with ann:gcp.pubsub.annotation.Subscription[] will be invoked by the framework.
+=== Pull Subscriptions
+All methods annotated with ann:gcp.pubsub.annotation.Subscription[] will be invoked by the framework in response to receiving messages via link:https://cloud.google.com/pubsub/docs/pull[Pull] subscription.
 Each annotated method creates an individual link:https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html[Subscriber],
 that can be configured using the `configuration` parameter of the ann:gcp.pubsub.annotation.Subscription[] annotation.
 
-IMPORTANT: Methods annotated with ann:gcp.pubsub.annotation.Subscription[] must be unique on your application.
+Pull subscriptions are long-running processes that continually poll the PubSub service, and are meant to be used in an environment such as Google Kubernetes Engine.
+
+=== Push Subscriptions
+Methods annotated with ann:gcp.pubsub.annotation.PushSubscription[] will be invoked by the framework in response to receiving messages via link:https://cloud.google.com/pubsub/docs/push[Push] subscription.
+
+Push messages are sent to the application by the PubSub service via HTTP request, making them an ideal fit for serverless environments such as Cloud Run.
+
+When Push subscriptions are enabled, the application will expose a single HTTP endpoint for processing all push requests, and messages will be routed to the matching `PushSubscription` method. The default path for this endpoint is `/push`. This endpoint URL must be specified when setting up a Push subscription in GCP.
+
+NOTE: As Push message handling uses HTTP, you must have a Micronaut HTTP server implementation available on your classpath, or else push handling will be disabled.
+
+NOTE: The available parameters of the ann:gcp.pubsub.annotation.PushSubscription[] annotation are identical to those of ann:gcp.pubsub.annotation.Subscription[], except for `configuration` which is relevant only to Pull subscriptions.
+
+IMPORTANT: Methods annotated with ann:gcp.pubsub.annotation.Subscription[] or ann:gcp.pubsub.annotation.PushSubscription[] must be unique in your application.
 If two distinct methods try to subscribe to the same `Subscription` an error is thrown.
 This is intended to avoid issues with message Acknowledgement control.
 
@@ -16,7 +31,7 @@ IMPORTANT: The annotated method must have at least one argument that is bound to
 
 == Resource naming
 
-Just as described on the <<producer, Pub/Sub Publisher>> section, subscriptions examples are also using simple names such as `animals`.
+Just as described in the <<producer, Pub/Sub Publisher>> section, subscriptions also use simple names such as `animals`.
 Inside Google Cloud however resources are only accessible via their FQN. A Subscription name follows the pattern: `projects/$PROJECT_ID/subscriptions/$SUBSCRIPTION_NAME`.
 Micronaut integration with GCP will automatically grab the default project id available (please refer to the section <<setup, Google Project Id>> ) and convert the simple naming of the resource into a FQN.
 You can also pass a FQN as the subscription name.

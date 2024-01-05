@@ -1,0 +1,1 @@
+The Pub/Sub emulator does not provide any built-in support for simulating Push messages. That said, testing your PushSubscription endpoints can be done simply by using Micronaut's HttpClient to simulate delivery of Push messages  .

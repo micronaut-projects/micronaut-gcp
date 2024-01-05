@@ -10,7 +10,7 @@ tasks.withType(Test) {
 dependencies {
     annotationProcessor(mn.micronaut.inject.java)
 
-    implementation(projects.micronautGcpFunctionHttp)
+    compileOnly(projects.micronautGcpFunctionHttp)
     implementation(projects.micronautGcpPubsub)
     implementation(projects.micronautGcpSecretManager)
     implementation(mn.reactor)

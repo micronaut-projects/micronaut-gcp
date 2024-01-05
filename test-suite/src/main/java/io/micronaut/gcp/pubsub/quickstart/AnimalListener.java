@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 package io.micronaut.gcp.pubsub.quickstart;
-//tag::imports[]
+
 import io.micronaut.context.annotation.Requires;
+//tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
 // end::imports[]
+//tag::pushimport[]
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+//end::pushimport[]
+//tag::pullimport[]
+import io.micronaut.gcp.pubsub.annotation.Subscription;
+//end::pullimport[]
 
 // There are currently no tests for this class. It is disabled in the test environment
 // in order to prevent clashes with other subscribers.
@@ -26,16 +32,28 @@ import io.micronaut.gcp.pubsub.annotation.Subscription;
 // tag::clazz[]
 @PubSubListener // <1>
 public class AnimalListener {
-
+// end::clazz[]
 
     /**
      *
      * @param data raw data
      */
+// tag::pull[]
     @Subscription("animals") // <2>
     public void onMessage(byte[] data) { // <3>
         System.out.println("Message received");
     }
-
+// end::pull[]
+    /**
+     *
+     * @param data raw data
+     */
+// tag::push[]
+    @PushSubscription("animals-push") // <2>
+    public void onPushMessage(byte[] data) { // <3>
+        System.out.println("Message received");
+    }
+// end::push[]
+// tag::clazzend[]
 }
-// end::clazz[]
+// end::clazzend[]

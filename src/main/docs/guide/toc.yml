@@ -27,7 +27,7 @@ pubsub:
     subscriberContentType: Content-Type and message deserialization
     subscriberReactive: Receiving and Returning Reactive Types
     subscriberHeaders: Message Headers
-    subscriberProperties: Subscriber properties
+    subscriberProperties: Pull Subscriber properties
     messageAcknowledge: Handling message acknowledgement
     errorHandling: Consumer error handling
     customParameter: Custom Parameter Binding
@@ -35,6 +35,7 @@ pubsub:
     title: Message Serialization/Deserialization (SerDes)
   executors: Configuring Thread pools
   emulator: Using Google Cloud Pub/Sub emulator
+  pushTesting: Testing Push Subscribers
 secretManager:
   title: Google Cloud Secret Manager Support
   distributedConfiguration: Distributed Configuration

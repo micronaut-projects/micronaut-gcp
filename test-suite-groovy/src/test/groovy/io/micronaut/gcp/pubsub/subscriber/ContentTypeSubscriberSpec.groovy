@@ -26,10 +26,10 @@ class ContentTypeSubscriberSpec extends Specification {
     @Inject
     ContentTypeSubscriber subscriber
 
-    Object message
+    Object receivedMessage
 
     def setup() {
-        message = null
+        receivedMessage = null
     }
 
     void "receive raw bytes"() {
@@ -42,9 +42,9 @@ class ContentTypeSubscriberSpec extends Specification {
 
         then:
         conditions.eventually {
-            assert message != null
-            assert message instanceof byte[]
-            String decodedMessage = new String((message as byte[]), StandardCharsets.UTF_8)
+            assert receivedMessage != null
+            assert receivedMessage instanceof byte[]
+            String decodedMessage = new String((receivedMessage as byte[]), StandardCharsets.UTF_8)
             assert "foo" == decodedMessage
         }
     }
@@ -59,9 +59,9 @@ class ContentTypeSubscriberSpec extends Specification {
 
         then:
         conditions.eventually {
-            assert message != null
-            assert message instanceof PubsubMessage
-            String decodedMessage = (message as PubsubMessage).getData().toString(StandardCharsets.UTF_8)
+            assert receivedMessage != null
+            assert receivedMessage instanceof PubsubMessage
+            String decodedMessage = (receivedMessage as PubsubMessage).getData().toString(StandardCharsets.UTF_8)
             assert "foo" == decodedMessage
         }
     }
@@ -76,9 +76,9 @@ class ContentTypeSubscriberSpec extends Specification {
 
         then:
         conditions.eventually {
-            assert message != null
-            assert message instanceof Animal
-            assert "dog" == (message as Animal).getName()
+            assert receivedMessage != null
+            assert receivedMessage instanceof Animal
+            assert "dog" == (receivedMessage as Animal).getName()
         }
     }
 
@@ -92,9 +92,9 @@ class ContentTypeSubscriberSpec extends Specification {
 
         then:
         conditions.eventually {
-            assert message != null
-            assert message instanceof Animal
-            assert "dog" == (message as Animal).getName()
+            assert receivedMessage != null
+            assert receivedMessage instanceof Animal
+            assert "dog" == (receivedMessage as Animal).getName()
         }
     }
 
@@ -106,25 +106,25 @@ class ContentTypeSubscriberSpec extends Specification {
     class TestContentTypeSubscriber extends ContentTypeSubscriber {
         @Override
         void receiveRaw(byte[] data, String id) {
-            message = data
+            receivedMessage = data
             super.receiveRaw(data, id)
         }
 
         @Override
         void receiveNative(PubsubMessage pubsubMessage) {
-            message = pubsubMessage
+            receivedMessage = pubsubMessage
             super.receiveNative(pubsubMessage)
         }
 
         @Override
         void receivePojo(Animal animal, String id) {
-            message = animal
+            receivedMessage = animal
             super.receivePojo(animal, id)
         }
 
         @Override
         void receiveXML(Animal animal, String id) {
-            message = animal
+            receivedMessage = animal
             super.receiveXML(animal, id)
         }
     }
