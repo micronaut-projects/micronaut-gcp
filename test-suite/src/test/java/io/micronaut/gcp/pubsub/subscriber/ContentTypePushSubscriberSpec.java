@@ -34,15 +34,18 @@ import java.util.HashMap;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+//tag::clazzBegin[]
 @MicronautTest
 @Property(name = "spec.name", value = "ContentTypePushSubscriberTest")
 @Property(name = "gcp.projectId", value = "test-project")
-class ContentTypePushSubscriberTest {
+class ContentTypePushSubscriberSpec {
+//end::clazzBegin[]
 
+//tag::injectClient[]
     @Inject
     @Client("/")
     HttpClient pushClient;
-
+//end::injectClient[]
     @Inject
     ContentTypePushSubscriber subscriber;
 
@@ -59,7 +62,8 @@ class ContentTypePushSubscriberTest {
     void testRawBytes() {
         byte[] bytesSent = "foo".getBytes(StandardCharsets.UTF_8);
         String encodedData = Base64.getEncoder().encodeToString(bytesSent);
-        PushRequest request = new PushRequest("projects/test-project/subscriptions/raw-push-subscription", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
+        PushRequest request = new PushRequest("projects/test-project/subscriptions/raw-push-subscription",
+            new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
         HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatus());
@@ -83,19 +87,27 @@ class ContentTypePushSubscriberTest {
         Assertions.assertEquals("foo", decodedMessage);
     }
 
+//tag::testMethodBegin[]
     @Test
     void testJsonPojo() throws IOException {
         Animal dog = new Animal("dog");
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes());
-        PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
-        HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
+
+        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes()); // <1>
+
+        PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", // <2>
+            new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
+
+        HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request)); // <3>
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatus());
+//end::testMethodBegin[]
         ArgumentCaptor<Animal> messageReceived = ArgumentCaptor.forClass(Animal.class);
         verify(subscriber, timeout(3000)).receivePojo(messageReceived.capture(), any());
         Assertions.assertNotNull(messageReceived.getValue());
         Assertions.assertEquals("dog", messageReceived.getValue().getName());
+//tag::testMethodEnd[]
     }
+//end::testMethodEnd[]
 
     @Test
     void testXmlPojo() throws JsonProcessingException {
@@ -119,4 +131,7 @@ class ContentTypePushSubscriberTest {
             return spy(event.getBean());
         }
     }
+
+//tag::clazzEnd[]
 }
+//end::clazzEnd[]

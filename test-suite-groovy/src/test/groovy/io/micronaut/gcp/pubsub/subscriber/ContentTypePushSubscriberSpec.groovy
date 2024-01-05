@@ -19,14 +19,18 @@ import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets
 
+//tag::clazzBegin[]
 @MicronautTest
 @Property(name = "spec.name", value = "ContentTypePushSubscriberSpec")
 @Property(name = "gcp.projectId", value = "test-project")
 class ContentTypePushSubscriberSpec extends Specification {
+//end::clazzBegin[]
 
+//tag::injectClient[]
     @Inject
     @Client("/")
     HttpClient pushClient
+//end::injectClient[]
 
     @Inject
     ContentTypePushSubscriber subscriber
@@ -75,21 +79,28 @@ class ContentTypePushSubscriberSpec extends Specification {
         assert "foo" == decodedMessage
     }
 
+//tag::testMethodBegin[]
     void "receive pojo message from json"() {
         given:
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
-        PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
+
+        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes()) // <1>
+
+        PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", // <2>
+                new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
-        HttpResponse response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request))
+        HttpResponse response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request)) // <3>
 
         then:
         response.status == HttpStatus.OK
+//end::testMethodBegin[]
         assert receivedMessage != null
         assert receivedMessage instanceof Animal
         assert "dog" == (receivedMessage as Animal).getName()
+//tag::testMethodEnd[]
     }
+//end::testMethodEnd[]
 
     void "receive pojo message from xml"() {
         given:
@@ -137,4 +148,6 @@ class ContentTypePushSubscriberSpec extends Specification {
             super.receiveXML(animal, id)
         }
     }
+//tag::clazzEnd[]
 }
+//end::clazzEnd[]

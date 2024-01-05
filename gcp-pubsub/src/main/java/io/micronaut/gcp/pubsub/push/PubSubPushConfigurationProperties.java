@@ -61,7 +61,7 @@ public class PubSubPushConfigurationProperties implements PushControllerConfigur
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    
+
     /**
      * The configured path for the PubSub Push HTTP endpoint.
      *
