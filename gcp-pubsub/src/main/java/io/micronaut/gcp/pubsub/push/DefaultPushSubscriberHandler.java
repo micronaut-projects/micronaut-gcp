@@ -32,11 +32,26 @@ import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Default implementation of {@link PushSubscriberHandler}.
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 @Singleton
 public class DefaultPushSubscriberHandler implements PushSubscriberHandler {
 
     private final ConcurrentHashMap<ProjectSubscriptionName, MessageReceiver> receivers = new ConcurrentHashMap<>();
 
+    /**
+     * Default handling of incoming JSON push request messages.
+     *
+     * @param pushRequest the incoming JSON push request message
+     * @return an appropriate HTTP response, with a status of {@link io.micronaut.http.HttpStatus#OK} to indicate an ack, or
+     * {@link io.micronaut.http.HttpStatus#UNPROCESSABLE_ENTITY} to indicate an explicit nack to the PubSub service. Note that
+     * any other error status codes that result from general errors during HTTP processing will also be interpreted as a nack by
+     * the PubSub service.
+     */
     @Override
     public Mono<MutableHttpResponse<Object>> handleRequest(PushRequest pushRequest) {
         ProjectSubscriptionName subscription = ProjectSubscriptionName.parse(pushRequest.subscription());

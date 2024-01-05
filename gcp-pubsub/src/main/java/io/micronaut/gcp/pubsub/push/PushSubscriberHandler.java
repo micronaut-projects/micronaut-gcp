@@ -20,9 +20,28 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import io.micronaut.http.MutableHttpResponse;
 import reactor.core.publisher.Mono;
 
+/**
+ * Handles incoming {@link PushRequest} messages.
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 public interface PushSubscriberHandler {
 
+    /**
+     * Handle the incoming {@link PushRequest} received via HTTP request processing. Implementations shall return
+     * an appropriate HTTP status code to signal either ack or nack to the PubSub service.
+     *
+     * @param pushRequest the incoming JSON push request message
+     * @return the HTTP response
+     */
     Mono<MutableHttpResponse<Object>> handleRequest(PushRequest pushRequest);
 
+    /**
+     * Configure a {@link MessageReceiver} for the given subscription.
+     *
+     * @param projectSubscriptionName the subscription name
+     * @param receiver the message receiver to bind to the subscription
+     */
     void addSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver);
 }

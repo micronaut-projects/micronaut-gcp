@@ -21,6 +21,9 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 
+/**
+ * Configuration properties for PubSub Push message handling.
+ */
 @Requires(property = PubSubPushConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(PubSubPushConfigurationProperties.PREFIX)
 public class PubSubPushConfigurationProperties implements PushControllerConfiguration {
@@ -41,12 +44,20 @@ public class PubSubPushConfigurationProperties implements PushControllerConfigur
 
     private String path = DEFAULT_PATH;
 
+    /**
+     * The configured path to the {@link PushController}.
+     * @return
+     */
     @Override
     @NonNull
     public String getPath() {
         return this.path;
     }
 
+    /**
+     *
+     * @return whether the {@link PushController} is enabled.
+     */
     @Override
     public boolean isEnabled() {
         return this.enabled;
@@ -54,15 +65,15 @@ public class PubSubPushConfigurationProperties implements PushControllerConfigur
 
     /**
      * Enables {@link PushController}. Default value {@value #DEFAULT_ENABLED}
-     * @param enabled True if it is enabled
+     * @param enabled {@code true} if it should be enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     /**
-     * Path to the {@link PushController}. Default value {@value #DEFAULT_PATH}
-     * @param path The path
+     * Configures the path to the {@link PushController}. Default value {@value #DEFAULT_PATH}
+     * @param path the path
      */
     public void setPath(String path) {
         if (StringUtils.isNotEmpty(path)) {

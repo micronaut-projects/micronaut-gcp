@@ -23,6 +23,12 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * A class-level validation constraint for PubSub push messages.
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 @Retention(RUNTIME)
 @Target(TYPE)
 @Constraint(validatedBy = { PushMessageValidator.class })

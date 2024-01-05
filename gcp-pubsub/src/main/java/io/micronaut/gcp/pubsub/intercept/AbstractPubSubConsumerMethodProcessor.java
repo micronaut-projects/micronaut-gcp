@@ -23,6 +23,8 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Blocking;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.bind.DefaultExecutableBinder;
@@ -43,25 +45,32 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageListenerException;
-import io.micronaut.scheduling.TaskExecutors;
 import jakarta.annotation.PreDestroy;
-import jakarta.inject.Named;
 import jakarta.inject.Qualifier;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Base implementation of {@link ExecutableMethodProcessor} that handles creation of a
+ * {@link com.google.cloud.pubsub.v1.MessageReceiver} that subscribes to a PubSub subscription
+ * and invoke methods annotated with a subscription annotation to be supplied by concrete subclasses.
+ * <p>
+ * There can be only one subscriber for any given subscription (in order to avoid issues with message
+ * acknowledgement control). Having more than one method using the same subscription raises a {@link io.micronaut.gcp.pubsub.exception.PubSubListenerException}.
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> implements ExecutableMethodProcessor<A> {
 
     protected final BeanContext beanContext;
@@ -138,11 +147,71 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
         }
     }
 
+    /**
+     * Enter shutdown mode.
+     */
+    @PreDestroy
+    public final void shutDown() {
+        shutDownMode.set(true);
+    }
+
+    /**
+     * A hook to determine whether processing of the current message should proceed.
+     *
+     * @param message the pub sub message being processed
+     * @param ackReplyConsumer the ack reply consumer for the message being processed
+     * @return {@code true} to continue processing, or {@code false} to short circuit processing and nack the current message.
+     */
     protected boolean doBeforeSubscriber(PubsubMessage message, AckReplyConsumer ackReplyConsumer) {
         return true;
     }
 
-    protected abstract void addSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver, String configuration);
+    /**
+     * A hook for building an implementation specific subscriber, i.e. for Pull or Push messaging.
+     *
+     * @param projectSubscriptionName the subscription name
+     * @param receiver the configured message receiver
+     * @param configuration the optional name of the configured receiver
+     */
+    protected abstract void addSubscriber(@NonNull ProjectSubscriptionName projectSubscriptionName, @NonNull MessageReceiver receiver, @Nullable String configuration);
+
+    /**
+     *
+     * @return whether shutdown has been initiated
+     */
+    protected boolean isShutDownInitiated() {
+        return shutDownMode.get();
+    }
+
+    /**
+     * Default handling logic for {@link PubSubMessageReceiverException}.
+     *
+     * @param ex the exception thrown during message processing
+     */
+    protected void handleException(PubSubMessageReceiverException ex) {
+        if (ex.getListener() instanceof PubSubMessageReceiverExceptionHandler bean) {
+            bean.handle(ex);
+        } else {
+            exceptionHandler.handle(ex);
+        }
+    }
+
+    /**
+     * Default execution logic for bound subscription methods.
+     *
+     * @param executable the bound executable subscription method
+     * @param bean the bean PubSub listener bean
+     * @param isBlocking whether the subscription method is blocking
+     * @return a {@link Flux} that will complete after subscriber execution
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected Flux<?> executeSubscriberMethod(BoundExecutable executable, Object bean, boolean isBlocking) {
+        Object result = Objects.requireNonNull(executable).invoke(bean);
+        if (!Publishers.isConvertibleToPublisher(result)) {
+            return Flux.empty();
+        }
+        return Flux.from(Publishers.convertPublisher(conversionService, result, Publisher.class));
+    }
 
     private void verifyManualAcknowledgment(@SuppressWarnings("rawtypes") BoundExecutable executable, String methodName) {
         Optional<Object> boundAck = Arrays
@@ -155,31 +224,5 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
                 logger.warn("Method {} was executed and no message acknowledge detected. Did you forget to invoke ack()/nack()?", methodName);
             }
         }
-    }
-
-    protected boolean isShutDownInitiated() {
-        return shutDownMode.get();
-    }
-
-    @PreDestroy
-    public final void shutDown() {
-        shutDownMode.set(true);
-    }
-
-    protected void handleException(PubSubMessageReceiverException ex) {
-        if (ex.getListener() instanceof PubSubMessageReceiverExceptionHandler bean) {
-            bean.handle(ex);
-        } else {
-            exceptionHandler.handle(ex);
-        }
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    protected Flux<?> executeSubscriberMethod(BoundExecutable executable, Object bean, boolean isBlocking) {
-        Object result = Objects.requireNonNull(executable).invoke(bean);
-        if (!Publishers.isConvertibleToPublisher(result)) {
-            return Flux.empty();
-        }
-        return Flux.from(Publishers.convertPublisher(conversionService, result, Publisher.class));
     }
 }

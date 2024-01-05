@@ -29,9 +29,26 @@ import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Map;
 
+/**
+ * A record for deserializing incoming PubSub Push request messages.
+ *
+ * @param subscription the subscription from which the message originated
+ * @param message the body of the push message
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 @Serdeable
 public record PushRequest(@NotBlank String subscription, @Valid @NotNull PushMessage message) {
 
+    /**
+     * The body of the deserialized push message.
+     *
+     * @param attributes the message attributes
+     * @param data the message data, encoded as a Base64 string
+     * @param messageId the message id
+     * @param publishTime the publishing time of the message
+     */
     @Serdeable
     @ValidPushMessage
     public record PushMessage(Map<String, String> attributes, String data, @NotBlank String messageId, @NotBlank String publishTime) {

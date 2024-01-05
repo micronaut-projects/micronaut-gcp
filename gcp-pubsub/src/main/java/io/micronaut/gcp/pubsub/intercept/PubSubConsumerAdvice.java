@@ -21,7 +21,6 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
-import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
@@ -32,16 +31,7 @@ import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
-import io.micronaut.scheduling.TaskExecutors;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
-
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -74,6 +64,14 @@ public class PubSubConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
     }
 
+    /**
+     * If nack on shutdown is enabled and shutdown has been initiated, immediately nacks all remaining messages that
+     * may be queued in memory.
+     *
+     * @param message the pub sub message being processed
+     * @param ackReplyConsumer the ack reply consumer for the message being processed
+     * @return false if messages are immediately nacked
+     */
     @Override
     protected boolean doBeforeSubscriber(PubsubMessage message, AckReplyConsumer ackReplyConsumer) {
         if (pubSubConfigurationProperties.isNackOnShutdown() && isShutDownInitiated()) {

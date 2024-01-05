@@ -18,16 +18,25 @@ package io.micronaut.gcp.pubsub.push;
 import io.micronaut.gcp.pubsub.bind.PubSubConsumerState;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
 
+/**
+ * An exception thrown if there is an error during PubSub push message processing.
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 public class PubSubPushMessageReceiverException extends PubSubMessageReceiverException {
 
-    public PubSubPushMessageReceiverException(String message, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
-        super(message, bean, state, autoAcknowledge);
-    }
-
-    public PubSubPushMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
+    private PubSubPushMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
         super(message, cause, bean, state, autoAcknowledge);
     }
 
+    /**
+     * Creates a {@code PubSubPushMessageReceiverException} from a general {@link PubSubMessageReceiverException} to indicate the error occurred
+     * while processing a push message.
+     *
+     * @param ex the original exception
+     * @return a {@code PubSubPushMessageReceiverException}
+     */
     public static PubSubPushMessageReceiverException from(PubSubMessageReceiverException ex) {
         return new PubSubPushMessageReceiverException(ex.getMessage(), ex.getCause(), ex.getListener(), ex.getState(), ex.isAutoAcknowledge());
     }

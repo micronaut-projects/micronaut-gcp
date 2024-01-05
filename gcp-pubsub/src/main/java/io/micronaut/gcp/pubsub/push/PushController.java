@@ -26,6 +26,23 @@ import io.micronaut.validation.Validated;
 import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;
 
+/**
+ * A {@link Controller} implementation for handling PubSub Push JSON messages.
+ *
+ * <p>
+ * If push message handling is enabled, and the required HTTP dependencies are available on the classpath, this controller will
+ * handle all incoming push messages via a single URL path. The default path is {@code /push}. This is the path that should be
+ * configured in the GCP PubSub service.
+ * </p>
+ *
+ * <p>
+ * The incoming JSON messages contain metadata about the subscription from which they originated, and they will be routed to
+ * the corresponding {@link io.micronaut.gcp.pubsub.annotation.PushSubscription} method for the subscription.
+ * </p>
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 @Requires(beans = PubSubConfigurationProperties.class)
 @Requires(classes = { Controller.class, Validated.class })
 @Validated
@@ -34,10 +51,23 @@ public class PushController {
 
     private final PushSubscriberHandler handler;
 
+    /**
+     * Constructor for the push controller.
+     *
+     * @param handler the handler that implements processing of the incoming message
+     */
     public PushController(PushSubscriberHandler handler) {
         this.handler = handler;
     }
 
+    /**
+     * Handle incoming PubSub Push messages by deserializing them from their specified JSON format and forwarding the
+     * deserialized message to the configured {@link PushSubscriberHandler}. Validation is applied to the incoming message
+     * to ensure that it conforms to the format specified by GCP.
+     *
+     * @param message the incoming pub sub push request message
+     * @return an HTTP response to indicate ack or nack of the message to the PubSub service
+     */
     @Post(consumes = MediaType.APPLICATION_JSON)
     public Mono<MutableHttpResponse<Object>> handlePushRequest(@Valid @Body PushRequest message) {
         return handler.handleRequest(message);

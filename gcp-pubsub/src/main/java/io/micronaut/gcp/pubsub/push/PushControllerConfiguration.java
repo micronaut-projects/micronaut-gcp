@@ -18,6 +18,12 @@ package io.micronaut.gcp.pubsub.push;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
 
+/**
+ * Configuration for the PubSub Push Controller.
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 @FunctionalInterface
 public interface PushControllerConfiguration extends Toggleable {
 
