@@ -45,16 +45,7 @@ public class PubSubPushConfigurationProperties implements PushControllerConfigur
     private String path = DEFAULT_PATH;
 
     /**
-     * The configured path to the {@link PushController}.
-     * @return
-     */
-    @Override
-    @NonNull
-    public String getPath() {
-        return this.path;
-    }
-
-    /**
+     * Whether PubSub Push is enabled.
      *
      * @return whether the {@link PushController} is enabled.
      */
@@ -69,6 +60,17 @@ public class PubSubPushConfigurationProperties implements PushControllerConfigur
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+    
+    /**
+     * The configured path for the PubSub Push HTTP endpoint.
+     *
+     * @return the path
+     */
+    @Override
+    @NonNull
+    public String getPath() {
+        return this.path;
     }
 
     /**

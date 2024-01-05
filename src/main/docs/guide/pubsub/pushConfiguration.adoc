@@ -1,0 +1,5 @@
+Push support is enabled by default if the Micronaut HTTP server support is on the classpath. It can be explicitly disabled via configuration (see the table below).
+
+The push endpoint is exposed at `/push` by default. This path is also configurable.
+
+include::{includedir}configurationProperties/io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties.adoc[]

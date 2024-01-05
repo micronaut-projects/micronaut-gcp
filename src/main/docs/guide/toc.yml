@@ -28,6 +28,7 @@ pubsub:
     subscriberReactive: Receiving and Returning Reactive Types
     subscriberHeaders: Message Headers
     subscriberProperties: Pull Subscriber properties
+    pushConfiguration: Push Subscriber configuration
     messageAcknowledge: Handling message acknowledgement
     errorHandling: Consumer error handling
     customParameter: Custom Parameter Binding
