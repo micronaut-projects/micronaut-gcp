@@ -17,19 +17,13 @@ package io.micronaut.gcp.pubsub.push;
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
-import com.google.protobuf.ByteString;
-import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.ProjectSubscriptionName;
-import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Base64;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

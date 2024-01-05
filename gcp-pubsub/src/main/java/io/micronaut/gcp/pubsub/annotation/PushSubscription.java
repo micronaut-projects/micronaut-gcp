@@ -21,6 +21,14 @@ import io.micronaut.messaging.annotation.MessageMapping;
 
 import java.lang.annotation.*;
 
+/**
+ * Represents a PubSub Push subscription. Methods annotated with this annotation
+ * will be invoked when a new message is received by a {@link com.google.cloud.pubsub.v1.MessageReceiver}
+ * that is bound to the annotated method.
+ *
+ * @author Jeremy Grelle
+ * @since 5.4.0
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

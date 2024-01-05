@@ -24,7 +24,7 @@ import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
  * @author Jeremy Grelle
  * @since 5.4.0
  */
-public class PubSubPushMessageReceiverException extends PubSubMessageReceiverException {
+public final class PubSubPushMessageReceiverException extends PubSubMessageReceiverException {
 
     private PubSubPushMessageReceiverException(String message, Throwable cause, Object bean, PubSubConsumerState state, boolean autoAcknowledge) {
         super(message, cause, bean, state, autoAcknowledge);

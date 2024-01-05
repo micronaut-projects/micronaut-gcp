@@ -47,8 +47,6 @@ import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Qualifier;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +65,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>
  * There can be only one subscriber for any given subscription (in order to avoid issues with message
  * acknowledgement control). Having more than one method using the same subscription raises a {@link io.micronaut.gcp.pubsub.exception.PubSubListenerException}.
+ *
+ * @param <A> The subscription annotation
  *
  * @author Jeremy Grelle
  * @since 5.4.0
