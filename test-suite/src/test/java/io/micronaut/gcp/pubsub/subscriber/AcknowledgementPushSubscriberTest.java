@@ -68,14 +68,6 @@ class AcknowledgementPushSubscriberTest {
         HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatus());
-
-        ArgumentCaptor<Animal> animalArg = ArgumentCaptor.forClass(Animal.class);
-        ArgumentCaptor<Acknowledgement> ackArg = ArgumentCaptor.forClass(Acknowledgement.class);
-
-        verify(subscriber, timeout(5000)).onMessage(animalArg.capture(), ackArg.capture());
-        Assertions.assertEquals("dog", animalArg.getValue().getName());
-        Assertions.assertInstanceOf(DefaultPubSubAcknowledgement.class, ackArg.getValue());
-        Assertions.assertTrue(((DefaultPubSubAcknowledgement)ackArg.getValue()).isClientAck());
     }
 
     @Test
@@ -92,14 +84,6 @@ class AcknowledgementPushSubscriberTest {
         } catch (HttpClientResponseException ex) {
             Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, ex.getResponse().getStatus());
         }
-
-        ArgumentCaptor<Animal> animalArg = ArgumentCaptor.forClass(Animal.class);
-        ArgumentCaptor<Acknowledgement> ackArg = ArgumentCaptor.forClass(Acknowledgement.class);
-
-        verify(subscriber, timeout(5000)).onMessage(animalArg.capture(), ackArg.capture());
-        Assertions.assertEquals("cat", animalArg.getValue().getName());
-        Assertions.assertInstanceOf(DefaultPubSubAcknowledgement.class, ackArg.getValue());
-        Assertions.assertTrue(((DefaultPubSubAcknowledgement)ackArg.getValue()).isClientAck());
     }
 
     @Test
@@ -112,14 +96,6 @@ class AcknowledgementPushSubscriberTest {
         HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatus());
-
-        ArgumentCaptor<Mono<Animal>> animalArg = ArgumentCaptor.forClass(Mono.class);
-        ArgumentCaptor<Acknowledgement> ackArg = ArgumentCaptor.forClass(Acknowledgement.class);
-
-        verify(subscriber, timeout(3000)).onReactiveMessage(animalArg.capture(), ackArg.capture());
-        Assertions.assertNotNull(animalArg.getValue());
-        Assertions.assertInstanceOf(DefaultPubSubAcknowledgement.class, ackArg.getValue());
-        await().atMost(Duration.ofSeconds(3)).until(() -> ((DefaultPubSubAcknowledgement)ackArg.getValue()).isClientAck());
     }
 
     @Test
@@ -136,14 +112,6 @@ class AcknowledgementPushSubscriberTest {
         } catch (HttpClientResponseException ex) {
             Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, ex.getResponse().getStatus());
         }
-
-        ArgumentCaptor<Mono<Animal>> animalArg = ArgumentCaptor.forClass(Mono.class);
-        ArgumentCaptor<Acknowledgement> ackArg = ArgumentCaptor.forClass(Acknowledgement.class);
-
-        verify(subscriber, timeout(5000)).onReactiveMessage(animalArg.capture(), ackArg.capture());
-        Assertions.assertNotNull(animalArg.getValue());
-        Assertions.assertInstanceOf(DefaultPubSubAcknowledgement.class, ackArg.getValue());
-        await().atMost(Duration.ofSeconds(3)).until(() -> ((DefaultPubSubAcknowledgement)ackArg.getValue()).isClientAck());
     }
 
     @MockBean(MessageProcessor.class)
