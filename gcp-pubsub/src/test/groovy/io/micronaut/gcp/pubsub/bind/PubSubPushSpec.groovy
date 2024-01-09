@@ -1,12 +1,14 @@
 package io.micronaut.gcp.pubsub.bind
 
 import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.util.StringUtils
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.PushSubscription
 import io.micronaut.gcp.pubsub.bind.PubSubPushSpec.Book
+import io.micronaut.gcp.pubsub.push.PushController
 import io.micronaut.gcp.pubsub.push.PushRequest
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -32,6 +34,9 @@ class PubSubPushSpec extends Specification {
 
     @Inject
     PushConsumer consumer
+
+    @Inject
+    BeanContext beanContext;
 
     void setup() {
         consumer.msg = null
@@ -223,12 +228,14 @@ class PubSubPushSpec extends Specification {
         PushRequest request = new PushRequest("projects/test-project/subscriptions/foo", new PushRequest.PushMessage(Map.of("foo", "bar"), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
-        HttpResponse response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request))
+        pushClient.toBlocking().exchange(HttpRequest.POST("/push", request))
 
-        then:
         then:
         HttpClientResponseException ex = thrown()
         ex.status == HttpStatus.NOT_FOUND
+
+        expect:
+        !beanContext.containsBean(PushController)
     }
 
     @Serdeable

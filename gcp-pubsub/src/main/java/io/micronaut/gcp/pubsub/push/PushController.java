@@ -16,7 +16,6 @@
 package io.micronaut.gcp.pubsub.push;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -43,7 +42,7 @@ import reactor.core.publisher.Mono;
  * @author Jeremy Grelle
  * @since 5.4.0
  */
-@Requires(beans = PubSubConfigurationProperties.class)
+@Requires(beans = PubSubPushConfigurationProperties.class)
 @Requires(classes = { Controller.class, Validated.class })
 @Validated
 @Controller("${" + PubSubPushConfigurationProperties.PREFIX + ".path:" + PubSubPushConfigurationProperties.DEFAULT_PATH + "}")
