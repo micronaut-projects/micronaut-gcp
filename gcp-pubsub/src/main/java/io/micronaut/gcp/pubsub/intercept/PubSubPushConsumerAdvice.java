@@ -67,8 +67,16 @@ public class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProces
     private final PubSubPushConfigurationProperties pubSubConfigurationProperties;
     private final Scheduler scheduler;
 
-    protected PubSubPushConsumerAdvice(BeanContext beanContext, ConversionService conversionService, GoogleCloudConfiguration googleCloudConfiguration, PubSubBinderRegistry binderRegistry, PubSubMessageReceiverExceptionHandler exceptionHandler,
-                                       @Named(TaskExecutors.BLOCKING) ExecutorService executorService, PushSubscriberHandler subscriberHandler, PubSubPushConfigurationProperties pubSubConfigurationProperties) {
+    protected PubSubPushConsumerAdvice(
+        BeanContext beanContext,
+        ConversionService conversionService,
+        GoogleCloudConfiguration googleCloudConfiguration,
+        PubSubBinderRegistry binderRegistry,
+        PubSubMessageReceiverExceptionHandler exceptionHandler,
+        @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
+        PushSubscriberHandler subscriberHandler,
+        PubSubPushConfigurationProperties pubSubConfigurationProperties
+    ) {
         super(PushSubscription.class, beanContext, conversionService, googleCloudConfiguration, binderRegistry, exceptionHandler);
         this.subscriberHandler = subscriberHandler;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
