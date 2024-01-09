@@ -46,6 +46,6 @@ public class PushMessageValidator implements ConstraintValidator<ValidPushMessag
      */
     @Override
     public boolean isValid(PushRequest.@Nullable PushMessage value, @NonNull AnnotationValue<ValidPushMessage> annotationMetadata, @NonNull ConstraintValidatorContext context) {
-        return StringUtils.isNotEmpty(value.data()) || (value.attributes() != null && !value.attributes().isEmpty());
+        return value != null && (StringUtils.isNotEmpty(value.data()) || (value.attributes() != null && !value.attributes().isEmpty()));
     }
 }
