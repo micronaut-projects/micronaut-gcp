@@ -114,36 +114,48 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
                 ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
                 String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse(MediaType.APPLICATION_JSON);
                 String configuration = subscriptionAnnotation.stringValue("configuration").orElse("");
-                MessageReceiver receiver = (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
-
-                    if (!doBeforeSubscriber(message, ackReplyConsumer)) {
-                        return;
-                    }
-
-                    String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
-                    String contentType = Optional.of(messageContentType)
-                            .filter(StringUtils::isNotEmpty)
-                            .orElse(defaultContentType);
-                    DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(ackReplyConsumer);
-
-                    PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer,
-                            projectSubscriptionName, contentType);
-                    boolean autoAcknowledge = !hasAckArg;
-                    try {
-                        BoundExecutable<Object, Object> executable = (BoundExecutable<Object, Object>) binder.bind(method, binderRegistry, consumerState);
-                        Flux<Object> resultPublisher = executeSubscriberMethod(executable, bean, isBlocking);
-                        resultPublisher.subscribe(data -> { }, //no-op
-                            ex -> handleException(new PubSubMessageReceiverException("Error handling message", ex, bean, consumerState, autoAcknowledge)),
-                            autoAcknowledge ? pubSubAcknowledgement::ack : () -> this.verifyManualAcknowledgment(executable, method.getName()));
-                    } catch (UnsatisfiedArgumentException e) {
-                        handleException(new PubSubMessageReceiverException("Error binding message to the method", e, bean, consumerState, autoAcknowledge));
-                    } catch (Exception e) {
-                        handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState, autoAcknowledge));
-                    }
-                };
+                MessageReceiver receiver = buildMessageReceiver(method, defaultContentType, projectSubscriptionName, hasAckArg, binder, bean, isBlocking);
                 addSubscriber(projectSubscriptionName, receiver, configuration);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private MessageReceiver buildMessageReceiver(ExecutableMethod<?, ?> method,
+                                                 String defaultContentType,
+                                                 ProjectSubscriptionName projectSubscriptionName,
+                                                 boolean hasAckArg,
+                                                 DefaultExecutableBinder<PubSubConsumerState> binder,
+                                                 Object bean,
+                                                 boolean isBlocking) {
+        return (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
+
+            if (!doBeforeSubscriber(message, ackReplyConsumer)) {
+                return;
+            }
+
+            String messageContentType = message.getAttributesMap().getOrDefault("Content-Type", "");
+            String contentType = Optional.of(messageContentType)
+                .filter(StringUtils::isNotEmpty)
+                .orElse(defaultContentType);
+            DefaultPubSubAcknowledgement pubSubAcknowledgement = new DefaultPubSubAcknowledgement(ackReplyConsumer);
+
+            PubSubConsumerState consumerState = new PubSubConsumerState(message, ackReplyConsumer,
+                projectSubscriptionName, contentType);
+            boolean autoAcknowledge = !hasAckArg;
+            try {
+                BoundExecutable<Object, Object> executable = (BoundExecutable<Object, Object>) binder.bind(method, binderRegistry, consumerState);
+                Flux<Object> resultPublisher = executeSubscriberMethod(executable, bean, isBlocking);
+                resultPublisher.subscribe(data -> {
+                    }, //no-op
+                    ex -> handleException(new PubSubMessageReceiverException("Error handling message", ex, bean, consumerState, autoAcknowledge)),
+                    autoAcknowledge ? pubSubAcknowledgement::ack : () -> this.verifyManualAcknowledgment(executable, method.getName()));
+            } catch (UnsatisfiedArgumentException e) {
+                handleException(new PubSubMessageReceiverException("Error binding message to the method", e, bean, consumerState, autoAcknowledge));
+            } catch (Exception e) {
+                handleException(new PubSubMessageReceiverException("Error handling message", e, bean, consumerState, autoAcknowledge));
+            }
+        };
     }
 
     /**
