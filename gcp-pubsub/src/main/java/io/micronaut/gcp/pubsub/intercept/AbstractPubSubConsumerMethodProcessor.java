@@ -130,9 +130,8 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
                             projectSubscriptionName, contentType);
                     boolean autoAcknowledge = !hasAckArg;
                     try {
-                        @SuppressWarnings("rawtypes")
-                        BoundExecutable executable = binder.bind(method, binderRegistry, consumerState);
-                        Flux<?> resultPublisher = executeSubscriberMethod(executable, bean, isBlocking);
+                        BoundExecutable<Object, Object> executable = (BoundExecutable<Object, Object>) binder.bind(method, binderRegistry, consumerState);
+                        Flux<Object> resultPublisher = executeSubscriberMethod(executable, bean, isBlocking);
                         resultPublisher.subscribe(data -> { }, //no-op
                             ex -> handleException(new PubSubMessageReceiverException("Error handling message", ex, bean, consumerState, autoAcknowledge)),
                             autoAcknowledge ? pubSubAcknowledgement::ack : () -> this.verifyManualAcknowledgment(executable, method.getName()));
@@ -204,8 +203,8 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
      * @param isBlocking whether the subscription method is blocking
      * @return a {@link Flux} that will complete after subscriber execution
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    protected Flux<?> executeSubscriberMethod(BoundExecutable executable, Object bean, boolean isBlocking) {
+    @SuppressWarnings({"unchecked"})
+    protected Flux<Object> executeSubscriberMethod(BoundExecutable<Object, Object> executable, Object bean, boolean isBlocking) {
         Object result = Objects.requireNonNull(executable).invoke(bean);
         if (!Publishers.isConvertibleToPublisher(result)) {
             return Flux.empty();
@@ -213,7 +212,7 @@ public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation
         return Flux.from(Publishers.convertPublisher(conversionService, result, Publisher.class));
     }
 
-    private void verifyManualAcknowledgment(@SuppressWarnings("rawtypes") BoundExecutable executable, String methodName) {
+    private void verifyManualAcknowledgment(BoundExecutable<Object, Object> executable, String methodName) {
         Optional<Object> boundAck = Arrays
             .stream(executable.getBoundArguments())
             .filter(o -> (o instanceof DefaultPubSubAcknowledgement))

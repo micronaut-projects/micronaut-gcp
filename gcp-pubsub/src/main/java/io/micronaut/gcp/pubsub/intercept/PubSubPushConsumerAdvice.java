@@ -103,8 +103,7 @@ public class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProces
      * @return a {@link Flux} that will complete after subscriber execution
      */
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    protected Flux<?> executeSubscriberMethod(BoundExecutable executable, Object bean, boolean isBlocking) {
+    protected Flux<Object> executeSubscriberMethod(BoundExecutable<Object, Object> executable, Object bean, boolean isBlocking) {
         if (isBlocking) {
             return Mono.fromCallable(() -> Objects.requireNonNull(executable).invoke(bean)).flux().subscribeOn(scheduler);
         }
