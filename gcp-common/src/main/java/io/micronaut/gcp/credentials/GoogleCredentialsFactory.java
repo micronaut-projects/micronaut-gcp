@@ -15,6 +15,8 @@
  */
 package io.micronaut.gcp.credentials;
 
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.auth.http.HttpTransportFactory;
 import com.google.auth.oauth2.GoogleCredentials;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Factory;
@@ -22,8 +24,10 @@ import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.StringUtils;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,13 +55,21 @@ public class GoogleCredentialsFactory {
 
     private final GoogleCredentialsConfiguration configuration;
 
+    private final HttpTransportFactory httpTransportFactory;
+
     /**
      * Default constructor.
      * @param configuration The configuration
      */
     public GoogleCredentialsFactory(@NonNull GoogleCredentialsConfiguration configuration) {
+        this(configuration, null);
+    }
+
+    @Inject
+    public GoogleCredentialsFactory(@NonNull GoogleCredentialsConfiguration configuration, @Nullable HttpTransportFactory httpTransportFactory) {
         ArgumentUtils.requireNonNull("configuration", configuration);
         this.configuration = configuration;
+        this.httpTransportFactory = httpTransportFactory != null ? httpTransportFactory : NetHttpTransport::new;
     }
 
     /**
@@ -90,27 +102,27 @@ public class GoogleCredentialsFactory {
     protected GoogleCredentials defaultGoogleCredentials() throws IOException {
         final List<String> scopes = configuration.getScopes().stream()
                 .map(URI::toString).collect(Collectors.toList());
-
         GoogleCredentials credentials;
         if (configuration.getLocation().isPresent() && configuration.getEncodedKey().isPresent()) {
             throw new ConfigurationException("Please specify only one of gcp.credentials.location or gcp.credentials.encodedKey");
         } else if (configuration.getLocation().isPresent()) {
             LOG.info("Google Credentials from gcp.credentials.location = " + configuration.getLocation());
             FileInputStream fis = new FileInputStream(configuration.getLocation().get());
-            credentials = GoogleCredentials.fromStream(fis);
+            credentials = GoogleCredentials.fromStream(fis, httpTransportFactory);
             fis.close();
         } else if (configuration.getEncodedKey().isPresent()) {
             LOG.info("Google Credentials from gcp.credentials.encodedKey");
             Base64.Decoder decoder = Base64.getDecoder();
             byte[] bytes = decoder.decode(configuration.getEncodedKey().get());
             ByteArrayInputStream is = new ByteArrayInputStream(bytes);
-            credentials = GoogleCredentials.fromStream(is);
+            credentials = GoogleCredentials.fromStream(is, httpTransportFactory);
             is.close();
         } else {
             LOG.info("Google Credentials from Application Default Credentials");
-            credentials = GoogleCredentials.getApplicationDefault();
+            credentials = GoogleCredentials.getApplicationDefault(httpTransportFactory);
         }
 
         return credentials.createScoped(scopes);
     }
+
 }

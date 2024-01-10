@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.pubsub.bind;
 
+import com.google.api.core.ApiService;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
@@ -101,7 +102,14 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
                 Map.Entry<ProjectSubscriptionName, Subscriber> entry = it.next();
                 SubscriberInterface subscriber = entry.getValue();
                 try {
-                    subscriber.stopAsync().awaitTerminated();
+                    if (subscriber.isRunning()) {
+                        subscriber.stopAsync().awaitTerminated();
+                    } else {
+                        logger.warn("Subscriber for {} was terminated early.", entry.getKey());
+                        if (subscriber.state() == ApiService.State.FAILED && logger.isTraceEnabled()) {
+                            logger.trace("Subscriber {} failed due to ", entry.getKey(), subscriber.failureCause());
+                        }
+                    }
                 } catch (Exception e) {
                     logger.error("Failed stopping subscriber for " + entry.getKey(), e);
                 } finally {
@@ -110,5 +118,12 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
                 }
             }
         }
+    }
+
+    boolean isRunning(ProjectSubscriptionName subscriptionName) {
+        if (subscribers.containsKey(subscriptionName)) {
+            return subscribers.get(subscriptionName).isRunning();
+        }
+        return false;
     }
 }

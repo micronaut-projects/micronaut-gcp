@@ -10,15 +10,19 @@ dependencies {
 
     implementation(mn.micronaut.json.core)
     implementation(mn.jackson.annotations)
+    compileOnly(mn.micronaut.http.client.core)
 
     testFixturesApi(platform(mn.micronaut.core.bom))
 
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.discovery.core)
     testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
 
     testImplementation(mnSerde.micronaut.serde.jackson)
 
     testImplementation(libs.system.stubs.core)
 
+
+    testImplementation("org.slf4j:jul-to-slf4j:2.0.9")
 }

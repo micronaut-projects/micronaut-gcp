@@ -1,10 +1,12 @@
 package io.micronaut.gcp.credentials
 
 import com.google.api.client.util.GenericData
+import com.google.auth.RequestMetadataCallback
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ImpersonatedCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.auth.oauth2.UserCredentials
+import com.google.common.util.concurrent.MoreExecutors
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.BeanInstantiationException
@@ -38,7 +40,7 @@ class GoogleCredentialsFactorySpec extends Specification {
     @AutoCleanup("stop")
     StandardStreamsCapturer capturer = new StandardStreamsCapturer()
 
-    PollingConditions conditions = new PollingConditions(timeout: 30)
+    PollingConditions conditions = new PollingConditions(timeout: 5)
 
     void setup() {
         capturer.addStandardStreamsListener(captured)
@@ -273,6 +275,86 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
+
+        cleanup:
+        ctx.stop()
+        gcp.stop()
+    }
+
+    void "an access token should be able to be refreshed and retrieved if HttpClient transport is disabled"() {
+        given:
+        PrivateKey pk = generatePrivateKey()
+        File serviceAccountCredentials = writeServiceCredentialsToTempFile(pk)
+
+        when:
+        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
+                "spec.name" : "GoogleCredentialsFactorySpec",
+                "micronaut.server.port" : 8080
+        ])
+        def ctx = ApplicationContext.run([
+                (GoogleCredentialsConfiguration.PREFIX + ".location"): serviceAccountCredentials.getPath(),
+                (GoogleCredentialsConfiguration.PREFIX + ".use-http-client"): false
+        ])
+        GoogleCredentials gc = ctx.getBean(GoogleCredentials)
+
+        then:
+        matchesJsonServiceAccountCredentials(pk, gc)
+        !ctx.containsBean(DefaultOAuth2HttpTransportFactory.class)
+
+        when:
+        gc.refreshIfExpired()
+
+        then:
+        gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
+
+        cleanup:
+        ctx.stop()
+        gcp.stop()
+    }
+
+    void "invalid credentials cause a warning to be logged when metadata is requested"(){
+        given:
+        //SLF4JBridgeHandler.install()
+        PrivateKey pk = generatePrivateKey()
+        String encodedServiceAccountCredentials = encodeServiceCredentials(pk)
+        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
+                "spec.name" : "GoogleCredentialsFactorySpec",
+                "micronaut.server.port" : 8080
+        ])
+        def ctx = ApplicationContext.run([
+                (GoogleCredentialsConfiguration.PREFIX + ".encoded-key"): encodedServiceAccountCredentials
+        ])
+        GoogleCredentials gc = ctx.getBean(GoogleCredentials)
+
+        when:
+        def callback = new RequestMetadataCallback() {
+            boolean success
+            @Override
+            void onSuccess(Map<String, List<String>> metadata) {
+                success = true
+            }
+
+            @Override
+            void onFailure(Throwable exception) {
+                success = false
+            }
+        }
+        gc.getRequestMetadata(null, MoreExecutors.directExecutor(), callback)
+
+        then:
+        conditions.eventually {
+            callback.success
+            captured.messages.any {
+                it.contains("WARN")
+                it.contains("A 429 Too Many Requests response was received from http://localhost:8080/token while " +
+                        "attempting to retrieve an access token for a GCP API request. The GCP libraries treat this as " +
+                        "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
+            }
+        }
+
+        cleanup:
+        ctx.stop()
+        gcp.stop()
     }
 
     private void matchesJsonUserCredentials(GoogleCredentials gc) {
