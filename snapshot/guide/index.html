@@ -2614,7 +2614,6 @@ interface CustomReturnClient {
 
 	@Topic("animals")
 	fun sendReactive(animal: Animal?): Mono&lt;String&gt; //<b class="conum">(3)</b>
-
 }</code></pre>
 </div>
 </div>
@@ -2944,14 +2943,11 @@ class SimpleSubscriber {
 
 	@Subscription("animals") // <b class="conum">(2)</b>
 	fun onMessage(animal: Animal) {
-
 	}
 
 	@Subscription("projects/eu-project/subscriptions/animals") // <b class="conum">(3)</b>
 	fun onMessageEU(animal: Animal) {
-
 	}
-
 }</code></pre>
 </div>
 </div>
