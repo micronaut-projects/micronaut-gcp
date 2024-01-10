@@ -112,6 +112,7 @@ class PubSubPushSpec extends Specification {
         then:
         HttpClientResponseException ex = thrown()
         ex.status == HttpStatus.BAD_REQUEST
+        ex.response.getBody(Map).get()._embedded.errors[0].message.contains('message must contain either a non-empty data field or at least one attribute')
     }
 
     void "a push message with POJO data can be received"() {
