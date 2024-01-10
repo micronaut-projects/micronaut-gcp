@@ -21,7 +21,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.PushSubscription;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 import reactor.core.publisher.Mono;
 // end::imports[]

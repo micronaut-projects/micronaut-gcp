@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.PushSubscription;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 import io.micronaut.messaging.Acknowledgement;
 import reactor.core.publisher.Mono;
