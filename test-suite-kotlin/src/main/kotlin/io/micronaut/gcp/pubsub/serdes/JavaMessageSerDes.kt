@@ -52,4 +52,4 @@ class JavaMessageSerDes : PubSubMessageSerDes {
 		return baos.toByteArray()
 	}
 }
-// tag::clazz[]
+// end::clazz[]

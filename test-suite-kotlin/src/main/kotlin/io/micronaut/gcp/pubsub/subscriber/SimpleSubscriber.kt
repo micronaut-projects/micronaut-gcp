@@ -30,12 +30,10 @@ class SimpleSubscriber {
 
 	@Subscription("animals") // <2>
 	fun onMessage(animal: Animal) {
-
 	}
 
 	@Subscription("projects/eu-project/subscriptions/animals") // <3>
 	fun onMessageEU(animal: Animal) {
-
 	}
-
 }
+// end::clazz[]

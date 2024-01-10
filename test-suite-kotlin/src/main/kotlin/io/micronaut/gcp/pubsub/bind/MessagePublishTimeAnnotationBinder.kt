@@ -40,4 +40,4 @@ class MessagePublishTimeAnnotationBinder(private val conversionService: Conversi
 
 
 }
-// tag::clazz[]
+// end::clazz[]

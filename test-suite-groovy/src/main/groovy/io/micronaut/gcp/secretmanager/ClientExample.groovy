@@ -38,4 +38,4 @@ import reactor.core.publisher.Mono
         Mono<VersionedSecret> fromOtherProject = client.getSecret("secretId", "latest", "another-project-id") //<3>
     }
 }
-//tag::clazz[]
+//end::clazz[]

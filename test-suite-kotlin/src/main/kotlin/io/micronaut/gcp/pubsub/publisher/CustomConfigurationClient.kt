@@ -29,4 +29,4 @@ interface CustomConfigurationClient {
 	@Topic(value = "animals", configuration = "immediate")
 	fun send(animal: Animal)  // <2>
 }
-// tag::clazz[]
+// end::clazz[]

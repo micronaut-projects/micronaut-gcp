@@ -24,4 +24,4 @@ import io.micronaut.core.bind.annotation.Bindable
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Bindable // <1>
 annotation class MessagePublishTime
-//tag::clazz[]
+//end::clazz[]

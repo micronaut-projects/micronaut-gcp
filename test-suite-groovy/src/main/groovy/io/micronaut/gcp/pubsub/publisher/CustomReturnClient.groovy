@@ -36,4 +36,4 @@ interface CustomReturnClient {
     Mono<String> sendReactive(Animal animal) //<3>
 
 }
-// tag::clazz[]
+// end::clazz[]

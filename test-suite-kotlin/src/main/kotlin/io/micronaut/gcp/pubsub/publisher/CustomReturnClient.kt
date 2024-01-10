@@ -34,5 +34,5 @@ interface CustomReturnClient {
 
 	@Topic("animals")
 	fun sendReactive(animal: Animal?): Mono<String> //<3>
-
 }
+// end::clazz[]
