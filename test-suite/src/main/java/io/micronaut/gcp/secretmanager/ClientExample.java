@@ -38,4 +38,4 @@ public final class ClientExample {
         Mono<VersionedSecret> fromOtherProject = Mono.from(client.getSecret("secretId", "latest", "another-project-id")); //<3>
     }
 }
-//tag::clazz[]
+//end::clazz[]

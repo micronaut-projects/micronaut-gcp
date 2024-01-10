@@ -55,4 +55,4 @@ class AcknowledgementSubscriber(private val messageProcessor: MessageProcessor) 
             }
     }
 }
-// tag::clazz[]
+// end::clazz[]
