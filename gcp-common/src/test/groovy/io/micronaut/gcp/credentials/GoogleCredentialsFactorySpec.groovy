@@ -272,7 +272,7 @@ class GoogleCredentialsFactorySpec extends Specification {
         gc.refreshIfExpired()
 
         then:
-        gc.getAccessToken()
+        gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
     }
 
     private void matchesJsonUserCredentials(GoogleCredentials gc) {
