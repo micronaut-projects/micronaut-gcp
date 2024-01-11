@@ -1,6 +1,6 @@
 package io.micronaut.gcp.credentials
 
-
+import com.google.api.client.util.GenericData
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ImpersonatedCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
@@ -12,9 +12,11 @@ import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.reflect.ReflectionUtils
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
+import io.micronaut.runtime.server.EmbeddedServer
 import org.spockframework.runtime.IStandardStreamsListener
 import org.spockframework.runtime.StandardStreamsCapturer
 import spock.lang.AutoCleanup
@@ -25,6 +27,7 @@ import uk.org.webcompere.systemstubs.properties.SystemProperties
 import uk.org.webcompere.systemstubs.resource.Resources
 
 import java.security.PrivateKey
+import java.util.concurrent.atomic.AtomicInteger
 
 import static io.micronaut.gcp.credentials.fixture.ServiceAccountCredentialsTestHelper.*
 
@@ -247,6 +250,31 @@ class GoogleCredentialsFactorySpec extends Specification {
         matchesJsonServiceAccountCredentials(pk, gc)
     }
 
+    void "an access token should be able to be refreshed and retrieved"() {
+        given:
+        PrivateKey pk = generatePrivateKey()
+        File serviceAccountCredentials = writeServiceCredentialsToTempFile(pk)
+
+        when:
+        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
+                "spec.name" : "GoogleCredentialsFactorySpec",
+                "micronaut.server.port" : 8080
+        ])
+        def ctx = ApplicationContext.run([
+                (GoogleCredentialsConfiguration.PREFIX + ".location"): serviceAccountCredentials.getPath()
+        ])
+        GoogleCredentials gc = ctx.getBean(GoogleCredentials)
+
+        then:
+        matchesJsonServiceAccountCredentials(pk, gc)
+
+        when:
+        gc.refreshIfExpired()
+
+        then:
+        gc.getAccessToken()
+    }
+
     private void matchesJsonUserCredentials(GoogleCredentials gc) {
         assert gc != null && gc instanceof UserCredentials
         UserCredentials uc = (UserCredentials) gc
@@ -271,9 +299,14 @@ class GoogleCredentialsFactorySpec extends Specification {
 @Controller
 class GoogleAuth {
 
-    @Post(value="/token", processes = MediaType.APPLICATION_FORM_URLENCODED)
-    HttpResponse<String> getToken() {
-        return HttpResponse.unauthorized()
+    AtomicInteger requestCount = new AtomicInteger(1)
+
+    @Post(value="/token", consumes = MediaType.APPLICATION_FORM_URLENCODED, produces = MediaType.APPLICATION_JSON)
+    HttpResponse<GenericData> getToken() {
+        if (requestCount.getAndAdd(1) == 2) {
+            return HttpResponse.ok(new GenericData().set("access_token", "ThisIsAFreshToken").set("expires_in", 3600))
+        }
+        return HttpResponse.status(HttpStatus.TOO_MANY_REQUESTS)
     }
 }
 
