@@ -1,11 +1,10 @@
 package io.micronaut.gcp.credentials
 
-import com.google.auth.RequestMetadataCallback
+
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ImpersonatedCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.auth.oauth2.UserCredentials
-import com.google.common.util.concurrent.MoreExecutors
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.BeanInstantiationException
@@ -16,7 +15,6 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
-import io.micronaut.runtime.server.EmbeddedServer
 import org.spockframework.runtime.IStandardStreamsListener
 import org.spockframework.runtime.StandardStreamsCapturer
 import spock.lang.AutoCleanup
@@ -191,7 +189,7 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         gc != null
-        ImpersonatedCredentials ic = gc.$target
+        ImpersonatedCredentials ic = (ImpersonatedCredentials) gc
         UserCredentials uc = (UserCredentials) ic.getSourceCredentials()
         ic.getAccount() == "sa-test1@micronaut-gcp-testing.iam.gserviceaccount.com"
         with(uc) {
@@ -249,49 +247,9 @@ class GoogleCredentialsFactorySpec extends Specification {
         matchesJsonServiceAccountCredentials(pk, gc)
     }
 
-    void "invalid credentials cause a warning to be logged when metadata is requested"(){
-        given:
-        PrivateKey pk = generatePrivateKey()
-        String encodedServiceAccountCredentials = encodeServiceCredentials(pk)
-        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
-                "spec.name" : "GoogleCredentialsFactorySpec",
-                "micronaut.server.port" : 8080
-        ])
-        def ctx = ApplicationContext.run([
-                (GoogleCredentialsConfiguration.PREFIX + ".encoded-key"): encodedServiceAccountCredentials
-        ])
-        GoogleCredentials gc = ctx.getBean(GoogleCredentials)
-
-        when:
-        gc.getRequestMetadata(null, MoreExecutors.directExecutor(), new RequestMetadataCallback() {
-            @Override
-            void onSuccess(Map<String, List<String>> metadata) {
-
-            }
-
-            @Override
-            void onFailure(Throwable exception) {
-
-            }
-        })
-
-        then:
-        conditions.eventually {
-            captured.messages.any {
-                it.contains("WARN")
-                it.contains("A failure occurred while attempting to build credential metadata for a GCP API request. The GCP libraries treat this as " +
-                        "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
-            }
-        }
-
-        cleanup:
-        ctx.stop()
-        gcp.stop()
-    }
-
     private void matchesJsonUserCredentials(GoogleCredentials gc) {
-        assert gc != null && gc.$target != null && gc.$target instanceof UserCredentials
-        UserCredentials uc = (UserCredentials) gc.$target
+        assert gc != null && gc instanceof UserCredentials
+        UserCredentials uc = (UserCredentials) gc
         assert uc.getClientId() == "client-id-1.apps.googleusercontent.com"
         assert uc.getClientSecret() == "client-secret-1"
         assert uc.getQuotaProjectId() == "micronaut-gcp-test"
@@ -299,8 +257,8 @@ class GoogleCredentialsFactorySpec extends Specification {
     }
 
     private void matchesJsonServiceAccountCredentials(PrivateKey pk, GoogleCredentials gc) {
-        assert gc != null && gc.$target != null && gc.$target instanceof ServiceAccountCredentials
-        ServiceAccountCredentials sc = (ServiceAccountCredentials) gc.$target
+        assert gc != null && gc instanceof ServiceAccountCredentials
+        ServiceAccountCredentials sc = (ServiceAccountCredentials) gc
         assert sc.getAccount() == "sa-test1@micronaut-gcp-testing.iam.gserviceaccount.com"
         assert sc.getClientId() == "client-id-1"
         assert sc.getProjectId() == "micronaut-gcp-testing"

@@ -87,7 +87,6 @@ public class GoogleCredentialsFactory {
     @Requires(property = GoogleCredentialsConfiguration.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
     @Primary
     @Singleton
-    @LogAuthenticationFailures
     protected GoogleCredentials defaultGoogleCredentials() throws IOException {
         final List<String> scopes = configuration.getScopes().stream()
                 .map(URI::toString).collect(Collectors.toList());
