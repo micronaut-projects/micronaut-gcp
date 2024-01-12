@@ -6,7 +6,6 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ImpersonatedCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.auth.oauth2.UserCredentials
-import com.google.common.util.concurrent.MoreExecutors
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.BeanInstantiationException
@@ -70,6 +69,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         thrown(NoSuchBeanException)
+
+        cleanup:
+        ctx.close()
     }
 
     void "configuring both credentials location and encoded-key throws an exception"() {
@@ -85,6 +87,9 @@ class GoogleCredentialsFactorySpec extends Specification {
         then:
         def ex = thrown(BeanInstantiationException)
         ex.getCause() instanceof ConfigurationException
+
+        cleanup:
+        ctx.close()
     }
 
     void "default configuration without GCP SDK installed fails"() {
@@ -235,6 +240,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         matchesJsonServiceAccountCredentials(pk, gc)
+
+        cleanup:
+        ctx.close()
     }
 
     void "service account credentials can be loaded via configured Base64-encoded key"() {
@@ -250,6 +258,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         matchesJsonServiceAccountCredentials(pk, gc)
+
+        cleanup:
+        ctx.close()
     }
 
     void "an access token should be able to be refreshed and retrieved"() {
