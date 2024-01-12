@@ -345,7 +345,7 @@ class GoogleCredentialsFactorySpec extends Specification {
         conditions.eventually {
             callback.success
             captured.messages.any {
-                it.contains("WARN")
+                it.contains("WARN") &&
                 it.contains("A 429 Too Many Requests response was received from http://localhost:8080/token while " +
                         "attempting to retrieve an access token for a GCP API request. The GCP libraries treat this as " +
                         "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
