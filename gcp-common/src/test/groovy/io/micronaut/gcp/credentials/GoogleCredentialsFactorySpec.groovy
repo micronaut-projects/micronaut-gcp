@@ -21,7 +21,6 @@ import org.spockframework.runtime.IStandardStreamsListener
 import org.spockframework.runtime.StandardStreamsCapturer
 import spock.lang.AutoCleanup
 import spock.lang.Specification
-import spock.util.concurrent.PollingConditions
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables
 import uk.org.webcompere.systemstubs.properties.SystemProperties
 import uk.org.webcompere.systemstubs.resource.Resources
@@ -37,8 +36,6 @@ class GoogleCredentialsFactorySpec extends Specification {
 
     @AutoCleanup("stop")
     StandardStreamsCapturer capturer = new StandardStreamsCapturer()
-
-    PollingConditions conditions = new PollingConditions(timeout: 30)
 
     void setup() {
         capturer.addStandardStreamsListener(captured)
@@ -68,6 +65,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         thrown(NoSuchBeanException)
+
+        cleanup:
+        ctx.close()
     }
 
     void "configuring both credentials location and encoded-key throws an exception"() {
@@ -83,6 +83,9 @@ class GoogleCredentialsFactorySpec extends Specification {
         then:
         def ex = thrown(BeanInstantiationException)
         ex.getCause() instanceof ConfigurationException
+
+        cleanup:
+        ctx.close()
     }
 
     void "default configuration without GCP SDK installed fails"() {
@@ -233,6 +236,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         matchesJsonServiceAccountCredentials(pk, gc)
+
+        cleanup:
+        ctx.close()
     }
 
     void "service account credentials can be loaded via configured Base64-encoded key"() {
@@ -248,6 +254,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         matchesJsonServiceAccountCredentials(pk, gc)
+
+        cleanup:
+        ctx.close()
     }
 
     void "an access token should be able to be refreshed and retrieved"() {
@@ -273,6 +282,10 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
+
+        cleanup:
+        gcp.close()
+        ctx.close()
     }
 
     private void matchesJsonUserCredentials(GoogleCredentials gc) {
