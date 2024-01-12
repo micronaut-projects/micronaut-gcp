@@ -15,7 +15,7 @@ managed-google-cloudevent-types="0.3.0"
 brave-opentracing = "1.0.0"
 brave-propagation-stackdriver = "1.0.4"
 
-grpc = "1.55.1"
+grpc = "1.61.0"
 kotlin = '1.8.21'
 cloudevents-api = "2.5.0"
 
