@@ -22,7 +22,4 @@ dependencies {
     testImplementation(mnSerde.micronaut.serde.jackson)
 
     testImplementation(libs.system.stubs.core)
-
-
-    testImplementation("org.slf4j:jul-to-slf4j:2.0.9")
 }

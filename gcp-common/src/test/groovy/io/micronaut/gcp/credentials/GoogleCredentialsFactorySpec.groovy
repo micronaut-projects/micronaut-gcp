@@ -6,6 +6,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ImpersonatedCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.auth.oauth2.UserCredentials
+import com.google.common.util.concurrent.MoreExecutors
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.BeanInstantiationException
@@ -325,7 +326,6 @@ class GoogleCredentialsFactorySpec extends Specification {
 
     void "invalid credentials cause a warning to be logged when metadata is requested"(){
         given:
-        //SLF4JBridgeHandler.install()
         PrivateKey pk = generatePrivateKey()
         String encodedServiceAccountCredentials = encodeServiceCredentials(pk)
         EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [

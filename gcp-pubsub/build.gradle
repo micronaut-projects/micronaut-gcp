@@ -21,6 +21,4 @@ dependencies {
     testImplementation(testFixtures(project(":micronaut-gcp-common")))
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
-
-    testImplementation("org.slf4j:jul-to-slf4j:2.0.9")
 }
