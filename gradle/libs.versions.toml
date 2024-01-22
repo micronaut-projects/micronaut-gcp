@@ -12,7 +12,7 @@ managed-google-cloud-pubsub = "1.126.0"
 managed-google-cloud-secretmanager = "2.30.0"
 managed-google-cloudevent-types="0.3.0"
 
-brave-opentracing = "1.0.0"
+brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "1.0.4"
 
 grpc = "1.55.1"
