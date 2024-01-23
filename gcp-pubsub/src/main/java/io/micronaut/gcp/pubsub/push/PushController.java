@@ -43,8 +43,7 @@ import reactor.core.publisher.Mono;
  * @since 5.4.0
  */
 @Requires(beans = PubSubPushConfigurationProperties.class)
-@Requires(classes = { Controller.class, Validated.class })
-@Validated
+@Requires(classes = { Controller.class })
 @Controller("${" + PubSubPushConfigurationProperties.PREFIX + ".path:" + PubSubPushConfigurationProperties.DEFAULT_PATH + "}")
 public class PushController {
 
