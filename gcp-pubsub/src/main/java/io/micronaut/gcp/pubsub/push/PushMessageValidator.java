@@ -22,7 +22,6 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.validation.validator.constraints.ConstraintValidator;
 import io.micronaut.validation.validator.constraints.ConstraintValidatorContext;
-import jakarta.inject.Singleton;
 
 /**
  * A validator for incoming PubSub push messages.

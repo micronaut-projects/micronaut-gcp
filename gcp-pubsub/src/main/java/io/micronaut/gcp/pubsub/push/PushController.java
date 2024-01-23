@@ -16,14 +16,14 @@
 package io.micronaut.gcp.pubsub.push;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.validation.Validated;
 import jakarta.validation.Valid;
-import reactor.core.publisher.Mono;
+import org.reactivestreams.Publisher;
 
 /**
  * A {@link Controller} implementation for handling PubSub Push JSON messages.
@@ -67,7 +67,8 @@ public class PushController {
      * @return an HTTP response to indicate ack or nack of the message to the PubSub service
      */
     @Post(consumes = MediaType.APPLICATION_JSON)
-    public Mono<MutableHttpResponse<Object>> handlePushRequest(@Valid @Body PushRequest message) {
+    @SingleResult
+    public Publisher<MutableHttpResponse<Object>> handlePushRequest(@Valid @Body PushRequest message) {
         return handler.handleRequest(message);
     }
 }

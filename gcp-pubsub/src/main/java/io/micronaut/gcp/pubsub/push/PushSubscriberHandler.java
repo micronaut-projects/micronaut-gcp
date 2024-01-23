@@ -17,8 +17,10 @@ package io.micronaut.gcp.pubsub.push;
 
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.pubsub.v1.ProjectSubscriptionName;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.MutableHttpResponse;
-import reactor.core.publisher.Mono;
+import org.reactivestreams.Publisher;
 
 /**
  * Handles incoming {@link PushRequest} messages.
@@ -35,7 +37,9 @@ public interface PushSubscriberHandler {
      * @param pushRequest the incoming JSON push request message
      * @return the HTTP response
      */
-    Mono<MutableHttpResponse<Object>> handleRequest(PushRequest pushRequest);
+    @NonNull
+    @SingleResult
+    Publisher<MutableHttpResponse<Object>> handleRequest(@NonNull PushRequest pushRequest);
 
     /**
      * Configure a {@link MessageReceiver} for the given subscription.
