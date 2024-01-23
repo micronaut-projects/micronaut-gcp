@@ -20,6 +20,7 @@ import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.gcp.pubsub.validation.ValidPushMessage;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.push;
+package io.micronaut.gcp.pubsub.validation;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * A class-level validation constraint for PubSub push messages.
@@ -29,10 +29,30 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Jeremy Grelle
  * @since 5.4.0
  */
-@Retention(RUNTIME)
-@Target(TYPE)
 @Constraint(validatedBy = { PushMessageValidator.class })
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface ValidPushMessage {
 
-    String message() default "invalid pubsub push request message ({validatedValue}) - message must contain either a non-empty data field or at least one attribute";
+    /**
+     * ValidPushMessage message.
+     */
+    String MESSAGE = "io.micronaut.gcp.pubsub.validation.ValidPushMessage.message";
+
+    /**
+     * @return message The error message
+     */
+    String message() default "{" + MESSAGE + "}";
+
+    /**
+     * @return Groups to control the order in which constraints are evaluated,
+     * or to perform validation of the partial state of a JavaBean.
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * @return Payloads used by validation clients to associate some metadata information with a given constraint declaration
+     */
+    Class<? extends Payload>[] payload() default {};
+
 }
