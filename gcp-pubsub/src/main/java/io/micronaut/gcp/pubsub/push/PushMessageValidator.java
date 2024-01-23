@@ -30,7 +30,6 @@ import jakarta.inject.Singleton;
  * @author Jeremy Grelle
  * @since 5.4.0
  */
-@Singleton
 @Introspected
 public class PushMessageValidator implements ConstraintValidator<ValidPushMessage, PushRequest.PushMessage> {
 
