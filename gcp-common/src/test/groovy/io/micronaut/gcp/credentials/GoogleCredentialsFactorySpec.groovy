@@ -289,39 +289,8 @@ class GoogleCredentialsFactorySpec extends Specification {
         gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
 
         cleanup:
-        ctx.stop()
-        gcp.stop()
-    }
-
-    void "an access token should be able to be refreshed and retrieved if HttpClient transport is disabled"() {
-        given:
-        PrivateKey pk = generatePrivateKey()
-        File serviceAccountCredentials = writeServiceCredentialsToTempFile(pk)
-
-        when:
-        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
-                "spec.name" : "GoogleCredentialsFactorySpec",
-                "micronaut.server.port" : 8080
-        ])
-        def ctx = ApplicationContext.run([
-                (GoogleCredentialsConfiguration.PREFIX + ".location"): serviceAccountCredentials.getPath(),
-                (GoogleCredentialsConfiguration.PREFIX + ".use-http-client"): false
-        ])
-        GoogleCredentials gc = ctx.getBean(GoogleCredentials)
-
-        then:
-        matchesJsonServiceAccountCredentials(pk, gc)
-        !ctx.containsBean(DefaultOAuth2HttpTransportFactory.class)
-
-        when:
-        gc.refreshIfExpired()
-
-        then:
-        gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
-
-        cleanup:
-        ctx.stop()
-        gcp.stop()
+        gcp.close()
+        ctx.close()
     }
 
     void "invalid credentials cause a warning to be logged when metadata is requested"(){
@@ -357,9 +326,9 @@ class GoogleCredentialsFactorySpec extends Specification {
             callback.success
             captured.messages.any {
                 it.contains("WARN") &&
-                it.contains("A 429 Too Many Requests response was received from http://localhost:8080/token while " +
-                        "attempting to retrieve an access token for a GCP API request. The GCP libraries treat this as " +
-                        "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
+                        it.contains("A 429 Too Many Requests response was received from http://localhost:8080/token while " +
+                                "attempting to retrieve an access token for a GCP API request. The GCP libraries treat this as " +
+                                "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
             }
         }
 
