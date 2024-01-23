@@ -18,6 +18,7 @@ package io.micronaut.gcp.pubsub.push;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.Valid;
@@ -64,7 +65,7 @@ public record PushRequest(@NotBlank String subscription, @Valid @NotNull PushMes
                 messageBuilder.setData(ByteString.copyFrom(Base64.getDecoder().decode(data())));
             }
 
-            if (attributes != null && !attributes.isEmpty()) {
+            if (CollectionUtils.isNotEmpty(attributes)) {
                 messageBuilder.putAllAttributes(attributes);
             }
 
