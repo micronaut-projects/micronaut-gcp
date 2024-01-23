@@ -42,7 +42,7 @@ import org.reactivestreams.Publisher;
  * @author Jeremy Grelle
  * @since 5.4.0
  */
-@Requires(beans = PubSubPushConfigurationProperties.class)
+@Requires(beans = PushControllerConfiguration.class)
 @Requires(classes = { Controller.class })
 @Controller("${" + PubSubPushConfigurationProperties.PREFIX + ".path:" + PubSubPushConfigurationProperties.DEFAULT_PATH + "}")
 public class PushController {
