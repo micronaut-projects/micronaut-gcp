@@ -29,10 +29,8 @@ import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.http.netty.cookies.NettyCookie;
+import io.micronaut.http.cookie.ServerCookieEncoder;
 import io.micronaut.servlet.http.ServletHttpResponse;
-import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -81,10 +79,7 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
 
     @Override
     public MutableHttpResponse<B> cookie(Cookie cookie) {
-        if (cookie instanceof NettyCookie nettyCookie) {
-            final String encoded = ServerCookieEncoder.STRICT.encode(nettyCookie.getNettyCookie());
-            header(HttpHeaders.SET_COOKIE, encoded);
-        }
+        ServerCookieEncoder.INSTANCE.encode(cookie).forEach(c -> header(HttpHeaders.SET_COOKIE, c));
         return this;
     }
 
