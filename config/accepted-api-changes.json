@@ -123,5 +123,155 @@
     "type": "io.micronaut.gcp.function.http.jackson.ObjectMapperCustomizer",
     "member": "Implemented interface io.micronaut.context.event.BeanCreatedEventListener",
     "reason": "Removed jackson-databind in MN 4"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Constructor io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference()",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.beans.BeanInfo",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataDelegate",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadata",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.QualifiedBeanType",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.type.ArgumentCoercible",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$AuthenticationLoggingInterceptor$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Constructor io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference()",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.beans.BeanInfo",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataDelegate",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.AdvisedBeanType",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadata",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.type.ArgumentCoercible",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.QualifiedBeanType",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.$GoogleCredentialsFactory$DefaultGoogleCredentials0$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.AuthenticationLoggingInterceptor",
+    "member": "Constructor io.micronaut.gcp.credentials.AuthenticationLoggingInterceptor()",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.AuthenticationLoggingInterceptor",
+    "member": "Implemented interface io.micronaut.aop.Interceptor",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.AuthenticationLoggingInterceptor",
+    "member": "Implemented interface io.micronaut.aop.MethodInterceptor",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.AuthenticationLoggingInterceptor",
+    "member": "Implemented interface io.micronaut.core.order.Ordered",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.LogAuthenticationFailures",
+    "member": "Implemented interface java.lang.annotation.Annotation",
+    "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
   }
 ]
