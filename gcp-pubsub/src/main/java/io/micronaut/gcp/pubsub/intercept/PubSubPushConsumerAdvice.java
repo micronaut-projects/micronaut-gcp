@@ -27,8 +27,8 @@ import io.micronaut.gcp.pubsub.annotation.PushSubscription;
 import io.micronaut.gcp.pubsub.bind.PubSubBinderRegistry;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException;
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
-import io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties;
 import io.micronaut.gcp.pubsub.push.PubSubPushMessageReceiverException;
+import io.micronaut.gcp.pubsub.push.PushControllerConfiguration;
 import io.micronaut.gcp.pubsub.push.PushSubscriberHandler;
 import io.micronaut.scheduling.TaskExecutors;
 import jakarta.inject.Named;
@@ -59,12 +59,12 @@ import java.util.concurrent.ExecutorService;
  * @author Jeremy Grelle
  * @since 5.4.0
  */
-@Requires(beans = PubSubPushConfigurationProperties.class)
+@Requires(beans = PushControllerConfiguration.class)
 @Singleton
 public class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<PushSubscription> {
 
     private final PushSubscriberHandler subscriberHandler;
-    private final PubSubPushConfigurationProperties pubSubConfigurationProperties;
+    private final PushControllerConfiguration pubSubConfigurationProperties;
     private final Scheduler scheduler;
 
     protected PubSubPushConsumerAdvice(
@@ -75,7 +75,7 @@ public class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProces
         PubSubMessageReceiverExceptionHandler exceptionHandler,
         @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
         PushSubscriberHandler subscriberHandler,
-        PubSubPushConfigurationProperties pubSubConfigurationProperties
+        PushControllerConfiguration pubSubConfigurationProperties
     ) {
         super(PushSubscription.class, beanContext, conversionService, googleCloudConfiguration, binderRegistry, exceptionHandler);
         this.subscriberHandler = subscriberHandler;
