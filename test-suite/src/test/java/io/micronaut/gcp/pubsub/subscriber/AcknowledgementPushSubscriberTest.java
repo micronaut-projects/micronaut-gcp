@@ -53,6 +53,9 @@ class AcknowledgementPushSubscriberTest {
     @Inject
     AcknowledgementPushSubscriber subscriber;
 
+    @Inject
+    JsonMapper jsonMapper;
+
     @BeforeEach
     void setup() {
         Mockito.reset(messageProcessor, subscriber);
@@ -63,7 +66,7 @@ class AcknowledgementPushSubscriberTest {
         when(messageProcessor.handleAnimalMessage(any())).thenReturn(Mono.just(Boolean.TRUE));
 
         Animal dog = new Animal("dog");
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
         HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
 
@@ -75,7 +78,7 @@ class AcknowledgementPushSubscriberTest {
         when(messageProcessor.handleAnimalMessage(any())).thenReturn(Mono.just(Boolean.FALSE));
 
         Animal cat = new Animal("cat");
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(cat).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(cat));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
 
         try {
@@ -91,7 +94,7 @@ class AcknowledgementPushSubscriberTest {
         when(messageProcessor.handleAnimalMessage(any())).thenReturn(Mono.just(Boolean.TRUE));
 
         Animal dog = new Animal("dog");
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-async-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
         HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
 
@@ -103,7 +106,7 @@ class AcknowledgementPushSubscriberTest {
         when(messageProcessor.handleAnimalMessage(any())).thenReturn(Mono.just(Boolean.FALSE));
 
         Animal cat = new Animal("cat");
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(cat).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(cat));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-async-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
 
         try {

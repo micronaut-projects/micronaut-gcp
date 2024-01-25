@@ -32,6 +32,9 @@ class AcknowledgementPushSubscriberSpec extends Specification {
     @Inject
     AcknowledgementPushSubscriber subscriber
 
+    @Inject
+    JsonMapper jsonMapper
+
     Object receivedMessage
 
     Acknowledgement acknowledgement
@@ -45,7 +48,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         setup:
         messageProcessor.handleAnimalMessage(_ as Animal) >> Mono.just(Boolean.TRUE)
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
@@ -64,7 +67,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         setup:
         messageProcessor.handleAnimalMessage(_ as Animal) >> Mono.just(Boolean.FALSE)
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
@@ -84,7 +87,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         setup:
         messageProcessor.handleAnimalMessage(_ as Animal) >> Mono.just(Boolean.TRUE)
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-async-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
@@ -102,7 +105,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         setup:
         messageProcessor.handleAnimalMessage(_ as Animal) >> Mono.just(Boolean.FALSE)
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-async-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:

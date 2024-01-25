@@ -36,7 +36,10 @@ class PubSubPushSpec extends Specification {
     PushConsumer consumer
 
     @Inject
-    BeanContext beanContext;
+    BeanContext beanContext
+
+    @Inject
+    JsonMapper jsonMapper
 
     void setup() {
         consumer.msg = null
@@ -44,7 +47,7 @@ class PubSubPushSpec extends Specification {
 
     void "a simple push message can be received"() {
         given:
-        String data = JsonMapper.createDefault().writeValueAsString(Map.of("key", "success"))
+        String data = jsonMapper.writeValueAsString(Map.of("key", "success"))
         String encodedData = Base64.getEncoder().encodeToString(data.getBytes())
         PushRequest request = new PushRequest("projects/test-project/subscriptions/foo", new PushRequest.PushMessage(Map.of("foo", "bar"), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
@@ -64,7 +67,7 @@ class PubSubPushSpec extends Specification {
 
     void "a simple push message with no attributes but non-empty data can be received"() {
         given:
-        String data = JsonMapper.createDefault().writeValueAsString(Map.of("key", "success"))
+        String data = jsonMapper.writeValueAsString(Map.of("key", "success"))
         String encodedData = Base64.getEncoder().encodeToString(data.getBytes())
         PushRequest request = new PushRequest("projects/test-project/subscriptions/foo", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
@@ -96,7 +99,7 @@ class PubSubPushSpec extends Specification {
 
     void "an invalid push message is rejected"() {
         given:
-        String jsonMessage = JsonMapper.createDefault().writeValueAsString([
+        String jsonMessage = jsonMapper.writeValueAsString([
                 "subscription" : "projects/test-project/subscriptions/foo",
                 "message" : [
                         "attributes" : new HashMap<>(),
@@ -120,7 +123,7 @@ class PubSubPushSpec extends Specification {
         Book book = new Book()
         book.title = "Fight Club"
         book.author = "Chuck Palahniuk"
-        String data = JsonMapper.createDefault().writeValueAsString(book)
+        String data = jsonMapper.writeValueAsString(book)
         String encodedData = Base64.getEncoder().encodeToString(data.getBytes())
         PushRequest request = new PushRequest("projects/test-project/subscriptions/books", new PushRequest.PushMessage(null, encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
@@ -144,7 +147,7 @@ class PubSubPushSpec extends Specification {
         Book book = new Book()
         book.title = "Fight Club"
         book.author = "Chuck Palahniuk"
-        String data = JsonMapper.createDefault().writeValueAsString(book)
+        String data = jsonMapper.writeValueAsString(book)
         String encodedData = Base64.getEncoder().encodeToString(data.getBytes())
         PushRequest request = new PushRequest("projects/test-project/subscriptions/library", new PushRequest.PushMessage(null, encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
@@ -166,7 +169,7 @@ class PubSubPushSpec extends Specification {
         receivedMessage.data
 
         when:
-        Book receivedBook = JsonMapper.createDefault().readValue(receivedMessage.data.toByteArray(), Book.class)
+        Book receivedBook = jsonMapper.readValue(receivedMessage.data.toByteArray(), Book.class)
 
         then:
         receivedBook
@@ -179,7 +182,7 @@ class PubSubPushSpec extends Specification {
         Book book = new Book()
         book.title = "Fight Club"
         book.author = "Chuck Palahniuk"
-        String data = JsonMapper.createDefault().writeValueAsString(book)
+        String data = jsonMapper.writeValueAsString(book)
         String encodedData = Base64.getEncoder().encodeToString(data.getBytes())
         PushRequest request = new PushRequest("projects/test-project/subscriptions/raw", new PushRequest.PushMessage(null, encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
@@ -192,7 +195,7 @@ class PubSubPushSpec extends Specification {
 
         when:
         byte[] received = consumer.msg as byte[]
-        Book receivedBook = JsonMapper.createDefault().readValue(received, Book.class)
+        Book receivedBook = jsonMapper.readValue(received, Book.class)
 
         then:
         receivedBook
@@ -203,7 +206,7 @@ class PubSubPushSpec extends Specification {
     @Property(name = "gcp.pubsub.push.path", value = "/custom-push-path")
     void "a custom path may be used for push messages"() {
         given:
-        String data = JsonMapper.createDefault().writeValueAsString(Map.of("key", "success"))
+        String data = jsonMapper.writeValueAsString(Map.of("key", "success"))
         String encodedData = Base64.getEncoder().encodeToString(data.getBytes())
         PushRequest request = new PushRequest("projects/test-project/subscriptions/foo", new PushRequest.PushMessage(Map.of("foo", "bar"), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
@@ -224,7 +227,7 @@ class PubSubPushSpec extends Specification {
     @Property(name = "gcp.pubsub.push.enabled", value = StringUtils.FALSE)
     void "push messaging can be disabled"() {
         given:
-        String data = JsonMapper.createDefault().writeValueAsString(Map.of("key", "success"))
+        String data = jsonMapper.writeValueAsString(Map.of("key", "success"))
         String encodedData = Base64.getEncoder().encodeToString(data.getBytes())
         PushRequest request = new PushRequest("projects/test-project/subscriptions/foo", new PushRequest.PushMessage(Map.of("foo", "bar"), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 

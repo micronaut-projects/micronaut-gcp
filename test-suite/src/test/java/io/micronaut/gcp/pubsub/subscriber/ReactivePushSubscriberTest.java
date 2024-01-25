@@ -39,6 +39,9 @@ class ReactivePushSubscriberTest {
     @Named("xml")
     XmlMapper xmlMapper;
 
+    @Inject
+    JsonMapper jsonMapper;
+
     Object unwrappedResult;
 
     @BeforeEach
@@ -80,7 +83,7 @@ class ReactivePushSubscriberTest {
     @Test
     void testJsonPojo() throws IOException {
         Animal dog = new Animal("dog");
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
         HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
 
@@ -94,7 +97,7 @@ class ReactivePushSubscriberTest {
     @Test
     void testXmlPojo() throws JsonProcessingException {
         Animal dog = new Animal("cat");
-        String encodedData = Base64.getEncoder().encodeToString(xmlMapper.writeValueAsString(dog).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(xmlMapper.writeValueAsBytes(dog));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-legacy-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
         HttpResponse<?> response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request));
 

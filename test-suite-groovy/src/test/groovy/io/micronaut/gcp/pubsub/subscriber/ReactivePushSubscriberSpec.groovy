@@ -33,6 +33,9 @@ class ReactivePushSubscriberSpec extends Specification {
     @Named("xml")
     XmlMapper xmlMapper
 
+    @Inject
+    JsonMapper jsonMapper
+
     Object unwrappedResult
 
     def setup() {
@@ -77,7 +80,7 @@ class ReactivePushSubscriberSpec extends Specification {
     void "receive pojo message from json"() {
         given:
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
@@ -93,7 +96,7 @@ class ReactivePushSubscriberSpec extends Specification {
     void "receive pojo message from xml"() {
         given:
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(xmlMapper.writeValueAsString(dog).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(xmlMapper.writeValueAsBytes(dog));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-legacy-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:

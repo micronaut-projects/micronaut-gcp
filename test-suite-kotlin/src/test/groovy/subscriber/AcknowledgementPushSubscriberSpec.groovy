@@ -33,6 +33,9 @@ class AcknowledgementPushSubscriberSpec extends Specification {
     @Inject
     AcknowledgementPushSubscriber subscriber
 
+    @Inject
+    JsonMapper jsonMapper
+
     Object receivedMessage
 
     boolean isNackTest
@@ -48,7 +51,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
     void "blocking subscriber with manual ack"() {
         setup:
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
@@ -67,7 +70,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         setup:
         isNackTest = true
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
@@ -86,7 +89,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
     void "async subscriber with manual ack"() {
         setup:
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-async-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
@@ -104,7 +107,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         setup:
         isNackTest = true
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes())
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog))
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-async-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:

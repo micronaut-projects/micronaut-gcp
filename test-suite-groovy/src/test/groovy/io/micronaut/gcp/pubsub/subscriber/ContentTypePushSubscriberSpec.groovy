@@ -24,6 +24,8 @@ import java.nio.charset.StandardCharsets
 @Property(name = "spec.name", value = "ContentTypePushSubscriberSpec")
 @Property(name = "gcp.projectId", value = "test-project")
 class ContentTypePushSubscriberSpec extends Specification {
+    @Inject
+    JsonMapper jsonMapper
 //end::clazzBegin[]
 
 //tag::injectClient[]
@@ -84,7 +86,7 @@ class ContentTypePushSubscriberSpec extends Specification {
         given:
         Animal dog = new Animal("dog")
 
-        String encodedData = Base64.getEncoder().encodeToString(JsonMapper.createDefault().writeValueAsString(dog).getBytes()) // <1>
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog)) // <1>
 
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", // <2>
                 new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
@@ -105,7 +107,7 @@ class ContentTypePushSubscriberSpec extends Specification {
     void "receive pojo message from xml"() {
         given:
         Animal dog = new Animal("dog")
-        String encodedData = Base64.getEncoder().encodeToString(xmlMapper.writeValueAsString(dog).getBytes());
+        String encodedData = Base64.getEncoder().encodeToString(xmlMapper.writeValueAsBytes(dog));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-legacy-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
 
         when:
