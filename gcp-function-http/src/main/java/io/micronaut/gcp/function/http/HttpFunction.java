@@ -20,25 +20,23 @@ import com.google.cloud.functions.HttpResponse;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.env.Environment;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.type.Argument;
 import io.micronaut.function.executor.FunctionInitializer;
 import io.micronaut.http.*;
 import io.micronaut.http.codec.MediaTypeCodec;
-import io.micronaut.http.cookie.Cookies;
-import io.micronaut.http.netty.cookies.NettyCookie;
+import io.micronaut.http.cookie.ClientCookieEncoder;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.DefaultServletExchange;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpHandler;
-import io.netty.handler.codec.http.cookie.ClientCookieEncoder;
 import io.netty.util.internal.MacAddressUtil;
 import io.netty.util.internal.PlatformDependent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.micronaut.core.annotation.NonNull;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -185,13 +183,9 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         request.getParameters().forEach(parameters::put);
         Object body = request.getBody().orElse(null);
         try {
-            Cookies cookies = request.getCookies();
-            cookies.forEach((s, cookie) -> {
-                if (cookie instanceof NettyCookie) {
+            request.getCookies().forEach((s, cookie) ->
                     headers.computeIfAbsent(HttpHeaders.COOKIE, s1 -> new ArrayList<>())
-                            .add(ClientCookieEncoder.STRICT.encode(((NettyCookie) cookie).getNettyCookie()));
-                }
-            });
+                            .add(ClientCookieEncoder.INSTANCE.encode(cookie)));
         } catch (UnsupportedOperationException e) {
             //not all request types support retrieving cookies
         }
