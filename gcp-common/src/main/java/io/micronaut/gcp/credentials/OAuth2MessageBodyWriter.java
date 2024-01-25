@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.credentials;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
@@ -37,6 +38,7 @@ import java.io.OutputStream;
  */
 @Internal
 @Experimental
+@Requires(beans = DefaultOAuth2HttpTransportFactory.class)
 @Singleton
 public final class OAuth2MessageBodyWriter implements MessageBodyWriter<DefaultOAuth2HttpTransportFactory.MutableBlockingLowLevelHttpRequest> {
 

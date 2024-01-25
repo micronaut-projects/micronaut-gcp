@@ -17,5 +17,6 @@ class DefaultOAuth2HttpTransportFactoryDisabledSpec extends Specification {
     void testDefaultOAuth2HttpTransportFactoryDisabled() {
         expect:
         !beanContext.containsBean(DefaultOAuth2HttpTransportFactory.class)
+        !beanContext.containsBean(OAuth2MessageBodyWriter.class)
     }
 }
