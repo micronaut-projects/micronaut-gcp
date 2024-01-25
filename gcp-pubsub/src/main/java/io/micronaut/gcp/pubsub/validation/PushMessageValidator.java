@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.push.PushRequest;
 import io.micronaut.validation.validator.constraints.ConstraintValidator;
@@ -45,6 +46,6 @@ public class PushMessageValidator implements ConstraintValidator<ValidPushMessag
      */
     @Override
     public boolean isValid(PushRequest.@Nullable PushMessage value, @NonNull AnnotationValue<ValidPushMessage> annotationMetadata, @NonNull ConstraintValidatorContext context) {
-        return value != null && (StringUtils.isNotEmpty(value.data()) || (value.attributes() != null && !value.attributes().isEmpty()));
+        return value != null && (StringUtils.isNotEmpty(value.data()) || CollectionUtils.isNotEmpty(value.attributes()));
     }
 }
