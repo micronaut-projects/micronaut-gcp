@@ -104,7 +104,7 @@ final class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcess
      * If the {@link PushSubscription} method is marked with {@link io.micronaut.core.annotation.Blocking}, executes the subscriber
      * method using the {@link TaskExecutors#BLOCKING} executor service to avoid blocking the main HTTP event loop.
      *
-     * @param beanDefinition
+     * @param beanDefinition the bean definition of the subscriber
      * @param method         the executable method reference
      * @param executable     the bound executable subscription method
      * @param bean           the bean PubSub listener bean
