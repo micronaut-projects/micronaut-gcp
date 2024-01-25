@@ -1,10 +1,12 @@
 package io.micronaut.gcp.credentials
 
 import com.google.api.client.util.GenericData
+import com.google.auth.RequestMetadataCallback
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ImpersonatedCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.auth.oauth2.UserCredentials
+import com.google.common.util.concurrent.MoreExecutors
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.BeanInstantiationException
@@ -21,6 +23,7 @@ import org.spockframework.runtime.IStandardStreamsListener
 import org.spockframework.runtime.StandardStreamsCapturer
 import spock.lang.AutoCleanup
 import spock.lang.Specification
+import spock.util.concurrent.PollingConditions
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables
 import uk.org.webcompere.systemstubs.properties.SystemProperties
 import uk.org.webcompere.systemstubs.resource.Resources
@@ -36,6 +39,8 @@ class GoogleCredentialsFactorySpec extends Specification {
 
     @AutoCleanup("stop")
     StandardStreamsCapturer capturer = new StandardStreamsCapturer()
+
+    PollingConditions conditions = new PollingConditions(timeout: 5)
 
     void setup() {
         capturer.addStandardStreamsListener(captured)
@@ -286,6 +291,50 @@ class GoogleCredentialsFactorySpec extends Specification {
         cleanup:
         gcp.close()
         ctx.close()
+    }
+
+    void "invalid credentials cause a warning to be logged when metadata is requested"(){
+        given:
+        PrivateKey pk = generatePrivateKey()
+        String encodedServiceAccountCredentials = encodeServiceCredentials(pk)
+        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
+                "spec.name" : "GoogleCredentialsFactorySpec",
+                "micronaut.server.port" : 8080
+        ])
+        def ctx = ApplicationContext.run([
+                (GoogleCredentialsConfiguration.PREFIX + ".encoded-key"): encodedServiceAccountCredentials
+        ])
+        GoogleCredentials gc = ctx.getBean(GoogleCredentials)
+
+        when:
+        def callback = new RequestMetadataCallback() {
+            boolean success
+            @Override
+            void onSuccess(Map<String, List<String>> metadata) {
+                success = true
+            }
+
+            @Override
+            void onFailure(Throwable exception) {
+                success = false
+            }
+        }
+        gc.getRequestMetadata(null, MoreExecutors.directExecutor(), callback)
+
+        then:
+        conditions.eventually {
+            callback.success
+            captured.messages.any {
+                it.contains("WARN") &&
+                        it.contains("A 429 Too Many Requests response was received from http://localhost:8080/token while " +
+                                "attempting to retrieve an access token for a GCP API request. The GCP libraries treat this as " +
+                                "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
+            }
+        }
+
+        cleanup:
+        ctx.stop()
+        gcp.stop()
     }
 
     private void matchesJsonUserCredentials(GoogleCredentials gc) {
