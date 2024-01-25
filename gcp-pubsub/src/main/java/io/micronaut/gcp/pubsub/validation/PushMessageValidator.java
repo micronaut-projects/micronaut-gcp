@@ -42,7 +42,7 @@ public class PushMessageValidator implements ConstraintValidator<ValidPushMessag
      * @param annotationMetadata The annotation metadata
      * @param context The context object
      *
-     * @return
+     * @return whether the push message is valid
      */
     @Override
     public boolean isValid(PushRequest.@Nullable PushMessage value, @NonNull AnnotationValue<ValidPushMessage> annotationMetadata, @NonNull ConstraintValidatorContext context) {
