@@ -15,15 +15,14 @@
  */
 package io.micronaut.gcp.pubsub.validation;
 
-import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.push.PushRequest;
-import io.micronaut.validation.validator.constraints.ConstraintValidator;
-import io.micronaut.validation.validator.constraints.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * A validator for incoming PubSub push messages.
@@ -39,13 +38,12 @@ public class PushMessageValidator implements ConstraintValidator<ValidPushMessag
      * a non-empty {@code data} field, or at least one non-empty {@code attribute}.
      *
      * @param value The push message to validate
-     * @param annotationMetadata The annotation metadata
      * @param context The context object
      *
      * @return whether the push message is valid
      */
     @Override
-    public boolean isValid(PushRequest.@Nullable PushMessage value, @NonNull AnnotationValue<ValidPushMessage> annotationMetadata, @NonNull ConstraintValidatorContext context) {
+    public boolean isValid(PushRequest.@Nullable PushMessage value, @NonNull ConstraintValidatorContext context) {
         return value != null && (StringUtils.isNotEmpty(value.data()) || CollectionUtils.isNotEmpty(value.attributes()));
     }
 }
