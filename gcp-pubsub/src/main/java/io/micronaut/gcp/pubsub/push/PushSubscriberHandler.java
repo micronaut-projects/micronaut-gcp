@@ -20,7 +20,8 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.MutableHttpResponse;
-import org.reactivestreams.Publisher;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Handles incoming {@link PushRequest} messages.
@@ -39,7 +40,7 @@ public interface PushSubscriberHandler {
      */
     @NonNull
     @SingleResult
-    Publisher<MutableHttpResponse<Object>> handleRequest(@NonNull PushRequest pushRequest);
+    CompletableFuture<MutableHttpResponse<Object>> handleRequest(@NonNull PushRequest pushRequest);
 
     /**
      * Configure a {@link MessageReceiver} for the given subscription.

@@ -23,8 +23,8 @@ import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -49,27 +49,28 @@ final class DefaultPushSubscriberHandler implements PushSubscriberHandler {
      * the PubSub service.
      */
     @Override
-    public Mono<MutableHttpResponse<Object>> handleRequest(PushRequest pushRequest) {
+    public CompletableFuture<MutableHttpResponse<Object>> handleRequest(PushRequest pushRequest) {
         ProjectSubscriptionName subscription = ProjectSubscriptionName.parse(pushRequest.subscription());
         if (receivers.containsKey(subscription)) {
             MessageReceiver receiver = receivers.get(subscription);
-            Mono<AckReply> result = Mono.create(sink -> receiver.receiveMessage(pushRequest.message().asPubsubMessage(), new AckReplyConsumer() {
-                @Override
-                public void ack() {
-                    sink.success(AckReply.ACK);
-                }
+            var result = new CompletableFuture<AckReply>();
+            receiver.receiveMessage(pushRequest.message().asPubsubMessage(), new AckReplyConsumer() {
+                    @Override
+                    public void ack() {
+                        result.complete(AckReply.ACK);
+                    }
 
-                @Override
-                public void nack() {
-                    sink.success(AckReply.NACK);
-                }
-            }));
-            return result.map(reply -> switch (reply) {
-                case ACK -> HttpResponse.ok();
-                case NACK -> HttpResponse.unprocessableEntity();
+                    @Override
+                    public void nack() {
+                        result.complete(AckReply.NACK);
+                    }
+            });
+            return result.thenApply(reply -> switch (reply) {
+                case ACK -> HttpResponse.ok("");
+                case NACK -> HttpResponse.unprocessableEntity().body("");
             });
         }
-        return Mono.just(HttpResponse.notFound("No subscribers were found for subscription " + pushRequest.subscription()));
+        return CompletableFuture.completedFuture(HttpResponse.notFound("No subscribers were found for subscription " + pushRequest.subscription()));
     }
 
     @Override

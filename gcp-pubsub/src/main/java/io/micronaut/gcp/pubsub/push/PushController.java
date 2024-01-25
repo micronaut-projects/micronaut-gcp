@@ -23,7 +23,8 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import jakarta.validation.Valid;
-import org.reactivestreams.Publisher;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A {@link Controller} implementation for handling PubSub Push JSON messages.
@@ -68,7 +69,7 @@ public class PushController {
      */
     @Post(consumes = MediaType.APPLICATION_JSON)
     @SingleResult
-    public Publisher<MutableHttpResponse<Object>> handlePushRequest(@Valid @Body PushRequest message) {
+    public CompletableFuture<MutableHttpResponse<Object>> handlePushRequest(@Valid @Body PushRequest message) {
         return handler.handleRequest(message);
     }
 }
