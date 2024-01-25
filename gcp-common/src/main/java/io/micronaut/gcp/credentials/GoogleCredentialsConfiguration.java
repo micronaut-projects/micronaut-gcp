@@ -156,6 +156,7 @@ public class GoogleCredentialsConfiguration implements Toggleable {
      * on the classpath, the GCP SDK's default transport will be used instead.
      *
      * @return Whether the {@link HttpClient} should be used for retrieving authentication tokens.
+     * @since 5.4.0
      */
     public boolean isUseHttpClient() {
         return this.useHttpClient;
@@ -166,6 +167,7 @@ public class GoogleCredentialsConfiguration implements Toggleable {
      * tokens. Default value is {@value #DEFAULT_USE_HTTP_CLIENT}.
      *
      * @param useHttpClient Whether the {@link HttpClient} should be used for retrieving authentication tokens.
+     * @since 5.4.0
      */
     public void setUseHttpClient(boolean useHttpClient) {
         this.useHttpClient = useHttpClient;
