@@ -17,6 +17,7 @@ dependencies {
     testImplementation(mnRxjava3.micronaut.rxjava3)
     testImplementation libs.testcontainers.spock
     testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
     testImplementation(testFixtures(project(":micronaut-gcp-common")))
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
