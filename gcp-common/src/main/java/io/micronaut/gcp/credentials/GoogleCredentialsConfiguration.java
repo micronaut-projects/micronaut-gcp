@@ -23,6 +23,8 @@ import io.micronaut.gcp.GoogleCloudConfiguration;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.client.HttpClient;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +55,11 @@ public class GoogleCredentialsConfiguration implements Toggleable {
     public static final List<URI> DEFAULT_SCOPES = Collections.emptyList();
 
     /**
+     * Use transport based on {@link io.micronaut.http.client.HttpClient} by default.
+     */
+    public static final boolean DEFAULT_USE_HTTP_CLIENT = true;
+
+    /**
      * The prefix to use.
      */
     public static final String PREFIX = GoogleCloudConfiguration.PREFIX + ".credentials";
@@ -60,6 +67,8 @@ public class GoogleCredentialsConfiguration implements Toggleable {
     private boolean enabled = DEFAULT_ENABLED;
 
     private List<URI> scopes = DEFAULT_SCOPES;
+
+    private boolean useHttpClient = DEFAULT_USE_HTTP_CLIENT;
 
     private String location;
 
@@ -120,7 +129,9 @@ public class GoogleCredentialsConfiguration implements Toggleable {
     }
 
     /**
-     * Returns whether Google credentials configuration is enabled or not.
+     * Allows disabling Google credentials configuration. This may be useful in situations where
+     * you don't want to authenticate despite having the Google Cloud SDK configured. Default value
+     * is {@value #DEFAULT_ENABLED}.
      * @since 4.4.1
      */
     @Override
@@ -137,5 +148,28 @@ public class GoogleCredentialsConfiguration implements Toggleable {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * If the HttpClient based transport should be used for retrieving authentication
+     * tokens. Default value is {@value #DEFAULT_USE_HTTP_CLIENT}. Note that if HttpClient is not
+     * on the classpath, the GCP SDK's default transport will be used instead.
+     *
+     * @return Whether the {@link HttpClient} should be used for retrieving authentication tokens.
+     * @since 5.4.0
+     */
+    public boolean isUseHttpClient() {
+        return this.useHttpClient;
+    }
+
+    /**
+     * Allows disabling use of the {@link HttpClient} based transport for retrieving authentication
+     * tokens. Default value is {@value #DEFAULT_USE_HTTP_CLIENT}.
+     *
+     * @param useHttpClient Whether the {@link HttpClient} should be used for retrieving authentication tokens.
+     * @since 5.4.0
+     */
+    public void setUseHttpClient(boolean useHttpClient) {
+        this.useHttpClient = useHttpClient;
     }
 }

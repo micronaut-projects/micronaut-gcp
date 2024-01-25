@@ -45,4 +45,4 @@ class ErrorHandlingSubscriber : PubSubMessageReceiverExceptionHandler { // <1>
 
 	}
 }
-// tag::clazz[]
+// end::clazz[]

@@ -34,3 +34,4 @@ class GoogleClientExample (private val client: SecretManagerServiceClient) { // 
 		val secret = response.payload.data.toStringUtf8()
 	}
 }
+//end::clazz[]

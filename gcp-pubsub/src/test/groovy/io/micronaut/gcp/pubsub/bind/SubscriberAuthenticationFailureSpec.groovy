@@ -1,6 +1,7 @@
 package io.micronaut.gcp.pubsub.bind
 
 import com.google.auth.oauth2.GoogleCredentials
+import com.google.pubsub.v1.ProjectSubscriptionName
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.reflect.ReflectionUtils
@@ -27,7 +28,7 @@ class SubscriberAuthenticationFailureSpec extends Specification {
 
     ServiceAccountTestListener listener
 
-    PollingConditions conditions = new PollingConditions(timeout: 30)
+    PollingConditions conditions = new PollingConditions(timeout: 5)
 
     SimpleStreamsListener captured = new SimpleStreamsListener()
 
@@ -39,7 +40,7 @@ class SubscriberAuthenticationFailureSpec extends Specification {
         capturer.start()
     }
 
-    void "authentication failure on subscription should be logged as a warning"() {
+    void "subscription with invalid authentication credentials causes immediate subscriber termination"() {
         given:
         PrivateKey pk = generatePrivateKey()
         String encodedServiceAccountCredentials = encodeServiceCredentials(pk)
@@ -56,16 +57,13 @@ class SubscriberAuthenticationFailureSpec extends Specification {
         when:
         def gc = ctx.getBean(GoogleCredentials)
         listener = ctx.getBean(ServiceAccountTestListener)
+        def subscriberFactory = ctx.getBean(DefaultSubscriberFactory)
 
         then:
         gc != null
         listener != null
         conditions.eventually {
-            captured.messages.any {
-                it.contains("WARN")
-                it.contains("A failure occurred while attempting to build credential metadata for a GCP API request. The GCP libraries treat this as " +
-                        "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
-            }
+            !subscriberFactory.isRunning(ProjectSubscriptionName.of("micronaut-gcp-testing", "micronaut-gcp-topic1-sub"))
         }
 
         cleanup:

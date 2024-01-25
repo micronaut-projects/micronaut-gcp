@@ -1,5 +1,6 @@
 package io.micronaut.gcp.credentials
 
+import com.google.api.client.util.GenericData
 import com.google.auth.RequestMetadataCallback
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ImpersonatedCredentials
@@ -13,6 +14,7 @@ import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.reflect.ReflectionUtils
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
@@ -27,6 +29,7 @@ import uk.org.webcompere.systemstubs.properties.SystemProperties
 import uk.org.webcompere.systemstubs.resource.Resources
 
 import java.security.PrivateKey
+import java.util.concurrent.atomic.AtomicInteger
 
 import static io.micronaut.gcp.credentials.fixture.ServiceAccountCredentialsTestHelper.*
 
@@ -37,7 +40,7 @@ class GoogleCredentialsFactorySpec extends Specification {
     @AutoCleanup("stop")
     StandardStreamsCapturer capturer = new StandardStreamsCapturer()
 
-    PollingConditions conditions = new PollingConditions(timeout: 30)
+    PollingConditions conditions = new PollingConditions(timeout: 5)
 
     void setup() {
         capturer.addStandardStreamsListener(captured)
@@ -67,6 +70,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         thrown(NoSuchBeanException)
+
+        cleanup:
+        ctx.close()
     }
 
     void "configuring both credentials location and encoded-key throws an exception"() {
@@ -82,6 +88,9 @@ class GoogleCredentialsFactorySpec extends Specification {
         then:
         def ex = thrown(BeanInstantiationException)
         ex.getCause() instanceof ConfigurationException
+
+        cleanup:
+        ctx.close()
     }
 
     void "default configuration without GCP SDK installed fails"() {
@@ -191,7 +200,7 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         gc != null
-        ImpersonatedCredentials ic = gc.$target
+        ImpersonatedCredentials ic = (ImpersonatedCredentials) gc
         UserCredentials uc = (UserCredentials) ic.getSourceCredentials()
         ic.getAccount() == "sa-test1@micronaut-gcp-testing.iam.gserviceaccount.com"
         with(uc) {
@@ -232,6 +241,9 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         matchesJsonServiceAccountCredentials(pk, gc)
+
+        cleanup:
+        ctx.close()
     }
 
     void "service account credentials can be loaded via configured Base64-encoded key"() {
@@ -247,6 +259,38 @@ class GoogleCredentialsFactorySpec extends Specification {
 
         then:
         matchesJsonServiceAccountCredentials(pk, gc)
+
+        cleanup:
+        ctx.close()
+    }
+
+    void "an access token should be able to be refreshed and retrieved"() {
+        given:
+        PrivateKey pk = generatePrivateKey()
+        File serviceAccountCredentials = writeServiceCredentialsToTempFile(pk)
+
+        when:
+        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
+                "spec.name" : "GoogleCredentialsFactorySpec",
+                "micronaut.server.port" : 8080
+        ])
+        def ctx = ApplicationContext.run([
+                (GoogleCredentialsConfiguration.PREFIX + ".location"): serviceAccountCredentials.getPath()
+        ])
+        GoogleCredentials gc = ctx.getBean(GoogleCredentials)
+
+        then:
+        matchesJsonServiceAccountCredentials(pk, gc)
+
+        when:
+        gc.refreshIfExpired()
+
+        then:
+        gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
+
+        cleanup:
+        gcp.close()
+        ctx.close()
     }
 
     void "invalid credentials cause a warning to be logged when metadata is requested"(){
@@ -263,24 +307,28 @@ class GoogleCredentialsFactorySpec extends Specification {
         GoogleCredentials gc = ctx.getBean(GoogleCredentials)
 
         when:
-        gc.getRequestMetadata(null, MoreExecutors.directExecutor(), new RequestMetadataCallback() {
+        def callback = new RequestMetadataCallback() {
+            boolean success
             @Override
             void onSuccess(Map<String, List<String>> metadata) {
-
+                success = true
             }
 
             @Override
             void onFailure(Throwable exception) {
-
+                success = false
             }
-        })
+        }
+        gc.getRequestMetadata(null, MoreExecutors.directExecutor(), callback)
 
         then:
         conditions.eventually {
+            callback.success
             captured.messages.any {
-                it.contains("WARN")
-                it.contains("A failure occurred while attempting to build credential metadata for a GCP API request. The GCP libraries treat this as " +
-                        "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
+                it.contains("WARN") &&
+                        it.contains("A 429 Too Many Requests response was received from http://localhost:8080/token while " +
+                                "attempting to retrieve an access token for a GCP API request. The GCP libraries treat this as " +
+                                "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
             }
         }
 
@@ -290,8 +338,8 @@ class GoogleCredentialsFactorySpec extends Specification {
     }
 
     private void matchesJsonUserCredentials(GoogleCredentials gc) {
-        assert gc != null && gc.$target != null && gc.$target instanceof UserCredentials
-        UserCredentials uc = (UserCredentials) gc.$target
+        assert gc != null && gc instanceof UserCredentials
+        UserCredentials uc = (UserCredentials) gc
         assert uc.getClientId() == "client-id-1.apps.googleusercontent.com"
         assert uc.getClientSecret() == "client-secret-1"
         assert uc.getQuotaProjectId() == "micronaut-gcp-test"
@@ -299,8 +347,8 @@ class GoogleCredentialsFactorySpec extends Specification {
     }
 
     private void matchesJsonServiceAccountCredentials(PrivateKey pk, GoogleCredentials gc) {
-        assert gc != null && gc.$target != null && gc.$target instanceof ServiceAccountCredentials
-        ServiceAccountCredentials sc = (ServiceAccountCredentials) gc.$target
+        assert gc != null && gc instanceof ServiceAccountCredentials
+        ServiceAccountCredentials sc = (ServiceAccountCredentials) gc
         assert sc.getAccount() == "sa-test1@micronaut-gcp-testing.iam.gserviceaccount.com"
         assert sc.getClientId() == "client-id-1"
         assert sc.getProjectId() == "micronaut-gcp-testing"
@@ -313,9 +361,14 @@ class GoogleCredentialsFactorySpec extends Specification {
 @Controller
 class GoogleAuth {
 
-    @Post(value="/token", processes = MediaType.APPLICATION_FORM_URLENCODED)
-    HttpResponse<String> getToken() {
-        return HttpResponse.unauthorized()
+    AtomicInteger requestCount = new AtomicInteger(1)
+
+    @Post(value="/token", consumes = MediaType.APPLICATION_FORM_URLENCODED, produces = MediaType.APPLICATION_JSON)
+    HttpResponse<GenericData> getToken() {
+        if (requestCount.getAndAdd(1) == 2) {
+            return HttpResponse.ok(new GenericData().set("access_token", "ThisIsAFreshToken").set("expires_in", 3600))
+        }
+        return HttpResponse.status(HttpStatus.TOO_MANY_REQUESTS)
     }
 }
 
