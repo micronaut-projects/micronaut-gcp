@@ -63,7 +63,7 @@ public class PubSubPushConfigurationProperties implements PushControllerConfigur
     }
 
     /**
-     * The configured path for the PubSub Push HTTP endpoint.
+     * The configured path for the PubSub Push HTTP endpoint. Default value {@value #DEFAULT_PATH}
      *
      * @return the path
      */
