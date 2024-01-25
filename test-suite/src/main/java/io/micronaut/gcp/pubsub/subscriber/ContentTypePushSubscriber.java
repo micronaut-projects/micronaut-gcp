@@ -18,18 +18,19 @@ package io.micronaut.gcp.pubsub.subscriber;
 
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Blocking;
 import io.micronaut.gcp.pubsub.annotation.MessageId;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 import io.micronaut.gcp.pubsub.annotation.PushSubscription;
 import io.micronaut.gcp.pubsub.support.Animal;
 import io.micronaut.http.MediaType;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 // end::imports[]
 
 @Requires(property = "spec.name", value = "ContentTypePushSubscriberTest")
 // tag::clazz[]
 @PubSubListener
-@Blocking // <1>
+@ExecuteOn(TaskExecutors.BLOCKING) // <1>
 public class ContentTypePushSubscriber {
 
     @PushSubscription("raw-push-subscription") // <2>

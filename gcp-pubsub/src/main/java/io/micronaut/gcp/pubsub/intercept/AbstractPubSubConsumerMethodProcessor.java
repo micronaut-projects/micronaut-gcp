@@ -98,7 +98,7 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
                     .getAnnotationTypeByStereotype(Qualifier.class)
                     .map(type -> Qualifiers.byAnnotation(beanDefinition, type))
                     .orElse(null);
-            boolean isBlocking = beanDefinition.hasDeclaredAnnotation(Blocking.class) || method.hasDeclaredAnnotation(Blocking.class);
+
             boolean hasAckArg = Arrays.stream(method.getArguments())
                     .anyMatch(arg -> Acknowledgement.class.isAssignableFrom(arg.getType()));
 
@@ -112,20 +112,19 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
                 ProjectSubscriptionName projectSubscriptionName = PubSubSubscriptionUtils.toProjectSubscriptionName(subscriptionName, googleCloudConfiguration.getProjectId());
                 String defaultContentType = subscriptionAnnotation.stringValue("contentType").orElse(MediaType.APPLICATION_JSON);
                 String configuration = subscriptionAnnotation.stringValue("configuration").orElse("");
-                MessageReceiver receiver = buildMessageReceiver(method, defaultContentType, projectSubscriptionName, hasAckArg, binder, bean, isBlocking);
+                MessageReceiver receiver = buildMessageReceiver(beanDefinition, method, defaultContentType, projectSubscriptionName, hasAckArg, binder, bean);
                 addSubscriber(projectSubscriptionName, receiver, configuration);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private MessageReceiver buildMessageReceiver(ExecutableMethod<?, ?> method,
+    private MessageReceiver buildMessageReceiver(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method,
                                                  String defaultContentType,
                                                  ProjectSubscriptionName projectSubscriptionName,
                                                  boolean hasAckArg,
                                                  DefaultExecutableBinder<PubSubConsumerState> binder,
-                                                 Object bean,
-                                                 boolean isBlocking) {
+                                                 Object bean) {
         return (PubsubMessage message, AckReplyConsumer ackReplyConsumer) -> {
 
             if (!doBeforeSubscriber(message, ackReplyConsumer)) {
@@ -143,7 +142,7 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
             boolean autoAcknowledge = !hasAckArg;
             try {
                 BoundExecutable<Object, Object> executable = (BoundExecutable<Object, Object>) binder.bind(method, binderRegistry, consumerState);
-                Flux<Object> resultPublisher = executeSubscriberMethod(executable, bean, isBlocking);
+                Flux<Object> resultPublisher = executeSubscriberMethod(beanDefinition, method, executable, bean);
                 resultPublisher.subscribe(data -> {
                     }, //no-op
                     ex -> handleException(new PubSubMessageReceiverException("Error handling message", ex, bean, consumerState, autoAcknowledge)),
@@ -208,13 +207,14 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
     /**
      * Default execution logic for bound subscription methods.
      *
-     * @param executable the bound executable subscription method
-     * @param bean the bean PubSub listener bean
-     * @param isBlocking whether the subscription method is blocking
+     * @param beanDefinition the bean definition of the subscriber
+     * @param method         the executable method reference
+     * @param executable     the bound executable subscription method
+     * @param bean           the bean PubSub listener bean
      * @return a {@link Flux} that will complete after subscriber execution
      */
     @SuppressWarnings({"unchecked"})
-    protected Flux<Object> executeSubscriberMethod(BoundExecutable<Object, Object> executable, Object bean, boolean isBlocking) {
+    protected Flux<Object> executeSubscriberMethod(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method, BoundExecutable<Object, Object> executable, Object bean) {
         Object result = Objects.requireNonNull(executable).invoke(bean);
         if (!Publishers.isConvertibleToPublisher(result)) {
             return Flux.empty();

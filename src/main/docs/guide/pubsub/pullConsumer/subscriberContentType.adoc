@@ -23,17 +23,17 @@ snippet::io.micronaut.gcp.pubsub.subscriber.ContentTypeSubscriber[tags="imports,
 
 Though the deserialization is identical for ann:gcp.pubsub.annotation.PushSubscription[] methods, one thing that requires additional consideration is that since Push messages are delivered via HTTP the subscriber methods will be executed on the main HTTP event loop thread by default. Care must be taken not to block the event loop thread.
 
-As a convenience, ann:gcp.pubsub.annotation.PushSubscription[] methods that are known to use blocking operations during the course of message processing may be annotated with ann:io.micronaut.core.annotation.Blocking[]. This will cause the invocation of the method to occur in an separate thread provided by the `TaskExecutors.BLOCKING` `ExecutorService`.
+As a convenience, ann:gcp.pubsub.annotation.PushSubscription[] methods that are known to use blocking operations during the course of message processing may be annotated with ann:io.micronaut.scheduling.annotation.ExecuteOn[]. This will cause the invocation of the method to occur in a separate thread using the `ExecutorService` specified in the annotation.
 
-If all of the subscriber methods in a given ann:gcp.pubsub.annotation.PubSubListener[] class are known to be blocking, then the ann:io.micronaut.core.annotation.Blocking[] annotation may be used at the class level instead and all ann:gcp.pubsub.annotation.PushSubscription[] methods in that class will be executed by the `TaskExecutors.BLOCKING` `ExecutorService`.
+If all the subscriber methods in a given ann:gcp.pubsub.annotation.PubSubListener[] class are known to be blocking, then the ann:io.micronaut.scheduling.annotation.ExecuteOn[] annotation may be used at the class level instead and all ann:gcp.pubsub.annotation.PushSubscription[] methods in that class will be executed by the specified `ExecutorService`.
 
-NOTE: Since the methods are executed by the `TaskExecutors.BLOCKING` `ExecutorService`, Virtual Threads will be used if available.
+NOTE: If you use the `TaskExecutors.BLOCKING` `ExecutorService`, Virtual Threads will be used if available.
 
-The following example is equivalent to the preceding one, except using ann:io.micronaut.core.annotation.Blocking[] at the class level and ann:gcp.pubsub.annotation.PushSubscription[] methods:
+The following example is equivalent to the preceding one, except using ann:io.micronaut.scheduling.annotation.ExecuteOn[] at the class level and ann:gcp.pubsub.annotation.PushSubscription[] methods:
 
 snippet::io.micronaut.gcp.pubsub.subscriber.ContentTypePushSubscriber[tags="imports, clazz", source="main"]
 
-<1> The class is annotated with ann:io.micronaut.core.annotation.Blocking[] so that all of the ann:gcp.pubsub.annotation.PushSubscription[] methods will be executed on a separate thread
+<1> The class is annotated with ann:io.micronaut.scheduling.annotation.ExecuteOn[] so that all of the ann:gcp.pubsub.annotation.PushSubscription[] methods will be executed on a separate thread
 <2> Bytes are copied, SerDes is bypassed, message id injected for usage
 <3> SerDes is bypassed, `PubSubMessage` object is copied, no need to use `@MessageId`
 <4> The framework will try to deserialize this payload. If no `Content-Type` header is found, will default to `application/json`

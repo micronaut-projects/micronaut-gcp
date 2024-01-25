@@ -17,11 +17,12 @@ package io.micronaut.gcp.pubsub.subscriber
 
 //tag::imports[]
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.Blocking
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.PushSubscription
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.messaging.Acknowledgement
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
 import reactor.core.publisher.Mono
 
 // end::imports[]
@@ -31,7 +32,7 @@ import reactor.core.publisher.Mono
 @PubSubListener
 class AcknowledgementPushSubscriber(private val messageProcessor: MessageProcessor) {
 
-    @Blocking
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @PushSubscription("animals-push")
     fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
         if (messageProcessor.handleAnimalMessage(animal).block() == true) {

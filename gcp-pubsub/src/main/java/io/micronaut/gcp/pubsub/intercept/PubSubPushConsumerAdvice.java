@@ -21,6 +21,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.gcp.GoogleCloudConfiguration;
@@ -31,8 +32,11 @@ import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverExceptionHandler;
 import io.micronaut.gcp.pubsub.push.PubSubPushMessageReceiverException;
 import io.micronaut.gcp.pubsub.push.PushControllerConfiguration;
 import io.micronaut.gcp.pubsub.push.PushSubscriberHandler;
+import io.micronaut.inject.BeanDefinition;
+import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.scheduling.TaskExecutors;
-import jakarta.inject.Named;
+import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.micronaut.scheduling.executor.ExecutorSelector;
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -40,7 +44,6 @@ import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Implementation of an {@link ExecutableMethodProcessor} that creates {@link com.google.cloud.pubsub.v1.MessageReceiver}s to
@@ -65,9 +68,11 @@ import java.util.concurrent.ExecutorService;
 @Internal
 final class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<PushSubscription> {
 
+    private static final String EXECUTE_ON = ExecuteOn.class.getName();
+
     private final PushSubscriberHandler subscriberHandler;
     private final PushControllerConfiguration pubSubConfigurationProperties;
-    private final Scheduler scheduler;
+    private final ExecutorSelector executorSelector;
 
     protected PubSubPushConsumerAdvice(
         BeanContext beanContext,
@@ -75,14 +80,14 @@ final class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcess
         GoogleCloudConfiguration googleCloudConfiguration,
         PubSubBinderRegistry binderRegistry,
         PubSubMessageReceiverExceptionHandler exceptionHandler,
-        @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
+        ExecutorSelector executorSelector,
         PushSubscriberHandler subscriberHandler,
         PushControllerConfiguration pubSubConfigurationProperties
     ) {
         super(PushSubscription.class, beanContext, conversionService, googleCloudConfiguration, binderRegistry, exceptionHandler);
+        this.executorSelector = executorSelector;
         this.subscriberHandler = subscriberHandler;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
-        this.scheduler = Schedulers.fromExecutorService(executorService);
     }
 
     @Override
@@ -99,17 +104,26 @@ final class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcess
      * If the {@link PushSubscription} method is marked with {@link io.micronaut.core.annotation.Blocking}, executes the subscriber
      * method using the {@link TaskExecutors#BLOCKING} executor service to avoid blocking the main HTTP event loop.
      *
-     * @param executable the bound executable subscription method
-     * @param bean the bean PubSub listener bean
-     * @param isBlocking whether the subscription method is blocking
+     * @param beanDefinition
+     * @param method         the executable method reference
+     * @param executable     the bound executable subscription method
+     * @param bean           the bean PubSub listener bean
      * @return a {@link Flux} that will complete after subscriber execution
      */
     @Override
-    protected Flux<Object> executeSubscriberMethod(BoundExecutable<Object, Object> executable, Object bean, boolean isBlocking) {
-        if (isBlocking) {
-            return Mono.fromCallable(() -> Objects.requireNonNull(executable).invoke(bean)).flux().subscribeOn(scheduler);
+    protected Flux<Object> executeSubscriberMethod(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method, BoundExecutable<Object, Object> executable, Object bean) {
+        Scheduler subscribeOnScheduler = schedulerFor(beanDefinition, method);
+        if (subscribeOnScheduler != null) {
+            return Mono.fromCallable(() -> Objects.requireNonNull(executable).invoke(bean)).flux().subscribeOn(subscribeOnScheduler);
         }
-        return super.executeSubscriberMethod(executable, bean, false);
+        return super.executeSubscriberMethod(beanDefinition, method, executable, bean);
+    }
+
+    private @Nullable Scheduler schedulerFor(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
+        if (beanDefinition.hasDeclaredAnnotation(ExecuteOn.class)) {
+            return executorSelector.select(beanDefinition.stringValue(EXECUTE_ON).orElse(null)).map(Schedulers::fromExecutorService).orElse(null);
+        }
+        return executorSelector.select(method, null).map(Schedulers::fromExecutorService).orElse(null);
     }
 
 }
