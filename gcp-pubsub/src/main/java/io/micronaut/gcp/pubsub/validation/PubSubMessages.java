@@ -16,6 +16,7 @@
 package io.micronaut.gcp.pubsub.validation;
 
 import io.micronaut.context.StaticMessageSource;
+import io.micronaut.core.annotation.Internal;
 import jakarta.inject.Singleton;
 
 /**
@@ -25,7 +26,8 @@ import jakarta.inject.Singleton;
  * @since 5.4.0
  */
 @Singleton
-public class PubSubMessages extends StaticMessageSource {
+@Internal
+final class PubSubMessages extends StaticMessageSource {
 
     /**
      * {@link ValidPushMessage} message.

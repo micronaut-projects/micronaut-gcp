@@ -18,6 +18,7 @@ package io.micronaut.gcp.pubsub.push;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.pubsub.v1.ProjectSubscriptionName;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -33,7 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 5.4.0
  */
 @Singleton
-public class DefaultPushSubscriberHandler implements PushSubscriberHandler {
+@Internal
+final class DefaultPushSubscriberHandler implements PushSubscriberHandler {
 
     private final ConcurrentHashMap<ProjectSubscriptionName, MessageReceiver> receivers = new ConcurrentHashMap<>();
 

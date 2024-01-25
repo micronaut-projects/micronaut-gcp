@@ -17,6 +17,7 @@ package io.micronaut.gcp.pubsub.push;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
@@ -26,7 +27,8 @@ import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
  */
 @Requires(property = PubSubPushConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(PubSubPushConfigurationProperties.PREFIX)
-public class PubSubPushConfigurationProperties implements PushControllerConfiguration {
+@Internal
+final class PubSubPushConfigurationProperties implements PushControllerConfiguration {
 
     public static final String PREFIX = PubSubConfigurationProperties.PREFIX + ".push";
 

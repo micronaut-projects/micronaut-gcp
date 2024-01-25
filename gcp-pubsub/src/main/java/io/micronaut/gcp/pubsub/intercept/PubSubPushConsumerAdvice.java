@@ -20,6 +20,7 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.gcp.GoogleCloudConfiguration;
@@ -61,7 +62,8 @@ import java.util.concurrent.ExecutorService;
  */
 @Requires(beans = PushControllerConfiguration.class)
 @Singleton
-public class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<PushSubscription> {
+@Internal
+final class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<PushSubscription> {
 
     private final PushSubscriberHandler subscriberHandler;
     private final PushControllerConfiguration pubSubConfigurationProperties;

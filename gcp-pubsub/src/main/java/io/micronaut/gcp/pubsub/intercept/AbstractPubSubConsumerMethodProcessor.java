@@ -21,10 +21,7 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
-import io.micronaut.core.annotation.AnnotationValue;
-import io.micronaut.core.annotation.Blocking;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.annotation.*;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.bind.DefaultExecutableBinder;
@@ -71,7 +68,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Jeremy Grelle
  * @since 5.4.0
  */
-public abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> implements ExecutableMethodProcessor<A> {
+@Internal
+abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> implements ExecutableMethodProcessor<A> {
 
     protected final BeanContext beanContext;
     protected final ConversionService conversionService;

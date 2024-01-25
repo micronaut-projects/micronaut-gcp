@@ -21,6 +21,7 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.Subscription;
@@ -45,8 +46,9 @@ import jakarta.inject.Singleton;
  * @author Vinicius Carvalho
  * @since 2.0.0
  */
+@Internal
 @Singleton
-public class PubSubConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<Subscription> {
+final class PubSubConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<Subscription> {
 
     private final SubscriberFactory subscriberFactory;
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
