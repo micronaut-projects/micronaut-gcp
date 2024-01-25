@@ -60,7 +60,9 @@ public class GoogleCredentialsFactory {
     /**
      * Default constructor.
      * @param configuration The configuration
+     * @deprecated Use {@link #GoogleCredentialsFactory(GoogleCredentialsConfiguration, HttpTransportFactory)} instead.
      */
+    @Deprecated
     public GoogleCredentialsFactory(@NonNull GoogleCredentialsConfiguration configuration) {
         this(configuration, null);
     }
