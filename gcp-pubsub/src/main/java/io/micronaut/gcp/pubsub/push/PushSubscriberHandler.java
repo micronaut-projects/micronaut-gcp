@@ -47,5 +47,5 @@ public interface PushSubscriberHandler {
      * @param projectSubscriptionName the subscription name
      * @param receiver the message receiver to bind to the subscription
      */
-    void addSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver);
+    void addSubscriber(@NonNull ProjectSubscriptionName projectSubscriptionName, @NonNull MessageReceiver receiver);
 }
