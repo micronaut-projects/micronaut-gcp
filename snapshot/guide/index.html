@@ -326,7 +326,16 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns whether Google credentials configuration is enabled or not.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allows disabling Google credentials configuration. This may be useful in situations where
+ you don&#8217;t want to authenticate despite having the Google Cloud SDK configured. Default value
+ is true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.credentials.use-http-client</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the HttpClient based transport should be used for retrieving authentication
+ tokens. Default value is true. Note that if HttpClient is not
+ on the classpath, the GCP SDK&#8217;s default transport will be used instead.</p></td>
 </tr>
 </tbody>
 </table>

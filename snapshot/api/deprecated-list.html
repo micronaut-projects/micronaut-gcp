@@ -78,19 +78,23 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html#%3Cinit%3E(io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry)">io.micronaut.gcp.pubsub.bind.PubSubBodyBinder<wbr>(PubSubMessageSerDesRegistry)</a></div>
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/gcp/credentials/GoogleCredentialsFactory.html#%3Cinit%3E(io.micronaut.gcp.credentials.GoogleCredentialsConfiguration)">io.micronaut.gcp.credentials.GoogleCredentialsFactory<wbr>(GoogleCredentialsConfiguration)</a></div>
 <div class="col-last even-row-color">
+<div class="deprecation-comment">Use <a href="io/micronaut/gcp/credentials/GoogleCredentialsFactory.html#%3Cinit%3E(io.micronaut.gcp.credentials.GoogleCredentialsConfiguration,com.google.auth.http.HttpTransportFactory)"><code>GoogleCredentialsFactory(GoogleCredentialsConfiguration, HttpTransportFactory)</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html#%3Cinit%3E(io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry)">io.micronaut.gcp.pubsub.bind.PubSubBodyBinder<wbr>(PubSubMessageSerDesRegistry)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">An instance of <code>ConversionService</code> is needed for binding the full range of supported
  types (including reactive) to PubSub subscriber methods. <p><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html#%3Cinit%3E(io.micronaut.core.convert.ConversionService,io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry)"><code>PubSubBodyBinder(ConversionService, PubSubMessageSerDesRegistry)</code></a> should be used instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html#%3Cinit%3E(java.lang.String,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)">io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException<wbr>(String, Object, PubSubConsumerState)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html#%3Cinit%3E(java.lang.String,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)">io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException<wbr>(String, Object, PubSubConsumerState)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">This exception is expected to only ever be created internally by the framework, and this form is no longer used.
  <p> <a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html#%3Cinit%3E(java.lang.String,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState,boolean)"><code>PubSubMessageReceiverException(String, Object, PubSubConsumerState, boolean)</code></a> is now used instead. Any outside appropriate usage of
  this class (such as in exception handler tests) should be updated accordingly.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)">io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException<wbr>(String, Throwable, Object, PubSubConsumerState)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)">io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException<wbr>(String, Throwable, Object, PubSubConsumerState)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">This exception is expected to only ever be created internally by the framework, and this form is no longer used.
 
  <p><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState,boolean)"><code>PubSubMessageReceiverException(String, Throwable, Object, PubSubConsumerState, boolean)</code></a> is now used instead. Any outside appropriate usage of

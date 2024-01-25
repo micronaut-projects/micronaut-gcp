@@ -64,6 +64,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Utility class to provide conversion for HTTP request body.</div>
 </div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/credentials/DefaultOAuth2HttpTransportFactory.html" title="class in io.micronaut.gcp.credentials">DefaultOAuth2HttpTransportFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">An implementation of <code>HttpTransportFactory</code> based upon <code>HttpClient</code> that can be supplied
+ when creating <code>GoogleCredentials</code>, allowing full control over configuration of the client.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/credentials/DefaultOAuth2HttpTransportFactory.MutableBlockingLowLevelHttpRequest.html" title="class in io.micronaut.gcp.credentials">DefaultOAuth2HttpTransportFactory.MutableBlockingLowLevelHttpRequest</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Implementation of <code>LowLevelHttpRequest</code> that uses the blocking API of <code>HttpClient</code>.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/DefaultPublisherFactory.html" title="class in io.micronaut.gcp.pubsub.support">DefaultPublisherFactory</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The default <a href="io/micronaut/gcp/pubsub/support/PublisherFactory.html" title="interface in io.micronaut.gcp.pubsub.support"><code>PublisherFactory</code></a> implementation.</div>
@@ -171,198 +180,203 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Provides names of implemented modules to be used as <code>Named</code> qualifiers as a well for <a href="io/micronaut/gcp/UserAgentHeaderProvider.html" title="class in io.micronaut.gcp"><code>UserAgentHeaderProvider</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/function/http/jackson/ObjectMapperCustomizer.html" title="class in io.micronaut.gcp.function.http.jackson">ObjectMapperCustomizer</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/credentials/OAuth2MessageBodyWriter.html" title="class in io.micronaut.gcp.credentials">OAuth2MessageBodyWriter</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A <code>MessageBodyWriter</code> implementation for writing the <code>LowLevelHttpRequest</code> that
+ is used for OAuth2 token refresh.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/function/http/jackson/ObjectMapperCustomizer.html" title="class in io.micronaut.gcp.function.http.jackson">ObjectMapperCustomizer</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Customizes the jackson object mapper to ensure essential modules are registered.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/OrderingKey.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">OrderingKey</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/OrderingKey.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">OrderingKey</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block">Defines the value of they to be used for message ordering.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PublisherConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PublisherConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configuration properties for PubSub Publishers.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/support/PublisherFactory.html" title="interface in io.micronaut.gcp.pubsub.support">PublisherFactory</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/support/PublisherFactory.html" title="interface in io.micronaut.gcp.pubsub.support">PublisherFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">The publisher factory interface that can create publishers.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PublisherFactoryConfig.html" title="class in io.micronaut.gcp.pubsub.support">PublisherFactoryConfig</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PublisherFactoryConfig.html" title="class in io.micronaut.gcp.pubsub.support">PublisherFactoryConfig</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Holds necessary configuration to create <code>Publisher</code> instances via <a href="io/micronaut/gcp/pubsub/support/PublisherFactory.html" title="interface in io.micronaut.gcp.pubsub.support"><code>PublisherFactory</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubAcknowledgementBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubAcknowledgementBinder</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubAcknowledgementBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubAcknowledgementBinder</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Binds <code>Acknowledgement</code> arguments.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/PubSubAnnotatedArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubAnnotatedArgumentBinder</a>&lt;<a href="io/micronaut/gcp/pubsub/bind/PubSubAnnotatedArgumentBinder.html" title="type parameter in PubSubAnnotatedArgumentBinder">A</a> extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/PubSubAnnotatedArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubAnnotatedArgumentBinder</a>&lt;<a href="io/micronaut/gcp/pubsub/bind/PubSubAnnotatedArgumentBinder.html" title="type parameter in PubSubAnnotatedArgumentBinder">A</a> extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">An interface for PubSub argument binding based on an annotation.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/PubSubArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubArgumentBinder</a>&lt;<a href="io/micronaut/gcp/pubsub/bind/PubSubArgumentBinder.html" title="type parameter in PubSubArgumentBinder">T</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/PubSubArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubArgumentBinder</a>&lt;<a href="io/micronaut/gcp/pubsub/bind/PubSubArgumentBinder.html" title="type parameter in PubSubArgumentBinder">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">An interface for PubSub argument binding.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubAttributesConvertibleValues.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubAttributesConvertibleValues</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubAttributesConvertibleValues.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubAttributesConvertibleValues</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Convert PubSub attributes to the requested type.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubBinderRegistry.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubBinderRegistry</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubBodyBinder</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubBinderRegistry.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubBinderRegistry</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubBodyBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubBodyBinder</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Binds arguments annotated with <code>MessageBody</code> and uses the appropriate
  <a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html" title="interface in io.micronaut.gcp.pubsub.serdes"><code>PubSubMessageSerDes</code></a> to deserialize the contents of the PubSubMessage data.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/PubSubClient.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">PubSubClient</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/gcp/pubsub/exception/PubSubClientException.html" title="class in io.micronaut.gcp.pubsub.exception">PubSubClientException</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab5">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/PubSubClient.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">PubSubClient</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/gcp/pubsub/exception/PubSubClientException.html" title="class in io.micronaut.gcp.pubsub.exception">PubSubClientException</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab5">
 <div class="block">Represents an error when publishing messages.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/intercept/PubSubClientIntroductionAdvice.html" title="class in io.micronaut.gcp.pubsub.intercept">PubSubClientIntroductionAdvice</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/intercept/PubSubClientIntroductionAdvice.html" title="class in io.micronaut.gcp.pubsub.intercept">PubSubClientIntroductionAdvice</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Implementation of <a href="io/micronaut/gcp/pubsub/annotation/PubSubClient.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation"><code>PubSubClient</code></a> advice annotation.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubConfigurationFactory.html" title="class in io.micronaut.gcp.pubsub.support">PubSubConfigurationFactory</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubConfigurationFactory.html" title="class in io.micronaut.gcp.pubsub.support">PubSubConfigurationFactory</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Factory class to create default settings for PubSub Publisher and subscriber beans.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configuration properties for PubSub support.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/intercept/PubSubConsumerAdvice.html" title="class in io.micronaut.gcp.pubsub.intercept">PubSubConsumerAdvice</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/intercept/PubSubConsumerAdvice.html" title="class in io.micronaut.gcp.pubsub.intercept">PubSubConsumerAdvice</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Implementation of an <code>ExecutableMethodProcessor</code> that creates
  <code>MessageReceiver</code> that subscribes to the PubSub subscription
  and invoke methods annotated by @<a href="io/micronaut/gcp/pubsub/annotation/Subscription.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation"><code>Subscription</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubConsumerState.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubConsumerState</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Stores the context of a PubSubMessage that is received.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubDefaultArgumentBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubDefaultArgumentBinder</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubDefaultArgumentBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubDefaultArgumentBinder</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Default body binder of PubSub consumers.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubHeaderBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubHeaderBinder</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubHeaderBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubHeaderBinder</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Binds an argument annotated with <code>MessageHeader</code> annotation.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/PubSubListener.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">PubSubListener</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/PubSubListener.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">PubSubListener</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block">Indicates that a bean will be consuming PubSub Messages.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/gcp/pubsub/exception/PubSubListenerException.html" title="class in io.micronaut.gcp.pubsub.exception">PubSubListenerException</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab5">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/gcp/pubsub/exception/PubSubListenerException.html" title="class in io.micronaut.gcp.pubsub.exception">PubSubListenerException</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab5">
 <div class="block">Represents an error when consuming messages.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubMessageIdBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubMessageIdBinder</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/PubSubMessageIdBinder.html" title="class in io.micronaut.gcp.pubsub.bind">PubSubMessageIdBinder</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Binds a PubSubMessage Id to the argument.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html" title="class in io.micronaut.gcp.pubsub.exception">PubSubMessageReceiverException</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverExceptionHandler.html" title="interface in io.micronaut.gcp.pubsub.exception">PubSubMessageReceiverExceptionHandler</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverException.html" title="class in io.micronaut.gcp.pubsub.exception">PubSubMessageReceiverException</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/exception/PubSubMessageReceiverExceptionHandler.html" title="interface in io.micronaut.gcp.pubsub.exception">PubSubMessageReceiverExceptionHandler</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Marker interface that <a href="io/micronaut/gcp/pubsub/annotation/PubSubListener.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation"><code>PubSubListener</code></a> beans can implement
  to handle exceptions.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html" title="interface in io.micronaut.gcp.pubsub.serdes">PubSubMessageSerDes</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html" title="interface in io.micronaut.gcp.pubsub.serdes">PubSubMessageSerDes</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Responsible for converstion to/from bytes into domain logic.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDesRegistry.html" title="interface in io.micronaut.gcp.pubsub.serdes">PubSubMessageSerDesRegistry</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDesRegistry.html" title="interface in io.micronaut.gcp.pubsub.serdes">PubSubMessageSerDesRegistry</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A registry of <a href="io/micronaut/gcp/pubsub/serdes/PubSubMessageSerDes.html" title="interface in io.micronaut.gcp.pubsub.serdes"><code>PubSubMessageSerDes</code></a> instances.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.html" title="class in io.micronaut.gcp.pubsub.support">PubSubPublisherState</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.html" title="class in io.micronaut.gcp.pubsub.support">PubSubPublisherState</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Stores the context of a PubSubMessage to be pulished.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.TopicState.html" title="class in io.micronaut.gcp.pubsub.support">PubSubPublisherState.TopicState</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.TopicState.html" title="class in io.micronaut.gcp.pubsub.support">PubSubPublisherState.TopicState</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Internal class to represent Topic State.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubSubscriptionUtils.html" title="class in io.micronaut.gcp.pubsub.support">PubSubSubscriptionUtils</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubSubscriptionUtils.html" title="class in io.micronaut.gcp.pubsub.support">PubSubSubscriptionUtils</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Various utility methods for dealing with Pub/Sub subscriptions.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubTopicUtils.html" title="class in io.micronaut.gcp.pubsub.support">PubSubTopicUtils</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/support/PubSubTopicUtils.html" title="class in io.micronaut.gcp.pubsub.support">PubSubTopicUtils</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Various utility methods for dealing with Pub/Sub topics.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/PubSubTypeArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubTypeArgumentBinder</a>&lt;<a href="io/micronaut/gcp/pubsub/bind/PubSubTypeArgumentBinder.html" title="type parameter in PubSubTypeArgumentBinder">T</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/PubSubTypeArgumentBinder.html" title="interface in io.micronaut.gcp.pubsub.bind">PubSubTypeArgumentBinder</a>&lt;<a href="io/micronaut/gcp/pubsub/bind/PubSubTypeArgumentBinder.html" title="type parameter in PubSubTypeArgumentBinder">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">An interface for PubSub argument binding based on argument type.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/condition/RequiresGoogleProjectId.html" title="annotation interface in io.micronaut.gcp.condition">RequiresGoogleProjectId</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/condition/RequiresGoogleProjectId.html" title="annotation interface in io.micronaut.gcp.condition">RequiresGoogleProjectId</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block">A custom condition that indicates the bean requires a configured Google Project ID.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/condition/RequiresProjectIdCondition.html" title="class in io.micronaut.gcp.condition">RequiresProjectIdCondition</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/condition/RequiresProjectIdCondition.html" title="class in io.micronaut.gcp.condition">RequiresProjectIdCondition</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Implementation of <a href="io/micronaut/gcp/condition/RequiresGoogleProjectId.html" title="annotation interface in io.micronaut.gcp.condition"><code>RequiresGoogleProjectId</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/secretmanager/client/SecretManagerClient.html" title="interface in io.micronaut.gcp.secretmanager.client">SecretManagerClient</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/secretmanager/client/SecretManagerClient.html" title="interface in io.micronaut.gcp.secretmanager.client">SecretManagerClient</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">This interface is intended to abstract interactions with <code>SecretManagerServiceClient</code>, and instead of returning Google's <code>ApiFuture</code>
  transform it on reactive extensions.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/SecretManagerConfigurationClient.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerConfigurationClient</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/configuration/SecretManagerConfigurationProperties.html" title="class in io.micronaut.gcp.secretmanager.configuration">SecretManagerConfigurationProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/SecretManagerConfigurationClient.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerConfigurationClient</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/configuration/SecretManagerConfigurationProperties.html" title="class in io.micronaut.gcp.secretmanager.configuration">SecretManagerConfigurationProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configuration for SecretManager clients and config client integration.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Factory to create SecretManager clients.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/logging/StackdriverJsonLayout.html" title="class in io.micronaut.gcp.logging">StackdriverJsonLayout</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/logging/StackdriverJsonLayout.html" title="class in io.micronaut.gcp.logging">StackdriverJsonLayout</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Logback JsonLayout class to include tracing and other MDC fields.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/tracing/zipkin/StackdriverSenderFactory.html" title="class in io.micronaut.gcp.tracing.zipkin">StackdriverSenderFactory</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/tracing/zipkin/StackdriverSenderFactory.html" title="class in io.micronaut.gcp.tracing.zipkin">StackdriverSenderFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configures the <code>StackdriverSender</code> for Micronaut if present on the classpath.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/logging/StackdriverTraceConstants.html" title="interface in io.micronaut.gcp.logging">StackdriverTraceConstants</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/logging/StackdriverTraceConstants.html" title="interface in io.micronaut.gcp.logging">StackdriverTraceConstants</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Constants for Stackdriver Trace.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">SubscriberConfigurationProperties</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">SubscriberConfigurationProperties</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configuration properties for PubSub <code>Subscriber</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/SubscriberFactory.html" title="interface in io.micronaut.gcp.pubsub.bind">SubscriberFactory</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/gcp/pubsub/bind/SubscriberFactory.html" title="interface in io.micronaut.gcp.pubsub.bind">SubscriberFactory</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Factory to create <code>SubscriberInterface</code> using default configurations.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/SubscriberFactoryConfig.html" title="class in io.micronaut.gcp.pubsub.bind">SubscriberFactoryConfig</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/bind/SubscriberFactoryConfig.html" title="class in io.micronaut.gcp.pubsub.bind">SubscriberFactoryConfig</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Holds necessary configuration to create <code>Subscriber</code> via <a href="io/micronaut/gcp/pubsub/bind/SubscriberFactory.html" title="interface in io.micronaut.gcp.pubsub.bind"><code>SubscriberFactory</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/Subscription.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">Subscription</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/Subscription.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">Subscription</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block">Represents a PubSub subscription.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/ThreeTenConverterRegistrar.html" title="class in io.micronaut.gcp.pubsub.configuration">ThreeTenConverterRegistrar</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/pubsub/configuration/ThreeTenConverterRegistrar.html" title="class in io.micronaut.gcp.pubsub.configuration">ThreeTenConverterRegistrar</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Type converter used to convert Google's internal Duration type.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/Topic.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">Topic</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/gcp/pubsub/annotation/Topic.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation">Topic</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block">Represents a pubsub topic to be used by classes annotated with <a href="io/micronaut/gcp/pubsub/annotation/PubSubClient.html" title="annotation interface in io.micronaut.gcp.pubsub.annotation"><code>PubSubClient</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/UserAgentHeaderProvider.html" title="class in io.micronaut.gcp">UserAgentHeaderProvider</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/UserAgentHeaderProvider.html" title="class in io.micronaut.gcp">UserAgentHeaderProvider</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Provides the User-Agent header to signal to the Google Cloud Client Libraries that requests originate from a
  Micronaut Integration.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html" title="class in io.micronaut.gcp.secretmanager.client">VersionedSecret</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html" title="class in io.micronaut.gcp.secretmanager.client">VersionedSecret</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A wrapper class around <code>AccessSecretVersionResponse</code> with secret information.</div>
 </div>
 </div>
