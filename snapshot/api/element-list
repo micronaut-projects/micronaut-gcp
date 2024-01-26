@@ -14,8 +14,10 @@ io.micronaut.gcp.pubsub.bind
 io.micronaut.gcp.pubsub.configuration
 io.micronaut.gcp.pubsub.exception
 io.micronaut.gcp.pubsub.intercept
+io.micronaut.gcp.pubsub.push
 io.micronaut.gcp.pubsub.serdes
 io.micronaut.gcp.pubsub.support
+io.micronaut.gcp.pubsub.validation
 io.micronaut.gcp.secretmanager
 io.micronaut.gcp.secretmanager.client
 io.micronaut.gcp.secretmanager.configuration

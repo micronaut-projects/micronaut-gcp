@@ -149,19 +149,23 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberHeaders"><a href="#subscriberHeaders"><strong>9.6.3</strong><span>Message Headers</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>9.6.4</strong><span>Subscriber properties</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-subscriberProperties"><a href="#subscriberProperties"><strong>9.6.4</strong><span>Pull Subscriber properties</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>9.6.5</strong><span>Handling message acknowledgement</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-pushConfiguration"><a href="#pushConfiguration"><strong>9.6.5</strong><span>Push Subscriber configuration</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>9.6.6</strong><span>Consumer error handling</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-messageAcknowledge"><a href="#messageAcknowledge"><strong>9.6.6</strong><span>Handling message acknowledgement</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>9.6.7</strong><span>Custom Parameter Binding</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-errorHandling"><a href="#errorHandling"><strong>9.6.7</strong><span>Consumer error handling</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-customParameter"><a href="#customParameter"><strong>9.6.8</strong><span>Custom Parameter Binding</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-serdes"><a href="#serdes"><strong>9.7</strong><span>Message Serialization/Deserialization (SerDes)</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-executors"><a href="#executors"><strong>9.8</strong><span>Configuring Thread pools</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-emulator"><a href="#emulator"><strong>9.9</strong><span>Using Google Cloud Pub/Sub emulator</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-pushTesting"><a href="#pushTesting"><strong>9.10</strong><span>Testing Push Subscribers</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-secretManager"><a href="#secretManager"><strong>10</strong><span>Google Cloud Secret Manager Support</span></a></div>
         
@@ -1426,6 +1430,9 @@ See the guide for <a href="https://guides.micronaut.io/latest/micronaut-google-c
 <p>This project provides integration between Micronaut and <a href="https://cloud.google.com/pubsub/docs">Google Cloud PubSub</a>.
 It uses the official Google Cloud Pub/Sub <a href="https://cloud.google.com/pubsub/docs/quickstart-client-libraries">client java libraries</a> to create Publisher and Subscribers while keeping a similar programming model for messaging as the ones defined in  <a href="https://micronaut-projects.github.io/micronaut-rabbitmq/latest/guide/">Micronaut RabbitMQ</a> and <a href="https://micronaut-projects.github.io/micronaut-kafka/latest/guide/">Micronaut Kafka</a>.</p>
 </div>
+<div class="paragraph">
+<p>Support is provided for the <a href="https://cloud.google.com/pubsub/docs/pull">Pull</a> (for long-running processes) and <a href="https://cloud.google.com/pubsub/docs/push">Push</a> (ideal for serverless environments such as Cloud Run) styles of message consumption using a consistent programming model.</p>
+</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -1628,7 +1635,7 @@ class AnimalService(private val animalClient: AnimalClient)  { // <b class="conu
 </div>
 </div>
 <div class="sect1">
-<h2 id="_creating_a_pubsub_subscriber_with_pubsublistener">Creating a Pub/Sub Subscriber with @PubSubListener</h2>
+<h2 id="_creating_a_pubsub_pull_subscriber_with_pubsublistener_and_subscription">Creating a Pub/Sub Pull Subscriber with @PubSubListener and @Subscription</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To listen to Pub/Sub messages you can use <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> annotation on a class to mark it as a message listener.</p>
@@ -1638,18 +1645,13 @@ class AnimalService(private val animalClient: AnimalClient)  { // <b class="conu
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
-import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 
 @PubSubListener // <b class="conum">(1)</b>
 public class AnimalListener {
 
-
-    /**
-     *
-     * @param data raw data
-     */
     @Subscription("animals") // <b class="conum">(2)</b>
     public void onMessage(byte[] data) { // <b class="conum">(3)</b>
         System.out.println("Message received");
@@ -1661,6 +1663,7 @@ public class AnimalListener {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+
 import io.micronaut.gcp.pubsub.annotation.Subscription;
 
 @PubSubListener // <b class="conum">(1)</b>
@@ -1676,9 +1679,9 @@ class AnimalListener {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
-import io.micronaut.gcp.pubsub.annotation.PubSubListener
-import io.micronaut.gcp.pubsub.annotation.Subscription
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+
+import io.micronaut.gcp.pubsub.annotation.Subscription;
 
 @PubSubListener // <b class="conum">(1)</b>
 class AnimalListener {
@@ -1699,13 +1702,97 @@ class AnimalListener {
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Messages routed to the <code>animals</code> subscription will be delivered to this method</td>
+<td>Messages routed to the <code>animals</code> subscription will be delivered to this method via Pull subscription</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>The method has a single argument that contains the serialized body of the Pub/Sub message</td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will use a long-running <a href="https://cloud.google.com/pubsub/docs/pull">Pull</a> subscription style.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_a_pubsub_push_subscriber_with_pubsublistener_and_pushsubscription">Creating a Pub/Sub Push Subscriber with @PubSubListener and @PushSubscription</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using the <a href="https://cloud.google.com/pubsub/docs/push">Push</a> style of subscription is similar to the above example, only substituting the <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> annotation instead.</p>
+</div>
+<div class="paragraph">
+<p>The following example would listen on a subscription named animals-push that is configured to be attached to the same topic of the previous example.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+
+@PubSubListener // <b class="conum">(1)</b>
+public class AnimalListener {
+
+    @PushSubscription("animals-push") // <b class="conum">(2)</b>
+    public void onPushMessage(byte[] data) { // <b class="conum">(3)</b>
+        System.out.println("Message received");
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+
+@PubSubListener // <b class="conum">(1)</b>
+class AnimalListener {
+
+    @PushSubscription("animals-push") // <b class="conum">(2)</b>
+    void onPushMessage(byte[] data) { // <b class="conum">(3)</b>
+        System.out.println("Message received")
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+
+@PubSubListener // <b class="conum">(1)</b>
+class AnimalListener {
+
+    @PushSubscription("animals-push") // <b class="conum">(2)</b>
+    fun onPushMessage(data: ByteArray) { // <b class="conum">(3)</b>
+        println("Message received")
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Designates this class to be a message listener for Pub/Sub messages</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Messages routed to the <code>animals</code> subscription will be delivered to this method via Push subscription</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The method has a single argument that contains the serialized body of the Pub/Sub message</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> will the <a href="https://cloud.google.com/pubsub/docs/push">Push</a> subscription style, where messages are delivered to the application via HTTP request.</p>
 </div>
 </div>
 </div>
@@ -2848,15 +2935,68 @@ class OrderService(private val client: OrderClient) {
 
 
 <div class="paragraph">
-<p>To start receiving messages you annotate a class with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a>, the framework will then use AOP to deliver messages to methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.</p>
+<p>To start receiving messages you annotate a class with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a>, the framework will then use AOP to deliver messages to methods annotated with either <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> or <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The semantics for how methods work when annotated with these two different subscription annotations are identical, differing only by the infrastructure that the framework transparently sets up to deliver the messages. In the following examples, <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> can be exchanged for <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> and the behavior will be the same except for some minor differences noted in the following sections.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect1">
 <h2 id="_subscriptions">Subscriptions</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_pull_subscriptions">Pull Subscriptions</h3>
 <div class="paragraph">
-<p>All methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will be invoked by the framework.
+<p>All methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> will be invoked by the framework in response to receiving messages via <a href="https://cloud.google.com/pubsub/docs/pull">Pull</a> subscription.
 Each annotated method creates an individual <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a>,
 that can be configured using the <code>configuration</code> parameter of the <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Pull subscriptions are long-running processes that continually poll the PubSub service, and are meant to be used in an environment such as Google Kubernetes Engine.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_push_subscriptions">Push Subscriptions</h3>
+<div class="paragraph">
+<p>Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> will be invoked by the framework in response to receiving messages via <a href="https://cloud.google.com/pubsub/docs/push">Push</a> subscription.</p>
+</div>
+<div class="paragraph">
+<p>Push messages are sent to the application by the PubSub service via HTTP request, making them an ideal fit for serverless environments such as Cloud Run.</p>
+</div>
+<div class="paragraph">
+<p>When Push subscriptions are enabled, the application will expose a single HTTP endpoint for processing all push requests, and messages will be routed to the matching <code>PushSubscription</code> method. The default path for this endpoint is <code>/push</code>. This endpoint URL must be specified when setting up a Push subscription in GCP.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As Push message handling uses HTTP, you must have a Micronaut HTTP server implementation available on your classpath, or else push handling will be disabled.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The available parameters of the <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> annotation are identical to those of <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>, except for <code>configuration</code> which is relevant only to Pull subscriptions.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -2865,7 +3005,7 @@ that can be configured using the <code>configuration</code> parameter of the <a 
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> must be unique on your application.
+Methods annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> or <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> must be unique in your application.
 If two distinct methods try to subscribe to the same <code>Subscription</code> an error is thrown.
 This is intended to avoid issues with message Acknowledgement control.
 </td>
@@ -2886,11 +3026,12 @@ The annotated method must have at least one argument that is bound to the body o
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="_resource_naming">Resource naming</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Just as described on the <a href="#producer">Pub/Sub Publisher</a> section, subscriptions examples are also using simple names such as <code>animals</code>.
+<p>Just as described in the <a href="#producer">Pub/Sub Publisher</a> section, subscriptions also use simple names such as <code>animals</code>.
 Inside Google Cloud however resources are only accessible via their FQN. A Subscription name follows the pattern: <code>projects/$PROJECT_ID/subscriptions/$SUBSCRIPTION_NAME</code>.
 Micronaut integration with GCP will automatically grab the default project id available (please refer to the section <a href="#setup">Google Project Id</a> ) and convert the simple naming of the resource into a FQN.
 You can also pass a FQN as the subscription name.
@@ -3023,7 +3164,7 @@ On the receiving end the rules to deserialize a <a href="https://developers.goog
 <p>If the message contains an attribute <code>Content-Type</code> that value is used</p>
 </li>
 <li>
-<p>Finally if the <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> has a <code>contentType</code> value this value overrides all of the previous values</p>
+<p>Finally if the <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> or <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> has a <code>contentType</code> value this value overrides all of the previous values</p>
 </li>
 </ol>
 </div>
@@ -3042,7 +3183,7 @@ Once you annotate an argument of type <code>String</code> with this annotation, 
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-PubSubMessage ids are always of type <code>String</code> for that reason your annotated argument must also be a <code>String</code>.
+PubSubMessage ids are always of type <code>String</code>, thus your annotated argument must also be a <code>String</code>.
 </td>
 </tr>
 </table>
@@ -3159,6 +3300,165 @@ class ContentTypeSubscriber(private val messageProcessor: MessageProcessor)  {
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Uses a custom SerDes and the framework will find a <a href="../api/io/micronaut/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a> that can handle <code>application/xml</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Though the deserialization is identical for <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> methods, one thing that requires additional consideration is that since Push messages are delivered via HTTP the subscriber methods will be executed on the main HTTP event loop thread by default. Care must be taken not to block the event loop thread.</p>
+</div>
+<div class="paragraph">
+<p>As a convenience, <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> methods that are known to use blocking operations during the course of message processing may be annotated with <a href="../api/io/micronaut/scheduling/annotation/ExecuteOn.html">@ExecuteOn</a>. This will cause the invocation of the method to occur in a separate thread using the <code>ExecutorService</code> specified in the annotation.</p>
+</div>
+<div class="paragraph">
+<p>If all the subscriber methods in a given <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubListener.html">@PubSubListener</a> class are known to be blocking, then the <a href="../api/io/micronaut/scheduling/annotation/ExecuteOn.html">@ExecuteOn</a> annotation may be used at the class level instead and all <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> methods in that class will be executed by the specified <code>ExecutorService</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you use the <code>TaskExecutors.BLOCKING</code> <code>ExecutorService</code>, Virtual Threads will be used if available.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following example is equivalent to the preceding one, except using <a href="../api/io/micronaut/scheduling/annotation/ExecuteOn.html">@ExecuteOn</a> at the class level and <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> methods:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.MessageId;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+import io.micronaut.gcp.pubsub.support.Animal;
+import io.micronaut.http.MediaType;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
+
+@PubSubListener
+@ExecuteOn(TaskExecutors.BLOCKING) // <b class="conum">(1)</b>
+public class ContentTypePushSubscriber {
+
+    @PushSubscription("raw-push-subscription") // <b class="conum">(2)</b>
+    void receiveRaw(byte[] data, @MessageId String id) {
+        //process with blocking code
+    }
+
+    @PushSubscription("native-push-subscription") // <b class="conum">(3)</b>
+    void receiveNative(PubsubMessage message) {
+        //process with blocking code
+    }
+
+    @PushSubscription("animals-push") // <b class="conum">(4)</b>
+    void receivePojo(Animal animal, @MessageId String id) {
+        //process with blocking code
+    }
+
+    @PushSubscription(value = "animals-legacy-push", contentType = MediaType.APPLICATION_XML) // <b class="conum">(5)</b>
+    void receiveXML(Animal animal, @MessageId String id) {
+        //process with blocking code
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.PushSubscription
+import io.micronaut.gcp.pubsub.support.Animal
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
+
+@PubSubListener
+@ExecuteOn(TaskExecutors.BLOCKING) // <b class="conum">(1)</b>
+class ContentTypePushSubscriber {
+
+    @PushSubscription("raw-push-subscription") // <b class="conum">(2)</b>
+    void receiveRaw(byte[] data, @MessageId String id) {
+        //process with blocking code
+    }
+
+    @PushSubscription("native-push-subscription") // <b class="conum">(3)</b>
+    void receiveNative(PubsubMessage message) {
+        //process with blocking code
+    }
+
+    @PushSubscription("animals-push") // <b class="conum">(4)</b>
+    void receivePojo(Animal animal, @MessageId String id) {
+        //process with blocking code
+    }
+
+    @PushSubscription(value = "animals-legacy-push", contentType = "application/xml") // <b class="conum">(5)</b>
+    void receiveXML(Animal animal, @MessageId String id) {
+        //process with blocking code
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.MessageId
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.PushSubscription
+import io.micronaut.gcp.pubsub.support.Animal
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
+
+
+@PubSubListener
+@ExecuteOn(TaskExecutors.BLOCKING) // <b class="conum">(1)</b>
+class ContentTypePushSubscriber(private val messageProcessor: MessageProcessor)  {
+	@PushSubscription("raw-push-subscription")
+	fun	receiveRaw(data: ByteArray, @MessageId id: String) { // <b class="conum">(2)</b>
+        messageProcessor.handleByteArrayMessage(data).block()
+	}
+
+	@PushSubscription("native-push-subscription")
+	fun  receiveNative(message: PubsubMessage) { // <b class="conum">(3)</b>
+        messageProcessor.handlePubsubMessage(message).block()
+	}
+
+	@PushSubscription("animals-push")
+	fun receivePojo(animal: Animal, @MessageId id: String) { // <b class="conum">(4)</b>
+        messageProcessor.handleAnimalMessage(animal).block()
+	}
+
+	@PushSubscription(value = "animals-legacy-push", contentType = "application/xml")
+	fun  receiveXML(animal: Animal, @MessageId id: String) { // <b class="conum">(5)</b>
+        messageProcessor.handleAnimalMessage(animal).block()
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The class is annotated with <a href="../api/io/micronaut/scheduling/annotation/ExecuteOn.html">@ExecuteOn</a> so that all of the <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> methods will be executed on a separate thread</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Bytes are copied, SerDes is bypassed, message id injected for usage</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>SerDes is bypassed, <code>PubSubMessage</code> object is copied, no need to use <code>@MessageId</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The framework will try to deserialize this payload. If no <code>Content-Type</code> header is found, will default to <code>application/json</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
 <td>Uses a custom SerDes and the framework will find a <a href="../api/io/micronaut/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a> that can handle <code>application/xml</code></td>
 </tr>
 </table>
@@ -3332,6 +3632,156 @@ class ReactiveSubscriber(private val messageProcessor: MessageProcessor) {
 </table>
 </div>
 <div class="paragraph">
+<p>Using Reactor with push subscriptions is similar:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types With Push Subscriptions</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.google.pubsub.v1.PubsubMessage;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.MessageId;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+import io.micronaut.gcp.pubsub.support.Animal;
+import reactor.core.publisher.Mono;
+
+@PubSubListener
+public class ReactivePushSubscriber {
+
+    private final MessageProcessor messageProcessor;
+
+    public ReactivePushSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor;
+    }
+
+    @PushSubscription("raw-push-subscription") // <b class="conum">(1)</b>
+    Mono&lt;Object&gt; receiveRaw(Mono&lt;byte[]&gt; data, @MessageId String id) {
+        return data.flatMap(messageProcessor::handleByteArrayMessage);
+    }
+
+    @PushSubscription("native-push-subscription") // <b class="conum">(2)</b>
+    Mono&lt;Object&gt; receiveNative(Mono&lt;PubsubMessage&gt; message) {
+        return message.flatMap(messageProcessor::handlePubSubMessage);
+    }
+
+    @PushSubscription("animals-push") // <b class="conum">(3)</b>
+    Mono&lt;Object&gt; receivePojo(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage);
+    }
+
+    @PushSubscription(value = "animals-legacy-push", contentType = "application/xml") // <b class="conum">(4)</b>
+    Mono&lt;Object&gt; receiveXML(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types With Push Subscriptions</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.PushSubscription
+import io.micronaut.gcp.pubsub.support.Animal
+import reactor.core.publisher.Mono
+
+
+@PubSubListener
+class ReactivePushSubscriber {
+
+    private final MessageProcessor messageProcessor
+
+    ReactivePushSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
+    @PushSubscription("raw-push-subscription") // <b class="conum">(1)</b>
+    Mono&lt;Object&gt; receiveRaw(Mono&lt;byte[]&gt; data, @MessageId String id) {
+        return data.flatMap(messageProcessor::handleByteArrayMessage)
+    }
+
+    @PushSubscription("native-push-subscription") // <b class="conum">(2)</b>
+    Mono&lt;Object&gt; receiveNative(Mono&lt;PubsubMessage&gt; message) {
+        return message.flatMap(messageProcessor::handlePubSubMessage)
+    }
+
+    @PushSubscription("animals-push") // <b class="conum">(3)</b>
+    Mono&lt;Object&gt; receivePojo(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+    }
+
+    @PushSubscription(value = "animals-legacy-push", contentType = "application/xml") // <b class="conum">(4)</b>
+    Mono&lt;Object&gt; receiveXML(Mono&lt;Animal&gt; animal, @MessageId String id) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types With Push Subscriptions</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.pubsub.v1.PubsubMessage
+import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.MessageId
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.PushSubscription
+import io.micronaut.gcp.pubsub.support.Animal
+import reactor.core.publisher.Mono
+
+
+@PubSubListener
+class ReactivePushSubscriber(private val messageProcessor: MessageProcessor) {
+
+    @PushSubscription("raw-push-subscription")
+    fun receiveRaw(data: Mono&lt;ByteArray&gt;, @MessageId id: String): Mono&lt;Any&gt; { // <b class="conum">(1)</b>
+        return data.flatMap { payload -&gt;
+            messageProcessor.handleByteArrayMessage(payload)
+        }
+    }
+
+    @PushSubscription("native-push-subscription")
+    fun receiveNative(message: Mono&lt;PubsubMessage&gt;): Mono&lt;Any&gt; { // <b class="conum">(2)</b>
+        return message.flatMap { payload -&gt;
+            messageProcessor.handlePubsubMessage(payload)
+        }
+    }
+
+    @PushSubscription("animals-push")
+    fun receivePojo(message: Mono&lt;Animal&gt;, @MessageId id: String): Mono&lt;Any&gt; { // <b class="conum">(3)</b>
+        return message.flatMap { animal -&gt;
+            messageProcessor.handleAnimalMessage(animal)
+        }
+    }
+
+    @PushSubscription(value = "animals-legacy-push", contentType = "application/xml")
+    fun receiveXML(message: Mono&lt;Animal&gt;, @MessageId id: String): Mono&lt;Any&gt; { // <b class="conum">(4)</b>
+        return message.flatMap { animal -&gt;
+            messageProcessor.handleAnimalMessage(animal)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Bytes are copied and wrapped in a <code>Mono</code>, SerDes is bypassed, message id injected for usage</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>SerDes is bypassed, <code>PubSubMessage</code> object is copied and wrapped in a <code>Mono</code>, no need to use <code>@MessageId</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The framework will try to deserialize this payload into <code>Mono&lt;Animal&gt;</code>. If no <code>Content-Type</code> header is found, will default to <code>application/json</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Uses a custom SerDes and the framework will find a <a href="../api/io/micronaut/serdes/PubSubMessageSerDes.html">PubSubMessageSerDes</a> that can handle <code>application/xml</code> and then pass the deserialized payload as <code>Mono&lt;Animal&gt;</code>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p>Note that the above examples all return a <code>Mono&lt;Object&gt;</code> to allow for a fully non-blocking reactive message processing pipeline. When a <code>Publisher</code> is returned from a <code>@Subscription</code> method, it will be subscribed to by the framework and the message will not be auto-acknowledged until the <code>Publisher</code> completes successfully. If the <code>Publisher</code> completes with an error, the framework will <code>nack()</code> the message for re-delivery.</p>
 </div>
 
@@ -3417,7 +3867,7 @@ class CustomHeaderSubscriber {
 </table>
 </div>
 
-<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>9.6.4 Subscriber properties</h2>
+<h2 id="subscriberProperties"><a class="anchor" href="#subscriberProperties"></a>9.6.4 Pull Subscriber properties</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/subscriberProperties.adoc"'>
@@ -3427,7 +3877,7 @@ class CustomHeaderSubscriber {
 
 
 <div class="paragraph">
-<p>Pub/Sub allows each <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a> to have its own configuration for things such as executors or flow control settings.</p>
+<p>Pub/Sub allows each Pull <a href="https://googleapis.dev/java/google-cloud-pubsub/latest/com/google/cloud/pubsub/v1/Subscriber.html">Subscriber</a> to have its own configuration for things such as executors or flow control settings.</p>
 </div>
 <div class="paragraph">
 <p>The framework allows you to create configurations and then bind those configurations to each  <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> using the <code>configuration</code> parameter.</p>
@@ -3625,7 +4075,51 @@ class CustomConfigurationSubscriber {
 </table>
 </div>
 
-<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>9.6.5 Handling message acknowledgement</h2>
+<h2 id="pushConfiguration"><a class="anchor" href="#pushConfiguration"></a>9.6.5 Push Subscriber configuration</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pushConfiguration.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Push support is enabled by default if the Micronaut HTTP server support is on the classpath. It can be explicitly disabled via configuration (see the table below).</p>
+</div>
+<div class="paragraph">
+<p>The push endpoint is exposed at <code>/push</code> by default. This path is also configurable.</p>
+</div>
+<a id="io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties" href="#io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/push/PubSubPushConfigurationProperties.html">PubSubPushConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether PubSub Push is enabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The configured path for the PubSub Push HTTP endpoint. Default value "/push"</p></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="messageAcknowledge"><a class="anchor" href="#messageAcknowledge"></a>9.6.6 Handling message acknowledgement</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/messageAcknowledge.adoc"'>
@@ -3635,12 +4129,34 @@ class CustomConfigurationSubscriber {
 
 
 <div class="paragraph">
-<p>The message delivery is handled by an <code>IntroductionAdvice</code> class <a href="../api/io/micronaut/gcp/pubsub/intercept/PubSubConsumerAdvice.html">PubSubConsumerAdvice</a>. It invokes the method annotated with <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a>.
-By default messages are auto acknowledged if the method returns without exceptions, see the section  <a href="#errorHandling">Consumer ErrorHandling </a> for more information on error handling.
-It is possible to have manual acknowledgement control by adding an argument of type <a href="{apimicronaut}messaging/Acknowledge.html">Acknowledge</a> and manually invoking <code>ack()</code> or <code>nack()</code> methods.</p>
+<p>When messages are delivered to <a href="../api/io/micronaut/gcp/pubsub/annotation/Subscription.html">@Subscription</a> and <a href="../api/io/micronaut/gcp/pubsub/annotation/PushSubscription.html">@PushSubscription</a> methods, they are by default auto-acknowledged to the PubSub service if the method returns without exceptions. When an error occurs during processing, a <code>nack</code> signal will be sent to the service instead, potentially resulting in redelivery of the message.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+See the section  <a href="#errorHandling">Consumer ErrorHandling </a> for more information on error handling.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Google Cloud Pub/Sub controls delivery behavior in response to <code>nack</code> signals at the Subscription level, please refer to the <a href="https://cloud.google.com/pubsub/docs/subscriber">Pub/Sub Subscriber documentation</a> for more information
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Google Cloud Pub/Sub controls Acknowledgment at the Subscription level, please refer to the <a href="https://cloud.google.com/pubsub/docs/subscriber">Pub/Sub Subscriber documentation</a> for more information.</p>
+<p>It is possible to have manual acknowledgement control by adding an argument of type <a href="{apimicronaut}messaging/Acknowledgement.html">Acknowledgement</a> and manually invoking <code>ack()</code> or <code>nack()</code> methods..</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -3649,12 +4165,16 @@ It is possible to have manual acknowledgement control by adding an argument of t
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you provide an <code>Acknowledge</code> type in your method and forget to invoke <code>ack()</code>/<code>nack()</code> the framework will log a warning message to let you know if you forgot to manually register an acknowledgement.
+If you provide an <code>Acknowledgement</code> type in your method and forget to invoke <code>ack()</code>/<code>nack()</code> the framework will log a warning message to let you know if you forgot to manually register an acknowledgement. Messages that are processed without an <code>ack</code> or <code>nack</code> signal being sent could potentially cause undesired behavior that could negatively affect performance.
 </td>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>The following example shows usage of manual acknowledgement:</p>
+</div>
 <div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Pull Messages</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
@@ -3697,6 +4217,7 @@ public class AcknowledgementSubscriber {
 </div>
 </div>
 <div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Pull Messages</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.gcp.pubsub.annotation.Subscription
 import io.micronaut.gcp.pubsub.support.Animal
@@ -3738,6 +4259,7 @@ class AcknowledgementSubscriber {
 </div>
 </div>
 <div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Pull Messages</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
@@ -3777,8 +4299,142 @@ class AcknowledgementSubscriber(private val messageProcessor: MessageProcessor) 
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The following example shows usage of manual acknowledgement with push messages:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Push Messages</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+import io.micronaut.gcp.pubsub.support.Animal;
+import io.micronaut.messaging.Acknowledgement;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
+import reactor.core.publisher.Mono;
 
-<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>9.6.6 Consumer error handling</h2>
+@PubSubListener
+public class AcknowledgementPushSubscriber {
+
+    private final MessageProcessor messageProcessor;
+
+    public AcknowledgementPushSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor;
+    }
+
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @PushSubscription("animals-push")
+    public void onMessage(Animal animal, Acknowledgement acknowledgement) {
+        if (Boolean.TRUE.equals(messageProcessor.handleAnimalMessage(animal).block())) {
+            acknowledgement.ack();
+        } else {
+            acknowledgement.nack();
+        }
+    }
+
+    @PushSubscription("animals-async-push")
+    public Mono&lt;Boolean&gt; onReactiveMessage(Mono&lt;Animal&gt; animal, Acknowledgement acknowledgement) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+            .doOnNext(result -&gt; {
+                if (Boolean.TRUE.equals(result)) {
+                    acknowledgement.ack();
+                } else {
+                    acknowledgement.nack();
+                }
+            });
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Push Messages</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
+import reactor.core.publisher.Mono
+
+@PubSubListener
+class AcknowledgementPushSubscriber {
+
+    MessageProcessor messageProcessor
+
+    AcknowledgementPushSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @PushSubscription("animals-push")
+    void onMessage(Animal animal, Acknowledgement acknowledgement) {
+        if (Boolean.TRUE == messageProcessor.handleAnimalMessage(animal).block()) {
+            acknowledgement.ack()
+        } else {
+            acknowledgement.nack()
+        }
+    }
+
+    @PushSubscription("animals-async-push")
+    Mono&lt;Boolean&gt; onReactiveMessage(Mono&lt;Animal&gt; animal, Acknowledgement acknowledgement) {
+        return animal.flatMap(messageProcessor::handleAnimalMessage)
+                .doOnNext(result -&gt; {
+                    if (Boolean.TRUE == result) {
+                        acknowledgement.ack()
+                    } else {
+                        acknowledgement.nack()
+                    }
+                })
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Push Messages</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.gcp.pubsub.annotation.PubSubListener
+import io.micronaut.gcp.pubsub.annotation.PushSubscription
+import io.micronaut.gcp.pubsub.support.Animal
+import io.micronaut.messaging.Acknowledgement
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
+import reactor.core.publisher.Mono
+
+
+@PubSubListener
+class AcknowledgementPushSubscriber(private val messageProcessor: MessageProcessor) {
+
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @PushSubscription("animals-push")
+    fun onMessage(animal: Animal, acknowledgement: Acknowledgement) {
+        if (messageProcessor.handleAnimalMessage(animal).block() == true) {
+            acknowledgement.ack()
+            messageProcessor.recordAcknowledgement(acknowledgement)
+        } else {
+            acknowledgement.nack()
+            messageProcessor.recordAcknowledgement(acknowledgement)
+        }
+    }
+
+    @PushSubscription("animals-async-push")
+    fun onReactiveMessage(message: Mono&lt;Animal&gt;, acknowledgement: Acknowledgement): Mono&lt;Boolean&gt; {
+        return message.flatMap { animal -&gt; messageProcessor.handleAnimalMessage(animal) }
+            .doOnNext { result -&gt;
+                if (result) {
+                    acknowledgement.ack()
+                    messageProcessor.recordAcknowledgement(acknowledgement)
+                } else {
+                    acknowledgement.nack()
+                    messageProcessor.recordAcknowledgement(acknowledgement)
+                }
+            }
+    }
+}</code></pre>
+</div>
+</div>
+
+<h2 id="errorHandling"><a class="anchor" href="#errorHandling"></a>9.6.7 Consumer error handling</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/errorHandling.adoc"'>
@@ -3940,7 +4596,7 @@ class ErrorHandlingSubscriber : PubSubMessageReceiverExceptionHandler { // <b cl
 </table>
 </div>
 
-<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>9.6.7 Custom Parameter Binding</h2>
+<h2 id="customParameter"><a class="anchor" href="#customParameter"></a>9.6.8 Custom Parameter Binding</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pullConsumer/customParameter.adoc"'>
@@ -4555,6 +5211,99 @@ Make sure that you also set <code>GCP_PROJECT_ID</code> to be the same as the pr
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">curl -XPUT $PUBSUB_EMULATOR_HOST/v1/projects/test-project/topics/micronaut-devices</code></pre>
 </div>
+</div>
+
+<h2 id="pushTesting"><a class="anchor" href="#pushTesting"></a>9.10 Testing Push Subscribers</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-gcp/edit/master/src/main/docs/guide/pubsub/pushTesting.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The Pub/Sub emulator does not provide any built-in support for simulating Push messages. That said, testing your PushSubscription endpoints can be done simply by using Micronaut&#8217;s HttpClient in to simulate delivery of Push messages.</p>
+</div>
+<div class="paragraph">
+<p>Push Messages follow a <a href="https://cloud.google.com/pubsub/docs/push#receive_push">specified JSON format</a>, which can be constructed and serialized with the <a href="../api/io/micronaut/gcp/pubsub/push/PushRequest.html">PushRequest</a> record.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@MicronautTest
+@Property(name = "spec.name", value = "ContentTypePushSubscriberTest")
+@Property(name = "gcp.projectId", value = "test-project")
+class ContentTypePushSubscriberSpec {
+    @Inject
+    JsonMapper jsonMapper;
+
+
+    @Test
+    void testJsonPojo() throws IOException {
+        Animal dog = new Animal("dog");
+
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog)); // <b class="conum">(1)</b>
+
+        PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", // <b class="conum">(2)</b>
+            new PushRequest.PushMessage(new HashMap&lt;&gt;(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
+
+        HttpResponse&lt;?&gt; response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request)); // <b class="conum">(3)</b>
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatus());
+
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@MicronautTest
+@Property(name = "spec.name", value = "ContentTypePushSubscriberSpec")
+@Property(name = "gcp.projectId", value = "test-project")
+class ContentTypePushSubscriberSpec extends Specification {
+    @Inject
+    JsonMapper jsonMapper
+
+
+    void "receive pojo message from json"() {
+        given:
+        Animal dog = new Animal("dog")
+
+        String encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog)) // <b class="conum">(1)</b>
+
+        PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-push", // <b class="conum">(2)</b>
+                new PushRequest.PushMessage(new HashMap&lt;&gt;(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
+
+        when:
+        HttpResponse response = pushClient.toBlocking().exchange(HttpRequest.POST("/push", request)) // <b class="conum">(3)</b>
+
+        then:
+        response.status == HttpStatus.OK
+
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The data to be sent must be encoded as a Base64 String</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The fully qualified subscription name must be specified</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The message is sent to the <code>/push</code> endpoint</td>
+</tr>
+</table>
 </div>
 
 <h1 id="secretManager"><a class="anchor" href="#secretManager"></a>10 Google Cloud Secret Manager Support</h1>
