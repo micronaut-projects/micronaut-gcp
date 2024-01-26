@@ -212,13 +212,13 @@ class ReactiveConsumer {
     @Subscription("mono-result")
     Mono<String> onMessage1(PubsubMessage message) {
         this.msg = message
-        return Mono.just(message).delayElement(Duration.ofSeconds(2)).then(Mono.just("success")).doOnTerminate { finished.set(true) }
+        return Mono.just(message).delayElement(Duration.ofMillis(200)).then(Mono.just("success")).doOnTerminate { finished.set(true) }
     }
 
     @Subscription("flux-result")
     Flux<String> onMessage2(PubsubMessage message) {
         this.msg = message
-        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1)).doOnTerminate { finished.set(true) };
+        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200)).doOnTerminate { finished.set(true) };
     }
 
     @Subscription("flowable-result")
@@ -229,13 +229,13 @@ class ReactiveConsumer {
     @Subscription("mono-result-error")
     Mono<String> onMessage3(PubsubMessage message) {
         this.msg = message
-        return Mono.just(message).delayElement(Duration.ofSeconds(2)).then(Mono.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) }
+        return Mono.just(message).delayElement(Duration.ofMillis(200)).then(Mono.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) }
     }
 
     @Subscription("flux-result-error")
     Flux<String> onMessage4(PubsubMessage message) {
         this.msg = message
-        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1)).thenMany(Flux.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) };
+        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200)).thenMany(Flux.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) };
     }
 
     @Subscription("flowable-result-error")
@@ -246,7 +246,7 @@ class ReactiveConsumer {
     @Subscription("mono-result-manual-ack")
     Mono<String> onMessage5(PubsubMessage message, Acknowledgement acknowledgement) {
         this.msg = message
-        return Mono.just(message).delayElement(Duration.ofSeconds(2)).then(Mono.just("success"))
+        return Mono.just(message).delayElement(Duration.ofMillis(200)).then(Mono.just("success"))
                 .doOnSuccess {
                     finished.set(true)
                     acknowledgement.ack()
@@ -256,7 +256,7 @@ class ReactiveConsumer {
     @Subscription("flux-result-manual-ack")
     Flux<String> onMessage6(PubsubMessage message, Acknowledgement acknowledgement) {
         this.msg = message
-        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1))
+        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200))
                 .doOnComplete(() -> {
                     finished.set(true)
                     acknowledgement.ack()
@@ -271,7 +271,7 @@ class ReactiveConsumer {
     @Subscription("mono-result-manual-nack")
     Mono<String> onMessage7(PubsubMessage message, Acknowledgement acknowledgement) {
         this.msg = message
-        return Mono.just(message).delayElement(Duration.ofSeconds(2)).then(Mono.just("success")).doOnSuccess {
+        return Mono.just(message).delayElement(Duration.ofMillis(200)).then(Mono.just("success")).doOnSuccess {
                     finished.set(true)
                     acknowledgement.nack()
                 }
@@ -280,7 +280,7 @@ class ReactiveConsumer {
     @Subscription("flux-result-manual-nack")
     Flux<String> onMessage8(PubsubMessage message, Acknowledgement acknowledgement) {
         this.msg = message
-        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1))
+        return Flux.just(message).thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200))
                 .doOnComplete(() -> {
                     finished.set(true)
                     acknowledgement.nack()
@@ -294,14 +294,14 @@ class ReactiveConsumer {
 
     @Subscription("mono-payload-and-result")
     Mono<String> onMessage9(Mono<PubsubMessage> message) {
-        return message.doOnNext {this.msg = it }.delayElement(Duration.ofSeconds(2)).then(Mono.just("success")).doOnTerminate { finished.set(true) }
+        return message.doOnNext {this.msg = it }.delayElement(Duration.ofMillis(200)).then(Mono.just("success")).doOnTerminate { finished.set(true) }
     }
 
     @Subscription("flux-payload-and-result")
     Flux<String> onMessage10(Flux<PubsubMessage> message) {
         return message.doOnNext {
             this.msg = it
-        }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1)).doOnTerminate { finished.set(true) };
+        }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200)).doOnTerminate { finished.set(true) };
     }
 
     @Subscription("flowable-payload-and-result")
@@ -311,14 +311,14 @@ class ReactiveConsumer {
 
     @Subscription("mono-payload-and-result-error")
     Mono<String> onMessage11(Mono<PubsubMessage> message) {
-        return message.doOnNext {this.msg = it }.delayElement(Duration.ofSeconds(2)).then(Mono.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) }
+        return message.doOnNext {this.msg = it }.delayElement(Duration.ofMillis(200)).then(Mono.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) }
     }
 
     @Subscription("flux-payload-and-result-error")
     Flux<String> onMessage12(Flux<PubsubMessage> message) {
         return message.doOnNext {
             this.msg = it
-        }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1)).thenMany(Flux.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) };
+        }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200)).thenMany(Flux.error(new RuntimeException("Message processing error"))).doOnTerminate { finished.set(true) };
     }
 
     @Subscription("flowable-payload-and-result-error")
@@ -328,7 +328,7 @@ class ReactiveConsumer {
 
     @Subscription("mono-payload-and-result-manual-ack")
     Mono<String> onMessage13(Mono<PubsubMessage> message, Acknowledgement acknowledgement) {
-        return message.doOnNext {this.msg = it }.delayElement(Duration.ofSeconds(2)).then(Mono.just("success"))
+        return message.doOnNext {this.msg = it }.delayElement(Duration.ofMillis(200)).then(Mono.just("success"))
                 .doOnSuccess {
                     finished.set(true)
                     acknowledgement.ack()
@@ -337,7 +337,7 @@ class ReactiveConsumer {
 
     @Subscription("flux-payload-and-result-manual-ack")
     Flux<String> onMessage14(Flux<PubsubMessage> message, Acknowledgement acknowledgement) {
-        return message.doOnNext {this.msg = it }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1))
+        return message.doOnNext {this.msg = it }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200))
                 .doOnComplete {
                     finished.set(true)
                     acknowledgement.ack()
@@ -351,7 +351,7 @@ class ReactiveConsumer {
 
     @Subscription("mono-payload-and-result-manual-nack")
     Mono<String> onMessage15(Mono<PubsubMessage> message, Acknowledgement acknowledgement) {
-        return message.doOnNext {this.msg = it }.delayElement(Duration.ofSeconds(2)).then(Mono.just("success"))
+        return message.doOnNext {this.msg = it }.delayElement(Duration.ofMillis(200)).then(Mono.just("success"))
                 .doOnSuccess {
                     finished.set(true)
                     acknowledgement.nack()
@@ -360,7 +360,7 @@ class ReactiveConsumer {
 
     @Subscription("flux-payload-and-result-manual-nack")
     Flux<String> onMessage16(Flux<PubsubMessage> message, Acknowledgement acknowledgement) {
-        return message.doOnNext {this.msg = it }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofSeconds(1))
+        return message.doOnNext {this.msg = it }.thenMany(Flux.just("1", "2")).delayElements(Duration.ofMillis(200))
                 .doOnComplete {
                     finished.set(true)
                     acknowledgement.nack()

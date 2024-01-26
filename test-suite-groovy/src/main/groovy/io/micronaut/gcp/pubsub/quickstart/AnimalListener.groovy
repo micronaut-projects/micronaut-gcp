@@ -18,8 +18,13 @@ package io.micronaut.gcp.pubsub.quickstart
 import io.micronaut.context.annotation.Requires;
 //tag::imports[]
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
-import io.micronaut.gcp.pubsub.annotation.Subscription;
 // end::imports[]
+//tag::pushimport[]
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+//end::pushimport[]
+//tag::pullimport[]
+import io.micronaut.gcp.pubsub.annotation.Subscription;
+//end::pullimport[]
 
 // There are currently no tests for this class. It is disabled in the test environment
 // in order to prevent clashes with other subscribers.
@@ -27,11 +32,19 @@ import io.micronaut.gcp.pubsub.annotation.Subscription;
 // tag::clazz[]
 @PubSubListener // <1>
 class AnimalListener {
-
+// end::clazz[]
+// tag::pull[]
     @Subscription("animals") // <2>
     void onMessage(byte[] data) { // <3>
         System.out.println("Message received")
     }
-
+// end::pull[]
+// tag::push[]
+    @PushSubscription("animals-push") // <2>
+    void onPushMessage(byte[] data) { // <3>
+        System.out.println("Message received")
+    }
+// end::push[]
+// tag::clazzend[]
 }
-// end::clazz[]
+// end::clazzend[]

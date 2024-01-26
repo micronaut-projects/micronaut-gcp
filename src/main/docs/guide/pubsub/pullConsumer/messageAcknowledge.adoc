@@ -1,9 +1,19 @@
-The message delivery is handled by an `IntroductionAdvice` class api:gcp.pubsub.intercept.PubSubConsumerAdvice[]. It invokes the method annotated with ann:gcp.pubsub.annotation.Subscription[].
-By default messages are auto acknowledged if the method returns without exceptions, see the section  <<errorHandling, Consumer ErrorHandling >> for more information on error handling.
-It is possible to have manual acknowledgement control by adding an argument of type link:{apimicronaut}messaging/Acknowledge.html[Acknowledge] and manually invoking `ack()` or `nack()` methods.
+When messages are delivered to ann:gcp.pubsub.annotation.Subscription[] and ann:gcp.pubsub.annotation.PushSubscription[] methods, they are by default auto-acknowledged to the PubSub service if the method returns without exceptions. When an error occurs during processing, a `nack` signal will be sent to the service instead, potentially resulting in redelivery of the message.
 
-Google Cloud Pub/Sub controls Acknowledgment at the Subscription level, please refer to the link:https://cloud.google.com/pubsub/docs/subscriber[Pub/Sub Subscriber documentation] for more information.
+NOTE: See the section  <<errorHandling, Consumer ErrorHandling >> for more information on error handling.
 
-TIP: If you provide an `Acknowledge` type in your method and forget to invoke `ack()`/`nack()` the framework will log a warning message to let you know if you forgot to manually register an acknowledgement.
+NOTE: Google Cloud Pub/Sub controls delivery behavior in response to `nack` signals at the Subscription level, please refer to the link:https://cloud.google.com/pubsub/docs/subscriber[Pub/Sub Subscriber documentation] for more information
 
+It is possible to have manual acknowledgement control by adding an argument of type link:{apimicronaut}messaging/Acknowledgement.html[Acknowledgement] and manually invoking `ack()` or `nack()` methods..
+
+TIP: If you provide an `Acknowledgement` type in your method and forget to invoke `ack()`/`nack()` the framework will log a warning message to let you know if you forgot to manually register an acknowledgement. Messages that are processed without an `ack` or `nack` signal being sent could potentially cause undesired behavior that could negatively affect performance.
+
+The following example shows usage of manual acknowledgement:
+
+.Manual Acknowledgement of Pull Messages
 snippet::io.micronaut.gcp.pubsub.subscriber.AcknowledgementSubscriber[tags="imports, clazz", source="main"]
+
+The following example shows usage of manual acknowledgement with push messages:
+
+.Manual Acknowledgement of Push Messages
+snippet::io.micronaut.gcp.pubsub.subscriber.AcknowledgementPushSubscriber[tags="imports, clazz", source="main"]

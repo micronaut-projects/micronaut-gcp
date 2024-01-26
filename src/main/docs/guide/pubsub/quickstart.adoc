@@ -22,14 +22,30 @@ snippet::io.micronaut.gcp.pubsub.quickstart.AnimalService[tags="imports, clazz",
 <2> Your custom serialization logic
 
 
-== Creating a Pub/Sub Subscriber with @PubSubListener
+== Creating a Pub/Sub Pull Subscriber with @PubSubListener and @Subscription
 
 To listen to Pub/Sub messages you can use ann:gcp.pubsub.annotation.PubSubListener[] annotation on a class to mark it as a message listener.
 
 The following example would listen on a subscription named `animals` that is configured to be attached to the topic of the previous example.
 
-snippet::io.micronaut.gcp.pubsub.quickstart.AnimalListener[tags="imports, clazz", source="main"]
+snippet::io.micronaut.gcp.pubsub.quickstart.AnimalListener[tags="imports, pullimport, clazz, pull, clazzend", source="main"]
 
 <1> Designates this class to be a message listener for Pub/Sub messages
-<2> Messages routed to the `animals` subscription will be delivered to this method
+<2> Messages routed to the `animals` subscription will be delivered to this method via Pull subscription
 <3> The method has a single argument that contains the serialized body of the Pub/Sub message
+
+Methods annotated with ann:gcp.pubsub.annotation.Subscription[] will use a long-running link:https://cloud.google.com/pubsub/docs/pull[Pull] subscription style.
+
+== Creating a Pub/Sub Push Subscriber with @PubSubListener and @PushSubscription
+
+Using the link:https://cloud.google.com/pubsub/docs/push[Push] style of subscription is similar to the above example, only substituting the ann:gcp.pubsub.annotation.PushSubscription[] annotation instead.
+
+The following example would listen on a subscription named animals-push that is configured to be attached to the same topic of the previous example.
+
+snippet::io.micronaut.gcp.pubsub.quickstart.AnimalListener[tags="imports, pushimport, clazz, push, clazzend", source="main"]
+
+<1> Designates this class to be a message listener for Pub/Sub messages
+<2> Messages routed to the `animals` subscription will be delivered to this method via Push subscription
+<3> The method has a single argument that contains the serialized body of the Pub/Sub message
+
+Methods annotated with ann:gcp.pubsub.annotation.PushSubscription[] will the link:https://cloud.google.com/pubsub/docs/push[Push] subscription style, where messages are delivered to the application via HTTP request.

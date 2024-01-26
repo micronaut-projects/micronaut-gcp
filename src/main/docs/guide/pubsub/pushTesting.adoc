@@ -1,0 +1,11 @@
+The Pub/Sub emulator does not provide any built-in support for simulating Push messages. That said, testing your PushSubscription endpoints can be done simply by using Micronaut's HttpClient in to simulate delivery of Push messages.
+
+Push Messages follow a link:https://cloud.google.com/pubsub/docs/push#receive_push[specified JSON format], which can be constructed and serialized with the api:io.micronaut.gcp.pubsub.push.PushRequest[] record.
+
+For example:
+
+snippet::io.micronaut.gcp.pubsub.subscriber.ContentTypePushSubscriberSpec[tags="clazzBegin, injectBlient, testMethodBegin, testMethodEnd, clazzEnd", source="test"]
+
+<1> The data to be sent must be encoded as a Base64 String
+<2> The fully qualified subscription name must be specified
+<3> The message is sent to the `/push` endpoint

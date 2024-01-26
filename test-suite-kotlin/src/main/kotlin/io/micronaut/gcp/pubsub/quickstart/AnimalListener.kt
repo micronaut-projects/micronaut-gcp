@@ -15,11 +15,16 @@
  */
 package io.micronaut.gcp.pubsub.quickstart
 
+import io.micronaut.context.annotation.Requires;
 //tag::imports[]
-import io.micronaut.context.annotation.Requires
-import io.micronaut.gcp.pubsub.annotation.PubSubListener
-import io.micronaut.gcp.pubsub.annotation.Subscription
+import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 // end::imports[]
+//tag::pushimport[]
+import io.micronaut.gcp.pubsub.annotation.PushSubscription;
+//end::pushimport[]
+//tag::pullimport[]
+import io.micronaut.gcp.pubsub.annotation.Subscription;
+//end::pullimport[]
 
 // There are currently no tests for this class. It is disabled in the test environment
 // in order to prevent clashes with other subscribers.
@@ -27,11 +32,19 @@ import io.micronaut.gcp.pubsub.annotation.Subscription
 // tag::clazz[]
 @PubSubListener // <1>
 class AnimalListener {
-
+// end::clazz[]
+// tag::pull[]
 	@Subscription("animals") // <2>
 	fun onMessage(data: ByteArray) { // <3>
 		println("Message received")
 	}
-
+// end::pull[]
+// tag::push[]
+    @PushSubscription("animals-push") // <2>
+    fun onPushMessage(data: ByteArray) { // <3>
+        println("Message received")
+    }
+// end::push[]
+// tag::clazzend[]
 }
-// end::clazz[]
+// end::clazzend[]
