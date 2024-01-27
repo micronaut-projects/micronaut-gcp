@@ -21,7 +21,7 @@ cloudevents-api = "2.5.0"
 
 jetty-servlet = "11.0.19"
 logback-json-classic = "0.1.5"
-testcontainers = "1.19.3"
+testcontainers = "1.19.4"
 zipkin-sender-stackdriver = "1.0.4"
 system-stubs-core = "2.1.6"
 
