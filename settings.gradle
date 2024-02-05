@@ -41,6 +41,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-rxjava3")
     importMicronautCatalog("micronaut-serde")
     importMicronautCatalog("micronaut-servlet")
+    importMicronautCatalog("micronaut-test-resources")
     importMicronautCatalog("micronaut-tracing")
     importMicronautCatalog("micronaut-validation")
 }

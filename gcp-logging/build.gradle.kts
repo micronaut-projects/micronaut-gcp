@@ -8,5 +8,5 @@ dependencies {
     implementation(libs.logback.json.classic)
     implementation(mn.micronaut.json.core)
     testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(libs.testcontainers.spock)
+    testImplementation(mnTestResources.testcontainers.core)
 }
