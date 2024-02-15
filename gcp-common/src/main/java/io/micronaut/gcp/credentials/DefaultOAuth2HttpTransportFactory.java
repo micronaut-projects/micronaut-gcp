@@ -26,6 +26,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.io.buffer.ByteBuffer;
 import io.micronaut.core.type.MutableHeaders;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.*;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * An implementation of {@link HttpTransportFactory} based upon {@link HttpClient} that can be supplied
@@ -59,7 +61,7 @@ public class DefaultOAuth2HttpTransportFactory implements HttpTransportFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOAuth2HttpTransportFactory.class);
 
-    private final HttpClientHttpTransport transport;
+    private final Supplier<HttpClientHttpTransport> transport;
 
     /**
      * Constructor for {@code DefaultOAuth2HttpTransportFactory}.
@@ -68,13 +70,14 @@ public class DefaultOAuth2HttpTransportFactory implements HttpTransportFactory {
      * @param defaultClientConfiguration the default HTTP client configuration
      */
     public DefaultOAuth2HttpTransportFactory(BeanContext beanContext, HttpClientConfiguration defaultClientConfiguration) {
-        HttpClient httpClient = beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration);
-        this.transport = new HttpClientHttpTransport(httpClient);
+        this.transport = SupplierUtil.memoized(() -> new HttpClientHttpTransport(beanContext.createBean(HttpClient.class,
+            LoadBalancer.empty(),
+            defaultClientConfiguration)));
     }
 
     @Override
     public HttpTransport create() {
-        return this.transport;
+        return this.transport.get();
     }
 
     private static final class HttpClientHttpTransport extends HttpTransport {
