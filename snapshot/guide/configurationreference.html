@@ -200,9 +200,38 @@
 </div>
 <div class="sect2">
 <h3 id="_micronaut_gcp_pubsub_config_properties">Micronaut Gcp Pubsub Config Properties</h3>
+<a id="io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties" href="#io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/push/PubSubPushConfigurationProperties.html">PubSubPushConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether PubSub Push is enabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The configured path for the PubSub Push HTTP endpoint. Default value "/push"</p></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
 <a id="io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties" href="#io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
+<caption class="title">Table 6. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -256,7 +285,7 @@
 <div style="page-break-after: always;"></div>
 <a id="io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties" href="#io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html">PublisherConfigurationProperties</a></caption>
+<caption class="title">Table 7. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html">PublisherConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -365,7 +394,7 @@
 <div style="page-break-after: always;"></div>
 <a id="io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties" href="#io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html">PubSubConfigurationProperties</a></caption>
+<caption class="title">Table 8. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html">PubSubConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -403,35 +432,6 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.nack-on-shutdown</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether subscribers should stop processing pending in-memory messages and eagerly nack() during application shutdown. Defaults to false.</p></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
-<a id="io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties" href="#io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/push/PubSubPushConfigurationProperties.html">PubSubPushConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether PubSub Push is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The configured path for the PubSub Push HTTP endpoint. Default value "/push"</p></td>
 </tr>
 </tbody>
 </table>
