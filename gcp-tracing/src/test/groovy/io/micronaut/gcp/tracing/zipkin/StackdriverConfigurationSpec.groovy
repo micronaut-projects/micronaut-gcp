@@ -28,5 +28,8 @@ class StackdriverConfigurationSpec extends Specification {
         then:
         noExceptionThrown()
         sender
+        
+        cleanup:
+        ctx.close()
     }
 }
