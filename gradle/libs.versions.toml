@@ -15,7 +15,6 @@ managed-google-cloudevent-types="0.3.0"
 brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "1.1.1"
 
-grpc = "1.61.1"
 kotlin = '1.9.22'
 cloudevents-api = "2.5.0"
 
@@ -27,6 +26,7 @@ system-stubs-core = "2.1.6"
 awaitility = '4.2.0'
 mockito = '5.9.0'
 
+micronaut-grpc = "4.3.0"
 micronaut-jackson-xml = "4.2.0"
 micronaut-logging = "1.0.0"
 micronaut-reactor = "3.2.1"
@@ -47,6 +47,7 @@ micronaut-gradle-plugin = "4.3.2"
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 
 # micronaut boms
+micronaut-grpc = { module = "io.micronaut.grpc:micronaut-grpc-bom", version.ref = "micronaut-grpc" }
 micronaut-jackson-xml = { module = "io.micronaut.xml:micronaut-jackson-xml-bom", version.ref = "micronaut-jackson-xml" }
 micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
 micronaut-rxjava3 = { module = "io.micronaut.rxjava3:micronaut-rxjava3-bom", version.ref = "micronaut-rxjava3" }
@@ -74,8 +75,8 @@ cloudevents-core = { module = "io.cloudevents:cloudevents-core", version.ref = "
 
 google-auth-library-credentials = { module = "com.google.auth:google-auth-library-credentials", version.ref = "managed-google-auth-library-oauth2http" }
 
-grpc-auth = { module = "io.grpc:grpc-auth", version.ref = "grpc" }
-grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
+grpc-auth = { module = "io.grpc:grpc-auth" }
+grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded" }
 jetty-servlet = { module = "org.eclipse.jetty:jetty-servlet", version.ref = "jetty-servlet" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }

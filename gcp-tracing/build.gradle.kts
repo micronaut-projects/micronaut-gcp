@@ -8,11 +8,12 @@ dependencies {
     implementation(libs.google.auth.library.credentials)
     implementation(libs.zipkin.sender.stackdriver)
     implementation(libs.brave.propagation.stackdriver)
+    implementation(platform(mnGrpc.boms.grpc))
     implementation(libs.grpc.auth)
     implementation(libs.grpc.netty.shaded)
     implementation(libs.brave.opentracing)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.inject.java)
     testImplementation(mnSerde.micronaut.serde.jackson)
-    testImplementation(testFixtures(project(":micronaut-gcp-common")))
+    testImplementation(testFixtures(projects.micronautGcpCommon))
 }
