@@ -29,7 +29,7 @@ mockito = '5.9.0'
 
 micronaut-jackson-xml = "4.2.0"
 micronaut-logging = "1.0.0"
-micronaut-reactor = "3.1.0"
+micronaut-reactor = "3.2.1"
 micronaut-rxjava3 = "3.2.0"
 micronaut-serde = "2.8.1"
 micronaut-servlet = "4.5.0"
