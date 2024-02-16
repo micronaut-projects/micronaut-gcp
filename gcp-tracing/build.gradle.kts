@@ -13,4 +13,6 @@ dependencies {
     implementation(libs.brave.opentracing)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.inject.java)
+    testImplementation(mnSerde.micronaut.serde.jackson)
+    testImplementation(testFixtures(project(":micronaut-gcp-common")))
 }
