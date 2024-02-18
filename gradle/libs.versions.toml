@@ -20,7 +20,7 @@ cloudevents-api = "2.5.0"
 
 jetty-servlet = "11.0.20"
 logback-json-classic = "0.1.5"
-zipkin-sender-stackdriver = "1.1.1"
+zipkin-sender-stackdriver = "2.2.2"
 system-stubs-core = "2.1.6"
 
 awaitility = '4.2.0'
