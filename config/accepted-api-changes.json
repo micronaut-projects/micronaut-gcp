@@ -273,5 +273,25 @@
     "type": "io.micronaut.gcp.credentials.LogAuthenticationFailures",
     "member": "Implemented interface java.lang.annotation.Annotation",
     "reason": "Removed AuthenticationLoggingInterceptor (#1014)"
+  },
+  {
+    "type": "io.micronaut.gcp.pubsub.bind.PubSubBodyBinder",
+    "member": "Constructor io.micronaut.gcp.pubsub.bind.PubSubBodyBinder(io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException",
+    "member": "Constructor io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException(java.lang.String,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException",
+    "member": "Constructor io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException(java.lang.String,java.lang.Throwable,java.lang.Object,io.micronaut.gcp.pubsub.bind.PubSubConsumerState)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
+  },
+  {
+    "type": "io.micronaut.gcp.credentials.GoogleCredentialsFactory",
+    "member": "Constructor io.micronaut.gcp.credentials.GoogleCredentialsFactory(io.micronaut.gcp.credentials.GoogleCredentialsConfiguration)",
+    "reason": "Remove deprecated code for Micronaut Framework 5"
   }
 ]
