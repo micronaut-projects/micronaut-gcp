@@ -1,0 +1,17 @@
+This section documents breaking changes between Micronaut GCP versions:
+
+=== Micronaut GCP 6.0.0
+
+- The factory constructor `io.micronaut.gcp.credentials.GoogleCredentialsFactory(GoogleCredentialsConfiguration)` deprecated previously has been removed.
+`GoogleCredentialsFactory(GoogleCredentialsConfiguration, HttpTransportFactory)` is used instead.
+
+- The Singleton constructor `io.micronaut.gcp.pubsub.bind.PubSubBodyBinder(PubSubMessageSerDesRegistry)` deprecated previously has been removed.
+`PubSubBodyBinder(ConversionService, PubSubMessageSerDesRegistry)` is used instead.
+
+- The exception constructor `io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException(String, Object, PubSubConsumerState)` deprecated previously has been removed.
+It was used internally by the framework and is no longer needed.
+
+- The exception constructor `io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException(String, Throwable, Object, PubSubConsumerState)` deprecated previously has been removed.
+It was used internally by the framework and is no longer needed.
+
+
