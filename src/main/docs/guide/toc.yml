@@ -43,4 +43,5 @@ secretManager:
   secretManagerClient: Low-Level Secret Manager Client access
 cloudStorage: Google Cloud Storage Support
 gcpGuides: Guides
+breaks: Breaking Changes
 repository: Repository

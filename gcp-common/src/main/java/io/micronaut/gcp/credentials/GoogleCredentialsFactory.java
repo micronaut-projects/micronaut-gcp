@@ -27,7 +27,6 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.StringUtils;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,17 +56,6 @@ public class GoogleCredentialsFactory {
 
     private final HttpTransportFactory httpTransportFactory;
 
-    /**
-     * Default constructor.
-     * @param configuration The configuration
-     * @deprecated Use {@link #GoogleCredentialsFactory(GoogleCredentialsConfiguration, HttpTransportFactory)} instead.
-     */
-    @Deprecated
-    public GoogleCredentialsFactory(@NonNull GoogleCredentialsConfiguration configuration) {
-        this(configuration, null);
-    }
-
-    @Inject
     public GoogleCredentialsFactory(@NonNull GoogleCredentialsConfiguration configuration, @Nullable HttpTransportFactory httpTransportFactory) {
         ArgumentUtils.requireNonNull("configuration", configuration);
         this.configuration = configuration;
