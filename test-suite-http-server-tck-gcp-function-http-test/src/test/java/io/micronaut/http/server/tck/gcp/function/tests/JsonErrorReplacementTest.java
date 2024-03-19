@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     "checkstyle:MissingJavadocType",
     "checkstyle:DesignForExtension"
 })
-class JsonErrorTestReplacement {
+class JsonErrorReplacementTest {
 
     private static final String SPEC_NAME = "JsonErrorTest";
 

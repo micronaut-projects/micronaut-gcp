@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     "checkstyle:MissingJavadocType",
     "checkstyle:DesignForExtension"
 })
-class VndErrorTestReplacement {
+class VndErrorReplacementTest {
     private static final String SPEC_NAME = "VndErrorTest";
 
     /**
