@@ -13,8 +13,8 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 })
 @SuiteDisplayName("HTTP Server TCK for GCP Function HTTP Test")
 @ExcludeClassNamePatterns({
-    "io.micronaut.http.server.tck.tests.hateoas.JsonErrorTest", // Replaced by JsonErrorTestReplacement
-    "io.micronaut.http.server.tck.tests.hateoas.VndErrorTest", // Replaced by VndErrorTestReplacement
+    "io.micronaut.http.server.tck.tests.hateoas.JsonErrorTest", // Replaced by JsonErrorReplacementTest
+    "io.micronaut.http.server.tck.tests.hateoas.VndErrorTest", // Replaced by VndErrorReplacementTest
     "io.micronaut.http.server.tck.tests.LocalErrorReadingBodyTest",
     "io.micronaut.http.server.tck.tests.FilterProxyTest",
     "io.micronaut.http.server.tck.tests.filter.options.OptionsFilterTest", // https://github.com/micronaut-projects/micronaut-core/pull/10126 removes a header which is not currently supported in gcp-function-http-test
