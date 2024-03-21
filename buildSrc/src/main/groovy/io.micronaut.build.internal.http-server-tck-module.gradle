@@ -10,6 +10,7 @@ dependencies {
 
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.tck)
+    testImplementation(mn.micronaut.jackson.databind)
     testImplementation(libs.junit.platform.engine)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(mnValidation.micronaut.validation)

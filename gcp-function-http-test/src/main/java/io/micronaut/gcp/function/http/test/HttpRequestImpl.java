@@ -62,7 +62,7 @@ final class HttpRequestImpl implements HttpRequest {
 
     @Override
     public String getUri() {
-        String url = request.getRequestURL().toString();
+        String url = request.getRequestURI();
         if (request.getQueryString() != null) {
             url += "?" + request.getQueryString();
         }

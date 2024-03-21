@@ -3,6 +3,7 @@ package io.micronaut.http.server.tck.gcp.function;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.StringUtils;
@@ -14,6 +15,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.tck.ServerUnderTest;
+import io.micronaut.json.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,8 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
     private static final Logger LOG = LoggerFactory.getLogger(GcpFunctionHttpServerUnderTest.class);
 
     private final HttpFunction function;
+    private final ConversionService conversionService;
+    private final JsonMapper jsonMapper;
 
     public GcpFunctionHttpServerUnderTest(Map<String, Object> properties) {
         properties.put("micronaut.server.context-path", "/");
@@ -38,11 +42,13 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
                 .deduceEnvironment(false)
                 .start()
         );
+        this.conversionService = function.getApplicationContext().getBean(ConversionService.class);
+        this.jsonMapper = function.getApplicationContext().getBean(JsonMapper.class);
     }
 
     @Override
     public <I, O> HttpResponse<O> exchange(HttpRequest<I> request, Argument<O> bodyType) {
-        HttpResponse<O> response = new HttpResponseAdaptor<>(function.invoke(request), bodyType);
+        HttpResponse<O> response = new HttpResponseAdaptor<>(function.invoke(request), conversionService, jsonMapper, bodyType);
         if (response.getStatus().getCode() >= 400) {
             LOG.error("Response body: {}", response.getBody(String.class).orElse(null));
             throw new HttpClientResponseException("error " + response.getStatus().getReason() + " (" + response.getStatus().getCode() + ")", response);
@@ -77,10 +83,19 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
     static class HttpResponseAdaptor<O> implements HttpResponse<O> {
 
         final GoogleHttpResponse googleHttpResponse;
+        private final ConversionService conversionService;
+        private final JsonMapper jsonMapper;
         private final Argument<O> bodyType;
 
-        HttpResponseAdaptor(GoogleHttpResponse googleHttpResponse, Argument<O> bodyType) {
+        HttpResponseAdaptor(
+            GoogleHttpResponse googleHttpResponse,
+            ConversionService conversionService,
+            JsonMapper jsonMapper,
+            Argument<O> bodyType
+        ) {
             this.googleHttpResponse = googleHttpResponse;
+            this.conversionService = conversionService;
+            this.jsonMapper = jsonMapper;
             this.bodyType = bodyType;
         }
 
@@ -116,8 +131,16 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         public Optional<O> getBody() {
             if (bodyType != null && bodyType.isAssignableFrom(byte[].class)) {
                 return (Optional<O>) Optional.of(googleHttpResponse.getBodyAsBytes());
-            } else {
+            } else if (bodyType == null) {
                 return (Optional<O>) Optional.of(googleHttpResponse.getBodyAsText());
+            } else {
+                return conversionService.convert(googleHttpResponse.getBodyAsText(), bodyType).or(() -> {
+                    try {
+                        return Optional.of(jsonMapper.readValue(googleHttpResponse.getBodyAsBytes(), bodyType));
+                    } catch (IOException e) {
+                        throw new HttpClientResponseException("Error reading body", this);
+                    }
+                });
             }
         }
     }
