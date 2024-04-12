@@ -36,6 +36,7 @@ import io.micronaut.tracing.brave.AsyncReporterConfiguration;
 import io.micronaut.tracing.brave.BraveTracerConfiguration;
 import zipkin2.Span;
 import zipkin2.reporter.AsyncReporter;
+import zipkin2.reporter.BytesEncoder;
 import zipkin2.reporter.Sender;
 import zipkin2.reporter.stackdriver.StackdriverEncoder;
 import zipkin2.reporter.stackdriver.StackdriverSender;
@@ -151,6 +152,6 @@ public class StackdriverSenderFactory {
     @Requires(beans = AsyncReporterConfiguration.class)
     public AsyncReporter<Span> stackdriverReporter(@NonNull AsyncReporterConfiguration configuration) {
         return configuration.getBuilder()
-                .build(StackdriverEncoder.V2);
+                .build((BytesEncoder<Span>) StackdriverEncoder.V2);
     }
 }
