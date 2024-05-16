@@ -39,7 +39,7 @@ micronaut-test-resources="2.4.0"
 micronaut-validation = "4.5.0"
 
 # Micronaut
-micronaut-gradle-plugin = "4.3.6"
+micronaut-gradle-plugin = "4.4.0"
 
 [libraries]
 # Core
