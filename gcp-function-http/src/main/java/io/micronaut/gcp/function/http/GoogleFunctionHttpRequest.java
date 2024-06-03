@@ -26,6 +26,7 @@ import io.micronaut.core.execution.ExecutionFlow;
 import io.micronaut.core.io.buffer.ByteBuffer;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.CaseInsensitiveMutableHttpHeaders;
 import io.micronaut.http.FullHttpRequest;
@@ -36,6 +37,8 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.MutableHttpParameters;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.http.ServerHttpRequest;
+import io.micronaut.http.body.ByteBody;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.Cookies;
 import io.micronaut.http.simple.SimpleHttpParameters;
@@ -45,6 +48,7 @@ import io.micronaut.servlet.http.ParsedBodyHolder;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpRequest;
 import io.micronaut.servlet.http.ServletHttpResponse;
+import io.micronaut.servlet.http.body.AvailableByteArrayBody;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +79,7 @@ import static io.micronaut.servlet.http.BodyBuilder.isFormSubmission;
 final class GoogleFunctionHttpRequest<B> implements
     ServletHttpRequest<com.google.cloud.functions.HttpRequest, B>,
     ServletExchange<com.google.cloud.functions.HttpRequest, com.google.cloud.functions.HttpResponse>,
+    ServerHttpRequest<B>,
     FullHttpRequest<B>,
     ParsedBodyHolder<B> {
 
@@ -128,7 +133,9 @@ final class GoogleFunctionHttpRequest<B> implements
     }
 
     public byte[] getBodyBytes() throws IOException {
-        return googleRequest.getInputStream().readAllBytes();
+        try (InputStream is = googleRequest.getInputStream()) {
+            return is.readAllBytes();
+        }
     }
 
     @Override
@@ -275,6 +282,15 @@ final class GoogleFunctionHttpRequest<B> implements
     @Override
     public @Nullable ExecutionFlow<ByteBuffer<?>> bufferContents() {
         return ExecutionFlow.just(contents());
+    }
+
+    @Override
+    public @NonNull ByteBody byteBody() {
+        try {
+            return new AvailableByteArrayBody(getBodyBytes());
+        } catch (IOException e) {
+            return new AvailableByteArrayBody(ArrayUtils.EMPTY_BYTE_ARRAY);
+        }
     }
 
     /**
