@@ -27,7 +27,9 @@ import io.micronaut.function.executor.FunctionInitializer;
 import io.micronaut.http.*;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.cookie.ClientCookieEncoder;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.json.JsonMapper;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.DefaultServletExchange;
 import io.micronaut.servlet.http.ServletExchange;
@@ -40,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.Executor;
 
 /**
  * Entry point into the Micronaut + GCP integration.
@@ -80,9 +83,9 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
             @Override
             protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
-                        new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry(), conversionService);
+                        new GoogleFunctionHttpResponse<>(response, conversionService);
                 final GoogleFunctionHttpRequest<Object> req =
-                        new GoogleFunctionHttpRequest<>(request, res, conversionService, applicationContext.getBean(BodyBuilder.class));
+                        new GoogleFunctionHttpRequest<>(request, res, conversionService, applicationContext.getBean(BodyBuilder.class), applicationContext.getBean(Executor.class, Qualifiers.byName(TaskExecutors.BLOCKING)));
 
                 return new DefaultServletExchange<>(req, res);
             }
