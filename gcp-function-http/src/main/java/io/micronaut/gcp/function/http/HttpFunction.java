@@ -24,10 +24,17 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.type.Argument;
 import io.micronaut.function.executor.FunctionInitializer;
-import io.micronaut.http.*;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpMethod;
+import io.micronaut.http.HttpRequestFactory;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.codec.MediaTypeCodec;
 import io.micronaut.http.cookie.ClientCookieEncoder;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.json.JsonMapper;
+import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.DefaultServletExchange;
 import io.micronaut.servlet.http.ServletExchange;
@@ -37,9 +44,25 @@ import io.netty.util.internal.PlatformDependent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.Executor;
 
 /**
  * Entry point into the Micronaut + GCP integration.
@@ -60,6 +83,8 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
     private final ServletHttpHandler<HttpRequest, HttpResponse> httpHandler;
 
     private final ConversionService conversionService;
+    private final BodyBuilder bodyBuilder;
+    private final Executor executor;
 
     /**
      * Default constructor.
@@ -67,12 +92,16 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
     public HttpFunction() {
         httpHandler = initializeHandler();
         this.conversionService = applicationContext.getBean(ConversionService.class);
+        this.bodyBuilder = applicationContext.getBean(BodyBuilder.class);
+        this.executor = applicationContext.getBean(Executor.class, Qualifiers.byName(TaskExecutors.BLOCKING));
     }
 
     public HttpFunction(ApplicationContext context) {
         super(context);
         httpHandler = initializeHandler();
         this.conversionService = applicationContext.getBean(ConversionService.class);
+        this.bodyBuilder = applicationContext.getBean(BodyBuilder.class);
+        this.executor = applicationContext.getBean(Executor.class, Qualifiers.byName(TaskExecutors.BLOCKING));
     }
 
     private ServletHttpHandler<HttpRequest, HttpResponse> initializeHandler() {
@@ -80,9 +109,9 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
             @Override
             protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
-                        new GoogleFunctionHttpResponse<>(response, getMediaTypeCodecRegistry(), conversionService);
+                        new GoogleFunctionHttpResponse<>(response, conversionService);
                 final GoogleFunctionHttpRequest<Object> req =
-                        new GoogleFunctionHttpRequest<>(request, res, conversionService, applicationContext.getBean(BodyBuilder.class));
+                        new GoogleFunctionHttpRequest<>(request, res, conversionService, bodyBuilder, executor);
 
                 return new DefaultServletExchange<>(req, res);
             }

@@ -27,10 +27,10 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.ServerCookieEncoder;
 import io.micronaut.servlet.http.ServletHttpResponse;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -47,7 +47,6 @@ import java.util.Optional;
 final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpResponse, B> {
 
     private final HttpResponseWrapper response;
-    private final MediaTypeCodecRegistry mediaTypeCodecRegistry;
 
     private final ConversionService conversionService;
     private MutableConvertibleValues<Object> attributes;
@@ -59,11 +58,9 @@ final class GoogleFunctionHttpResponse<B> implements ServletHttpResponse<HttpRes
      * Default constructor.
      *
      * @param response               The Google response object
-     * @param mediaTypeCodecRegistry The media type codec registry
      */
-    GoogleFunctionHttpResponse(HttpResponse response, MediaTypeCodecRegistry mediaTypeCodecRegistry, ConversionService conversionService) {
+    GoogleFunctionHttpResponse(HttpResponse response, ConversionService conversionService) {
         this.response = new HttpResponseWrapper(response);
-        this.mediaTypeCodecRegistry = mediaTypeCodecRegistry;
         this.conversionService = conversionService;
     }
 
