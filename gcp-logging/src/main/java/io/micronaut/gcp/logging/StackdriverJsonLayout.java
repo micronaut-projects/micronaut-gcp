@@ -15,6 +15,7 @@
  */
 package io.micronaut.gcp.logging;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.contrib.json.JsonFormatter;
@@ -35,6 +36,16 @@ import java.util.function.Supplier;
  * @since 3.2.0
  */
 public class StackdriverJsonLayout extends JsonLayout {
+    // GPC Logging has limited Severity values: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity
+    private static final Map<Level, String> LOGBACK_TO_GCP_SEVERITY_MAP = Map.of(
+        Level.ALL, "DEBUG",
+        Level.TRACE, "DEBUG",
+        Level.DEBUG, "DEBUG",
+        Level.INFO, "INFO",
+        Level.WARN, "WARNING",
+        Level.ERROR, "ERROR"
+    );
+    private static final String DEFAULT_LOG_SEVERITY = "DEBUG";
 
     private static final Set<String> FILTERED_MDC_FIELDS = new HashSet<>(Arrays.asList(
             StackdriverTraceConstants.MDC_FIELD_TRACE_ID,
@@ -102,7 +113,7 @@ public class StackdriverJsonLayout extends JsonLayout {
         }
 
         add(StackdriverTraceConstants.SEVERITY_ATTRIBUTE, this.includeLevel,
-                String.valueOf(event.getLevel()), map);
+                LOGBACK_TO_GCP_SEVERITY_MAP.getOrDefault(event.getLevel(), DEFAULT_LOG_SEVERITY), map);
         add(JsonLayout.THREAD_ATTR_NAME, this.includeThreadName, event.getThreadName(), map);
         add(JsonLayout.LOGGER_ATTR_NAME, this.includeLoggerName, event.getLoggerName(), map);
 
