@@ -27,10 +27,10 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpHeaders;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.codec.MediaTypeCodecRegistry;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.ServerCookieEncoder;
 import io.micronaut.servlet.http.ServletHttpResponse;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
