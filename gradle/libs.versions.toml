@@ -11,6 +11,7 @@ managed-google-cloud-core = "2.39.0"
 managed-google-cloud-pubsub = "1.130.0"
 managed-google-cloud-secretmanager = "2.44.0"
 managed-google-cloudevent-types="0.3.0"
+managed-gax = "2.49.0"
 
 brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "2.2.4"
@@ -66,6 +67,8 @@ managed-google-function-invoker = { module = "com.google.cloud.functions.invoker
 managed-google-cloud-core = { module = "com.google.cloud:google-cloud-core", version.ref = "managed-google-cloud-core" }
 managed-google-cloud-pubsub = { module = "com.google.cloud:google-cloud-pubsub", version.ref = "managed-google-cloud-pubsub" }
 managed-google-cloud-secretmanager = { module = "com.google.cloud:google-cloud-secretmanager", version.ref = "managed-google-cloud-secretmanager" }
+managed-gax = { module = 'com.google.api:gax', version.ref = 'managed-gax' }
+managed-gax-grpc = { module = 'com.google.api:gax-grpc', version.ref = 'managed-gax' }
 
 brave-opentracing = { module = "io.opentracing.brave:brave-opentracing", version.ref = "brave-opentracing" }
 brave-propagation-stackdriver = { module = "io.zipkin.gcp:brave-propagation-stackdriver", version.ref = "brave-propagation-stackdriver" }
