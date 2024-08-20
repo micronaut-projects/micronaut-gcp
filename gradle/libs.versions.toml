@@ -24,7 +24,7 @@ logback-json-classic = "0.1.5"
 zipkin-sender-stackdriver = "1.1.1"
 system-stubs-core = "2.1.6"
 
-awaitility = '4.2.1'
+awaitility = '4.2.2'
 
 micronaut-grpc = "4.5.0"
 micronaut-jackson-xml = "4.3.0"
