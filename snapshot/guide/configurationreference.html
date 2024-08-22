@@ -244,9 +244,92 @@
 </tbody>
 </table>
 <div style="page-break-after: always;"></div>
+<a id="io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties" href="#io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/push/PubSubPushConfigurationProperties.html">PubSubPushConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether PubSub Push is enabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The configured path for the PubSub Push HTTP endpoint. Default value "/push"</p></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+<a id="io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties" href="#io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.parallel-pull-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.max-ack-extension-period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.threeten.bp.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the maximum period a message ack deadline will be extended. Defaults to one hour.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.max-duration-per-ack-extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.threeten.bp.Duration</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.executor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.flow-control.max-outstanding-element-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Long</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.flow-control.max-outstanding-request-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Long</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.flow-control.limit-exceeded-behavior</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">com.google.api.gax.batching.FlowController$LimitExceededBehavior</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
 <a id="io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties" href="#io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html">PublisherConfigurationProperties</a></caption>
+<caption class="title">Table 8. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html">PublisherConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -379,89 +462,6 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.publisher.*.executor</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
-<a id="io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties" href="#io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html">SubscriberConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.parallel-pull-count</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.max-ack-extension-period</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">org.threeten.bp.Duration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set the maximum period a message ack deadline will be extended. Defaults to one hour.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.max-duration-per-ack-extension</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">org.threeten.bp.Duration</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.executor</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.flow-control.max-outstanding-element-count</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Long</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.flow-control.max-outstanding-request-bytes</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Long</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.subscriber.*.flow-control.limit-exceeded-behavior</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">com.google.api.gax.batching.FlowController$LimitExceededBehavior</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
-<div style="page-break-after: always;"></div>
-<a id="io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties" href="#io.micronaut.gcp.pubsub.push.PubSubPushConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Configuration Properties for <a href="../api/io/micronaut/gcp/pubsub/push/PubSubPushConfigurationProperties.html">PubSubPushConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether PubSub Push is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.pubsub.push.path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The configured path for the PubSub Push HTTP endpoint. Default value "/push"</p></td>
 </tr>
 </tbody>
 </table>
