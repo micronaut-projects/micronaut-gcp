@@ -130,13 +130,25 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
         @NonNull
         public Optional<O> getBody() {
             if (bodyType != null && bodyType.isAssignableFrom(byte[].class)) {
-                return (Optional<O>) Optional.of(googleHttpResponse.getBodyAsBytes());
+                byte[] bodyAsBytes = googleHttpResponse.getBodyAsBytes();
+                if (bodyAsBytes.length == 0) {
+                    return Optional.empty();
+                }
+                return (Optional<O>) Optional.of(bodyAsBytes);
             } else if (bodyType == null) {
-                return (Optional<O>) Optional.of(googleHttpResponse.getBodyAsText());
+                String str = googleHttpResponse.getBodyAsText();
+                if (StringUtils.isEmpty(str)) {
+                    return Optional.empty();
+                }
+                return (Optional<O>) Optional.of(str);
             } else {
                 return conversionService.convert(googleHttpResponse.getBodyAsText(), bodyType).or(() -> {
                     try {
-                        return Optional.of(jsonMapper.readValue(googleHttpResponse.getBodyAsBytes(), bodyType));
+                        byte[] bodyAsBytes = googleHttpResponse.getBodyAsBytes();
+                        if (bodyAsBytes.length == 0) {
+                            return Optional.empty();
+                        }
+                        return Optional.of(jsonMapper.readValue(bodyAsBytes, bodyType));
                     } catch (IOException e) {
                         throw new HttpClientResponseException("Error reading body", this);
                     }
