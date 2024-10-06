@@ -17,7 +17,7 @@ brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "2.2.5"
 
 kotlin = '1.9.25'
-cloudevents-api = "2.5.0"
+cloudevents-api = "4.0.1"
 
 jetty-servlet = "11.0.24"
 logback-json-classic = "0.1.5"
