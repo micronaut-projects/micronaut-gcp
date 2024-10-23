@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 import io.micronaut.scheduling.TaskExecutors;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -35,28 +36,30 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Default implementation of {@link SecretManagerClient}.
- * @author Vinicius Carvalho
- * @since 3.4.0
+ * Default regional implementation of {@link SecretManagerClient}.
+ * @author Alfatah Bheda
  */
 @Singleton
 @BootstrapContextCompatible
 @Requires(classes = SecretManagerServiceClient.class)
-@Requires(missingProperty = "gcp.secret-manager.location")
-public class DefaultSecretManagerClient implements SecretManagerClient {
+@Requires(property = "gcp.secret-manager.location")
+public class DefaultLocationSecretManagerClient implements SecretManagerClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSecretManagerClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultLocationSecretManagerClient.class);
     private final SecretManagerServiceClient client;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final ExecutorService executorService;
+    private final SecretManagerConfigurationProperties configurationProperties;
 
-    public DefaultSecretManagerClient(
+    public DefaultLocationSecretManagerClient(
             SecretManagerServiceClient client,
             GoogleCloudConfiguration googleCloudConfiguration,
-            @Nullable @Named(TaskExecutors.IO) ExecutorService executorService) {
+            @Nullable @Named(TaskExecutors.IO) ExecutorService executorService,
+            SecretManagerConfigurationProperties configurationProperties) {
         this.client = client;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.executorService = executorService != null ? executorService : Executors.newSingleThreadExecutor()  ;
+        this.configurationProperties = configurationProperties;
     }
 
     @Override
@@ -71,8 +74,9 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
 
     @Override
     public Mono<VersionedSecret> getSecret(String secretId, String version, String projectId) {
-        LOGGER.debug("Fetching secret: projects/{}/secrets/{}/{}", projectId, secretId, version);
-        SecretVersionName secretVersionName = SecretVersionName.of(projectId, secretId, version);
+        String location = configurationProperties.getLocation();
+        LOGGER.debug("Fetching secret: projects/{}/locations/{}/secrets/{}/{}", projectId, location, secretId, version);
+        SecretVersionName secretVersionName = SecretVersionName.ofProjectLocationSecretSecretVersionName(projectId, location, secretId, version);
         AccessSecretVersionRequest request = AccessSecretVersionRequest.newBuilder()
                 .setName(secretVersionName.toString())
                 .build();
@@ -90,7 +94,7 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
         });
 
         return mono
-                .map(response -> new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray()))
+                .map(response -> new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray(), location))
                 .onErrorResume(throwable -> Mono.empty());
     }
 }

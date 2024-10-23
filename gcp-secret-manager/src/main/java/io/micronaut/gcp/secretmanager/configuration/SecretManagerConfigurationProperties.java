@@ -37,6 +37,7 @@ public class SecretManagerConfigurationProperties {
     private Set<String> customConfigs = new LinkedHashSet<>();
     private Set<String> keys = new HashSet<>();
     private boolean defaultConfigEnabled = DEFAULT_DEFAULT_CONFIG_ENABLED;
+    private String location;
 
     /**
      *
@@ -86,5 +87,24 @@ public class SecretManagerConfigurationProperties {
      */
     public void setDefaultConfigEnabled(boolean defaultConfigEnabled) {
         this.defaultConfigEnabled = defaultConfigEnabled;
+    }
+
+    /**
+     * Specifies the location of the regional secrets used to create a {@link com.google.cloud.secretmanager.v1.SecretManagerServiceClient} specific to the location endpoint.
+     * If not provided, the client will be created using the global endpoint.
+     * It must be one of the available location for the regional endpoints.
+     * See <a href="https://cloud.google.com/secret-manager/docs/locations">Secret Manager locations</a> for more information.
+     * @return Location of the regional secrets
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     *
+     * @param location Sets the location of the regional secrets
+     */
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

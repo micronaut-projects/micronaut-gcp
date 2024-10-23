@@ -27,12 +27,18 @@ public class VersionedSecret {
     private final String projectId;
     private final byte[] contents;
     private final String version;
+    private final String location;
 
     public VersionedSecret(String name, String projectId, String version, byte[] contents) {
+        this(name, projectId, version, contents, null);
+    }
+
+    public VersionedSecret(String name, String projectId, String version, byte[] contents, String location) {
         this.name = name;
         this.projectId = projectId;
         this.contents = contents;
         this.version = version;
+        this.location = location;
     }
 
     /**
@@ -65,5 +71,13 @@ public class VersionedSecret {
      */
     public String getProjectId() {
         return projectId;
+    }
+
+    /**
+     *
+     * @return location
+     */
+    public String getLocation() {
+        return location;
     }
 }
