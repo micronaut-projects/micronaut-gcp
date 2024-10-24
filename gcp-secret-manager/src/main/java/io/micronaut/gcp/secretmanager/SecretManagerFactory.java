@@ -64,7 +64,7 @@ public class SecretManagerFactory {
                                                                  @Named(Modules.SECRET_MANAGER) TransportChannelProvider transportChannelProvider) {
         try {
             SecretManagerServiceSettings.Builder builder = SecretManagerServiceSettings.newBuilder();
-            if (configurationProperties != null && !StringUtils.isEmpty(configurationProperties.getLocation())) {
+            if (configurationProperties != null && StringUtils.isNotEmpty(configurationProperties.getLocation())) {
                 builder.setEndpoint(String.format(REGIONAL_ENDPOINT, configurationProperties.getLocation()));
             }
             SecretManagerServiceSettings settings = builder
