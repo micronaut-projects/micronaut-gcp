@@ -30,6 +30,7 @@ import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.UserAgentHeaderProvider;
 
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.io.IOException;
@@ -48,8 +49,18 @@ public class SecretManagerFactory {
     private static final String REGIONAL_ENDPOINT = "secretmanager.%s.rep.googleapis.com:443";
     private final SecretManagerConfigurationProperties configurationProperties;
 
+    /**
+     *
+     * @param configurationProperties SecretManager Configuration Properties
+     */
+    @Inject
     public SecretManagerFactory(SecretManagerConfigurationProperties configurationProperties) {
         this.configurationProperties = configurationProperties;
+    }
+
+    @Deprecated
+    public SecretManagerFactory() {
+        this(new SecretManagerConfigurationProperties());
     }
 
     /**
