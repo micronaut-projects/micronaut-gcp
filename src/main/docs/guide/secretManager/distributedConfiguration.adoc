@@ -15,8 +15,7 @@ micronaut:
 IMPORTANT: Make sure you have configured the correct credentials on your project following the <<setup, Setting up GCP >> section.
 And that the service account you designated your application has proper rights to read secrets. Follow the official link:https://cloud.google.com/secret-manager/docs/access-control[Access Control] guide for Secret Manager if you need more information.
 
-
-Similarly, You can also leverage Distributed Configuration by complying with data residency regulations by using regional secrets in Google Cloud Secret Manager.
+Similarly, you can leverage Distributed Configuration by complying with data residency regulations using regional secrets in Google Cloud Secret Manager.
 Follow the official link:https://cloud.google.com/secret-manager/regional-secrets/data-residency[Regional Secrets Overview] if you need more information.
 
 To enable it for regional secrets, add the following bootstrap configuration file to `src/main/resources/`:
