@@ -15,6 +15,26 @@ micronaut:
 IMPORTANT: Make sure you have configured the correct credentials on your project following the <<setup, Setting up GCP >> section.
 And that the service account you designated your application has proper rights to read secrets. Follow the official link:https://cloud.google.com/secret-manager/docs/access-control[Access Control] guide for Secret Manager if you need more information.
 
+Similarly, you can leverage Distributed Configuration by complying with data residency regulations using regional secrets in Google Cloud Secret Manager.
+Follow the official link:https://cloud.google.com/secret-manager/regional-secrets/data-residency[Regional Secrets Overview] if you need more information.
+
+To enable it for regional secrets, add the following bootstrap configuration file to `src/main/resources/`:
+
+.bootstrap configuration
+[configuration]
+----
+micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+        location: us-central1
+----
+
+IMPORTANT: Make sure you have configured the `gcp.secret-manager.location` property to use regional secrets for the distributed configuration
+
 
 == Configuration file resolution
 

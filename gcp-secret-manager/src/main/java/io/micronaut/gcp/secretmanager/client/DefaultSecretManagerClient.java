@@ -23,8 +23,11 @@ import com.google.cloud.secretmanager.v1.SecretVersionName;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 import io.micronaut.scheduling.TaskExecutors;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -44,18 +47,44 @@ import java.util.concurrent.Executors;
 @Requires(classes = SecretManagerServiceClient.class)
 public class DefaultSecretManagerClient implements SecretManagerClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSecretManagerClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultSecretManagerClient.class);
     private final SecretManagerServiceClient client;
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final ExecutorService executorService;
+    private final SecretManagerConfigurationProperties configurationProperties;
 
+    /**
+     *
+     * @param client SecretManagerServiceClient
+     * @param googleCloudConfiguration Google Cloud Configuration
+     * @param executorService IO ExecutorService
+     * @param configurationProperties Secret Manager Configuration Properties
+     */
+    @Inject
+    public DefaultSecretManagerClient(
+            SecretManagerServiceClient client,
+            GoogleCloudConfiguration googleCloudConfiguration,
+            @Nullable @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
+            SecretManagerConfigurationProperties configurationProperties) {
+        this.client = client;
+        this.googleCloudConfiguration = googleCloudConfiguration;
+        this.executorService = executorService != null ? executorService : Executors.newSingleThreadExecutor()  ;
+        this.configurationProperties = configurationProperties;
+    }
+
+    /**
+     *
+     * @param client SecretManagerServiceClient
+     * @param googleCloudConfiguration Google Cloud Configuration
+     * @param executorService IO ExecutorService
+     * @deprecated Use {@link #DefaultSecretManagerClient(SecretManagerServiceClient, GoogleCloudConfiguration, ExecutorService, SecretManagerConfigurationProperties)} instead.
+     */
+    @Deprecated
     public DefaultSecretManagerClient(
             SecretManagerServiceClient client,
             GoogleCloudConfiguration googleCloudConfiguration,
             @Nullable @Named(TaskExecutors.IO) ExecutorService executorService) {
-        this.client = client;
-        this.googleCloudConfiguration = googleCloudConfiguration;
-        this.executorService = executorService != null ? executorService : Executors.newSingleThreadExecutor()  ;
+        this(client, googleCloudConfiguration,  executorService, new SecretManagerConfigurationProperties());
     }
 
     @Override
@@ -70,8 +99,15 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
 
     @Override
     public Mono<VersionedSecret> getSecret(String secretId, String version, String projectId) {
-        LOGGER.debug("Fetching secret: projects/{}/secrets/{}/{}", projectId, secretId, version);
-        SecretVersionName secretVersionName = SecretVersionName.of(projectId, secretId, version);
+        if (LOG.isDebugEnabled()) {
+            if (StringUtils.isNotEmpty(configurationProperties.getLocation())) {
+                LOG.debug("Fetching secret: projects/{}/locations/{}/secrets/{}/{}", projectId, configurationProperties.getLocation(), secretId, version);
+            } else {
+                LOG.debug("Fetching secret: projects/{}/secrets/{}/{}", projectId, secretId, version);
+            }
+        }
+
+        SecretVersionName secretVersionName = secretVersionName(projectId, secretId, version);
         AccessSecretVersionRequest request = AccessSecretVersionRequest.newBuilder()
                 .setName(secretVersionName.toString())
                 .build();
@@ -89,7 +125,22 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
         });
 
         return mono
-                .map(response -> new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray()))
+                .map(response -> versionedSecret(secretId, version, projectId, response))
                 .onErrorResume(throwable -> Mono.empty());
+    }
+
+    private SecretVersionName secretVersionName(String projectId, String secretId, String version) {
+        return StringUtils.isEmpty(configurationProperties.getLocation())
+                ? SecretVersionName.of(projectId, secretId, version)
+                : SecretVersionName.ofProjectLocationSecretSecretVersionName(projectId, configurationProperties.getLocation(), secretId, version);
+    }
+    
+    private VersionedSecret versionedSecret(String secretId,
+                                            String version,
+                                            String projectId,
+                                            AccessSecretVersionResponse response) {
+        return StringUtils.isEmpty(configurationProperties.getLocation())
+                ? new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray())
+                : new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray(), configurationProperties.getLocation());
     }
 }

@@ -19,7 +19,13 @@ class SettableUnaryCallable extends UnaryCallable<AccessSecretVersionRequest, Ac
         SecretVersionName secretVersionName = SecretVersionName.parse(request.getName())
         SettableApiFuture<AccessSecretVersionResponse> result = new SettableApiFuture<>()
         try {
-            String contents = LocalFileResourceLoader.loadSecret(secretVersionName.getProject(), secretVersionName.getSecret())
+            String contents;
+            if (secretVersionName.getLocation() != null) {
+                contents = LocalFileResourceLoader.loadLocationSecret(secretVersionName.getProject(), secretVersionName.getLocation(), secretVersionName.getSecret())
+            }
+            else {
+                contents = LocalFileResourceLoader.loadSecret(secretVersionName.getProject(), secretVersionName.getSecret())
+            }
             result.set(AccessSecretVersionResponse.newBuilder()
                     .setName(request.getName())
                     .setPayload(SecretPayload.newBuilder().setData(ByteString.copyFrom(contents.getBytes())).build())

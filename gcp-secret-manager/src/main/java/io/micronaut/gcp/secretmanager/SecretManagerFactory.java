@@ -25,9 +25,12 @@ import com.google.cloud.secretmanager.v1.SecretManagerServiceSettings;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.UserAgentHeaderProvider;
 
+import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.io.IOException;
@@ -43,6 +46,22 @@ import java.io.IOException;
 @BootstrapContextCompatible
 public class SecretManagerFactory {
 
+    private static final String REGIONAL_ENDPOINT = "secretmanager.%s.rep.googleapis.com:443";
+    private final SecretManagerConfigurationProperties configurationProperties;
+
+    /**
+     *
+     * @param configurationProperties SecretManager Configuration Properties
+     */
+    @Inject
+    public SecretManagerFactory(SecretManagerConfigurationProperties configurationProperties) {
+        this.configurationProperties = configurationProperties;
+    }
+
+    @Deprecated
+    public SecretManagerFactory() {
+        this(new SecretManagerConfigurationProperties());
+    }
 
     /**
      * Creates a {@link SecretManagerServiceClient} instance.
@@ -55,7 +74,11 @@ public class SecretManagerFactory {
     public SecretManagerServiceClient secretManagerServiceClient(@Named(Modules.SECRET_MANAGER) CredentialsProvider credentialsProvider,
                                                                  @Named(Modules.SECRET_MANAGER) TransportChannelProvider transportChannelProvider) {
         try {
-            SecretManagerServiceSettings settings = SecretManagerServiceSettings.newBuilder()
+            SecretManagerServiceSettings.Builder builder = SecretManagerServiceSettings.newBuilder();
+            if (configurationProperties != null && StringUtils.isNotEmpty(configurationProperties.getLocation())) {
+                builder.setEndpoint(String.format(REGIONAL_ENDPOINT, configurationProperties.getLocation()));
+            }
+            SecretManagerServiceSettings settings = builder
                     .setCredentialsProvider(credentialsProvider)
                     .setTransportChannelProvider(transportChannelProvider)
                     .build();
