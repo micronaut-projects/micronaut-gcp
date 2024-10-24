@@ -363,7 +363,7 @@ class GoogleAuth {
 
     AtomicInteger requestCount = new AtomicInteger(1)
 
-    @Post(value="/token", consumes = MediaType.APPLICATION_FORM_URLENCODED, produces = MediaType.APPLICATION_JSON)
+    @Post(value = "/token", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     HttpResponse<GenericData> getToken() {
         if (requestCount.getAndAdd(1) == 2) {
             return HttpResponse.ok(new GenericData().set("access_token", "ThisIsAFreshToken").set("expires_in", 3600))
