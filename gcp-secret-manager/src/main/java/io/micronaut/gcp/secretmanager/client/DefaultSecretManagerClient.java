@@ -58,6 +58,7 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
      * @param client SecretManagerServiceClient
      * @param googleCloudConfiguration Google Cloud Configuration
      * @param executorService IO ExecutorService
+     * @param configurationProperties Secret Manager Configuration Properties
      */
     @Inject
     public DefaultSecretManagerClient(
@@ -133,6 +134,7 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
                 ? SecretVersionName.of(projectId, secretId, version)
                 : SecretVersionName.ofProjectLocationSecretSecretVersionName(projectId, configurationProperties.getLocation(), secretId, version);
     }
+    
     private VersionedSecret versionedSecret(String secretId,
                                             String version,
                                             String projectId,

@@ -37,6 +37,7 @@ public class SecretManagerConfigurationProperties {
     private static final boolean DEFAULT_DEFAULT_CONFIG_ENABLED = true;
 
     /**
+     * Secret Manager Locations.
      * <a href="https://cloud.google.com/secret-manager/docs/locations">Secret Manger Locations</a>
      *
      */
@@ -95,10 +96,10 @@ public class SecretManagerConfigurationProperties {
     private Set<String> keys = new HashSet<>();
     private boolean defaultConfigEnabled = DEFAULT_DEFAULT_CONFIG_ENABLED;
 
-    @Pattern(regexp = DELHI +"|" + HONG_KONG +"|" + JAKARTA +"|" + MELBOURNE +"|" + MUMBAI +"|" + OSAKA +"|" + SEOUL +"|" + SINGAPORE +"|" + SYDNEY +"|" + TAIWAN +"|" + TOKYO
-            + "|" + BELGIUM +"|" + BERLIN +"|" + FINLAND +"|" + FRANKFURT +"|" + LONDON +"|" + MILAN +"|" + NETHERLANDS +"|" + PARIS +"|" + TURIN +"|" + WARSAW +"|" + ZURICH
-            + "|" + COLUMBUS +"|" + DALLAS +"|" + IOWA +"|" + LAS_VEGAS +"|" + LOS_ANGELES +"|" + MONTREAL +"|" + NORTHERN_VIRGINIA +"|" + OREGON +"|" + SALT_LAKE_CITY +"|" + SOUTH_CAROLINA +"|" + TORONTO
-            + "|" + SANTIAGO +"|" + SAO_PAULO +"|" + DAMMAM +"|" + DOHA +"|" + TEL_AVIV +"|" + JOHANNESBURG)
+    @Pattern(regexp = DELHI + "|" + HONG_KONG + "|" + JAKARTA + "|" + MELBOURNE + "|" + MUMBAI + "|" + OSAKA + "|" + SEOUL + "|" + SINGAPORE + "|" + SYDNEY + "|" + TAIWAN + "|" + TOKYO
+            + "|" + BELGIUM + "|" + BERLIN + "|" + FINLAND + "|" + FRANKFURT + "|" + LONDON + "|" + MILAN + "|" + NETHERLANDS + "|" + PARIS + "|" + TURIN + "|" + WARSAW + "|" + ZURICH
+            + "|" + COLUMBUS + "|" + DALLAS + "|" + IOWA + "|" + LAS_VEGAS + "|" + LOS_ANGELES + "|" + MONTREAL + "|" + NORTHERN_VIRGINIA + "|" + OREGON + "|" + SALT_LAKE_CITY + "|" + SOUTH_CAROLINA + "|" + TORONTO
+            + "|" + SANTIAGO + "|" + SAO_PAULO + "|" + DAMMAM + "|" + DOHA + "|" + TEL_AVIV + "|" + JOHANNESBURG)
     @Nullable
     private String location;
 
