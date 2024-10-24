@@ -23,9 +23,9 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "silver" == context.getRequiredProperty("acme.customer.tier", String)
-            false == context.getRequiredProperty("application.debug", Boolean)
-            false == context.containsProperty("sm.password")
-            false == context.containsProperty("custom.value")
+            !context.getRequiredProperty("application.debug", Boolean)
+            !context.containsProperty("sm.password")
+            !context.containsProperty("custom.value")
 
         cleanup:
             context.stop()
@@ -47,9 +47,9 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "silver" == context.getRequiredProperty("acme.customer.tier", String)
-            false == context.getRequiredProperty("application.debug", Boolean)
-            false == context.containsProperty("sm.password")
-            false == context.containsProperty("custom.value")
+            !context.getRequiredProperty("application.debug", Boolean)
+            !context.containsProperty("sm.password")
+            !context.containsProperty("custom.value")
 
         cleanup:
             context.stop()
@@ -70,10 +70,10 @@ class LocationSecretManagerConfigSpec extends Specification {
             ApplicationContext context = ApplicationContext.run(properties, "gcp")
 
         expect:
-            false == context.containsProperty("acme.customer.tier")
-            false == context.containsProperty("application.debug")
-            false == context.containsProperty("sm.password")
-            false == context.containsProperty("custom.value")
+            !context.containsProperty("acme.customer.tier")
+            !context.containsProperty("application.debug")
+            !context.containsProperty("sm.password")
+            !context.containsProperty("custom.value")
 
         cleanup:
             context.stop()
@@ -95,8 +95,8 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "silver" == context.getRequiredProperty("acme.customer.tier", String)
-            false == context.getRequiredProperty("application.debug", Boolean)
-            false == context.containsProperty("sm.password")
+            !context.getRequiredProperty("application.debug", Boolean)
+            !context.containsProperty("sm.password")
             "bar" == context.getRequiredProperty("custom.value", String)
 
         cleanup:
@@ -119,9 +119,9 @@ class LocationSecretManagerConfigSpec extends Specification {
             ApplicationContext context = ApplicationContext.run(properties, "gcp")
 
         expect:
-            false == context.containsProperty("acme.customer.tier")
-            false == context.containsProperty("application.debug")
-            false == context.containsProperty("sm.password")
+            !context.containsProperty("acme.customer.tier")
+            !context.containsProperty("application.debug")
+            !context.containsProperty("sm.password")
             "bar" == context.getRequiredProperty("custom.value", String)
 
         cleanup:
@@ -144,7 +144,7 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "silver" == context.getRequiredProperty("acme.customer.tier", String)
-            false == context.getRequiredProperty("application.debug", Boolean)
+            !context.getRequiredProperty("application.debug", Boolean)
             "location-secret" == context.getRequiredProperty("sm.password", String)
 
         cleanup:
@@ -167,8 +167,8 @@ class LocationSecretManagerConfigSpec extends Specification {
             ApplicationContext context = ApplicationContext.run(properties, "gcp")
 
         expect:
-            false == context.containsProperty("acme.customer.tier")
-            false == context.containsProperty("application.debug")
+            !context.containsProperty("acme.customer.tier")
+            !context.containsProperty("application.debug")
             "location-secret" == context.getRequiredProperty("sm.password", String)
 
         cleanup:
@@ -192,7 +192,7 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "silver" == context.getRequiredProperty("acme.customer.tier", String)
-            false == context.getRequiredProperty("application.debug", Boolean)
+            !context.getRequiredProperty("application.debug", Boolean)
             "location-secret" == context.getRequiredProperty("sm.db.password", String)
             "location-user" == context.getRequiredProperty("sm.db.user", String)
 
@@ -214,7 +214,7 @@ class LocationSecretManagerConfigSpec extends Specification {
             ApplicationContext context = ApplicationContext.run(properties, "gcp")
 
         expect:
-            true == context.getRequiredProperty("application.debug", Boolean)
+            context.getRequiredProperty("application.debug", Boolean)
             -1    == context.getRequiredProperty("application.server.port", Integer)
 
         cleanup:
@@ -235,10 +235,10 @@ class LocationSecretManagerConfigSpec extends Specification {
             ApplicationContext context = ApplicationContext.run(properties, "gcp")
 
         expect:
-            false == context.containsProperty("acme.customer.tier")
-            false == context.containsProperty("application.debug")
-            false == context.containsProperty("sm.password")
-            false == context.containsProperty("custom.value")
+            !context.containsProperty("acme.customer.tier")
+            !context.containsProperty("application.debug")
+            !context.containsProperty("sm.password")
+            !context.containsProperty("custom.value")
 
         cleanup:
             context.stop()
@@ -259,9 +259,9 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "bronze" == context.getRequiredProperty("acme.customer.tier", String)
-            true == context.getRequiredProperty("application.debug", Boolean)
-            false == context.containsProperty("sm.password")
-            false == context.containsProperty("custom.value")
+            context.getRequiredProperty("application.debug", Boolean)
+            !context.containsProperty("sm.password")
+            !context.containsProperty("custom.value")
 
         cleanup:
             context.stop()
@@ -283,8 +283,8 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "bronze" == context.getRequiredProperty("acme.customer.tier", String)
-            true == context.getRequiredProperty("application.debug", Boolean)
-            false == context.containsProperty("sm.password")
+            context.getRequiredProperty("application.debug", Boolean)
+            !context.containsProperty("sm.password")
             "foobar" == context.getRequiredProperty("custom.value", String)
 
         cleanup:
@@ -307,7 +307,7 @@ class LocationSecretManagerConfigSpec extends Specification {
 
         expect:
             "bronze" == context.getRequiredProperty("acme.customer.tier", String)
-            true == context.getRequiredProperty("application.debug", Boolean)
+             context.getRequiredProperty("application.debug", Boolean)
             "other-location-secret" == context.getRequiredProperty("sm.password", String)
 
         cleanup:

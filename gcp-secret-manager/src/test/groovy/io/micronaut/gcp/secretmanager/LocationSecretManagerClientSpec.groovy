@@ -5,7 +5,6 @@ import io.micronaut.gcp.secretmanager.client.SecretManagerClient
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
-
 class LocationSecretManagerClientSpec extends Specification {
 
     void "missing regional secret"() {
@@ -14,7 +13,7 @@ class LocationSecretManagerClientSpec extends Specification {
         when:
             def result = Mono.from(client.getSecret("notFound", "latest", "first-gcp-project")).block()
         then:
-            result == null
+            !result
     }
 
     void "fetch single regional secret"() {
@@ -23,8 +22,8 @@ class LocationSecretManagerClientSpec extends Specification {
         when:
             def result = Mono.from(client.getSecret("application", "latest", "first-gcp-project")).block()
         then:
-            result.getName() == "application"
-            result.getContents() != null
+            result.name == "application"
+            result.contents
     }
 
 }

@@ -32,7 +32,7 @@ class GoogleLocationClientExample {
     private final SecretManagerServiceClient client
 
     GoogleLocationClientExample(SecretManagerServiceClient googleSecretManagerClient) { // <1>
-        this.client = googleSecretManagerClient;
+        this.client = googleSecretManagerClient
     }
 
     @EventListener
@@ -41,7 +41,7 @@ class GoogleLocationClientExample {
                 .newBuilder()
                 .setName(SecretVersionName.ofProjectLocationSecretSecretVersionName("my-cloud-project", "us-central1", "secretName", "latest").toString())
                 .build())
-        String secret = response.getPayload().getData().toStringUtf8()
+        String secret = response.payload.data.toStringUtf8()
     }
 }
 //end::clazz[]
