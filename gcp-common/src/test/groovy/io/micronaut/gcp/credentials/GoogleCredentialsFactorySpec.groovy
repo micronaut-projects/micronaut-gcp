@@ -16,8 +16,10 @@ import io.micronaut.core.reflect.ReflectionUtils
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.Produces
 import io.micronaut.runtime.server.EmbeddedServer
 import org.spockframework.runtime.IStandardStreamsListener
 import org.spockframework.runtime.StandardStreamsCapturer
@@ -363,7 +365,7 @@ class GoogleAuth {
 
     AtomicInteger requestCount = new AtomicInteger(1)
 
-    @Post(value="/token", consumes = MediaType.APPLICATION_FORM_URLENCODED, produces = MediaType.APPLICATION_JSON)
+    @Post(value = "/token", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     HttpResponse<GenericData> getToken() {
         if (requestCount.getAndAdd(1) == 2) {
             return HttpResponse.ok(new GenericData().set("access_token", "ThisIsAFreshToken").set("expires_in", 3600))
