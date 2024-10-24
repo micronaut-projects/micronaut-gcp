@@ -15,6 +15,8 @@
  */
 package io.micronaut.gcp.secretmanager.client;
 
+import io.micronaut.core.annotation.Nullable;
+
 /**
  * A wrapper class around {@link com.google.cloud.secretmanager.v1.AccessSecretVersionResponse} with secret information.
  *
@@ -27,6 +29,8 @@ public class VersionedSecret {
     private final String projectId;
     private final byte[] contents;
     private final String version;
+
+    @Nullable
     private final String location;
 
     public VersionedSecret(String name, String projectId, String version, byte[] contents) {
@@ -76,7 +80,9 @@ public class VersionedSecret {
     /**
      *
      * @return location
+     * @since 5.8.0
      */
+    @Nullable
     public String getLocation() {
         return location;
     }
