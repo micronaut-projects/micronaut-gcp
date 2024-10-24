@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.gcp.GoogleCloudConfiguration;
+import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 import io.micronaut.scheduling.TaskExecutors;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -42,7 +43,7 @@ import java.util.concurrent.Executors;
 @Singleton
 @BootstrapContextCompatible
 @Requires(classes = SecretManagerServiceClient.class)
-@Requires(missingProperty = "gcp.secret-manager.location")
+@Requires(missingProperty = SecretManagerConfigurationProperties.PREFIX + ".location")
 public class DefaultSecretManagerClient implements SecretManagerClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSecretManagerClient.class);

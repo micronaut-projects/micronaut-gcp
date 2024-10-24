@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
 @Singleton
 @BootstrapContextCompatible
 @Requires(classes = SecretManagerServiceClient.class)
-@Requires(property = "gcp.secret-manager.location")
+@Requires(property = SecretManagerConfigurationProperties.PREFIX + ".location")
 public class DefaultLocationSecretManagerClient implements SecretManagerClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultLocationSecretManagerClient.class);
@@ -54,7 +54,7 @@ public class DefaultLocationSecretManagerClient implements SecretManagerClient {
     public DefaultLocationSecretManagerClient(
             SecretManagerServiceClient client,
             GoogleCloudConfiguration googleCloudConfiguration,
-            @Nullable @Named(TaskExecutors.IO) ExecutorService executorService,
+            @Nullable @Named(TaskExecutors.BLOCKING) ExecutorService executorService,
             SecretManagerConfigurationProperties configurationProperties) {
         this.client = client;
         this.googleCloudConfiguration = googleCloudConfiguration;
@@ -95,6 +95,7 @@ public class DefaultLocationSecretManagerClient implements SecretManagerClient {
 
         return mono
                 .map(response -> new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray(), location))
+                .doOnError(throwable -> LOGGER.debug("Error fetching the secret: {}", throwable.getMessage()))
                 .onErrorResume(throwable -> Mono.empty());
     }
 }
