@@ -250,6 +250,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Default implementation of <a href="io/micronaut/gcp/secretmanager/client/SecretManagerClient.html" title="interface in io.micronaut.gcp.secretmanager.client"><code>SecretManagerClient</code></a>.</div>
 </dd>
 <dt><a href="io/micronaut/gcp/secretmanager/client/DefaultSecretManagerClient.html#%3Cinit%3E(com.google.cloud.secretmanager.v1.SecretManagerServiceClient,io.micronaut.gcp.GoogleCloudConfiguration,java.util.concurrent.ExecutorService)" class="member-name-link">DefaultSecretManagerClient(SecretManagerServiceClient, GoogleCloudConfiguration, ExecutorService)</a> - Constructor for class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/DefaultSecretManagerClient.html" title="class in io.micronaut.gcp.secretmanager.client">DefaultSecretManagerClient</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="io/micronaut/gcp/secretmanager/client/DefaultSecretManagerClient.html#%3Cinit%3E(com.google.cloud.secretmanager.v1.SecretManagerServiceClient,io.micronaut.gcp.GoogleCloudConfiguration,java.util.concurrent.ExecutorService,io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties)"><code>DefaultSecretManagerClient(SecretManagerServiceClient, GoogleCloudConfiguration, ExecutorService, SecretManagerConfigurationProperties)</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/client/DefaultSecretManagerClient.html#%3Cinit%3E(com.google.cloud.secretmanager.v1.SecretManagerServiceClient,io.micronaut.gcp.GoogleCloudConfiguration,java.util.concurrent.ExecutorService,io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties)" class="member-name-link">DefaultSecretManagerClient(SecretManagerServiceClient, GoogleCloudConfiguration, ExecutorService, SecretManagerConfigurationProperties)</a> - Constructor for class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/DefaultSecretManagerClient.html" title="class in io.micronaut.gcp.secretmanager.client">DefaultSecretManagerClient</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/bind/DefaultSubscriberFactory.html" class="type-name-link" title="class in io.micronaut.gcp.pubsub.bind">DefaultSubscriberFactory</a> - Class in <a href="io/micronaut/gcp/pubsub/bind/package-summary.html">io.micronaut.gcp.pubsub.bind</a></dt>
 <dd>
@@ -420,6 +426,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html#getLocation()" class="member-name-link">getLocation()</a> - Method in class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/GoogleCredentialsConfiguration.html" title="class in io.micronaut.gcp.credentials">GoogleCredentialsConfiguration</a></dt>
 <dd>
 <div class="block">The location of the service account credential key file.</div>
+</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html#getLocation()" class="member-name-link">getLocation()</a> - Method in class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html" title="class in io.micronaut.gcp.secretmanager.client">VersionedSecret</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/configuration/SecretManagerConfigurationProperties.html#getLocation()" class="member-name-link">getLocation()</a> - Method in class io.micronaut.gcp.secretmanager.configuration.<a href="io/micronaut/gcp/secretmanager/configuration/SecretManagerConfigurationProperties.html" title="class in io.micronaut.gcp.secretmanager.configuration">SecretManagerConfigurationProperties</a></dt>
+<dd>
+<div class="block">Specifies the location of the regional secrets used to create a <code>SecretManagerServiceClient</code> specific to the location endpoint.</div>
 </dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html#getMaxAckExtensionPeriod()" class="member-name-link">getMaxAckExtensionPeriod()</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">SubscriberConfigurationProperties</a></dt>
 <dd>
@@ -1278,6 +1290,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Factory to create SecretManager clients.</div>
 </dd>
 <dt><a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html#%3Cinit%3E()" class="member-name-link">SecretManagerFactory()</a> - Constructor for class io.micronaut.gcp.secretmanager.<a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html#%3Cinit%3E(io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties)" class="member-name-link">SecretManagerFactory(SecretManagerConfigurationProperties)</a> - Constructor for class io.micronaut.gcp.secretmanager.<a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html#secretManagerServiceClient(com.google.api.gax.core.CredentialsProvider,com.google.api.gax.rpc.TransportChannelProvider)" class="member-name-link">secretManagerServiceClient(CredentialsProvider, TransportChannelProvider)</a> - Method in class io.micronaut.gcp.secretmanager.<a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></dt>
 <dd>
@@ -1353,6 +1369,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the location to the service account credential key file.</div>
 </dd>
+<dt><a href="io/micronaut/gcp/secretmanager/configuration/SecretManagerConfigurationProperties.html#setLocation(java.lang.String)" class="member-name-link">setLocation(String)</a> - Method in class io.micronaut.gcp.secretmanager.configuration.<a href="io/micronaut/gcp/secretmanager/configuration/SecretManagerConfigurationProperties.html" title="class in io.micronaut.gcp.secretmanager.configuration">SecretManagerConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html#setMaxAckExtensionPeriod(org.threeten.bp.Duration)" class="member-name-link">setMaxAckExtensionPeriod(Duration)</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/SubscriberConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">SubscriberConfigurationProperties</a></dt>
 <dd>
 <div class="block">Set the maximum period a message ack deadline will be extended.</div>
@@ -1594,6 +1612,8 @@ the order they are declared.</div>
 <div class="block">A wrapper class around <code>AccessSecretVersionResponse</code> with secret information.</div>
 </dd>
 <dt><a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,byte%5B%5D)" class="member-name-link">VersionedSecret(String, String, String, byte[])</a> - Constructor for class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html" title="class in io.micronaut.gcp.secretmanager.client">VersionedSecret</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,byte%5B%5D,java.lang.String)" class="member-name-link">VersionedSecret(String, String, String, byte[], String)</a> - Constructor for class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/VersionedSecret.html" title="class in io.micronaut.gcp.secretmanager.client">VersionedSecret</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html#VIRTUAL_CLOCK" class="member-name-link">VIRTUAL_CLOCK</a> - Enum constant in enum class io.micronaut.discovery.cloud.gcp.<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html" title="enum class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataKeys</a></dt>
 <dd>&nbsp;</dd>

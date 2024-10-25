@@ -5436,6 +5436,116 @@ And that the service account you designated your application has proper rights t
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Similarly, you can leverage Distributed Configuration by complying with data residency regulations using regional secrets in Google Cloud Secret Manager.
+Follow the official <a href="https://cloud.google.com/secret-manager/regional-secrets/data-residency">Regional Secrets Overview</a> if you need more information.</p>
+</div>
+<div class="paragraph">
+<p>To enable it for regional secrets, add the following bootstrap configuration file to <code>src/main/resources/</code>:</p>
+</div>
+<div class="openblock">
+<div class="title">bootstrap configuration</div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
+micronaut.config-client.enabled=true
+gcp.secret-manager.location=us-central1</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    application:
+        name: hello-world
+    config-client:
+        enabled: true
+gcp:
+    secret-manager:
+        location: us-central1</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
+  [micronaut.application]
+    name="hello-world"
+  [micronaut.config-client]
+    enabled=true
+[gcp]
+  [gcp.secret-manager]
+    location="us-central1"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
+  application {
+    name = "hello-world"
+  }
+  configClient {
+    enabled = true
+  }
+}
+gcp {
+  secretManager {
+    location = "us-central1"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  micronaut {
+    application {
+      name = "hello-world"
+    }
+    config-client {
+      enabled = true
+    }
+  }
+  gcp {
+    secret-manager {
+      location = "us-central1"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "application": {
+      "name": "hello-world"
+    },
+    "config-client": {
+      "enabled": true
+    }
+  },
+  "gcp": {
+    "secret-manager": {
+      "location": "us-central1"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Make sure you have configured the <code>gcp.secret-manager.location</code> property to use regional secrets for the distributed configuration
+</td>
+</tr>
+</table>
+</div>
 <div class="sect1">
 <h2 id="_configuration_file_resolution">Configuration file resolution</h2>
 <div class="sectionbody">
@@ -5936,6 +6046,94 @@ class GoogleClientExample (private val client: SecretManagerServiceClient) { // 
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Similarly, if you require access to Secret Manager for the regional secrets via the Google <a href="https://cloud.google.com/pubsub/docs/quickstart-client-libraries">client java libraries</a>, you can use the bean of type <a href="https://googleapis.dev/java/google-cloud-secretmanager/latest/com/google/cloud/secretmanager/v1/SecretManagerServiceClient.html">SecretManagerServiceClient</a> for injection.
+To leverage the regional endpoints for the SecretManagerServiceClient, you must set <code>gcp.secret-manager.location</code> to one of the <a href="https://cloud.google.com/secret-manager/docs/locations">available locations</a>.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
+import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import com.google.cloud.secretmanager.v1.SecretVersionName;
+import io.micronaut.context.event.StartupEvent;
+import io.micronaut.runtime.event.annotation.EventListener;
+
+public final class GoogleLocationClientExample {
+
+    private final SecretManagerServiceClient client;
+
+    public GoogleLocationClientExample(SecretManagerServiceClient googleSecretManagerClient) { // <b class="conum">(1)</b>
+        this.client = googleSecretManagerClient;
+    }
+
+    @EventListener
+    public void onStartup(StartupEvent event) {
+        AccessSecretVersionResponse response = client.accessSecretVersion(AccessSecretVersionRequest
+                .newBuilder()
+                .setName(SecretVersionName.ofProjectLocationSecretSecretVersionName("my-cloud-project", "us-central1", "secretName", "latest").toString())
+                .build());
+        String secret = response.getPayload().getData().toStringUtf8();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
+import com.google.cloud.secretmanager.v1.SecretVersionName
+import io.micronaut.context.event.StartupEvent
+import io.micronaut.runtime.event.annotation.EventListener
+
+
+class GoogleLocationClientExample {
+
+    private final SecretManagerServiceClient client
+
+    GoogleLocationClientExample(SecretManagerServiceClient googleSecretManagerClient) { // <b class="conum">(1)</b>
+        this.client = googleSecretManagerClient
+    }
+
+    @EventListener
+    void onStartup(StartupEvent event) {
+        AccessSecretVersionResponse response = client.accessSecretVersion(AccessSecretVersionRequest
+                .newBuilder()
+                .setName(SecretVersionName.ofProjectLocationSecretSecretVersionName("my-cloud-project", "us-central1", "secretName", "latest").toString())
+                .build())
+        String secret = response.payload.data.toStringUtf8()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
+import com.google.cloud.secretmanager.v1.SecretVersionName
+import io.micronaut.context.event.StartupEvent
+import io.micronaut.runtime.event.annotation.EventListener
+
+class GoogleLocationClientExample (private val client: SecretManagerServiceClient) { // <b class="conum">(1)</b>
+	@EventListener
+	fun onStartup(event: StartupEvent) {
+		val response = client.accessSecretVersion(AccessSecretVersionRequest
+				.newBuilder()
+				.setName(SecretVersionName.ofProjectLocationSecretSecretVersionName("my-cloud-project", "us-central1", "secretName", "latest").toString())
+				.build())
+		val secret = response.payload.data.toStringUtf8()
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Inject SecretManagerServiceClient</td>
+</tr>
+</table>
+</div>
 <div class="sect2">
 <h3 id="_micronaut_secret_manager_client">Micronaut Secret Manager Client</h3>
 <div class="paragraph">
@@ -6046,6 +6244,9 @@ See the guide for <a href="https://guides.micronaut.io/latest/micronaut-cloud-se
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Similarly, if you want to access regional secrets using the wrapper client: <a href="../api/io/micronaut/gcp/secretmanager/client/SecretManagerClient.html">SecretManagerClient</a> in a reactive based approach, then you must set <code>gcp.secret-manager.location</code> to one of the <a href="https://cloud.google.com/secret-manager/docs/locations">available locations</a>.</p>
 </div>
 </div>
 </div>

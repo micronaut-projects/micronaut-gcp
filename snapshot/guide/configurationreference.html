@@ -500,6 +500,14 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether to load the default config files (<code>application</code>, <code>application_${env}</code>, <code>[APPLICATION_NAME], `[APPLICATION_NAME]_${env}</code>). Default value: true.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gcp.secret-manager.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the location of the regional secrets used to create a {@link com.google.cloud.secretmanager.v1.SecretManagerServiceClient} specific to the location endpoint.
+ If not provided, the client will be created using the global endpoint.
+ It must be one of the available location for the regional endpoints.
+ See &lt;a href="https://cloud.google.com/secret-manager/docs/locations"&gt;Secret Manager locations&lt;/a&gt; for more information.</p></td>
+</tr>
 </tbody>
 </table>
 <div style="page-break-after: always;"></div>
