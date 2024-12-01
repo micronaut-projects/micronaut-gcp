@@ -27,7 +27,7 @@ system-stubs-core = "2.1.7"
 awaitility = '4.2.2'
 
 micronaut-grpc = "4.7.1"
-micronaut-jackson-xml = "4.4.0"
+micronaut-jackson-xml = "4.5.0"
 micronaut-logging = "1.4.0"
 micronaut-reactor = "3.6.0"
 micronaut-rxjava3 = "3.5.0"
