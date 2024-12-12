@@ -8,7 +8,6 @@ import jakarta.inject.Inject
 import spock.lang.Specification
 
 @MicronautTest
-@Property(name = "gcp.credentials.use-http-client", value = StringUtils.FALSE)
 class DefaultOAuth2HttpTransportFactoryDisabledSpec extends Specification {
 
     @Inject

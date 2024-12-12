@@ -56,7 +56,7 @@ import java.util.function.Supplier;
  */
 @Singleton
 @Requires(classes = HttpClient.class)
-@Requires(property = GoogleCredentialsConfiguration.PREFIX + ".use-http-client", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = GoogleCredentialsConfiguration.PREFIX + ".use-http-client", value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
 public class DefaultOAuth2HttpTransportFactory implements HttpTransportFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOAuth2HttpTransportFactory.class);

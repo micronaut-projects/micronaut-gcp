@@ -13,6 +13,7 @@ import io.micronaut.context.exceptions.BeanInstantiationException
 import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.reflect.ReflectionUtils
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
@@ -275,6 +276,7 @@ class GoogleCredentialsFactorySpec extends Specification {
                 "micronaut.server.port" : 8080
         ])
         def ctx = ApplicationContext.run([
+                "gcp.credentials.use-http-client" : StringUtils.TRUE,
                 (GoogleCredentialsConfiguration.PREFIX + ".location"): serviceAccountCredentials.getPath()
         ])
         GoogleCredentials gc = ctx.getBean(GoogleCredentials)
@@ -302,6 +304,7 @@ class GoogleCredentialsFactorySpec extends Specification {
                 "micronaut.server.port" : 8080
         ])
         def ctx = ApplicationContext.run([
+                "gcp.credentials.use-http-client" : StringUtils.TRUE,
                 (GoogleCredentialsConfiguration.PREFIX + ".encoded-key"): encodedServiceAccountCredentials
         ])
         GoogleCredentials gc = ctx.getBean(GoogleCredentials)
