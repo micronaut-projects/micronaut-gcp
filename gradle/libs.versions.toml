@@ -11,7 +11,7 @@ managed-google-cloud-core = "2.47.0"
 managed-google-cloud-pubsub = "1.135.0"
 managed-google-cloud-secretmanager = "2.55.0"
 managed-google-cloudevent-types="0.3.0"
-managed-gax = "2.58.0"
+managed-gax = "2.59.1"
 
 brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "2.2.6"
