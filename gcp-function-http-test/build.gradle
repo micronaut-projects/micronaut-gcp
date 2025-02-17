@@ -8,7 +8,6 @@ dependencies {
     api(projects.micronautGcpFunctionHttp)
 
     implementation(mnServlet.micronaut.servlet.core)
-    implementation(platform(mnServlet.boms.jetty))
     implementation(libs.jetty.servlet)
 
     testAnnotationProcessor(mn.micronaut.inject.java)
