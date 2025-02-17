@@ -105,7 +105,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
     }
 
     private ServletHttpHandler<HttpRequest, HttpResponse> initializeHandler() {
-        final ServletHttpHandler<HttpRequest, HttpResponse> httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext) {
+        final ServletHttpHandler<HttpRequest, HttpResponse> httpHandler = new ServletHttpHandler<HttpRequest, HttpResponse>(applicationContext, conversionService) {
             @Override
             protected ServletExchange<HttpRequest, HttpResponse> createExchange(HttpRequest request, HttpResponse response) {
                 final GoogleFunctionHttpResponse<Object> res =
