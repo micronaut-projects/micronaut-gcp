@@ -40,7 +40,7 @@ micronaut-validation = "4.9.0"
 sonatype-scan = "2.8.3"
 
 # Micronaut
-micronaut-gradle-plugin = "4.4.5"
+micronaut-gradle-plugin = "4.5.0"
 
 [libraries]
 # Core
