@@ -3,7 +3,7 @@ micronaut-docs = "2.0.0"
 micronaut = "4.8.6"
 groovy = "4.0.25"
 spock = "2.3-groovy-4.0"
-jetty-servlet = "11.0.24"
+jetty-servlet = "11.0.25"
 
 managed-google-auth-library-oauth2http = "1.33.1"
 managed-google-functions-framework-api = "1.1.4"
