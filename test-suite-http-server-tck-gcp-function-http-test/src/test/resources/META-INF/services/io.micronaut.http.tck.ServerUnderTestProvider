@@ -1,1 +1,1 @@
-io.micronaut.http.server.tck.gcp.function.GcpFunctionHttpTestServerUnderTestProvider
+io.micronaut.http.tck.EmbeddedServerUnderTestProvider

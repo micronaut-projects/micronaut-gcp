@@ -11,7 +11,6 @@ ossIndexAudit {
     username = ossIndexUsername
     password = ossIndexPassword
     excludeCoordinates = [
-            "org.eclipse.jetty:jetty-http:11.0.25", // no version of Jetty 11 patched https://ossindex.sonatype.org/component/pkg:maven/org.eclipse.jetty/jetty-http
             "org.threeten:threetenbp:1.7.0", // no version patched https://ossindex.sonatype.org/component/pkg:maven/org.threeten/threetenbp
     ]
 }
