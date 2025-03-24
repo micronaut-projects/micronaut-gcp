@@ -94,12 +94,6 @@ class HttpExchangeHttpRequest implements HttpRequest {
         return Optional.of(characterEncoding().toString());
     }
 
-    public Charset characterEncoding() {
-        return parseCharacterEncoding(
-            getHeader(HttpHeaders.CONTENT_TYPE),
-            getHeader(HttpHeaders.ACCEPT_CHARSET));
-    }
-
     @Override
     public InputStream getInputStream() throws IOException {
         return httpExchange.getRequestBody();
@@ -118,5 +112,12 @@ class HttpExchangeHttpRequest implements HttpRequest {
     @Nullable
     private String getHeader(@NonNull String headerName) {
         return getHeaders().get(headerName).stream().findFirst().orElse(null);
+    }
+
+    @NonNull
+    private Charset characterEncoding() {
+        return parseCharacterEncoding(
+            getHeader(HttpHeaders.CONTENT_TYPE),
+            getHeader(HttpHeaders.ACCEPT_CHARSET));
     }
 }
