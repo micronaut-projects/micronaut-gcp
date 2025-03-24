@@ -9,7 +9,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SelectPackages("io.micronaut.http.server.tck.tests")
 @SuiteDisplayName("HTTP Server TCK for GCP Function HTTP Test")
 @ExcludeClassNamePatterns({
-    "io.micronaut.http.server.tck.tests.filter.options.OptionsFilterTest", // https://github.com/micronaut-projects/micronaut-core/pull/10126 removes a header which is not currently supported in gcp-function-http-test
+    "io.micronaut.http.server.tck.tests.FilterProxyTest"
 })
 class GcpFunctionHttpTestServerTestSuite {
 }

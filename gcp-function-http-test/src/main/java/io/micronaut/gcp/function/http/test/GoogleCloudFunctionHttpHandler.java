@@ -30,7 +30,7 @@ import java.io.IOException;
 class GoogleCloudFunctionHttpHandler implements HttpHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudFunctionHttpHandler.class);
     private final HttpFunction httpFunction;
-    boolean headersSent = false;
+    private boolean headersSent = false;
 
     GoogleCloudFunctionHttpHandler(HttpFunction httpFunction) {
         this.httpFunction = httpFunction;

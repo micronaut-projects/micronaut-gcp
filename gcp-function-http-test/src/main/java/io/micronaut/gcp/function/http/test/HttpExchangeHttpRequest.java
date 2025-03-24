@@ -23,7 +23,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
-import io.micronaut.servlet.http.utils.QueryStringDecoder;
+import io.micronaut.http.uri.QueryStringDecoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +40,7 @@ import static io.micronaut.http.util.HttpHeadersUtil.parseCharacterEncoding;
 @Internal
 class HttpExchangeHttpRequest implements HttpRequest {
     private final HttpExchange httpExchange;
+
     HttpExchangeHttpRequest(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
     }
