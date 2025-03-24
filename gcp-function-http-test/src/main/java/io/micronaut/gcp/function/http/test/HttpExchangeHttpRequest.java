@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017-2025 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.micronaut.gcp.function.http.test;
 
 import com.google.cloud.functions.HttpRequest;
@@ -8,19 +23,18 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
-import io.micronaut.http.MediaType;
-import io.micronaut.http.util.HttpHeadersUtil;
+import io.micronaut.servlet.http.utils.QueryStringDecoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static io.micronaut.http.util.HttpHeadersUtil.parseCharacterEncoding;
 
 @Experimental
 @Internal
@@ -52,8 +66,7 @@ class HttpExchangeHttpRequest implements HttpRequest {
 
     @Override
     public Map<String, List<String>> getQueryParameters() {
-        //TODO Use QueryStringDecoder
-        return Map.of();
+        return new QueryStringDecoder(httpExchange.getRequestURI()).parameters();
     }
 
     @Override
@@ -104,68 +117,5 @@ class HttpExchangeHttpRequest implements HttpRequest {
     @Nullable
     private String getHeader(@NonNull String headerName) {
         return getHeaders().get(headerName).stream().findFirst().orElse(null);
-    }
-
-    // Delete the following methods once this PR is merged in core: https://github.com/micronaut-projects/micronaut-core/pull/11670
-    /**
-     * Resolve the {@link Charset} to use for request identified by the Content-Type HTTP Header value and the Accept-Charset HTTP Header value.
-     *
-     * @param contentTypeHeaderValue Content-Type HTTP Header Value
-     * @param acceptCharsetHeaderValue Accept-Charset HTTP Header Value
-     * @return A {@link Charset}
-     * @since 4.8.8
-     */
-    @NonNull
-    public static Charset parseCharacterEncoding(@Nullable String contentTypeHeaderValue, @Nullable String acceptCharsetHeaderValue) {
-        MediaType contentType = contentTypeHeaderValue == null ? null : MediaType.of(contentTypeHeaderValue);
-        Charset charset = acceptCharsetHeaderValue != null ? parseAcceptCharset(acceptCharsetHeaderValue) : StandardCharsets.UTF_8;
-        return parseCharacterEncoding(contentType, charset);
-    }
-
-    /**
-     * Resolve the {@link Charset} to use for the request.
-     *
-     * @param contentType ContenType
-     * @return An {@link Optional} of {@link Charset}
-     * @since 4.8.8
-     */
-    @NonNull
-    public static Charset parseCharacterEncoding(@Nullable MediaType contentType,
-                                                 @NonNull Charset acceptCharset) {
-        try {
-
-            if (contentType != null) {
-                String charset = contentType.getParametersMap().get(MediaType.CHARSET_PARAMETER);
-                if (charset != null) {
-                    try {
-                        return Charset.forName(charset);
-                    } catch (Exception e) {
-                        // unsupported charset, default to UTF-8
-                        return Charset.defaultCharset();
-                    }
-                }
-            }
-        } catch (UnsupportedCharsetException e) {
-            return StandardCharsets.UTF_8;
-        }
-        return acceptCharset;
-    }
-
-    /**
-     *
-     * @param acceptCharsetHeaderValue Accept-Charset HeaderValue
-     * @return Accept Charset
-     * @since 4.8.8
-     */
-    @NonNull
-    public static Charset parseAcceptCharset(@NonNull String acceptCharsetHeaderValue) {
-        String text = HttpHeadersUtil.splitAcceptHeader(acceptCharsetHeaderValue);
-        if (text != null) {
-            try {
-                return Charset.forName(text);
-            } catch (Exception ignored) {
-            }
-        }
-        return StandardCharsets.UTF_8;
     }
 }

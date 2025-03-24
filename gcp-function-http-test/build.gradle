@@ -1,20 +1,10 @@
 plugins {
     id("io.micronaut.build.internal.gcp-module")
 }
-repositories {
-    mavenLocal {
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
-}
 dependencies {
     api(mn.micronaut.http.server)
     api(libs.managed.functions.framework.api)
     api(projects.micronautGcpFunctionHttp)
-
-    implementation("io.micronaut.servlet:micronaut-servlet-core:5.2.0-SNAPSHOT")
-
     testAnnotationProcessor(mn.micronaut.inject.java)
 
     testImplementation(mn.micronaut.http.client)
