@@ -40,6 +40,8 @@ public class PubSubConfigurationProperties {
 
     private boolean nackOnShutdown = DEFAULT_NACK_ON_SHUTDOWN;
 
+    private boolean enabled = true;
+
     /**
      * The name of the {@link java.util.concurrent.ScheduledExecutorService} to be used by all {@link com.google.cloud.pubsub.v1.Publisher} instances. Defaults to "scheduled".
      * @return the name of the publishing executor
@@ -121,5 +123,22 @@ public class PubSubConfigurationProperties {
      */
     public void setNackOnShutdown(boolean nackOnShutdown) {
         this.nackOnShutdown = nackOnShutdown;
+    }
+
+    /**
+     * If pull pubs sub should be enabled or not. Enabled is true by default.
+     *
+     * @return if pull pubsub is enabled in the config.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Sets if the pull pub sub is enabled or not. Enabled is true by default.
+     * @param enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

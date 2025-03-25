@@ -86,7 +86,9 @@ final class PubSubConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<S
     @Override
     protected void addSubscriber(ProjectSubscriptionName projectSubscriptionName, MessageReceiver receiver, String configuration) {
         try {
-            this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
+            if(pubSubConfigurationProperties.isEnabled()) {
+                this.subscriberFactory.createSubscriber(new SubscriberFactoryConfig(projectSubscriptionName, receiver, configuration, pubSubConfigurationProperties.getSubscribingExecutor()));
+            }
         } catch (Exception e) {
             throw new PubSubListenerException("Failed to create subscriber", e);
         }
