@@ -11,7 +11,7 @@ managed-google-function-invoker = "1.4.1"
 managed-google-cloud-core = "2.53.1"
 managed-google-cloud-pubsub = "1.137.1"
 managed-google-cloud-secretmanager = "2.59.0"
-managed-google-cloudevent-types="0.3.0"
+managed-google-cloudevent-types="0.16.0"
 managed-gax = "2.62.0"
 
 brave-opentracing = "1.0.1"
