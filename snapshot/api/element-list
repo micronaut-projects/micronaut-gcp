@@ -6,7 +6,6 @@ io.micronaut.gcp.function
 io.micronaut.gcp.function.cloudevents
 io.micronaut.gcp.function.http
 io.micronaut.gcp.function.http.jackson
-io.micronaut.gcp.function.http.test
 io.micronaut.gcp.http.client
 io.micronaut.gcp.logging
 io.micronaut.gcp.pubsub.annotation
