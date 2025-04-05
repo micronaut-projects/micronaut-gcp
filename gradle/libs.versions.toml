@@ -20,7 +20,7 @@ cloudevents-api = "2.5.0"
 
 logback-json-classic = "0.1.5"
 zipkin-sender-stackdriver = "1.1.1"
-system-stubs-core = "2.1.7"
+system-stubs-core = "2.1.8"
 
 awaitility = '4.2.2'
 
