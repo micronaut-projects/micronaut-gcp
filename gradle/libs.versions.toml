@@ -41,6 +41,8 @@ sonatype-scan = "3.1.1"
 # Micronaut
 micronaut-gradle-plugin = "4.5.3"
 
+opentelemetry-exporter-auto = '0.36.0-alpha'
+
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
@@ -85,6 +87,8 @@ zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver"
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 sonatype-scan = { module = "org.sonatype.gradle.plugins:scan-gradle-plugin", version.ref = "sonatype-scan" }
+
+com-google-cloud-opentelemetry-exporter-auto = { module = 'com.google.cloud.opentelemetry:exporter-auto', version.ref = 'opentelemetry-exporter-auto'}
 
 # Plugins
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
