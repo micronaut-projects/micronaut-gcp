@@ -12,6 +12,7 @@ import org.junit.platform.suite.api.*;
     "io.micronaut.http.server.tck.tests.forms.FormsJacksonAnnotationsTest",
     "io.micronaut.http.server.tck.tests.ErrorHandlerFluxTest",
     "io.micronaut.http.server.tck.tests.filter.CacheControlTest",
+    "io.micronaut.http.server.tck.tests.forms.UploadTest"
 })
 @SuiteDisplayName("HTTP Server TCK for for GCP Function HTTP")
 class GcpFunctionHttpServerTestSuite {

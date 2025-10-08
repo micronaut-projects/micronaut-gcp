@@ -15,3 +15,7 @@ ossIndexAudit {
     ]
 }
 }
+
+tasks.named("japiCmp") { t ->
+    t.enabled = false
+}

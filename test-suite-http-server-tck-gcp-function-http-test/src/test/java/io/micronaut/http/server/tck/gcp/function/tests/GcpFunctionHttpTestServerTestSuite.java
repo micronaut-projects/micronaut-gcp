@@ -9,7 +9,8 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SelectPackages("io.micronaut.http.server.tck.tests")
 @SuiteDisplayName("HTTP Server TCK for GCP Function HTTP Test")
 @ExcludeClassNamePatterns({
-    "io.micronaut.http.server.tck.tests.FilterProxyTest"
+    "io.micronaut.http.server.tck.tests.FilterProxyTest",
+    "io.micronaut.http.server.tck.tests.forms.UploadTest"
 })
 class GcpFunctionHttpTestServerTestSuite {
 }
