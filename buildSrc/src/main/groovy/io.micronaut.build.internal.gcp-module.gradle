@@ -11,7 +11,7 @@ ossIndexAudit {
     username = ossIndexUsername
     password = ossIndexPassword
     excludeCoordinates = [
-            "org.threeten:threetenbp:1.7.0", // no version patched https://ossindex.sonatype.org/component/pkg:maven/org.threeten/threetenbp
+            "org.threeten:threetenbp:1.7.2", // no version patched https://ossindex.sonatype.org/component/pkg:maven/org.threeten/threetenbp
     ]
 }
 }
