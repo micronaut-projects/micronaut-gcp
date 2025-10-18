@@ -5,6 +5,10 @@ plugins {
 
 tasks.withType(Test) {
     useJUnitPlatform()
+    def javaMajorVersion = Integer.parseInt(System.getProperty("java.version").split("\\.")[0])
+    if (javaMajorVersion >= 25) {
+        systemProperty 'mockito.mockito.inline', 'false'
+    }
 }
 
 dependencies {
