@@ -5,10 +5,6 @@ plugins {
 
 tasks.withType(Test) {
     useJUnitPlatform()
-    def javaMajorVersion = Integer.parseInt(System.getProperty("java.version").split("\\.")[0])
-    if (javaMajorVersion >= 25) {
-        systemProperty 'mockito.mockito.inline', 'false'
-    }
 }
 
 dependencies {
@@ -23,6 +19,7 @@ dependencies {
 
     compileOnly(libs.managed.functions.framework.api)
 
+    testImplementation(libs.mockito.core)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
     testRuntimeOnly mnLogging.logback.classic
     testRuntimeOnly mn.snakeyaml
