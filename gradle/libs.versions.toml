@@ -2,7 +2,7 @@
 micronaut-docs = "3.0.0"
 micronaut = "4.10.4"
 groovy = "4.0.25"
-spock = "2.4-groovy-4.0"
+spock = "2.3-groovy-4.0"
 mockito = "5.2.0"
 managed-google-auth-library-oauth2http = "1.39.1"
 managed-google-functions-framework-api = "1.1.4"
