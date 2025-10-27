@@ -22,6 +22,7 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly mnLogging.logback.classic
     testRuntimeOnly mn.snakeyaml
+    testRuntimeOnly(mnTest.junit.platform.launcher)
 }
 
 micronaut {
