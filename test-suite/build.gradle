@@ -11,7 +11,6 @@ dependencies {
     testImplementation(mnTest.mockito.core)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 micronaut {
