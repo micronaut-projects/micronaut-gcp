@@ -1,6 +1,8 @@
 plugins {
     id "io.micronaut.build.internal.gcp-base"
     id "io.micronaut.test-resources"
+    id "io.micronaut.build.internal.java-base"
+    id "io.micronaut.build.internal.kotlin-base"
 }
 
 tasks.withType(Test) {
@@ -22,6 +24,7 @@ dependencies {
     testRuntimeOnly(mnTest.junit.jupiter.engine)
     testRuntimeOnly mnLogging.logback.classic
     testRuntimeOnly mn.snakeyaml
+    testRuntimeOnly(mnTest.junit.platform.launcher)
 }
 
 micronaut {
