@@ -3,7 +3,6 @@ micronaut-docs = "3.0.0"
 micronaut = "4.10.7"
 groovy = "4.0.25"
 spock = "2.3-groovy-4.0"
-mockito = "5.20.0"
 managed-google-auth-library-oauth2http = "1.39.1"
 managed-google-functions-framework-api = "1.1.4"
 managed-google-function-invoker = "1.4.1"
@@ -90,5 +89,3 @@ gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", ver
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 kotlin-gradle-allopen = { module = 'org.jetbrains.kotlin:kotlin-allopen', version.ref = 'kotlin' }
 junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
-
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }

@@ -19,7 +19,6 @@ dependencies {
 
     compileOnly(libs.managed.functions.framework.api)
 
-    testImplementation(libs.mockito.core)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
     testRuntimeOnly mnLogging.logback.classic
     testRuntimeOnly mn.snakeyaml
