@@ -1,8 +1,5 @@
 [versions]
-micronaut-docs = "3.0.0"
-micronaut = "4.10.7"
-groovy = "4.0.25"
-spock = "2.3-groovy-4.0"
+micronaut = "4.10.8"
 managed-google-auth-library-oauth2http = "1.39.1"
 managed-google-functions-framework-api = "1.1.4"
 managed-google-function-invoker = "1.4.1"
@@ -38,7 +35,7 @@ micronaut-discovery = "4.7.1"
 micronaut-validation = "4.10.0"
 
 # Micronaut
-micronaut-gradle-plugin = "4.5.5"
+micronaut-gradle-plugin = "4.6.1"
 
 [libraries]
 # Core
