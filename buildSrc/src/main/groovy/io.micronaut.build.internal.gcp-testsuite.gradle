@@ -1,31 +1,28 @@
 plugins {
-    id "io.micronaut.build.internal.gcp-base"
-    id "io.micronaut.test-resources"
-    id "io.micronaut.build.internal.kotlin-base"
-}
-
-tasks.withType(Test) {
-    useJUnitPlatform()
+    id("io.micronaut.build.internal.gcp-base")
+    id("io.micronaut.build.internal.kotlin-base")
+    id("io.micronaut.test-resources")
 }
 
 dependencies {
     annotationProcessor(mn.micronaut.inject.java)
-
+    compileOnly(libs.managed.functions.framework.api)
     compileOnly(projects.micronautGcpFunctionHttp)
+    implementation(mn.reactor)
+    implementation(mnJacksonXml.micronaut.jackson.xml)
+    implementation(mnSerde.micronaut.serde.jackson)
     implementation(projects.micronautGcpPubsub)
     implementation(projects.micronautGcpSecretManager)
-    implementation(mn.reactor)
-    implementation mnSerde.micronaut.serde.jackson
-    implementation mnJacksonXml.micronaut.jackson.xml
-
-    compileOnly(libs.managed.functions.framework.api)
-
+    testRuntimeOnly(mn.snakeyaml)
+    testRuntimeOnly(mnLogging.logback.classic)
     testRuntimeOnly(mnTest.junit.jupiter.engine)
-    testRuntimeOnly mnLogging.logback.classic
-    testRuntimeOnly mn.snakeyaml
     testRuntimeOnly(mnTest.junit.platform.launcher)
 }
 
 micronaut {
     importMicronautPlatform.set(false)
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }

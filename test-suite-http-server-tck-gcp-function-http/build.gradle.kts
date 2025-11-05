@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    testImplementation(projects.micronautGcpFunctionHttp)
     testImplementation(libs.managed.functions.framework.api)
+    testImplementation(projects.micronautGcpFunctionHttp)
 }

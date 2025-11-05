@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     annotationProcessor(mnSerde.micronaut.serde.processor)
-    api(mnSerde.micronaut.serde.api)
     api(libs.managed.google.cloudevent.types)
+    api(mnSerde.micronaut.serde.api)
     implementation(mnSerde.micronaut.serde.jackson)
 }

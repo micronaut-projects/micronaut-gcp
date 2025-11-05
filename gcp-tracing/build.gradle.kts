@@ -3,15 +3,15 @@ plugins {
 }
 
 dependencies {
-    api(projects.micronautGcpCommon)
     api(mnTracing.micronaut.tracing.brave.http)
-    implementation(libs.google.auth.library.credentials)
-    implementation(libs.zipkin.sender.stackdriver)
+    api(projects.micronautGcpCommon)
+    implementation(libs.brave.opentracing)
     implementation(libs.brave.propagation.stackdriver)
-    implementation(platform(mnGrpc.boms.grpc))
+    implementation(libs.google.auth.library.credentials)
     implementation(libs.grpc.auth)
     implementation(libs.grpc.netty.shaded)
-    implementation(libs.brave.opentracing)
+    implementation(libs.zipkin.sender.stackdriver)
+    implementation(platform(mnGrpc.boms.grpc))
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.inject.java)
     testImplementation(mnSerde.micronaut.serde.jackson)

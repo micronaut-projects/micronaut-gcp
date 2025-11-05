@@ -3,14 +3,11 @@ plugins {
 }
 
 dependencies {
+    api(libs.managed.google.cloud.secretmanager)
     api(mn.micronaut.messaging)
     api(projects.micronautGcpCommon)
-    api(libs.managed.google.cloud.secretmanager)
-
     implementation(libs.micronaut.discovery.client)
     implementation(mn.reactor)
     implementation(mn.snakeyaml)
-
     testImplementation(mn.snakeyaml)
-
 }

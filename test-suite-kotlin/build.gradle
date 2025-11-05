@@ -1,8 +1,8 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.kapt"
-    id "groovy"
-    id "io.micronaut.build.internal.gcp-testsuite"
+    id("groovy")
+    id("io.micronaut.build.internal.gcp-testsuite")
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.kapt")
 }
 
 dependencies {
@@ -21,4 +21,3 @@ micronaut {
         clientTimeout = 600
     }
 }
-

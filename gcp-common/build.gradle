@@ -4,22 +4,17 @@ plugins {
 }
 
 dependencies {
-    compileOnly(mn.micronaut.discovery.core)
     api(libs.managed.google.auth.library.oauth2.http)
     api(libs.managed.google.cloud.core)
-
-    implementation(mn.micronaut.json.core)
-    implementation(mn.jackson.annotations)
+    compileOnly(mn.micronaut.discovery.core)
     compileOnly(mn.micronaut.http.client.core)
-
-    testFixturesApi(platform(mn.micronaut.core.bom))
-
+    implementation(mn.jackson.annotations)
+    implementation(mn.micronaut.json.core)
     testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(mn.micronaut.discovery.core)
-    testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(mn.micronaut.http.client)
-
-    testImplementation(mnSerde.micronaut.serde.jackson)
-
+    testFixturesApi(platform(mn.micronaut.core.bom))
     testImplementation(libs.system.stubs.core)
+    testImplementation(mn.micronaut.discovery.core)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mnSerde.micronaut.serde.jackson)
 }

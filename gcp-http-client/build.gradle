@@ -3,11 +3,10 @@ plugins {
 }
 
 dependencies {
-    api(projects.micronautGcpCommon)
     api(mn.micronaut.http.client)
+    api(projects.micronautGcpCommon)
     implementation(mn.reactor)
-    testImplementation(mn.micronaut.http.server.netty)
-
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mnSerde.micronaut.serde.jackson)
 }

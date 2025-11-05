@@ -1,16 +1,16 @@
 plugins {
-    id 'groovy'
-    id "io.micronaut.build.internal.gcp-testsuite"
+    id("groovy")
+    id("io.micronaut.build.internal.gcp-testsuite")
 }
 
 dependencies {
-    compileOnly(mn.micronaut.inject.groovy)
     compileOnly(mn.groovy)
-    testImplementation(platform(mn.micronaut.core.bom))
+    compileOnly(mn.micronaut.inject.groovy)
     testCompileOnly(mn.micronaut.inject.groovy)
-    testImplementation(mnTest.micronaut.test.spock)
-    testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mnTest.micronaut.test.spock)
+    testImplementation(platform(mn.micronaut.core.bom))
 }
 
 micronaut {
