@@ -8,6 +8,7 @@ dependencies {
     api(projects.micronautGcpFunction)
     compileOnly(libs.managed.functions.framework.api)
     compileOnly(mn.micronaut.jackson.databind)
+    compileOnly(mn.reactor)
     implementation(mn.micronaut.http.netty)
     implementation(mn.micronaut.http.server)
     implementation(mn.micronaut.router)
