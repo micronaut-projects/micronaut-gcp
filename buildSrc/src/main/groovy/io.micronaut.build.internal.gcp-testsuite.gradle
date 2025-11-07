@@ -1,6 +1,5 @@
 plugins {
     id("io.micronaut.build.internal.gcp-base")
-    id("io.micronaut.build.internal.kotlin-base")
     id("io.micronaut.test-resources")
 }
 
