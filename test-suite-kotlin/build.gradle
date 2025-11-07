@@ -1,8 +1,7 @@
 plugins {
     id("groovy")
     id("io.micronaut.build.internal.gcp-testsuite")
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlin.kapt")
+    id("io.micronaut.build.internal.kotlin-kapt")
 }
 
 dependencies {
