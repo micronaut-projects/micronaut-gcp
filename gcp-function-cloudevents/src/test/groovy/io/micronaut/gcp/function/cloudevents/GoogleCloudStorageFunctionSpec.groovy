@@ -4,8 +4,8 @@ import com.google.events.cloud.storage.v1.StorageObjectData
 import io.cloudevents.CloudEvent
 import io.cloudevents.CloudEventContext
 import io.cloudevents.core.builder.CloudEventBuilder
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
+import org.jspecify.annotations.NonNull
+import org.jspecify.annotations.Nullable
 import spock.lang.Specification
 
 import java.time.OffsetDateTime

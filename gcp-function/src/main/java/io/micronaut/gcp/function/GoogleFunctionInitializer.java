@@ -19,7 +19,7 @@ import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.env.Environment;
 import io.micronaut.function.executor.FunctionInitializer;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Extended version of {@link FunctionInitializer} that configures the GCP environment.

@@ -17,7 +17,7 @@ package io.micronaut.gcp.pubsub.support;
 
 import com.google.pubsub.v1.ProjectTopicName;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Various utility methods for dealing with Pub/Sub topics.

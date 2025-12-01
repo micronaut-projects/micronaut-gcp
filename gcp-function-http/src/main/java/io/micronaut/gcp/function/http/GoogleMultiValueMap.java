@@ -22,7 +22,7 @@ import io.micronaut.core.convert.ConversionServiceAware;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.util.ArgumentUtils;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
