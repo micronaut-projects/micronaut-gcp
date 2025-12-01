@@ -21,8 +21,8 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.client.HttpClient;
 
 import java.net.URI;

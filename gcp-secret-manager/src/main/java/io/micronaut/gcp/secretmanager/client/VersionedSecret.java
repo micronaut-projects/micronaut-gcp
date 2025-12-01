@@ -15,7 +15,7 @@
  */
 package io.micronaut.gcp.secretmanager.client;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A wrapper class around {@link com.google.cloud.secretmanager.v1.AccessSecretVersionResponse} with secret information.
