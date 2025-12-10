@@ -79,5 +79,3 @@ system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.re
 
 # Plugins
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
-junit-jupiter-engine = { module = 'org.junit.jupiter:junit-jupiter-engine' }
-junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
