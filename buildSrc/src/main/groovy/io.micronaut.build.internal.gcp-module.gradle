@@ -6,3 +6,8 @@ plugins {
 tasks.named("japiCmp") { t ->
     t.enabled = false
 }
+micronautBuild {
+    descriptor {
+        parentModuleId = "io.micronaut.gcp:micronaut-gcp-common"
+    }
+}
