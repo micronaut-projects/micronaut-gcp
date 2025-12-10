@@ -12,7 +12,6 @@ managed-gax = "2.70.3"
 brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "2.3.0"
 
-kotlin = '1.9.25'
 cloudevents-api = "2.5.0"
 
 logback-json-classic = "0.1.5"
@@ -73,8 +72,6 @@ google-auth-library-credentials = { module = "com.google.auth:google-auth-librar
 
 grpc-auth = { module = "io.grpc:grpc-auth" }
 grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded" }
-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic", version.ref = "logback-json-classic" }
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
@@ -82,7 +79,5 @@ system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.re
 
 # Plugins
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
-kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
-kotlin-gradle-allopen = { module = 'org.jetbrains.kotlin:kotlin-allopen', version.ref = 'kotlin' }
 junit-jupiter-engine = { module = 'org.junit.jupiter:junit-jupiter-engine' }
 junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }
