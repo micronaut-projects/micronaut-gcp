@@ -27,7 +27,7 @@ import io.micronaut.gcp.pubsub.configuration.PublisherConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.inject.qualifiers.Qualifiers;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.Optional;

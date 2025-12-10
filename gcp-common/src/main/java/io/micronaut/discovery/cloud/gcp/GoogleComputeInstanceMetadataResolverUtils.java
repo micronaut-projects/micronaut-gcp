@@ -16,7 +16,7 @@
 package io.micronaut.discovery.cloud.gcp;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.type.Argument;
 import io.micronaut.discovery.cloud.AbstractComputeInstanceMetadata;
 import io.micronaut.http.HttpMethod;
