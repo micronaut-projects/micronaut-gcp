@@ -91,7 +91,7 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
 
     @Override
     @SuppressWarnings("unchecked")
-    public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
+    public <B> void process(BeanDefinition<B> beanDefinition, ExecutableMethod<B, ?> method) {
         if (beanDefinition.hasDeclaredAnnotation(PubSubListener.class)) {
             AnnotationValue<A> subscriptionAnnotation = method.getAnnotation(annotationType);
             io.micronaut.context.Qualifier<Object> qualifier = beanDefinition
