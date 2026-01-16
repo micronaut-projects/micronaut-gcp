@@ -208,8 +208,7 @@ public class DefaultParameterManagerAccessClient implements ParameterManagerAcce
     private VersionedParameter getVersionedParameter(String projectId, String parameterName,
                                                      String version, ParameterVersion response) {
         return StringUtils.isEmpty(configurationProperties.getLocation()) ?
-            new VersionedParameter(projectId, "global", parameterName, version, response.format
-                response.getPayload().getData().toByteArray()) :
+            new VersionedParameter(projectId, "global", parameterName, version,response.getPayload().getData().toByteArray()) :
             new VersionedParameter(projectId, configurationProperties.getLocation(), parameterName,
                 version, response.getPayload().getData().toByteArray());
     }
