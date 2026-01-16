@@ -1,0 +1,113 @@
+You can use Micronaut’s https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration[Distributed Configuration]
+feature together with Google Cloud Parameter Manager to centrally store and load your application configuration. Google
+Cloud Parameter Manager supports https://docs.cloud.google.com/secret-manager/parameter-manager/docs/list-parameter-versions[parameter versioning].
+When using Distributed Configuration, you must explicitly specify both the parameter name and its version using the
+format: `<parameter-name>/<parameter-version>`. For example: `testParameter/v1`. Micronaut loads the specified parameter
+version into a PropertySource, ensuring predictable and repeatable configuration behavior.
+
+== Enabling Distributed Configuration
+
+To enable distributed configuration, create a bootstrap configuration file in `src/main/resources/`:
+
+.bootstrap configuration
+[configuration]
+----
+micronaut:
+    application:
+        name: sample-app
+    config-client:
+        enabled: true
+----
+
+IMPORTANT: Ensure that your project is configured with valid Google Cloud credentials as described in the
+<<setup, Setting up GCP>> section. The service account used by your application must have permission to read parameters.
+Refer to the official https://docs.cloud.google.com/secret-manager/parameter-manager/docs/access-control[Parameter Manager Access Control]
+documentation for details.
+
+=== Using Regional Parameters
+
+If your application must comply with data residency requirements, you can use regional parameters with Distributed
+Configuration. To enable distributed configuration for regional parameters, create a bootstrap configuration file in
+`src/main/resources/`:
+
+.bootstrap configuration
+[configuration]
+----
+micronaut:
+    application:
+        name: sample-app
+    config-client:
+        enabled: true
+gcp:
+    parameter-manager:
+        location: us-east1
+----
+
+IMPORTANT: The `gcp.parameter-manager.location` property is required when using regional parameters for distributed
+configuration. For more information, see the official https://docs.cloud.google.com/secret-manager/docs/locations#parameter_manager_locations[Parameter Manager regional endpoint locations]
+documentation.
+
+== Parameters Resolution
+
+The framework uses the https://docs.cloud.google.com/secret-manager/parameter-manager/docs/render-parameter-version[render functionality]
+when reading parameters. This allows parameter versions to reference secrets stored in Google Cloud Secret Manager.
+
+IMPORTANT: If a parameter references a Secret Manager secret, the specific parameter must also be granted the Secret
+Manager Secret Accessor role for that secret. Refer to the official https://docs.cloud.google.com/secret-manager/parameter-manager/docs/reference-secrets-in-parameter[Reference Secrets in Parameter]
+guide for more details.
+
+=== Loading Custom Configuration Files
+
+When loading configuration from Parameter Manager, the framework attempts to resolve parameters as configuration files
+in the following format: `yaml`, `json`, `properties`. You have to explicitly whitelist configuration parameters using
+the `custom-configs` setting. Each entry must include the parameter name and version:
+
+.bootstrap configuration
+[configuration]
+----
+micronaut:
+    application:
+        name: sample-app
+    config-client:
+        enabled: true
+gcp:
+    parameter-manager:
+        custom-configs:
+            - my-first-config/v1
+            - my-second-config/v1
+----
+
+TIP: Parameters listed under `custom-configs` must represent valid configuration files (for example, YAML or properties
+files), not individual key/value entries.
+
+=== Loading Key/Value Pairs into a PropertySource
+
+Google Cloud Parameter Manager can also store individual parameters that map to a single string value, such as a
+`DB_PASSWORD`. You must explicitly whitelist the `keys` you want to load. Each entry must include the parameter name
+and version:
+
+.bootstrap configuration
+[configuration]
+----
+micronaut:
+    application:
+        name: sample-app
+    config-client:
+        enabled: true
+gcp:
+    parameter-manager:
+        keys:
+            - DB_PASSWORD/newVersion
+            - dbUser/otherVersion
+----
+
+All whitelisted Parameter Manager `keys` are loaded into the Micronaut environment with a `pm` prefix.
+The following table shows how parameters are resolved:
+
+|===
+|Parameter Name with version|Micronaut resolved property
+|`DB_PASSWORD/newVersion`
+|`{pm.db.password}`
+|`dbUser/otherVersion`
+|`{pm.db.user}`
+|===

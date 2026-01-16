@@ -1,0 +1,9 @@
+Google Cloud https://docs.cloud.google.com/secret-manager/parameter-manager/docs/overview[Parameter Manager] is an
+extension of the Secret Manager service that provides a centralized way to store and manage configuration values for
+your workloads. Parameters are configuration variables, typically key-value pairs, that control how an application
+functions.
+
+To enable Google Cloud Parameter Manager support in an existing project, add the following dependency to your
+build configuration:
+
+dependency:micronaut-gcp-parameter-manager[groupId="io.micronaut.gcp"]
