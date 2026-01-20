@@ -175,6 +175,7 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
                     break;
                 }
             } catch (Exception e) {
+                // Sileting ignoring failure to parse non compatible formats while iterating through readers 
             }
         }
         return PropertySource.of(parameter.getName() + PROPERTY_SOURCE_SUFFIX, data, priority);
