@@ -183,7 +183,7 @@ class SecretManagerConfigSpec extends Specification {
         ApplicationContext context = ApplicationContext.run(["spec.name"                      : "SecretManagerConfigSpec",
                                                              "micronaut.application.name"     : "secret-manager-test",
                                                              "micronaut.config-client.enabled": true,
-                                                             "gcp.projectId"                  : "second-gcp-project"], "gcp")
+                                                             "gcp.projectId"                  : "second-gcp-project"], "gcp", "test")
         expect:
 
         false == context.getRequiredProperty("application.debug", Boolean)
