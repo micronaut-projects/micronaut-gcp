@@ -5,7 +5,7 @@ managed-google-functions-framework-api = "1.1.4"
 managed-google-function-invoker = "1.4.1"
 managed-google-cloud-core = "2.60.3"
 managed-google-cloud-pubsub = "1.142.0"
-managed-google-cloud-secretmanager = "2.76.0"
+managed-google-cloud-secretmanager = "2.85.0"
 managed-google-cloudevent-types="0.3.0"
 managed-gax = "2.70.3"
 
