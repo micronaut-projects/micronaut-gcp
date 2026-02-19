@@ -1,6 +1,6 @@
 plugins {
-    id 'java-library'
-    id "io.micronaut.build.internal.gcp-testsuite"
+    id("java-library")
+    id("io.micronaut.build.internal.gcp-testsuite")
 }
 
 dependencies {

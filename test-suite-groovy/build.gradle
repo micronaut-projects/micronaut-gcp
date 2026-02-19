@@ -1,6 +1,6 @@
 plugins {
-    id 'groovy'
-    id "io.micronaut.build.internal.gcp-testsuite"
+    id("groovy")
+    id("io.micronaut.build.internal.gcp-testsuite")
 }
 
 dependencies {
