@@ -22,7 +22,7 @@ awaitility = '4.3.0'
 
 micronaut-grpc = "4.12.0"
 micronaut-jackson-xml = "4.8.0"
-micronaut-logging = "1.7.1"
+micronaut-logging = "2.0.0-M2"
 micronaut-reactor = "4.0.0-M1"
 micronaut-rxjava3 = "4.0.0-M1"
 micronaut-serde = "3.0.0-M2"
