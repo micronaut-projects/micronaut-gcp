@@ -3,12 +3,15 @@ package io.micronaut.gcp.pubsub.subscriber
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.http.MediaType
+import io.micronaut.pubsub.testcontainers.PubSubEmulator
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.test.support.TestPropertyProvider
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import spock.lang.Specification
@@ -18,7 +21,11 @@ import java.nio.charset.StandardCharsets
 
 @MicronautTest
 @Property(name = "spec.name", value = "ContentTypeSubscriberSpec")
-class ContentTypeSubscriberSpec extends Specification {
+class ContentTypeSubscriberSpec extends Specification implements TestPropertyProvider {
+    @Override
+    @NonNull Map<String, String> getProperties() {
+        PubSubEmulator.getProperties()
+    }
 
     @Inject
     TestPublisher publisher

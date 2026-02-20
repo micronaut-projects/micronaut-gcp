@@ -19,7 +19,7 @@ dependencies {
     compileOnly(libs.managed.functions.framework.api)
 
     testRuntimeOnly(mnTest.junit.jupiter.engine)
+    testRuntimeOnly(mnTest.junit.platform.launcher)
     testRuntimeOnly(mnLogging.logback.classic)
-    testRuntimeOnly(mn.snakeyaml)
 }
 

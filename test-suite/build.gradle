@@ -11,4 +11,5 @@ dependencies {
     testImplementation(mnTest.mockito.core)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
+    testImplementation(projects.testSuiteUtils)
 }

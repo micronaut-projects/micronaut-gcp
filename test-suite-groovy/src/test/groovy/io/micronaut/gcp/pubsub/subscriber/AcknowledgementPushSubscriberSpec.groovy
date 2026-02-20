@@ -14,14 +14,21 @@ import io.micronaut.json.JsonMapper
 import io.micronaut.messaging.Acknowledgement
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.test.support.TestPropertyProvider
 import jakarta.inject.Inject
+import org.jspecify.annotations.NonNull
 import reactor.core.publisher.Mono
 import spock.lang.Specification
+import io.micronaut.pubsub.testcontainers.PubSubEmulator
 
 @MicronautTest
 @Property(name = "spec.name", value = "AcknowledgementPushSubscriberSpec")
 @Property(name = "gcp.projectId", value = "test-project")
-class AcknowledgementPushSubscriberSpec extends Specification {
+class AcknowledgementPushSubscriberSpec extends Specification implements TestPropertyProvider {
+    @Override
+    @NonNull Map<String, String> getProperties() {
+        return PubSubEmulator.getProperties();
+    }
 
     @Inject
     @Client("/")

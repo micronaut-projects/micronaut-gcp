@@ -7,6 +7,8 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
+import io.micronaut.pubsub.testcontainers.PubSubEmulator;
+import io.micronaut.test.support.TestPropertyProvider;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.gcp.pubsub.push.PushRequest;
 import io.micronaut.gcp.pubsub.support.Animal;
@@ -23,6 +25,7 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -30,6 +33,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -38,7 +42,13 @@ import static org.mockito.Mockito.*;
 @MicronautTest
 @Property(name = "spec.name", value = "ContentTypePushSubscriberTest")
 @Property(name = "gcp.projectId", value = "test-project")
-class ContentTypePushSubscriberSpec {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ContentTypePushSubscriberSpec implements TestPropertyProvider {
+    @Override
+    public @NonNull Map<String, String> getProperties() {
+        return PubSubEmulator.getProperties();
+    }
+
     @Inject
     JsonMapper jsonMapper;
 //end::clazzBegin[]
