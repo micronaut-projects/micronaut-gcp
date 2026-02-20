@@ -7,23 +7,33 @@ import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.support.Animal;
 import io.micronaut.http.MediaType;
+import io.micronaut.pubsub.testcontainers.PubSubEmulator;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.micronaut.test.support.TestPropertyProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Map;
 
 import static org.awaitility.Awaitility.await;
 
 @MicronautTest
 @Property(name = "spec.name", value = "ReactiveSubscriberTest")
-class ReactiveSubscriberTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ReactiveSubscriberTest implements TestPropertyProvider {
+    @Override
+    public @NonNull Map<String, String> getProperties() {
+        return PubSubEmulator.getProperties();
+    }
 
     @Inject
     TestPublisher publisher;

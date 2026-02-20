@@ -1,8 +1,8 @@
 package subscriber
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.gcp.pubsub.push.PushRequest
 import io.micronaut.gcp.pubsub.subscriber.MessageProcessor
 import io.micronaut.gcp.pubsub.support.Animal
@@ -12,19 +12,26 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.json.JsonMapper
+import io.micronaut.pubsub.testcontainers.PubSubEmulator
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.test.support.TestPropertyProvider
 import jakarta.inject.Inject
 import jakarta.inject.Named
 import reactor.core.publisher.Mono
 import spock.lang.Specification
+import tools.jackson.dataformat.xml.XmlMapper
 
 import java.nio.charset.StandardCharsets
 
 @MicronautTest
 @Property(name = "spec.name", value = "ReactivePushSubscriberSpec")
 @Property(name = "gcp.projectId", value = "test-project")
-class ReactivePushSubscriberSpec extends Specification {
+class ReactivePushSubscriberSpec extends Specification implements TestPropertyProvider {
+    @Override
+    @NonNull Map<String, String> getProperties() {
+        PubSubEmulator.getProperties();
+    }
 
     @Inject
     @Client("/")

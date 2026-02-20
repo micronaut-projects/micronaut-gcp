@@ -1,11 +1,11 @@
 package io.micronaut.gcp.pubsub.serdes
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import io.micronaut.core.serialize.exceptions.SerializationException
 import io.micronaut.core.type.Argument
 import io.micronaut.http.MediaType
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import tools.jackson.dataformat.xml.XmlMapper
 
 @Singleton
 class XmlMessageSerDes implements PubSubMessageSerDes {

@@ -2,13 +2,16 @@ package io.micronaut.gcp.pubsub.subscriber
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement
 import io.micronaut.gcp.pubsub.support.Animal
 import io.micronaut.messaging.Acknowledgement
+import io.micronaut.pubsub.testcontainers.PubSubEmulator
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.test.support.TestPropertyProvider
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import reactor.core.publisher.Mono
@@ -17,7 +20,11 @@ import spock.util.concurrent.PollingConditions
 
 @MicronautTest
 @Property(name = "spec.name", value = "AcknowledgementSubscriberSpec")
-class AcknowledgementSubscriberSpec extends Specification {
+class AcknowledgementSubscriberSpec extends Specification implements TestPropertyProvider {
+    @Override
+    @NonNull Map<String, String> getProperties() {
+        PubSubEmulator.getProperties();
+    }
 
     @Inject
     TestPublisher publisher
@@ -86,7 +93,7 @@ class AcknowledgementSubscriberSpec extends Specification {
         then:
         conditions.eventually {
             assert message != null
-            assert message instanceof Mono<Animal>
+            assert message instanceof Mono
             assert acknowledgement instanceof DefaultPubSubAcknowledgement
             assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
         }
@@ -104,7 +111,7 @@ class AcknowledgementSubscriberSpec extends Specification {
         then:
         conditions.eventually {
             assert message != null
-            assert message instanceof Mono<Animal>
+            assert message instanceof Mono
             assert acknowledgement instanceof DefaultPubSubAcknowledgement
             assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
         }

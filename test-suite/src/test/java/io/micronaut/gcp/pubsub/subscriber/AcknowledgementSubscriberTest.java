@@ -4,6 +4,8 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
+import io.micronaut.pubsub.testcontainers.PubSubEmulator;
+import io.micronaut.test.support.TestPropertyProvider;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
@@ -17,11 +19,13 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Map;
 
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +37,12 @@ import static org.mockito.Mockito.when;
 
 @MicronautTest
 @Property(name = "spec.name", value = "AcknowledgementSubscriberTest")
-class AcknowledgementSubscriberTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class AcknowledgementSubscriberTest implements TestPropertyProvider {
+    @Override
+    public @NonNull Map<String, String> getProperties() {
+        return PubSubEmulator.getProperties();
+    }
 
     @Inject
     TestPublisher publisher;

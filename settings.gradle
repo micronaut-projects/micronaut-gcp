@@ -27,6 +27,7 @@ include 'gcp-secret-manager'
 include 'gcp-serde-cloudevents'
 
 include 'test-suite'
+include 'test-suite-utils'
 include 'test-suite-groovy'
 include 'test-suite-http-server-tck-gcp-function-http'
 include 'test-suite-http-server-tck-gcp-function-http-test'
@@ -42,7 +43,6 @@ micronautBuild {
     importMicronautCatalog("micronaut-rxjava3")
     importMicronautCatalog("micronaut-serde")
     importMicronautCatalog("micronaut-servlet")
-    importMicronautCatalog("micronaut-test-resources")
     importMicronautCatalog("micronaut-tracing")
     importMicronautCatalog("micronaut-validation")
 }
