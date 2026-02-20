@@ -15,8 +15,9 @@
  */
 package io.micronaut.gcp.pubsub.support
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.micronaut.serde.annotation.Serdeable
 
 @Serdeable
-data class Animal(val name: String) {
+data class Animal(@JsonProperty("name") val name: String) {
 }

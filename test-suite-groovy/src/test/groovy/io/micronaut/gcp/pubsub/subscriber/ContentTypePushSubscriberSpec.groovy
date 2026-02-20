@@ -1,6 +1,5 @@
 package io.micronaut.gcp.pubsub.subscriber
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Property
 import io.micronaut.core.annotation.NonNull
@@ -19,6 +18,7 @@ import io.micronaut.test.support.TestPropertyProvider
 import jakarta.inject.Inject
 import jakarta.inject.Named
 import spock.lang.Specification
+import tools.jackson.dataformat.xml.XmlMapper
 
 import java.nio.charset.StandardCharsets
 
