@@ -1,8 +1,7 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.kapt"
     id "groovy"
     id "io.micronaut.build.internal.gcp-testsuite"
+    id("io.micronaut.build.internal.kotlin-kapt")
 }
 
 dependencies {
@@ -13,17 +12,6 @@ dependencies {
     testImplementation(mnTest.micronaut.test.spock)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
-}
+    testImplementation(projects.testSuiteUtils)
 
-micronaut {
-    testResources {
-        // 10 minutes as this image is massive
-        clientTimeout = 600
-    }
-}
-
-kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
 }

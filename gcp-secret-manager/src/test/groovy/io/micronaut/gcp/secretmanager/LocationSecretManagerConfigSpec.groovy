@@ -211,7 +211,7 @@ class LocationSecretManagerConfigSpec extends Specification {
                     "gcp.secret-manager.location"    : "us-central1",
             ]
             System.setProperty(Environment.BOOTSTRAP_CONTEXT_PROPERTY, "true")
-            ApplicationContext context = ApplicationContext.run(properties, "gcp")
+            ApplicationContext context = ApplicationContext.run(properties, "gcp", "test")
 
         expect:
             context.getRequiredProperty("application.debug", Boolean)

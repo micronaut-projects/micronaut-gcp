@@ -1,21 +1,17 @@
 [versions]
-micronaut-docs = "3.0.0"
-micronaut = "4.10.8"
-groovy = "4.0.25"
-spock = "2.3-groovy-4.0"
-managed-google-auth-library-oauth2http = "1.39.1"
+micronaut = "5.0.0-M12"
+managed-google-auth-library-oauth2http = "1.43.0"
 managed-google-functions-framework-api = "2.0.0"
 managed-google-function-invoker = "2.0.0"
-managed-google-cloud-core = "2.60.3"
-managed-google-cloud-pubsub = "1.142.0"
-managed-google-cloud-secretmanager = "2.76.0"
+managed-google-cloud-core = "2.65.0"
+managed-google-cloud-pubsub = "1.148.0"
+managed-google-cloud-secretmanager = "2.85.0"
 managed-google-cloudevent-types="0.3.0"
-managed-gax = "2.70.3"
+managed-gax = "2.75.0"
 
 brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "2.3.0"
 
-kotlin = '1.9.25'
 cloudevents-api = "2.5.0"
 
 logback-json-classic = "0.1.5"
@@ -24,21 +20,20 @@ system-stubs-core = "2.1.8"
 
 awaitility = '4.3.0'
 
+micronaut-test = "5.0.0-M6"
 micronaut-grpc = "4.12.0"
-micronaut-jackson-xml = "4.7.0"
-micronaut-logging = "1.7.1"
-micronaut-reactor = "3.8.0"
-micronaut-rxjava3 = "3.8.0"
-micronaut-serde = "2.15.3"
-micronaut-servlet = "5.5.1"
-micronaut-tracing = "7.1.4"
-micronaut-test = "4.7.0"
-micronaut-test-resources = "2.10.1"
-micronaut-discovery = "4.7.1"
-micronaut-validation = "4.10.0"
+micronaut-jackson-xml = "5.0.0-M1"
+micronaut-logging = "2.0.0-M2"
+micronaut-reactor = "4.0.0-M1"
+micronaut-rxjava3 = "4.0.0-M1"
+micronaut-serde = "3.0.0-M2"
+micronaut-servlet = "6.0.0-M2"
+micronaut-tracing = "8.0.0-M1"
+micronaut-discovery = "5.0.0-M1"
+micronaut-validation = "5.0.0-M1"
 
 # Micronaut
-micronaut-gradle-plugin = "4.5.5"
+micronaut-gradle-plugin = "4.6.2"
 
 [libraries]
 # Core
@@ -51,7 +46,6 @@ micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", ver
 micronaut-rxjava3 = { module = "io.micronaut.rxjava3:micronaut-rxjava3-bom", version.ref = "micronaut-rxjava3" }
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
 micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", version.ref = "micronaut-servlet" }
-micronaut-test-resources = { module = "io.micronaut.testresources:micronaut-test-resources-bom", version.ref = "micronaut-test-resources" }
 micronaut-tracing = { module = "io.micronaut.tracing:micronaut-tracing-bom", version.ref = "micronaut-tracing" }
 micronaut-validation = { module = 'io.micronaut.validation:micronaut-validation-bom', version.ref = "micronaut-validation" }
 
@@ -77,16 +71,11 @@ google-auth-library-credentials = { module = "com.google.auth:google-auth-librar
 
 grpc-auth = { module = "io.grpc:grpc-auth" }
 grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded" }
-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic", version.ref = "logback-json-classic" }
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
+testcontainers = { module = "org.testcontainers:testcontainers" }
 
 # Plugins
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
-kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
-kotlin-gradle-allopen = { module = 'org.jetbrains.kotlin:kotlin-allopen', version.ref = 'kotlin' }
-junit-jupiter-engine = { module = 'org.junit.jupiter:junit-jupiter-engine' }
-junit-platform-engine = { module = "org.junit.platform:junit-platform-suite-engine" }

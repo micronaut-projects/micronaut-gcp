@@ -35,7 +35,6 @@ public class GoogleJacksonConfiguration implements BeanCreatedEventListener<Jack
     public JacksonConfiguration onCreated(BeanCreatedEvent<JacksonConfiguration> event) {
         JacksonConfiguration jacksonConfiguration = event.getBean();
         jacksonConfiguration.setModuleScan(false);
-        jacksonConfiguration.setBeanIntrospectionModule(true);
         return jacksonConfiguration;
     }
 }

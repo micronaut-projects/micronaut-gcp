@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ServiceLoader;
 
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
@@ -54,8 +53,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     private static final String CAMEL_CASE_REPLACE = "$1_$2";
     private static final String DESCRIPTION = "GCP Secret Manager Config Client";
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
-    private static final List<PropertySourceLoader> READERS = ServiceLoader.load(PropertySourceLoader.class)
-            .stream().map(ServiceLoader.Provider::get).toList();
+    private static List<PropertySourceLoader> readers;
     private static final String UNDERSCORE = "_";
     private static final String APPLICATION = "application";
     private static final String MICRONAUT_APPLICATION_NAME = "micronaut.application.name";
@@ -69,6 +67,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
 
     @Override
     public Publisher<PropertySource> getPropertySources(Environment environment) {
+        this.readers = environment.getPropertySourceLoaders().stream().toList();
         return Flux.concat(resolveEnvironmentSecrets(environment), resolveSecretKeys());
     }
 
@@ -94,7 +93,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
                 .filter(Objects::nonNull)
                 .collectMap(versionedSecret -> "sm." + versionedSecret.getName().replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase(),
                         versionedSecret -> (Object) new String(versionedSecret.getContents(), StandardCharsets.UTF_8).replaceAll("\\n", "").trim())
-                .map(m -> PropertySource.of("secret-manager-keys", m, PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE));
+                .map(m -> PropertySource.of("secret-manager-keys", m, PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE, PropertySource.Origin.of("GCP Secret Manager")));
     }
 
     /**
@@ -141,7 +140,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     private PropertySource fromSecret(VersionedSecret secret, int priority) {
         Map<String, Object> data = new HashMap<>();
 
-        for (PropertySourceReader reader : READERS) {
+        for (PropertySourceReader reader : readers) {
             try {
                 data.putAll(reader.read(secret.getName(), secret.getContents()));
                 if (!data.isEmpty()) {

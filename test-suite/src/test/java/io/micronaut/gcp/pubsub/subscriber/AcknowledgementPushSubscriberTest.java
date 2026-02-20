@@ -4,7 +4,9 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.pubsub.testcontainers.PubSubEmulator;
+import io.micronaut.test.support.TestPropertyProvider;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.gcp.pubsub.annotation.PubSubClient;
 import io.micronaut.gcp.pubsub.annotation.Topic;
 import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement;
@@ -25,6 +27,7 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import reactor.core.publisher.Mono;
@@ -33,6 +36,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +45,12 @@ import static org.mockito.Mockito.*;
 @MicronautTest
 @Property(name = "spec.name", value = "AcknowledgementPushSubscriberTest")
 @Property(name = "gcp.projectId", value = "test-project")
-class AcknowledgementPushSubscriberTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class AcknowledgementPushSubscriberTest implements TestPropertyProvider {
+    @Override
+    public @NonNull Map<String, String> getProperties() {
+        return PubSubEmulator.getProperties();
+    }
 
     @Inject
     @Client("/")
