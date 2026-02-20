@@ -11,5 +11,6 @@ dependencies {
     implementation(mnLogging.logback.classic)
     implementation(mn.micronaut.json.core)
     testAnnotationProcessor(mn.micronaut.inject.java)
-    testImplementation(mnTestResources.testcontainers.core)
+    testImplementation(platform(mnTest.boms.testcontainers))
+    testImplementation(libs.testcontainers)
 }

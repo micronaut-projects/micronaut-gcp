@@ -12,10 +12,3 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
 }
-
-micronaut {
-    testResources {
-        // 10 minutes as this image is massive
-        clientTimeout = 600
-    }
-}

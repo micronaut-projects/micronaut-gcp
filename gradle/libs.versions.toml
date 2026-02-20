@@ -20,6 +20,7 @@ system-stubs-core = "2.1.8"
 
 awaitility = '4.3.0'
 
+micronaut-test = "5.0.0-M6"
 micronaut-grpc = "4.12.0"
 micronaut-jackson-xml = "4.8.0"
 micronaut-logging = "2.0.0-M2"
@@ -28,7 +29,6 @@ micronaut-rxjava3 = "4.0.0-M1"
 micronaut-serde = "3.0.0-M2"
 micronaut-servlet = "6.0.0-M2"
 micronaut-tracing = "8.0.0-M1"
-micronaut-test-resources = "3.0.0-M6"
 micronaut-discovery = "5.0.0-M1"
 micronaut-validation = "5.0.0-M1"
 
@@ -46,7 +46,6 @@ micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", ver
 micronaut-rxjava3 = { module = "io.micronaut.rxjava3:micronaut-rxjava3-bom", version.ref = "micronaut-rxjava3" }
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
 micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", version.ref = "micronaut-servlet" }
-micronaut-test-resources = { module = "io.micronaut.testresources:micronaut-test-resources-bom", version.ref = "micronaut-test-resources" }
 micronaut-tracing = { module = "io.micronaut.tracing:micronaut-tracing-bom", version.ref = "micronaut-tracing" }
 micronaut-validation = { module = 'io.micronaut.validation:micronaut-validation-bom', version.ref = "micronaut-validation" }
 
@@ -76,6 +75,7 @@ logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic",
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
+testcontainers = { module = "org.testcontainers:testcontainers" }
 
 # Plugins
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
