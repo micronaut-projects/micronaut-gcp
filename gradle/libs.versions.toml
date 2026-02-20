@@ -2,7 +2,7 @@
 micronaut = "5.0.0-M12"
 managed-google-auth-library-oauth2http = "1.43.0"
 managed-google-functions-framework-api = "1.1.4"
-managed-google-function-invoker = "1.4.1"
+managed-google-function-invoker = "1.4.3"
 managed-google-cloud-core = "2.65.0"
 managed-google-cloud-pubsub = "1.142.0"
 managed-google-cloud-secretmanager = "2.85.0"
