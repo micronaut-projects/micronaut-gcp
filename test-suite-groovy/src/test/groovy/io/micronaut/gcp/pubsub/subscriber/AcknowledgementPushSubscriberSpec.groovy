@@ -96,7 +96,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         then:
         response.status == HttpStatus.OK
         assert receivedMessage != null
-        assert receivedMessage instanceof Mono<Animal>
+        assert receivedMessage instanceof Mono
         assert acknowledgement instanceof DefaultPubSubAcknowledgement
         assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
     }
@@ -115,7 +115,7 @@ class AcknowledgementPushSubscriberSpec extends Specification {
         HttpClientResponseException ex = thrown()
         ex.response.status() == HttpStatus.UNPROCESSABLE_ENTITY
         assert receivedMessage != null
-        assert receivedMessage instanceof Mono<Animal>
+        assert receivedMessage instanceof Mono
         assert acknowledgement instanceof DefaultPubSubAcknowledgement
         assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
     }

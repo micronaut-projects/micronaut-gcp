@@ -86,7 +86,7 @@ class AcknowledgementSubscriberSpec extends Specification {
         then:
         conditions.eventually {
             assert message != null
-            assert message instanceof Mono<Animal>
+            assert message instanceof Mono
             assert acknowledgement instanceof DefaultPubSubAcknowledgement
             assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
         }
@@ -104,7 +104,7 @@ class AcknowledgementSubscriberSpec extends Specification {
         then:
         conditions.eventually {
             assert message != null
-            assert message instanceof Mono<Animal>
+            assert message instanceof Mono
             assert acknowledgement instanceof DefaultPubSubAcknowledgement
             assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
         }
