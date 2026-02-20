@@ -13,13 +13,13 @@ dependencies {
     implementation(projects.micronautGcpPubsub)
     implementation(projects.micronautGcpSecretManager)
     implementation(mn.reactor)
-    implementation mnSerde.micronaut.serde.jackson
-    implementation mnJacksonXml.micronaut.jackson.xml
+    implementation(mnSerde.micronaut.serde.jackson)
+    implementation(mnJacksonXml.micronaut.jackson.xml)
 
     compileOnly(libs.managed.functions.framework.api)
 
     testRuntimeOnly(mnTest.junit.jupiter.engine)
-    testRuntimeOnly mnLogging.logback.classic
-    testRuntimeOnly mn.snakeyaml
+    testRuntimeOnly(mnLogging.logback.classic)
+    testRuntimeOnly(mn.snakeyaml)
 }
 
