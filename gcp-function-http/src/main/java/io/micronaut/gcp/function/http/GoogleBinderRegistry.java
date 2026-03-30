@@ -19,11 +19,9 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.http.bind.binders.DefaultBodyAnnotationBinder;
-import io.micronaut.servlet.http.ServletBinderRegistry;
-import io.micronaut.http.annotation.Part;
 import io.micronaut.http.bind.DefaultRequestBinderRegistry;
 import io.micronaut.http.bind.binders.RequestArgumentBinder;
-import io.micronaut.http.codec.MediaTypeCodecRegistry;
+import io.micronaut.http.body.MessageBodyHandlerRegistry;
 
 import jakarta.inject.Singleton;
 import java.util.List;
@@ -39,24 +37,24 @@ import java.util.List;
 @Singleton
 @Replaces(DefaultRequestBinderRegistry.class)
 @Internal
-class GoogleBinderRegistry<T> extends ServletBinderRegistry<T> {
+class GoogleBinderRegistry<T> extends DefaultRequestBinderRegistry<T> {
 
     /**
      * Default constructor.
      *
-     * @param mediaTypeCodecRegistry The media type codec registry
      * @param conversionService      The conversion service
      * @param binders                The binders
      * @param defaultBodyAnnotationBinder The delegate default body binder
+     * @param messageBodyHandlerRegistry  The message body handler registry
      */
     GoogleBinderRegistry(
-            MediaTypeCodecRegistry mediaTypeCodecRegistry,
             ConversionService conversionService,
             List<RequestArgumentBinder> binders,
-            DefaultBodyAnnotationBinder<T> defaultBodyAnnotationBinder) {
-        super(mediaTypeCodecRegistry, conversionService, binders, defaultBodyAnnotationBinder);
-        this.byType.put(com.google.cloud.functions.HttpRequest.class, new GoogleRequestBinder());
-        this.byType.put(com.google.cloud.functions.HttpResponse.class, new GoogleResponseBinder());
-        this.byAnnotation.put(Part.class, new GooglePartBinder<T>(mediaTypeCodecRegistry));
+            DefaultBodyAnnotationBinder<T> defaultBodyAnnotationBinder,
+            MessageBodyHandlerRegistry messageBodyHandlerRegistry) {
+        super(conversionService, binders, defaultBodyAnnotationBinder);
+        addArgumentBinder(new GoogleRequestBinder());
+        addArgumentBinder(new GoogleResponseBinder());
+        addArgumentBinder(new GooglePartBinder<>(messageBodyHandlerRegistry, conversionService));
     }
 }

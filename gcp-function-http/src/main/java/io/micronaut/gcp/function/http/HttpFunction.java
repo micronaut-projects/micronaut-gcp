@@ -30,7 +30,9 @@ import io.micronaut.http.HttpRequestFactory;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.http.codec.MediaTypeCodec;
+import io.micronaut.http.body.MessageBodyHandlerRegistry;
+import io.micronaut.http.body.MessageBodyWriter;
+import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.cookie.ClientCookieEncoder;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.json.JsonMapper;
@@ -39,6 +41,7 @@ import io.micronaut.servlet.http.BodyBuilder;
 import io.micronaut.servlet.http.DefaultServletExchange;
 import io.micronaut.servlet.http.ServletExchange;
 import io.micronaut.servlet.http.ServletHttpHandler;
+import io.micronaut.http.simple.SimpleHttpHeaders;
 import io.netty.util.internal.MacAddressUtil;
 import io.netty.util.internal.PlatformDependent;
 import org.slf4j.Logger;
@@ -85,6 +88,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
     private final ConversionService conversionService;
     private final BodyBuilder bodyBuilder;
     private final Executor executor;
+    private final MessageBodyHandlerRegistry messageBodyHandlerRegistry;
 
     /**
      * Default constructor.
@@ -94,6 +98,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         this.conversionService = applicationContext.getBean(ConversionService.class);
         this.bodyBuilder = applicationContext.getBean(BodyBuilder.class);
         this.executor = applicationContext.getBean(Executor.class, Qualifiers.byName(TaskExecutors.BLOCKING));
+        this.messageBodyHandlerRegistry = applicationContext.getBean(MessageBodyHandlerRegistry.class);
     }
 
     public HttpFunction(ApplicationContext context) {
@@ -102,6 +107,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         this.conversionService = applicationContext.getBean(ConversionService.class);
         this.bodyBuilder = applicationContext.getBean(BodyBuilder.class);
         this.executor = applicationContext.getBean(Executor.class, Qualifiers.byName(TaskExecutors.BLOCKING));
+        this.messageBodyHandlerRegistry = applicationContext.getBean(MessageBodyHandlerRegistry.class);
     }
 
     private ServletHttpHandler<HttpRequest, HttpResponse> initializeHandler() {
@@ -296,14 +302,25 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
                     } else {
                         MediaType mediaType = getContentType().map(MediaType::new).orElse(null);
                         if (mediaType != null) {
-                            MediaTypeCodec codec = httpHandler.getMediaTypeCodecRegistry()
-                                .findCodec(mediaType)
-                                .orElse(null);
-                            if (codec != null) {
-                                byte[] bytes = codec.encode(body);
-                                return new ByteArrayInputStream(bytes);
+                            @SuppressWarnings("unchecked")
+                            Argument<Object> bodyArgument = (Argument<Object>) Argument.of(body.getClass());
+                            @SuppressWarnings("unchecked")
+                            MessageBodyWriter<Object> writer = (MessageBodyWriter<Object>) messageBodyHandlerRegistry
+                                .findWriter(bodyArgument, mediaType)
+                                .orElseGet(() -> messageBodyHandlerRegistry.findWriter(bodyArgument).orElse(null));
+                            if (writer != null) {
+                                try {
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    writer.writeTo(bodyArgument, mediaType, body, new SimpleHttpHeaders(conversionService), baos);
+                                    return new ByteArrayInputStream(baos.toByteArray());
+                                } catch (CodecException e) {
+                                    if (LOG.isDebugEnabled()) {
+                                        LOG.debug("Failed to encode body using MessageBodyWriter for media type {}", mediaType, e);
+                                    }
+                                }
                             }
-                        } else {
+                        }
+                        {
                             // No mediatype, so try and convert the body to a byte array from whatever it may be
                             return BodyUtils.bodyAsByteArray(
                                     jsonMapper,
