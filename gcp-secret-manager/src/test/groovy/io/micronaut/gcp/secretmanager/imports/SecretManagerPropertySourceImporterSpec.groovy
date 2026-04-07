@@ -42,12 +42,13 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
                 .find { it.provider == SecretManagerPropertySourceImporter.PROVIDER }
 
         when:
-        def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-secret-manager://application'))
+        def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-secret-manager://application?project-id=my-gcp-project'))
 
         then:
         declaration.declaration().path() == 'application'
         !declaration.declaration().optional()
         declaration.declaration().format() == null
+        declaration.declaration().projectId() == 'my-gcp-project'
         declaration.retryPolicy().maxAttempts() == 3
         context != null
 
@@ -86,5 +87,49 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         then:
         IllegalArgumentException e = thrown()
         e.message == 'Google Secret Manager config import path cannot be blank'
+    }
+
+    void "rejects declarations with both credentials-location and encoded-key"() {
+        given:
+        PropertySourceImporter importer = new SecretManagerPropertySourceImporter()
+
+        when:
+        importer.newImportDeclaration(ConvertibleValues.of([
+                provider              : 'gcp-secret-manager',
+                path                  : 'application',
+                'project-id'          : 'my-gcp-project',
+                'credentials-location': '/path/to/sa.json',
+                'encoded-key'         : 'dGVzdA=='
+        ]))
+
+        then:
+        IllegalArgumentException e = thrown()
+        e.message == 'Please specify only one of credentials-location or encoded-key for gcp-secret-manager imports'
+    }
+
+    void "rejects declarations without project-id"() {
+        given:
+        PropertySourceImporter importer = new SecretManagerPropertySourceImporter()
+
+        when:
+        importer.newImportDeclaration(ConvertibleValues.of([
+                provider: 'gcp-secret-manager',
+                path    : 'application'
+        ]))
+
+        then:
+        IllegalArgumentException e = thrown()
+        e.message == 'Google Secret Manager imports require project-id to be specified'
+    }
+
+    void "normalises path with leading slash from triple-slash URI"() {
+        given:
+        PropertySourceImporter importer = new SecretManagerPropertySourceImporter()
+
+        when:
+        def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-secret-manager:///application?project-id=my-gcp-project'))
+
+        then:
+        declaration.declaration().path() == 'application'
     }
 }

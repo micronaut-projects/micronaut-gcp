@@ -54,7 +54,7 @@ Supported importer options are:
 |`optional` |Marks the import as optional
 |===
 
-When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <<setup, setup>> section.
+When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <<setup, Setting up GCP>> section.
 
 == Retry options
 

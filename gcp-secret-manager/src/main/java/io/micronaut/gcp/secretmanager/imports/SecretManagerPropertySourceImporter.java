@@ -17,13 +17,13 @@ package io.micronaut.gcp.secretmanager.imports;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.gax.core.CredentialsProvider;
-import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.auth.http.HttpTransportFactory;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import io.micronaut.context.env.PropertySource;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ConnectionString;
@@ -68,18 +68,29 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
 
     @Override
     protected SecretManagerImportDeclaration newImportDeclaration(ConnectionString connectionString, RetryPolicy retryPolicy) {
-        String path = validatePath(connectionString.getPath());
+        String rawPath = connectionString.getPath();
+        if (StringUtils.isEmpty(rawPath) && !connectionString.getHosts().isEmpty()) {
+            rawPath = connectionString.getHosts().get(0).host();
+        }
+        if (rawPath != null && rawPath.startsWith("/")) {
+            rawPath = rawPath.substring(1);
+        }
+        String path = validatePath(rawPath);
         String format = connectionString.getOptions().get(FORMAT);
         String encodedKey = connectionString.getPassword().orElse(connectionString.getOptions().get(ENCODED_KEY));
         String credentialsLocation = connectionString.getUsername().orElse(connectionString.getOptions().get(CREDENTIALS_LOCATION));
         String projectId = connectionString.getOptions().get(PROJECT_ID);
         String location = connectionString.getOptions().get(LOCATION);
+        String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
+        String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
+        validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
+        validateProjectId(StringUtils.isNotEmpty(projectId) ? projectId : null);
         return new SecretManagerImportDeclaration(
             path,
             connectionString.isOptional(),
             StringUtils.isNotEmpty(format) ? format : null,
-            StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null,
-            StringUtils.isNotEmpty(encodedKey) ? encodedKey : null,
+            normalizedCredentialsLocation,
+            normalizedEncodedKey,
             StringUtils.isNotEmpty(projectId) ? projectId : null,
             StringUtils.isNotEmpty(location) ? location : null
         );
@@ -94,12 +105,16 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         String encodedKey = values.get(ENCODED_KEY, String.class).orElse(null);
         String projectId = values.get(PROJECT_ID, String.class).orElse(null);
         String location = values.get(LOCATION, String.class).orElse(null);
+        String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
+        String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
+        validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
+        validateProjectId(StringUtils.isNotEmpty(projectId) ? projectId : null);
         return new SecretManagerImportDeclaration(
             path,
             optional,
             StringUtils.isNotEmpty(format) ? format : null,
-            StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null,
-            StringUtils.isNotEmpty(encodedKey) ? encodedKey : null,
+            normalizedCredentialsLocation,
+            normalizedEncodedKey,
             StringUtils.isNotEmpty(projectId) ? projectId : null,
             StringUtils.isNotEmpty(location) ? location : null
         );
@@ -146,11 +161,7 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         GoogleCredentialsConfiguration credentialsConfiguration = new GoogleCredentialsConfiguration();
         credentialsConfiguration.setLocation(declaration.credentialsLocation());
         credentialsConfiguration.setEncodedKey(declaration.encodedKey());
-        credentialsConfiguration.setScopes(List.<URI>of());
         HttpTransportFactory transportFactory = NetHttpTransport::new;
-        if (credentialsConfiguration.getLocation().isPresent() && credentialsConfiguration.getEncodedKey().isPresent()) {
-            throw new IllegalStateException("Please specify only one of credentials-location or encoded-key for gcp-secret-manager imports");
-        }
         GoogleCredentials credentials;
         if (credentialsConfiguration.getLocation().isPresent()) {
             try (java.io.FileInputStream fis = new java.io.FileInputStream(credentialsConfiguration.getLocation().get())) {
@@ -164,7 +175,13 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         } else {
             credentials = GoogleCredentials.getApplicationDefault(transportFactory);
         }
-        return credentials.createScoped(credentialsConfiguration.getScopes().stream().map(URI::toString).toList());
+        List<String> scopes = credentialsConfiguration.getScopes().isEmpty()
+            ? List.of("https://www.googleapis.com/auth/cloud-platform")
+            : credentialsConfiguration.getScopes().stream().map(URI::toString).toList();
+        if (credentials.createScopedRequired()) {
+            return credentials.createScoped(scopes);
+        }
+        return credentials;
     }
 
     private String inferExtension(String path) {
@@ -177,9 +194,6 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
 
     private io.micronaut.gcp.GoogleCloudConfiguration googleCloudConfiguration(SecretManagerImportDeclaration declaration) {
         io.micronaut.gcp.GoogleCloudConfiguration configuration = new io.micronaut.gcp.GoogleCloudConfiguration();
-        if (!StringUtils.hasText(declaration.projectId())) {
-            throw new IllegalStateException("Google Secret Manager imports require project-id to be specified");
-        }
         configuration.setProjectId(declaration.projectId());
         return configuration;
     }
@@ -189,5 +203,17 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
             throw new IllegalArgumentException("Google Secret Manager config import path cannot be blank");
         }
         return path;
+    }
+
+    private static void validateCredentials(@Nullable String credentialsLocation, @Nullable String encodedKey) {
+        if (credentialsLocation != null && encodedKey != null) {
+            throw new IllegalArgumentException("Please specify only one of credentials-location or encoded-key for gcp-secret-manager imports");
+        }
+    }
+
+    private static void validateProjectId(@Nullable String projectId) {
+        if (!StringUtils.hasText(projectId)) {
+            throw new IllegalArgumentException("Google Secret Manager imports require project-id to be specified");
+        }
     }
 }

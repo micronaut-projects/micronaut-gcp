@@ -17,7 +17,6 @@ package io.micronaut.gcp.secretmanager;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -26,14 +25,12 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.EnvironmentPropertySource;
 import io.micronaut.context.env.PropertySource;
-import io.micronaut.context.env.PropertySourceLoader;
-import io.micronaut.context.env.PropertySourceReader;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.config.ConfigurationClient;
 import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
-import io.micronaut.gcp.secretmanager.imports.SecretManagerPropertySourceReader;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
+import io.micronaut.gcp.secretmanager.imports.SecretManagerPropertySourceReader;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
