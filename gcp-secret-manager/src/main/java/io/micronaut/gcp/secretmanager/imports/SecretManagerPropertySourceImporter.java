@@ -70,6 +70,8 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
     protected SecretManagerImportDeclaration newImportDeclaration(ConnectionString connectionString, RetryPolicy retryPolicy) {
         String rawPath = connectionString.getPath();
         if (StringUtils.isEmpty(rawPath) && !connectionString.getHosts().isEmpty()) {
+            // For URIs like gcp-secret-manager://application, ConnectionString parses the
+            // secret name as the first host. Fall back to that when the path is empty.
             rawPath = connectionString.getHosts().get(0).host();
         }
         if (rawPath != null && rawPath.startsWith("/")) {
