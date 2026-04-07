@@ -32,6 +32,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.config.ConfigurationClient;
 import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
+import io.micronaut.gcp.secretmanager.imports.SecretManagerPropertySourceReader;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
@@ -53,7 +54,6 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     private static final String CAMEL_CASE_REPLACE = "$1_$2";
     private static final String DESCRIPTION = "GCP Secret Manager Config Client";
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
-    private static List<PropertySourceLoader> readers;
     private static final String UNDERSCORE = "_";
     private static final String APPLICATION = "application";
     private static final String MICRONAUT_APPLICATION_NAME = "micronaut.application.name";
@@ -67,7 +67,6 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
 
     @Override
     public Publisher<PropertySource> getPropertySources(Environment environment) {
-        this.readers = environment.getPropertySourceLoaders().stream().toList();
         return Flux.concat(resolveEnvironmentSecrets(environment), resolveSecretKeys());
     }
 
@@ -76,7 +75,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
         return Flux.fromIterable(configCandidates(environment).entrySet())
                 .flatMap(env ->
                         Mono.from(secretManagerClient.getSecret(env.getValue()))
-                                .mapNotNull(secret -> fromSecret(secret, env.getKey()))
+                                .mapNotNull(secret -> fromSecret(secret, env.getKey(), environment))
                 );
     }
 
@@ -137,19 +136,8 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
      * @param priority Property Source position
      * @return Mapped PropertySource
      */
-    private PropertySource fromSecret(VersionedSecret secret, int priority) {
-        Map<String, Object> data = new HashMap<>();
-
-        for (PropertySourceReader reader : readers) {
-            try {
-                data.putAll(reader.read(secret.getName(), secret.getContents()));
-                if (!data.isEmpty()) {
-                    break;
-                }
-            } catch (Exception e) {
-            }
-        }
-        return PropertySource.of(secret.getName() + PROPERTY_SOURCE_SUFFIX, data, priority);
+    private PropertySource fromSecret(VersionedSecret secret, int priority, Environment environment) {
+        return SecretManagerPropertySourceReader.read(environment, secret, secret.getName() + PROPERTY_SOURCE_SUFFIX, priority);
     }
 
     @Override
