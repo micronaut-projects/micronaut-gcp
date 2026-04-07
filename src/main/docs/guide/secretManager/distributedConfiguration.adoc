@@ -56,6 +56,44 @@ Supported importer options are:
 
 When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <<setup, setup>> section.
 
+== Retry options
+
+`gcp-secret-manager` imports also support the standard retry options provided by `RetryablePropertySourceImporter`. These options work with both scalar connection-string imports and structured import declarations.
+
+|===
+|Option |Description
+|`retry-attempts` |Maximum number of attempts
+|`retry-count` |Alias for `retry-attempts`
+|`retry-delay` |Delay between attempts
+|`retry-max-delay` |Maximum overall retry delay
+|`retry-multiplier` |Delay multiplier applied between attempts
+|`retry-jitter` |Jitter factor from `0.0` to `1.0`
+|===
+
+Example using scalar connection-string form:
+
+[source,yaml]
+----
+micronaut:
+  config:
+    import: gcp-secret-manager://application?project-id=my-gcp-project&retry-attempts=5&retry-delay=1s&retry-multiplier=1.5
+----
+
+Example using structured form:
+
+[source,yaml]
+----
+micronaut:
+  config:
+    import:
+      provider: gcp-secret-manager
+      path: application
+      project-id: my-gcp-project
+      retry-attempts: 5
+      retry-delay: 1s
+      retry-max-delay: 30s
+----
+
 == Regional imports
 
 To comply with data residency requirements, you can point the importer at a regional secret by setting `location` in the import declaration:

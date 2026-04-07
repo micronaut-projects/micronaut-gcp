@@ -22,20 +22,20 @@ import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.auth.http.HttpTransportFactory;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
-import io.micronaut.context.env.EnvironmentPropertySource;
 import io.micronaut.context.env.PropertySource;
-import io.micronaut.context.env.PropertySourceImporter;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ConnectionString;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.discovery.config.RetryablePropertySourceImporter;
 import io.micronaut.gcp.credentials.GoogleCredentialsConfiguration;
 import io.micronaut.gcp.secretmanager.SecretManagerFactory;
 import io.micronaut.gcp.secretmanager.client.DefaultSecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
+import io.micronaut.retry.RetryPolicy;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ import java.util.concurrent.ExecutorService;
  * @since 5.0
  */
 @Internal
-public final class SecretManagerPropertySourceImporter implements PropertySourceImporter<SecretManagerImportDeclaration> {
+public final class SecretManagerPropertySourceImporter extends RetryablePropertySourceImporter<SecretManagerImportDeclaration> {
 
     public static final String PROVIDER = "gcp-secret-manager";
     private static final String PATH = "path";
@@ -67,7 +67,7 @@ public final class SecretManagerPropertySourceImporter implements PropertySource
     }
 
     @Override
-    public SecretManagerImportDeclaration newImportDeclaration(ConnectionString connectionString) {
+    protected SecretManagerImportDeclaration newImportDeclaration(ConnectionString connectionString, RetryPolicy retryPolicy) {
         String path = validatePath(connectionString.getPath());
         String format = connectionString.getOptions().get(FORMAT);
         String encodedKey = connectionString.getPassword().orElse(connectionString.getOptions().get(ENCODED_KEY));
@@ -86,7 +86,7 @@ public final class SecretManagerPropertySourceImporter implements PropertySource
     }
 
     @Override
-    public SecretManagerImportDeclaration newImportDeclaration(ConvertibleValues<Object> values) {
+    protected SecretManagerImportDeclaration newImportDeclaration(ConvertibleValues<Object> values, RetryPolicy retryPolicy) {
         String path = validatePath(values.get(PATH, String.class).orElse(null));
         boolean optional = values.get("optional", Boolean.class).orElse(false);
         String format = values.get(FORMAT, String.class).orElse(null);
@@ -106,7 +106,7 @@ public final class SecretManagerPropertySourceImporter implements PropertySource
     }
 
     @Override
-    public Optional<PropertySource> importPropertySource(ImportContext<SecretManagerImportDeclaration> context) {
+    protected Optional<PropertySource> importRetryablePropertySource(ImportContext<SecretManagerImportDeclaration> context) {
         ArgumentUtils.requireNonNull("context", context);
         SecretManagerImportDeclaration declaration = context.importDeclaration();
         SecretManagerConfigurationProperties configurationProperties = new SecretManagerConfigurationProperties();

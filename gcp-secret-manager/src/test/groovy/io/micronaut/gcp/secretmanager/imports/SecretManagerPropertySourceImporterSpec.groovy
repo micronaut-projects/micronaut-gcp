@@ -45,9 +45,10 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-secret-manager://application'))
 
         then:
-        declaration.path() == 'application'
-        !declaration.optional()
-        declaration.format() == null
+        declaration.declaration().path() == 'application'
+        !declaration.declaration().optional()
+        declaration.declaration().format() == null
+        declaration.retryPolicy().maxAttempts() == 3
         context != null
 
         cleanup:
@@ -68,10 +69,11 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         ]))
 
         then:
-        declaration.path() == 'application_test'
-        declaration.optional()
-        declaration.format() == 'yml'
-        declaration.projectId() == 'first-gcp-project'
+        declaration.declaration().path() == 'application_test'
+        declaration.declaration().optional()
+        declaration.declaration().format() == 'yml'
+        declaration.declaration().projectId() == 'first-gcp-project'
+        declaration.retryPolicy().maxAttempts() == 3
     }
 
     void "rejects blank paths"() {
