@@ -19,7 +19,6 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
-import com.google.cloud.secretmanager.v1.SecretVersionName;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import org.jspecify.annotations.Nullable;
@@ -107,10 +106,7 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
             }
         }
 
-        SecretVersionName secretVersionName = secretVersionName(projectId, secretId, version);
-        AccessSecretVersionRequest request = AccessSecretVersionRequest.newBuilder()
-                .setName(secretVersionName.toString())
-                .build();
+        AccessSecretVersionRequest request = SecretManagerSecretAccessor.accessRequest(projectId, secretId, version, configurationProperties);
         final Mono<AccessSecretVersionResponse> mono = Mono.create((sink) -> {
             final ApiFuture<AccessSecretVersionResponse> future = client
                     .accessSecretVersionCallable().futureCall(request);
@@ -125,22 +121,9 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
         });
 
         return mono
-                .map(response -> versionedSecret(secretId, version, projectId, response))
+                .map(response -> SecretManagerSecretAccessor.toVersionedSecret(secretId, version, projectId, response, configurationProperties))
                 .onErrorResume(throwable -> Mono.empty());
     }
 
-    private SecretVersionName secretVersionName(String projectId, String secretId, String version) {
-        return StringUtils.isEmpty(configurationProperties.getLocation())
-                ? SecretVersionName.of(projectId, secretId, version)
-                : SecretVersionName.ofProjectLocationSecretSecretVersionName(projectId, configurationProperties.getLocation(), secretId, version);
-    }
-    
-    private VersionedSecret versionedSecret(String secretId,
-                                            String version,
-                                            String projectId,
-                                            AccessSecretVersionResponse response) {
-        return StringUtils.isEmpty(configurationProperties.getLocation())
-                ? new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray())
-                : new VersionedSecret(secretId, projectId, version, response.getPayload().getData().toByteArray(), configurationProperties.getLocation());
-    }
+
 }

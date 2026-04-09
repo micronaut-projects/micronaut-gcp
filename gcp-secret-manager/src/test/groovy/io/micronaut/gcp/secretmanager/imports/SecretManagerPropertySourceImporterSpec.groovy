@@ -33,6 +33,20 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         importer instanceof SecretManagerPropertySourceImporter
     }
 
+
+    void "registers the gcp secret manager importer for application context bootstrap discovery"() {
+        when:
+        ApplicationContext context = ApplicationContext.run([:])
+        List<PropertySourceImporter> importers = SoftServiceLoader.load(PropertySourceImporter, context.classLoader).collectAll().asList()
+        PropertySourceImporter importer = importers.find { it.provider == SecretManagerPropertySourceImporter.PROVIDER }
+
+        then:
+        importer instanceof SecretManagerPropertySourceImporter
+
+        cleanup:
+        context.close()
+    }
+
     void "supports scalar connection string declarations without bootstrap config client"() {
         given:
         ApplicationContext context = ApplicationContext.run([:])
@@ -49,11 +63,26 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         !declaration.declaration().optional()
         declaration.declaration().format() == null
         declaration.declaration().projectId() == 'my-gcp-project'
+        declaration.declaration().version() == null
         declaration.retryPolicy().maxAttempts() == 3
         context != null
 
         cleanup:
         context.close()
+    }
+
+
+    void "supports scalar connection string declarations with explicit version"() {
+        given:
+        PropertySourceImporter importer = new SecretManagerPropertySourceImporter()
+
+        when:
+        def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-secret-manager://application?project-id=my-gcp-project&version=5'))
+
+        then:
+        declaration.declaration().path() == 'application'
+        declaration.declaration().projectId() == 'my-gcp-project'
+        declaration.declaration().version() == '5'
     }
 
     void "supports structured declarations"() {
@@ -74,6 +103,7 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         declaration.declaration().optional()
         declaration.declaration().format() == 'yml'
         declaration.declaration().projectId() == 'first-gcp-project'
+        declaration.declaration().version() == null
         declaration.retryPolicy().maxAttempts() == 3
     }
 
@@ -107,19 +137,18 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         e.message == 'Please specify only one of credentials-location or encoded-key for gcp-secret-manager imports'
     }
 
-    void "rejects declarations without project-id"() {
+    void "allows declarations without project-id for later environment resolution"() {
         given:
         PropertySourceImporter importer = new SecretManagerPropertySourceImporter()
 
         when:
-        importer.newImportDeclaration(ConvertibleValues.of([
+        def declaration = importer.newImportDeclaration(ConvertibleValues.of([
                 provider: 'gcp-secret-manager',
                 path    : 'application'
         ]))
 
         then:
-        IllegalArgumentException e = thrown()
-        e.message == 'Google Secret Manager imports require project-id to be specified'
+        declaration.declaration().projectId() == null
     }
 
     void "normalises path with leading slash from triple-slash URI"() {

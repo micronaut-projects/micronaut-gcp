@@ -31,18 +31,17 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.config.RetryablePropertySourceImporter;
 import io.micronaut.gcp.credentials.GoogleCredentialsConfiguration;
 import io.micronaut.gcp.secretmanager.SecretManagerFactory;
-import io.micronaut.gcp.secretmanager.client.DefaultSecretManagerClient;
-import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
+import io.micronaut.gcp.secretmanager.client.SecretManagerSecretAccessor;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 import io.micronaut.retry.RetryPolicy;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Property source importer for Google Secret Manager.
@@ -53,12 +52,14 @@ import java.util.concurrent.ExecutorService;
 public final class SecretManagerPropertySourceImporter extends RetryablePropertySourceImporter<SecretManagerImportDeclaration> {
 
     public static final String PROVIDER = "gcp-secret-manager";
+    private static final Logger LOG = LoggerFactory.getLogger(SecretManagerPropertySourceImporter.class);
     private static final String PATH = "path";
     private static final String FORMAT = "format";
     private static final String CREDENTIALS_LOCATION = "credentials-location";
     private static final String ENCODED_KEY = "encoded-key";
     private static final String PROJECT_ID = "project-id";
     private static final String LOCATION = "location";
+    private static final String VERSION = "version";
     private static final SecretManagerImporterClientFactory CLIENT_FACTORY = new SecretManagerImporterClientFactory();
 
     @Override
@@ -83,10 +84,10 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         String credentialsLocation = connectionString.getUsername().orElse(connectionString.getOptions().get(CREDENTIALS_LOCATION));
         String projectId = connectionString.getOptions().get(PROJECT_ID);
         String location = connectionString.getOptions().get(LOCATION);
+        String version = connectionString.getOptions().get(VERSION);
         String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
         String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
         validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
-        validateProjectId(StringUtils.isNotEmpty(projectId) ? projectId : null);
         return new SecretManagerImportDeclaration(
             path,
             connectionString.isOptional(),
@@ -94,7 +95,8 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
             normalizedCredentialsLocation,
             normalizedEncodedKey,
             StringUtils.isNotEmpty(projectId) ? projectId : null,
-            StringUtils.isNotEmpty(location) ? location : null
+            StringUtils.isNotEmpty(location) ? location : null,
+            StringUtils.isNotEmpty(version) ? version : null
         );
     }
 
@@ -107,10 +109,10 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         String encodedKey = values.get(ENCODED_KEY, String.class).orElse(null);
         String projectId = values.get(PROJECT_ID, String.class).orElse(null);
         String location = values.get(LOCATION, String.class).orElse(null);
+        String version = values.get(VERSION, String.class).orElse(null);
         String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
         String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
         validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
-        validateProjectId(StringUtils.isNotEmpty(projectId) ? projectId : null);
         return new SecretManagerImportDeclaration(
             path,
             optional,
@@ -118,14 +120,15 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
             normalizedCredentialsLocation,
             normalizedEncodedKey,
             StringUtils.isNotEmpty(projectId) ? projectId : null,
-            StringUtils.isNotEmpty(location) ? location : null
+            StringUtils.isNotEmpty(location) ? location : null,
+            StringUtils.isNotEmpty(version) ? version : null
         );
     }
 
     @Override
     protected Optional<PropertySource> importRetryablePropertySource(ImportContext<SecretManagerImportDeclaration> context) {
         ArgumentUtils.requireNonNull("context", context);
-        SecretManagerImportDeclaration declaration = context.importDeclaration();
+        SecretManagerImportDeclaration declaration = resolveDeclaration(context, context.importDeclaration());
         SecretManagerConfigurationProperties configurationProperties = new SecretManagerConfigurationProperties();
         configurationProperties.setLocation(declaration.location());
         VersionedSecret secret = fetchSecret(context, declaration, configurationProperties);
@@ -146,13 +149,9 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
             CredentialsProvider credentialsProvider = factory.credentialsProvider(credentials);
             TransportChannelProvider transportChannelProvider = factory.transportChannelProvider();
             try (SecretManagerServiceClient client = CLIENT_FACTORY.create(configurationProperties, credentialsProvider, transportChannelProvider)) {
-                SecretManagerClient secretManagerClient = new DefaultSecretManagerClient(
-                    client,
-                    googleCloudConfiguration(declaration),
-                    (ExecutorService) null,
-                    configurationProperties
-                );
-                return Mono.from(secretManagerClient.getSecret(declaration.path())).block();
+                String projectId = declaration.projectId();
+                String version = StringUtils.isNotEmpty(declaration.version()) ? declaration.version() : "latest";
+                return SecretManagerSecretAccessor.accessSecret(client, projectId, declaration.path(), version, configurationProperties);
             }
         } catch (IOException e) {
             throw new IllegalStateException("Could not instantiate SecretManagerServiceClient for config import", e);
@@ -175,7 +174,7 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
                 credentials = GoogleCredentials.fromStream(is, transportFactory);
             }
         } else {
-            credentials = GoogleCredentials.getApplicationDefault(transportFactory);
+            credentials = GoogleCredentials.getApplicationDefault();
         }
         List<String> scopes = credentialsConfiguration.getScopes().isEmpty()
             ? List.of("https://www.googleapis.com/auth/cloud-platform")
@@ -184,6 +183,46 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
             return credentials.createScoped(scopes);
         }
         return credentials;
+    }
+
+    private SecretManagerImportDeclaration resolveDeclaration(ImportContext<SecretManagerImportDeclaration> context,
+                                                            SecretManagerImportDeclaration declaration) {
+        String credentialsLocation = declaration.credentialsLocation();
+        String encodedKey = declaration.encodedKey();
+        String projectId = declaration.projectId();
+        if (!StringUtils.hasText(credentialsLocation) && context.environment().containsProperty("gcp.credentials.location")) {
+            credentialsLocation = context.environment().getRequiredProperty("gcp.credentials.location", String.class);
+        }
+        if (!StringUtils.hasText(encodedKey) && context.environment().containsProperty("gcp.credentials.encoded-key")) {
+            encodedKey = context.environment().getRequiredProperty("gcp.credentials.encoded-key", String.class);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Resolving gcp-secret-manager import for path [{}] with visible bootstrap keys gcp.project-id={}, gcp.projectId={}, gcp.credentials.location={}, gcp.credentials.encoded-key={}",
+                declaration.path(),
+                context.environment().containsProperty("gcp.project-id"),
+                context.environment().containsProperty("gcp.projectId"),
+                context.environment().containsProperty("gcp.credentials.location"),
+                context.environment().containsProperty("gcp.credentials.encoded-key"));
+        }
+        if (!StringUtils.hasText(projectId)) {
+            if (context.environment().containsProperty("gcp.project-id")) {
+                projectId = context.environment().getRequiredProperty("gcp.project-id", String.class);
+            } else if (context.environment().containsProperty("gcp.projectId")) {
+                projectId = context.environment().getRequiredProperty("gcp.projectId", String.class);
+            }
+        }
+        validateCredentials(StringUtils.hasText(credentialsLocation) ? credentialsLocation : null, StringUtils.hasText(encodedKey) ? encodedKey : null);
+        validateProjectId(StringUtils.hasText(projectId) ? projectId : null);
+        return new SecretManagerImportDeclaration(
+            declaration.path(),
+            declaration.optional(),
+            declaration.format(),
+            StringUtils.hasText(credentialsLocation) ? credentialsLocation : null,
+            StringUtils.hasText(encodedKey) ? encodedKey : null,
+            StringUtils.hasText(projectId) ? projectId : null,
+            declaration.location(),
+            declaration.version()
+        );
     }
 
     private String inferExtension(String path) {

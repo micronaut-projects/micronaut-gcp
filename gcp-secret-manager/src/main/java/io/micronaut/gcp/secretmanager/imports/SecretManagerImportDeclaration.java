@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
  * @param encodedKey Optional base64 encoded credentials json
  * @param projectId Optional project id override
  * @param location Optional regional secret location
+ * @param version Optional secret version override
  * @since 5.0
  */
 @Internal
@@ -37,5 +38,6 @@ record SecretManagerImportDeclaration(String path,
                                       @Nullable String credentialsLocation,
                                       @Nullable String encodedKey,
                                       @Nullable String projectId,
-                                      @Nullable String location) {
+                                      @Nullable String location,
+                                      @Nullable String version) {
 }
