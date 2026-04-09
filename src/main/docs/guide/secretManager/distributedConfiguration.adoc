@@ -135,4 +135,4 @@ The legacy bootstrap path can also disable default config resolution with `gcp.s
 
 == Secret Versioning
 
-Google Cloud Secret Manager supports link:https://cloud.google.com/secret-manager/docs/managing-secret-versions[secret versioning]. For the current import support in this module, config imports load the `latest` version of the named secret.
+Google Cloud Secret Manager supports link:https://cloud.google.com/secret-manager/docs/managing-secret-versions[secret versioning]. For the current import support in this module, config imports load the `latest` version of the named secret by default, but you can explicitly override the version.
