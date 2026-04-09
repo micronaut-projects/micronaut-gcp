@@ -233,12 +233,6 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         return "yml";
     }
 
-    private io.micronaut.gcp.GoogleCloudConfiguration googleCloudConfiguration(SecretManagerImportDeclaration declaration) {
-        io.micronaut.gcp.GoogleCloudConfiguration configuration = new io.micronaut.gcp.GoogleCloudConfiguration();
-        configuration.setProjectId(declaration.projectId());
-        return configuration;
-    }
-
     private static String validatePath(String path) {
         if (!StringUtils.hasText(path)) {
             throw new IllegalArgumentException("Google Secret Manager config import path cannot be blank");
