@@ -23,7 +23,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import io.micronaut.context.env.PropertySource;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ConnectionString;
@@ -35,6 +34,7 @@ import io.micronaut.gcp.secretmanager.client.SecretManagerSecretAccessor;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 import io.micronaut.retry.RetryPolicy;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URI;
@@ -132,9 +132,6 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         SecretManagerConfigurationProperties configurationProperties = new SecretManagerConfigurationProperties();
         configurationProperties.setLocation(declaration.location());
         VersionedSecret secret = fetchSecret(context, declaration, configurationProperties);
-        if (secret == null) {
-            return Optional.empty();
-        }
         String sourceName = context.connectionString() != null ? context.getCanonicalLocation() : PROVIDER + ":" + declaration.path();
         String extension = StringUtils.isNotEmpty(declaration.format()) ? declaration.format() : inferExtension(secret.getName());
         return context.importPropertySource(new String(secret.getContents(), java.nio.charset.StandardCharsets.UTF_8), sourceName, extension, context.parentOrigin());
@@ -231,12 +228,6 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
             return path.substring(index + 1);
         }
         return "yml";
-    }
-
-    private io.micronaut.gcp.GoogleCloudConfiguration googleCloudConfiguration(SecretManagerImportDeclaration declaration) {
-        io.micronaut.gcp.GoogleCloudConfiguration configuration = new io.micronaut.gcp.GoogleCloudConfiguration();
-        configuration.setProjectId(declaration.projectId());
-        return configuration;
     }
 
     private static String validatePath(String path) {

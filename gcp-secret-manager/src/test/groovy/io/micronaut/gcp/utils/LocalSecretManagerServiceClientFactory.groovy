@@ -12,7 +12,8 @@ import spock.lang.Specification
 
 @Factory
 @BootstrapContextCompatible
-@Requires(property = 'spec.name', value = 'SecretManagerPropertySourceImporterEndToEndSpec')
+@Requires(property = 'spec.name')
+@Requires(property = 'spec.name', notEquals = 'SecretManagerClientIntegrationSpec')
 class LocalSecretManagerServiceClientFactory extends Specification {
 
     @Singleton

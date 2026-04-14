@@ -17,14 +17,14 @@ micronaut:
 
 The importer loads the secret at startup and publishes it as a Micronaut property source.
 
-When you use the scalar connection-string form, authentication details can also be encoded directly in the URI user-info section:
+When you use the scalar connection-string form, you can pass additional importer options as query parameters:
 
 [source]
 ----
-micronaut.config.import=gcp-secret-manager://credentials-file-path:base64-encoded-service-account-key@application?project-id=my-gcp-project
+micronaut.config.import=gcp-secret-manager://application?project-id=my-gcp-project&credentials-location=credentials-file-path
 ----
 
-In that form, the username maps to `credentials-location` and the password maps to `encoded-key`. Use only one of them at a time. If neither is supplied, the importer falls back to Application Default Credentials.
+In that form, `credentials-location` maps directly to the importer option of the same name. If you need `encoded-key`, prefer the structured import form below so the Base64 value does not need URI escaping. If neither credential option is supplied, the importer falls back to Application Default Credentials.
 
 == Structured import declarations
 

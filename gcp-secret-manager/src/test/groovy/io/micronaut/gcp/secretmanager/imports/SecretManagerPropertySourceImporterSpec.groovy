@@ -85,6 +85,20 @@ class SecretManagerPropertySourceImporterSpec extends Specification {
         declaration.declaration().version() == '5'
     }
 
+    void "supports scalar connection string declarations with credentials location in query parameters"() {
+        given:
+        PropertySourceImporter importer = new SecretManagerPropertySourceImporter()
+
+        when:
+        def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-secret-manager://application?project-id=my-gcp-project&credentials-location=credentials-file-path'))
+
+        then:
+        declaration.declaration().path() == 'application'
+        declaration.declaration().credentialsLocation() == 'credentials-file-path'
+        declaration.declaration().encodedKey() == null
+        declaration.declaration().projectId() == 'my-gcp-project'
+    }
+
     void "supports structured declarations"() {
         given:
         PropertySourceImporter importer = new SecretManagerPropertySourceImporter()
