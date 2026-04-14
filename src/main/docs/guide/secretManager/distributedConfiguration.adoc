@@ -49,6 +49,7 @@ Supported importer options are:
 |`project-id` |The Google Cloud project containing the secret
 |`format` |Explicit payload format such as `yml`, `yaml`, `json`, or `properties`
 |`location` |Regional Secret Manager location for regional secrets
+|`version` |Secret version to import; defaults to `latest`
 |`credentials-location` |Path to a service account credentials file used only for this import
 |`encoded-key` |Base64 encoded service account credentials used only for this import
 |`optional` |Marks the import as optional
@@ -135,4 +136,4 @@ The legacy bootstrap path can also disable default config resolution with `gcp.s
 
 == Secret Versioning
 
-Google Cloud Secret Manager supports link:https://cloud.google.com/secret-manager/docs/managing-secret-versions[secret versioning]. For the current import support in this module, config imports load the `latest` version of the named secret.
+Google Cloud Secret Manager supports link:https://cloud.google.com/secret-manager/docs/managing-secret-versions[secret versioning]. For the current import support in this module, config imports load the `latest` version of the named secret by default, but you can explicitly override the version.
