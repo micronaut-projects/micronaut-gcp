@@ -23,6 +23,11 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 
+/**
+ * Helper methods for building Secret Manager requests and mapping responses.
+ *
+ * @since 5.0
+ */
 @Internal
 public final class SecretManagerSecretAccessor {
 

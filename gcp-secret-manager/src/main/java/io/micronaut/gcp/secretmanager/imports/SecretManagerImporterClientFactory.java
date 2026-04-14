@@ -22,8 +22,6 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.gcp.secretmanager.SecretManagerFactory;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
 
-import java.io.IOException;
-
 /**
  * Internal client factory seam for Google Secret Manager config imports.
  *
@@ -39,11 +37,10 @@ public final class SecretManagerImporterClientFactory {
      * @param credentialsProvider Credentials provider used to authenticate the import request
      * @param transportChannelProvider Transport channel provider for the Secret Manager client
      * @return A Secret Manager service client
-     * @throws IOException If the client cannot be created
      */
     public SecretManagerServiceClient create(SecretManagerConfigurationProperties configurationProperties,
                                              CredentialsProvider credentialsProvider,
-                                             TransportChannelProvider transportChannelProvider) throws IOException {
+                                             TransportChannelProvider transportChannelProvider) {
         SecretManagerFactory factory = new SecretManagerFactory(configurationProperties);
         return factory.secretManagerServiceClient(credentialsProvider, transportChannelProvider);
     }

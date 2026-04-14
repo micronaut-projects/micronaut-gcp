@@ -22,6 +22,7 @@ import com.google.auth.http.HttpTransportFactory;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import io.micronaut.context.env.PropertySource;
+import io.micronaut.context.env.PropertySource.Origin;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.util.ArgumentUtils;
@@ -53,6 +54,7 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
 
     public static final String PROVIDER = "gcp-secret-manager";
     private static final Logger LOG = LoggerFactory.getLogger(SecretManagerPropertySourceImporter.class);
+    private static final String DEFAULT_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
     private static final String PATH = "path";
     private static final String FORMAT = "format";
     private static final String CREDENTIALS_LOCATION = "credentials-location";
@@ -60,6 +62,10 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
     private static final String PROJECT_ID = "project-id";
     private static final String LOCATION = "location";
     private static final String VERSION = "version";
+    private static final String GCP_CREDENTIALS_LOCATION = "gcp.credentials.location";
+    private static final String GCP_CREDENTIALS_ENCODED_KEY = "gcp.credentials.encoded-key";
+    private static final String GCP_PROJECT_ID = "gcp.project-id";
+    private static final String GCP_PROJECT_ID_CAMEL_CASE = "gcp.projectId";
     private static final SecretManagerImporterClientFactory CLIENT_FACTORY = new SecretManagerImporterClientFactory();
 
     @Override
@@ -131,14 +137,15 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         SecretManagerImportDeclaration declaration = resolveDeclaration(context, context.importDeclaration());
         SecretManagerConfigurationProperties configurationProperties = new SecretManagerConfigurationProperties();
         configurationProperties.setLocation(declaration.location());
-        VersionedSecret secret = fetchSecret(context, declaration, configurationProperties);
+        VersionedSecret secret = fetchSecret(declaration, configurationProperties);
         String sourceName = context.connectionString() != null ? context.getCanonicalLocation() : PROVIDER + ":" + declaration.path();
         String extension = StringUtils.isNotEmpty(declaration.format()) ? declaration.format() : inferExtension(secret.getName());
-        return context.importPropertySource(new String(secret.getContents(), java.nio.charset.StandardCharsets.UTF_8), sourceName, extension, context.parentOrigin());
+        String content = new String(secret.getContents(), java.nio.charset.StandardCharsets.UTF_8);
+        Origin origin = context.parentOrigin();
+        return context.importPropertySource(content, sourceName, extension, origin != null ? origin : Origin.of(sourceName));
     }
 
-    private VersionedSecret fetchSecret(ImportContext<SecretManagerImportDeclaration> context,
-                                        SecretManagerImportDeclaration declaration,
+    private VersionedSecret fetchSecret(SecretManagerImportDeclaration declaration,
                                         SecretManagerConfigurationProperties configurationProperties) {
         try {
             GoogleCredentials credentials = buildGoogleCredentials(declaration);
@@ -161,12 +168,14 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         credentialsConfiguration.setEncodedKey(declaration.encodedKey());
         HttpTransportFactory transportFactory = NetHttpTransport::new;
         GoogleCredentials credentials;
-        if (credentialsConfiguration.getLocation().isPresent()) {
-            try (java.io.FileInputStream fis = new java.io.FileInputStream(credentialsConfiguration.getLocation().get())) {
+        Optional<String> credentialsLocation = credentialsConfiguration.getLocation();
+        Optional<String> encodedKey = credentialsConfiguration.getEncodedKey();
+        if (credentialsLocation.isPresent()) {
+            try (java.io.FileInputStream fis = new java.io.FileInputStream(credentialsLocation.orElseThrow())) {
                 credentials = GoogleCredentials.fromStream(fis, transportFactory);
             }
-        } else if (credentialsConfiguration.getEncodedKey().isPresent()) {
-            byte[] bytes = java.util.Base64.getDecoder().decode(credentialsConfiguration.getEncodedKey().get());
+        } else if (encodedKey.isPresent()) {
+            byte[] bytes = java.util.Base64.getDecoder().decode(encodedKey.orElseThrow());
             try (java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(bytes)) {
                 credentials = GoogleCredentials.fromStream(is, transportFactory);
             }
@@ -174,7 +183,7 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
             credentials = GoogleCredentials.getApplicationDefault();
         }
         List<String> scopes = credentialsConfiguration.getScopes().isEmpty()
-            ? List.of("https://www.googleapis.com/auth/cloud-platform")
+            ? List.of(DEFAULT_SCOPE)
             : credentialsConfiguration.getScopes().stream().map(URI::toString).toList();
         if (credentials.createScopedRequired()) {
             return credentials.createScoped(scopes);
@@ -187,25 +196,25 @@ public final class SecretManagerPropertySourceImporter extends RetryableProperty
         String credentialsLocation = declaration.credentialsLocation();
         String encodedKey = declaration.encodedKey();
         String projectId = declaration.projectId();
-        if (!StringUtils.hasText(credentialsLocation) && context.environment().containsProperty("gcp.credentials.location")) {
-            credentialsLocation = context.environment().getRequiredProperty("gcp.credentials.location", String.class);
+        if (!StringUtils.hasText(credentialsLocation) && context.environment().containsProperty(GCP_CREDENTIALS_LOCATION)) {
+            credentialsLocation = context.environment().getRequiredProperty(GCP_CREDENTIALS_LOCATION, String.class);
         }
-        if (!StringUtils.hasText(encodedKey) && context.environment().containsProperty("gcp.credentials.encoded-key")) {
-            encodedKey = context.environment().getRequiredProperty("gcp.credentials.encoded-key", String.class);
+        if (!StringUtils.hasText(encodedKey) && context.environment().containsProperty(GCP_CREDENTIALS_ENCODED_KEY)) {
+            encodedKey = context.environment().getRequiredProperty(GCP_CREDENTIALS_ENCODED_KEY, String.class);
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("Resolving gcp-secret-manager import for path [{}] with visible bootstrap keys gcp.project-id={}, gcp.projectId={}, gcp.credentials.location={}, gcp.credentials.encoded-key={}",
                 declaration.path(),
-                context.environment().containsProperty("gcp.project-id"),
-                context.environment().containsProperty("gcp.projectId"),
-                context.environment().containsProperty("gcp.credentials.location"),
-                context.environment().containsProperty("gcp.credentials.encoded-key"));
+                context.environment().containsProperty(GCP_PROJECT_ID),
+                context.environment().containsProperty(GCP_PROJECT_ID_CAMEL_CASE),
+                context.environment().containsProperty(GCP_CREDENTIALS_LOCATION),
+                context.environment().containsProperty(GCP_CREDENTIALS_ENCODED_KEY));
         }
         if (!StringUtils.hasText(projectId)) {
-            if (context.environment().containsProperty("gcp.project-id")) {
-                projectId = context.environment().getRequiredProperty("gcp.project-id", String.class);
-            } else if (context.environment().containsProperty("gcp.projectId")) {
-                projectId = context.environment().getRequiredProperty("gcp.projectId", String.class);
+            if (context.environment().containsProperty(GCP_PROJECT_ID)) {
+                projectId = context.environment().getRequiredProperty(GCP_PROJECT_ID, String.class);
+            } else if (context.environment().containsProperty(GCP_PROJECT_ID_CAMEL_CASE)) {
+                projectId = context.environment().getRequiredProperty(GCP_PROJECT_ID_CAMEL_CASE, String.class);
             }
         }
         validateCredentials(StringUtils.hasText(credentialsLocation) ? credentialsLocation : null, StringUtils.hasText(encodedKey) ? encodedKey : null);

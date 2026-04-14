@@ -124,6 +124,4 @@ public class DefaultSecretManagerClient implements SecretManagerClient {
                 .map(response -> SecretManagerSecretAccessor.toVersionedSecret(secretId, version, projectId, response, configurationProperties))
                 .onErrorResume(throwable -> Mono.empty());
     }
-
-
 }
