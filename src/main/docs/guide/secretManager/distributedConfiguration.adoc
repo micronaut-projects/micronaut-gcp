@@ -1,140 +1,139 @@
-You can leverage https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration[Distributed Configuration] and rely on Google Cloud Secret Manager to store your configuration files.
+You can use https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration[Distributed Configuration] with Google Cloud Secret Manager by importing specific secrets through `micronaut.config.import`.
 
-To enable it, add a bootstrap configuration file to `src/main/resources/`:
+This is the preferred approach for new applications because it avoids bootstrap-specific wiring and makes each imported secret explicit.
 
-.bootstrap configuration
-[configuration]
+IMPORTANT: Make sure you have configured credentials following the <<setup, Setting up GCP>> section, and that the configured identity can read the target secrets. If you need more information, see the official link:https://cloud.google.com/secret-manager/docs/access-control[Secret Manager access control] documentation.
+
+== Importing a configuration secret
+
+Store a configuration payload such as YAML, JSON, or properties in a Secret Manager secret. Secret Manager does not keep file extensions, so the importer either uses the configured `format` or defaults to YAML-style parsing for extensionless secrets.
+
+[source,yaml]
 ----
 micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
+  config:
+    import: gcp-secret-manager://application?project-id=my-gcp-project
 ----
 
-IMPORTANT: Make sure you have configured the correct credentials on your project following the <<setup, Setting up GCP >> section.
-And that the service account you designated your application has proper rights to read secrets. Follow the official link:https://cloud.google.com/secret-manager/docs/access-control[Access Control] guide for Secret Manager if you need more information.
+The importer loads the secret at startup and publishes it as a Micronaut property source.
 
-Similarly, you can leverage Distributed Configuration by complying with data residency regulations using regional secrets in Google Cloud Secret Manager.
-Follow the official link:https://cloud.google.com/secret-manager/regional-secrets/data-residency[Regional Secrets Overview] if you need more information.
+When you use the scalar connection-string form, you can pass additional importer options as query parameters:
 
-To enable it for regional secrets, add the following bootstrap configuration file to `src/main/resources/`:
+[source]
+----
+micronaut.config.import=gcp-secret-manager://application?project-id=my-gcp-project&credentials-location=credentials-file-path
+----
 
-.bootstrap configuration
-[configuration]
+In that form, `credentials-location` maps directly to the importer option of the same name. If you need `encoded-key`, prefer the structured import form below so the Base64 value does not need URI escaping. If neither credential option is supplied, the importer falls back to Application Default Credentials.
+
+== Structured import declarations
+
+If you need to pass extra options such as credentials, project id, or regional location, use the structured import form:
+
+[source,yaml]
 ----
 micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-        location: us-central1
+  config:
+    import:
+      provider: gcp-secret-manager
+      path: application
+      project-id: my-gcp-project
+      format: yml
 ----
 
-IMPORTANT: Make sure you have configured the `gcp.secret-manager.location` property to use regional secrets for the distributed configuration
+Supported importer options are:
 
+|===
+|Option |Description
+|`path` |The secret name to import
+|`project-id` |The Google Cloud project containing the secret
+|`format` |Explicit payload format such as `yml`, `yaml`, `json`, or `properties`
+|`location` |Regional Secret Manager location for regional secrets
+|`version` |Secret version to import; defaults to `latest`
+|`credentials-location` |Path to a service account credentials file used only for this import
+|`encoded-key` |Base64 encoded service account credentials used only for this import
+|`optional` |Marks the import as optional
+|===
 
-== Configuration file resolution
+When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <<setup, Setting up GCP>> section.
 
-It's important to note that Google Cloud Secret Manager *does not* support file extensions.
-When you upload your application configuration file (e.g. `application.yml` or `application.properties`) remove the file extension.
+== Retry options
 
-Micronaut tries to circumvent this limitation, adopting a convention when fetching configuration files.
-The following table displays the possible secrets that are fetched by default:
+`gcp-secret-manager` imports also support the standard retry options provided by `RetryablePropertySourceImporter`. These options work with both scalar connection-string imports and structured import declarations.
+
+|===
+|Option |Description
+|`retry-attempts` |Maximum number of attempts
+|`retry-count` |Alias for `retry-attempts`
+|`retry-delay` |Delay between attempts
+|`retry-max-delay` |Maximum overall retry delay
+|`retry-multiplier` |Delay multiplier applied between attempts
+|`retry-jitter` |Jitter factor from `0.0` to `1.0`
+|===
+
+Example using scalar connection-string form:
+
+[source,yaml]
+----
+micronaut:
+  config:
+    import: gcp-secret-manager://application?project-id=my-gcp-project&retry-attempts=5&retry-delay=1s&retry-multiplier=1.5
+----
+
+Example using structured form:
+
+[source,yaml]
+----
+micronaut:
+  config:
+    import:
+      provider: gcp-secret-manager
+      path: application
+      project-id: my-gcp-project
+      retry-attempts: 5
+      retry-delay: 1s
+      retry-max-delay: 30s
+----
+
+== Regional imports
+
+To comply with data residency requirements, you can point the importer at a regional secret by setting `location` in the import declaration:
+
+[source,yaml]
+----
+micronaut:
+  config:
+    import:
+      provider: gcp-secret-manager
+      path: application
+      project-id: my-gcp-project
+      location: us-central1
+----
+
+== Legacy bootstrap integration
+
+The older bootstrap/config-client based integration remains available for existing applications. It still supports default config resolution such as `application`, `application_{env}`, `[APPLICATION_NAME]`, and `[APPLICATION_NAME]_{env}`, plus `custom-configs` and `keys`.
+
+For new development, prefer `micronaut.config.import`. Use the bootstrap configuration path only when you need the legacy default secret resolution behavior.
+
+== Legacy default config resolution
+
+When using the legacy bootstrap configuration client, the following secrets are fetched by default:
 
 |===
 |Name|Description
 |`application`
 |Configuration shared by all applications
 |`application_${env}`
-|Environment specific configuration, for instance if you have `gcp` and `k8s` as environments the framework will look for `application_gcp` and `application_k8s`
+|Environment-specific configuration
 |`[APPLICATION_NAME]`
-|Application specific configuration, example `hello-world`
+|Application-specific configuration
 |`[APPLICATION_NAME]_${env}`
-|Application specific configuration bound to an environment, example `hello-world_gcp`
-
+|Application-specific configuration for an environment
 |===
 
-=== Supported formats
-
-Internally the framework will try to read the files (that lack extensions) on the following order: `yaml`, `json`, `properties`.
-The first PropertySourceLoader that succeeds reading the contents of the secrets interrupts the chain.
-
-=== Avoid loading default config files
-
-If, for some reason, you don't want to fetch these default config files, you can set `gcp.secret-manager.default-config-enabled` to `false`:
-
-.bootstrap configuration
-[configuration]
-----
-micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-        default-config-enabled: false
-----
-
-=== Loading non default config files
-
-It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.
-You can `whitelist` secrets that you would like to loaded as PropertySources using the following configuration:
-
-.bootstrap configuration
-[configuration]
-----
-micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-      custom-configs:
-        - my-first-config
-        - my-second-config
-----
-
-TIP: The secrets you list on `custom-configs` must be valid configuration files and not single keys.
-
-=== Loading key/value pairs into a PropertySource
-
-Google Cloud Secret Manager can also host single keys mapping to a single String value.
-For instance one could have a `DB_PASSWORD` secret, instead of storing it on a configuration file.
-Because Secret Manager does not offer a hierarchical approach, loading all secrets in a project is not a viable solution.
-Instead you need to whitelist the keys you would like to pre-fetch such as the following config demonstrates:
-
-.bootstrap configuration
-[configuration]
-----
-micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-      keys:
-        - DB_PASSWORD
-        - dbUser
-----
-
-The framework will load all Secret Manager keys and prefix them with a `sm` key. The table below shows how entries could be accessed:
-
-|===
-|Secret Name|Micronaut resolved property
-|`DB_PASSWORD`
-|`{sm.db.password}`
-|`dbUser`
-|`{sm.db.user}`
-|===
+The legacy bootstrap path can also disable default config resolution with `gcp.secret-manager.default-config-enabled=false`, whitelist additional config secrets through `gcp.secret-manager.custom-configs`, and whitelist single-value secrets through `gcp.secret-manager.keys`.
 
 == Secret Versioning
 
-Google Cloud Secret Manager supports link:https://cloud.google.com/secret-manager/docs/managing-secret-versions[secret versioning].
-For the distributed configuration use case Micronaut will *always* load the `latest` version of each secret into a property source file.
-It's currently not supported specifying what version of your `application` configuration file should be loaded.
+Google Cloud Secret Manager supports link:https://cloud.google.com/secret-manager/docs/managing-secret-versions[secret versioning]. For the current import support in this module, config imports load the `latest` version of the named secret by default, but you can explicitly override the version.
