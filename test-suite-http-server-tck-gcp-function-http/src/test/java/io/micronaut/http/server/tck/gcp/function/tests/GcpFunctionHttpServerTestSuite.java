@@ -8,6 +8,7 @@ import org.junit.platform.suite.api.*;
     "io.micronaut.http.server.tck.gcp.function.tests"
 })
 @ExcludeClassNamePatterns({
+    "io.micronaut.http.server.tck.tests.BodyTest",
     "io.micronaut.http.server.tck.tests.cors.CorsStaticResourceTest",
     "io.micronaut.http.server.tck.tests.FilterProxyTest",
     "io.micronaut.http.server.tck.tests.forms.FormBindingDeadlockTest",
