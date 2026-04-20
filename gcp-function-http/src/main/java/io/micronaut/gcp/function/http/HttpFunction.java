@@ -319,8 +319,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
                                     }
                                 }
                             }
-                        }
-                        {
+                        } else {
                             // No mediatype, so try and convert the body to a byte array from whatever it may be
                             return BodyUtils.bodyAsByteArray(
                                     jsonMapper,
