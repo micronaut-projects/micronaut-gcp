@@ -29,15 +29,13 @@ import java.util.List;
 /**
  * Implementation of {@link ServletBinderRegistry} for Google.
  *
- * @param <T> The body type
- *
  * @author graemerocher
  * @since 1.2.0
  */
 @Singleton
 @Replaces(DefaultRequestBinderRegistry.class)
 @Internal
-class GoogleBinderRegistry<T> extends DefaultRequestBinderRegistry<T> {
+class GoogleBinderRegistry extends DefaultRequestBinderRegistry {
 
     /**
      * Default constructor.
@@ -50,7 +48,7 @@ class GoogleBinderRegistry<T> extends DefaultRequestBinderRegistry<T> {
     GoogleBinderRegistry(
             ConversionService conversionService,
             List<RequestArgumentBinder> binders,
-            DefaultBodyAnnotationBinder<T> defaultBodyAnnotationBinder,
+            DefaultBodyAnnotationBinder<?> defaultBodyAnnotationBinder,
             MessageBodyHandlerRegistry messageBodyHandlerRegistry) {
         super(conversionService, binders, defaultBodyAnnotationBinder);
         addArgumentBinder(new GoogleRequestBinder());
