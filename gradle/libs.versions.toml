@@ -1,16 +1,16 @@
 [versions]
-micronaut = "5.0.0-M12"
+micronaut = "5.0.0-M23"
 managed-google-auth-library-oauth2http = "1.43.0"
-managed-google-functions-framework-api = "2.0.0"
+managed-google-functions-framework-api = "2.0.1"
 managed-google-function-invoker = "2.0.0"
-managed-google-cloud-core = "2.65.0"
+managed-google-cloud-core = "2.69.0"
 managed-google-cloud-pubsub = "1.150.1"
-managed-google-cloud-secretmanager = "2.85.0"
+managed-google-cloud-secretmanager = "2.91.0"
 managed-google-cloudevent-types="0.3.0"
 managed-gax = "2.75.0"
 
 brave-opentracing = "1.0.1"
-brave-propagation-stackdriver = "2.3.0"
+brave-propagation-stackdriver = "2.3.1"
 
 cloudevents-api = "2.5.0"
 
@@ -20,13 +20,13 @@ system-stubs-core = "2.1.8"
 
 awaitility = '4.3.0'
 
-micronaut-test = "5.0.0-M6"
-micronaut-grpc = "4.12.0"
+micronaut-test = "5.0.0-M7"
+micronaut-grpc = "5.0.0-M1"
 micronaut-jackson-xml = "5.0.0-M1"
 micronaut-logging = "2.0.0-M2"
 micronaut-reactor = "4.0.0-M1"
 micronaut-rxjava3 = "4.0.0-M1"
-micronaut-serde = "3.0.0-M2"
+micronaut-serde = "3.0.0-M7"
 micronaut-servlet = "6.0.0-M2"
 micronaut-tracing = "8.0.0-M1"
 micronaut-discovery = "5.0.0-M1"
