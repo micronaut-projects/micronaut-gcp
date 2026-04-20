@@ -10,7 +10,7 @@ managed-google-cloudevent-types="0.3.0"
 managed-gax = "2.75.0"
 
 brave-opentracing = "1.0.1"
-brave-propagation-stackdriver = "2.3.0"
+brave-propagation-stackdriver = "2.3.1"
 
 cloudevents-api = "2.5.0"
 
