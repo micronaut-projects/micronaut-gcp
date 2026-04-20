@@ -30,7 +30,7 @@ micronaut-serde = "3.0.0-M7"
 micronaut-servlet = "6.0.0-M3"
 micronaut-tracing = "8.0.0-M1"
 micronaut-discovery = "5.0.0-M1"
-micronaut-validation = "5.0.0-M1"
+micronaut-validation = "5.0.0-M2"
 
 # Micronaut
 micronaut-gradle-plugin = "4.6.2"
