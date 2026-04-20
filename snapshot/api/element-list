@@ -21,5 +21,6 @@ io.micronaut.gcp.pubsub.validation
 io.micronaut.gcp.secretmanager
 io.micronaut.gcp.secretmanager.client
 io.micronaut.gcp.secretmanager.configuration
+io.micronaut.gcp.secretmanager.imports
 io.micronaut.gcp.tracing.zipkin
 io.micronaut.pubsub.testcontainers

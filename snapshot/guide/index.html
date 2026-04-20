@@ -5387,6 +5387,9 @@ Applications can also use it to store configuration files and use it as secure d
 </div>
 </p>
 </div>
+<div class="paragraph">
+<p>For configuration files stored in Secret Manager, prefer <code>micronaut.config.import</code> with the Google Secret Manager importer. For direct runtime secret access from application code, inject <code>SecretManagerServiceClient</code> or use <a href="../api/io/micronaut/gcp/secretmanager/client/SecretManagerClient.html">SecretManagerClient</a>.</p>
+</div>
 
 <h2 id="distributedConfiguration"><a class="anchor" href="#distributedConfiguration"></a>10.1 Distributed Configuration</h2>
 
@@ -5398,79 +5401,10 @@ Applications can also use it to store configuration files and use it as secure d
 
 
 <div class="paragraph">
-<p>You can leverage <a href="https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration">Distributed Configuration</a> and rely on Google Cloud Secret Manager to store your configuration files.</p>
+<p>You can use <a href="https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration">Distributed Configuration</a> with Google Cloud Secret Manager by importing specific secrets through <code>micronaut.config.import</code>.</p>
 </div>
 <div class="paragraph">
-<p>To enable it, add a bootstrap configuration file to <code>src/main/resources/</code>:</p>
-</div>
-<div class="openblock">
-<div class="title">bootstrap configuration</div>
-<div class="content">
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
-micronaut.config-client.enabled=true</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
-  [micronaut.application]
-    name="hello-world"
-  [micronaut.config-client]
-    enabled=true</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
-  application {
-    name = "hello-world"
-  }
-  configClient {
-    enabled = true
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
-  micronaut {
-    application {
-      name = "hello-world"
-    }
-    config-client {
-      enabled = true
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "micronaut": {
-    "application": {
-      "name": "hello-world"
-    },
-    "config-client": {
-      "enabled": true
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
+<p>This is the preferred approach for new applications because it avoids bootstrap-specific wiring and makes each imported secret explicit.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -5479,132 +5413,214 @@ micronaut.config-client.enabled=true</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Make sure you have configured the correct credentials on your project following the <a href="#setup">Setting up GCP </a> section.
-And that the service account you designated your application has proper rights to read secrets. Follow the official <a href="https://cloud.google.com/secret-manager/docs/access-control">Access Control</a> guide for Secret Manager if you need more information.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Similarly, you can leverage Distributed Configuration by complying with data residency regulations using regional secrets in Google Cloud Secret Manager.
-Follow the official <a href="https://cloud.google.com/secret-manager/regional-secrets/data-residency">Regional Secrets Overview</a> if you need more information.</p>
-</div>
-<div class="paragraph">
-<p>To enable it for regional secrets, add the following bootstrap configuration file to <code>src/main/resources/</code>:</p>
-</div>
-<div class="openblock">
-<div class="title">bootstrap configuration</div>
-<div class="content">
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
-micronaut.config-client.enabled=true
-gcp.secret-manager.location=us-central1</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-        location: us-central1</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
-  [micronaut.application]
-    name="hello-world"
-  [micronaut.config-client]
-    enabled=true
-[gcp]
-  [gcp.secret-manager]
-    location="us-central1"</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
-  application {
-    name = "hello-world"
-  }
-  configClient {
-    enabled = true
-  }
-}
-gcp {
-  secretManager {
-    location = "us-central1"
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
-  micronaut {
-    application {
-      name = "hello-world"
-    }
-    config-client {
-      enabled = true
-    }
-  }
-  gcp {
-    secret-manager {
-      location = "us-central1"
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "micronaut": {
-    "application": {
-      "name": "hello-world"
-    },
-    "config-client": {
-      "enabled": true
-    }
-  },
-  "gcp": {
-    "secret-manager": {
-      "location": "us-central1"
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Make sure you have configured the <code>gcp.secret-manager.location</code> property to use regional secrets for the distributed configuration
+Make sure you have configured credentials following the <a href="#setup">Setting up GCP</a> section, and that the configured identity can read the target secrets. If you need more information, see the official <a href="https://cloud.google.com/secret-manager/docs/access-control">Secret Manager access control</a> documentation.
 </td>
 </tr>
 </table>
 </div>
 <div class="sect1">
-<h2 id="_configuration_file_resolution">Configuration file resolution</h2>
+<h2 id="_importing_a_configuration_secret">Importing a configuration secret</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>It&#8217;s important to note that Google Cloud Secret Manager <strong>does not</strong> support file extensions.
-When you upload your application configuration file (e.g. <code>application.yml</code> or <code>application.properties</code>) remove the file extension.</p>
+<p>Store a configuration payload such as YAML, JSON, or properties in a Secret Manager secret. Secret Manager does not keep file extensions, so the importer either uses the configured <code>format</code> or defaults to YAML-style parsing for extensionless secrets.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  config:
+    import: gcp-secret-manager://application?project-id=my-gcp-project</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Micronaut tries to circumvent this limitation, adopting a convention when fetching configuration files.
-The following table displays the possible secrets that are fetched by default:</p>
+<p>The importer loads the secret at startup and publishes it as a Micronaut property source.</p>
+</div>
+<div class="paragraph">
+<p>When you use the scalar connection-string form, you can pass additional importer options as query parameters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">micronaut.config.import=gcp-secret-manager://application?project-id=my-gcp-project&amp;credentials-location=credentials-file-path</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In that form, <code>credentials-location</code> maps directly to the importer option of the same name. If you need <code>encoded-key</code>, prefer the structured import form below so the Base64 value does not need URI escaping. If neither credential option is supplied, the importer falls back to Application Default Credentials.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_structured_import_declarations">Structured import declarations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you need to pass extra options such as credentials, project id, or regional location, use the structured import form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  config:
+    import:
+      provider: gcp-secret-manager
+      path: application
+      project-id: my-gcp-project
+      format: yml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supported importer options are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Option</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret name to import</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>project-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Google Cloud project containing the secret</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>format</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit payload format such as <code>yml</code>, <code>yaml</code>, <code>json</code>, or <code>properties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Regional Secret Manager location for regional secrets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Secret version to import; defaults to <code>latest</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>credentials-location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to a service account credentials file used only for this import</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>encoded-key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base64 encoded service account credentials used only for this import</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Marks the import as optional</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When <code>credentials-location</code> and <code>encoded-key</code> are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <a href="#setup">Setting up GCP</a> section.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_retry_options">Retry options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>gcp-secret-manager</code> imports also support the standard retry options provided by <code>RetryablePropertySourceImporter</code>. These options work with both scalar connection-string imports and structured import declarations.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Option</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retry-attempts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of attempts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retry-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alias for <code>retry-attempts</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retry-delay</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delay between attempts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retry-max-delay</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum overall retry delay</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retry-multiplier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delay multiplier applied between attempts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retry-jitter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jitter factor from <code>0.0</code> to <code>1.0</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example using scalar connection-string form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  config:
+    import: gcp-secret-manager://application?project-id=my-gcp-project&amp;retry-attempts=5&amp;retry-delay=1s&amp;retry-multiplier=1.5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example using structured form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  config:
+    import:
+      provider: gcp-secret-manager
+      path: application
+      project-id: my-gcp-project
+      retry-attempts: 5
+      retry-delay: 1s
+      retry-max-delay: 30s</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_regional_imports">Regional imports</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To comply with data residency requirements, you can point the importer at a regional secret by setting <code>location</code> in the import declaration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  config:
+    import:
+      provider: gcp-secret-manager
+      path: application
+      project-id: my-gcp-project
+      location: us-central1</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_legacy_bootstrap_integration">Legacy bootstrap integration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The older bootstrap/config-client based integration remains available for existing applications. It still supports default config resolution such as <code>application</code>, <code>application_{env}</code>, <code>[APPLICATION_NAME]</code>, and <code>[APPLICATION_NAME]_{env}</code>, plus <code>custom-configs</code> and <code>keys</code>.</p>
+</div>
+<div class="paragraph">
+<p>For new development, prefer <code>micronaut.config.import</code>. Use the bootstrap configuration path only when you need the legacy default secret resolution behavior.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_legacy_default_config_resolution">Legacy default config resolution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using the legacy bootstrap configuration client, the following secrets are fetched by default:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5622,366 +5638,20 @@ The following table displays the possible secrets that are fetched by default:</
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>application_${env}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Environment specific configuration, for instance if you have <code>gcp</code> and <code>k8s</code> as environments the framework will look for <code>application_gcp</code> and <code>application_k8s</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment-specific configuration</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[APPLICATION_NAME]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Application specific configuration, example <code>hello-world</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application-specific configuration</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[APPLICATION_NAME]_${env}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Application specific configuration bound to an environment, example <code>hello-world_gcp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application-specific configuration for an environment</p></td>
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_supported_formats">Supported formats</h3>
 <div class="paragraph">
-<p>Internally the framework will try to read the files (that lack extensions) on the following order: <code>yaml</code>, <code>json</code>, <code>properties</code>.
-The first PropertySourceLoader that succeeds reading the contents of the secrets interrupts the chain.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_avoid_loading_default_config_files">Avoid loading default config files</h3>
-<div class="paragraph">
-<p>If, for some reason, you don&#8217;t want to fetch these default config files, you can set <code>gcp.secret-manager.default-config-enabled</code> to <code>false</code>:</p>
-</div>
-<div class="openblock">
-<div class="title">bootstrap configuration</div>
-<div class="content">
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
-micronaut.config-client.enabled=true
-gcp.secret-manager.default-config-enabled=false</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-        default-config-enabled: false</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
-  [micronaut.application]
-    name="hello-world"
-  [micronaut.config-client]
-    enabled=true
-[gcp]
-  [gcp.secret-manager]
-    default-config-enabled=false</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
-  application {
-    name = "hello-world"
-  }
-  configClient {
-    enabled = true
-  }
-}
-gcp {
-  secretManager {
-    defaultConfigEnabled = false
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
-  micronaut {
-    application {
-      name = "hello-world"
-    }
-    config-client {
-      enabled = true
-    }
-  }
-  gcp {
-    secret-manager {
-      default-config-enabled = false
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "micronaut": {
-    "application": {
-      "name": "hello-world"
-    },
-    "config-client": {
-      "enabled": true
-    }
-  },
-  "gcp": {
-    "secret-manager": {
-      "default-config-enabled": false
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_loading_non_default_config_files">Loading non default config files</h3>
-<div class="paragraph">
-<p>It may be desired to sometimes load a secret as a PropertySource that does not follow the above convention.
-You can <code>whitelist</code> secrets that you would like to loaded as PropertySources using the following configuration:</p>
-</div>
-<div class="openblock">
-<div class="title">bootstrap configuration</div>
-<div class="content">
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
-micronaut.config-client.enabled=true
-gcp.secret-manager.custom-configs[0]=my-first-config
-gcp.secret-manager.custom-configs[1]=my-second-config</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-      custom-configs:
-        - my-first-config
-        - my-second-config</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
-  [micronaut.application]
-    name="hello-world"
-  [micronaut.config-client]
-    enabled=true
-[gcp]
-  [gcp.secret-manager]
-    custom-configs=[
-      "my-first-config",
-      "my-second-config"
-    ]</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
-  application {
-    name = "hello-world"
-  }
-  configClient {
-    enabled = true
-  }
-}
-gcp {
-  secretManager {
-    customConfigs = ["my-first-config", "my-second-config"]
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
-  micronaut {
-    application {
-      name = "hello-world"
-    }
-    config-client {
-      enabled = true
-    }
-  }
-  gcp {
-    secret-manager {
-      custom-configs = ["my-first-config", "my-second-config"]
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "micronaut": {
-    "application": {
-      "name": "hello-world"
-    },
-    "config-client": {
-      "enabled": true
-    }
-  },
-  "gcp": {
-    "secret-manager": {
-      "custom-configs": ["my-first-config", "my-second-config"]
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-The secrets you list on <code>custom-configs</code> must be valid configuration files and not single keys.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_loading_keyvalue_pairs_into_a_propertysource">Loading key/value pairs into a PropertySource</h3>
-<div class="paragraph">
-<p>Google Cloud Secret Manager can also host single keys mapping to a single String value.
-For instance one could have a <code>DB_PASSWORD</code> secret, instead of storing it on a configuration file.
-Because Secret Manager does not offer a hierarchical approach, loading all secrets in a project is not a viable solution.
-Instead you need to whitelist the keys you would like to pre-fetch such as the following config demonstrates:</p>
-</div>
-<div class="openblock">
-<div class="title">bootstrap configuration</div>
-<div class="content">
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">micronaut.application.name=hello-world
-micronaut.config-client.enabled=true
-gcp.secret-manager.keys[0]=DB_PASSWORD
-gcp.secret-manager.keys[1]=dbUser</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    application:
-        name: hello-world
-    config-client:
-        enabled: true
-gcp:
-    secret-manager:
-      keys:
-        - DB_PASSWORD
-        - dbUser</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut]
-  [micronaut.application]
-    name="hello-world"
-  [micronaut.config-client]
-    enabled=true
-[gcp]
-  [gcp.secret-manager]
-    keys=[
-      "DB_PASSWORD",
-      "dbUser"
-    ]</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">micronaut {
-  application {
-    name = "hello-world"
-  }
-  configClient {
-    enabled = true
-  }
-}
-gcp {
-  secretManager {
-    keys = ["DB_PASSWORD", "dbUser"]
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
-  micronaut {
-    application {
-      name = "hello-world"
-    }
-    config-client {
-      enabled = true
-    }
-  }
-  gcp {
-    secret-manager {
-      keys = ["DB_PASSWORD", "dbUser"]
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "micronaut": {
-    "application": {
-      "name": "hello-world"
-    },
-    "config-client": {
-      "enabled": true
-    }
-  },
-  "gcp": {
-    "secret-manager": {
-      "keys": ["DB_PASSWORD", "dbUser"]
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>The framework will load all Secret Manager keys and prefix them with a <code>sm</code> key. The table below shows how entries could be accessed:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Secret Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Micronaut resolved property</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DB_PASSWORD</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{sm.db.password}</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dbUser</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{sm.db.user}</code></p></td>
-</tr>
-</tbody>
-</table>
+<p>The legacy bootstrap path can also disable default config resolution with <code>gcp.secret-manager.default-config-enabled=false</code>, whitelist additional config secrets through <code>gcp.secret-manager.custom-configs</code>, and whitelist single-value secrets through <code>gcp.secret-manager.keys</code>.</p>
 </div>
 </div>
 </div>
@@ -5989,9 +5659,7 @@ gcp {
 <h2 id="_secret_versioning">Secret Versioning</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Google Cloud Secret Manager supports <a href="https://cloud.google.com/secret-manager/docs/managing-secret-versions">secret versioning</a>.
-For the distributed configuration use case Micronaut will <strong>always</strong> load the <code>latest</code> version of each secret into a property source file.
-It&#8217;s currently not supported specifying what version of your <code>application</code> configuration file should be loaded.</p>
+<p>Google Cloud Secret Manager supports <a href="https://cloud.google.com/secret-manager/docs/managing-secret-versions">secret versioning</a>. For the current import support in this module, config imports load the <code>latest</code> version of the named secret by default, but you can explicitly override the version.</p>
 </div>
 </div>
 </div>
@@ -6008,6 +5676,9 @@ It&#8217;s currently not supported specifying what version of your <code>applica
 <div class="sect1">
 <h2 id="_accessing_secret_manager_via_client_libraries">Accessing Secret Manager via client libraries</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>If you need startup configuration import, use the distributed configuration support described in <a href="secretManager/distributedConfiguration.html">Distributed Configuration</a>. The client APIs described here are for direct application code access to secrets.</p>
+</div>
 <div class="paragraph">
 <p>If you require access to Secret Manager via the Google <a href="https://cloud.google.com/pubsub/docs/quickstart-client-libraries">client java libraries</a>, Micronaut provides a bean of type <a href="https://googleapis.dev/java/google-cloud-secretmanager/latest/com/google/cloud/secretmanager/v1/SecretManagerServiceClient.html">SecretManagerServiceClient</a> for injection.</p>
 </div>

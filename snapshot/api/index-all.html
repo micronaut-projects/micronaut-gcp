@@ -61,6 +61,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html#ACCESS_CONFIGS" class="member-name-link">ACCESS_CONFIGS</a> - Enum constant in enum class io.micronaut.discovery.cloud.gcp.<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html" title="enum class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataKeys</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/client/SecretManagerSecretAccessor.html#accessRequest(java.lang.String,java.lang.String,java.lang.String,io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties)" class="member-name-link">accessRequest(String, String, String, SecretManagerConfigurationProperties)</a> - Static method in class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/SecretManagerSecretAccessor.html" title="class in io.micronaut.gcp.secretmanager.client">SecretManagerSecretAccessor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/client/SecretManagerSecretAccessor.html#accessSecret(com.google.cloud.secretmanager.v1.SecretManagerServiceClient,java.lang.String,java.lang.String,java.lang.String,io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties)" class="member-name-link">accessSecret(SecretManagerServiceClient, String, String, String, SecretManagerConfigurationProperties)</a> - Static method in class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/SecretManagerSecretAccessor.html" title="class in io.micronaut.gcp.secretmanager.client">SecretManagerSecretAccessor</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/bind/DefaultPubSubAcknowledgement.html#ack()" class="member-name-link">ack()</a> - Method in class io.micronaut.gcp.pubsub.bind.<a href="io/micronaut/gcp/pubsub/bind/DefaultPubSubAcknowledgement.html" title="class in io.micronaut.gcp.pubsub.bind">DefaultPubSubAcknowledgement</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/credentials/DefaultOAuth2HttpTransportFactory.MutableBlockingLowLevelHttpRequest.html#addHeader(java.lang.String,java.lang.String)" class="member-name-link">addHeader(String, String)</a> - Method in class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/DefaultOAuth2HttpTransportFactory.MutableBlockingLowLevelHttpRequest.html" title="class in io.micronaut.gcp.credentials">DefaultOAuth2HttpTransportFactory.MutableBlockingLowLevelHttpRequest</a></dt>
@@ -142,6 +146,10 @@ enable trace correlation with log entries.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/credentials/DefaultOAuth2HttpTransportFactory.html#create()" class="member-name-link">create()</a> - Method in class io.micronaut.gcp.credentials.<a href="io/micronaut/gcp/credentials/DefaultOAuth2HttpTransportFactory.html" title="class in io.micronaut.gcp.credentials">DefaultOAuth2HttpTransportFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerImporterClientFactory.html#create(io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties,com.google.api.gax.core.CredentialsProvider,com.google.api.gax.rpc.TransportChannelProvider)" class="member-name-link">create(SecretManagerConfigurationProperties, CredentialsProvider, TransportChannelProvider)</a> - Method in class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerImporterClientFactory.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerImporterClientFactory</a></dt>
+<dd>
+<div class="block">Creates the low-level Secret Manager client used during config import.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/pubsub/support/DefaultPublisherFactory.html#createPublisher(io.micronaut.gcp.pubsub.support.PublisherFactoryConfig)" class="member-name-link">createPublisher(PublisherFactoryConfig)</a> - Method in class io.micronaut.gcp.pubsub.support.<a href="io/micronaut/gcp/pubsub/support/DefaultPublisherFactory.html" title="class in io.micronaut.gcp.pubsub.support">DefaultPublisherFactory</a></dt>
 <dd>
 <div class="block">Creates a publisher for a given topic.</div>
@@ -469,6 +477,8 @@ while processing a push message.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/logging/GoogleCloudPropertyDefiner.html#getPropertyValue()" class="member-name-link">getPropertyValue()</a> - Method in class io.micronaut.gcp.logging.<a href="io/micronaut/gcp/logging/GoogleCloudPropertyDefiner.html" title="class in io.micronaut.gcp.logging">GoogleCloudPropertyDefiner</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html#getProvider()" class="member-name-link">getProvider()</a> - Method in class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceImporter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.html#getPublisher()" class="member-name-link">getPublisher()</a> - Method in class io.micronaut.gcp.pubsub.support.<a href="io/micronaut/gcp/pubsub/support/PubSubPublisherState.html" title="class in io.micronaut.gcp.pubsub.support">PubSubPublisherState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html#getPublishingExecutor()" class="member-name-link">getPublishingExecutor()</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/PubSubConfigurationProperties.html" title="class in io.micronaut.gcp.pubsub.configuration">PubSubConfigurationProperties</a></dt>
@@ -687,6 +697,8 @@ deserialized message to the configured <a href="io/micronaut/gcp/pubsub/push/Pus
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html#IMAGE" class="member-name-link">IMAGE</a> - Enum constant in enum class io.micronaut.discovery.cloud.gcp.<a href="io/micronaut/discovery/cloud/gcp/GoogleComputeMetadataKeys.html" title="enum class in io.micronaut.discovery.cloud.gcp">GoogleComputeMetadataKeys</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html#importRetryablePropertySource(io.micronaut.context.env.PropertySourceImporter.ImportContext)" class="member-name-link">importRetryablePropertySource(PropertySourceImporter.ImportContext)</a> - Method in class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceImporter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/intercept/PubSubClientIntroductionAdvice.html#intercept(io.micronaut.aop.MethodInvocationContext)" class="member-name-link">intercept(MethodInvocationContext)</a> - Method in class io.micronaut.gcp.pubsub.intercept.<a href="io/micronaut/gcp/pubsub/intercept/PubSubClientIntroductionAdvice.html" title="class in io.micronaut.gcp.pubsub.intercept">PubSubClientIntroductionAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/function/http/HttpFunction.html#invoke(com.google.cloud.functions.HttpRequest)" class="member-name-link">invoke(HttpRequest)</a> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
@@ -771,6 +783,8 @@ and <a href="io/micronaut/gcp/pubsub/annotation/PubSubListener.html" title="anno
 <dt><a href="io/micronaut/gcp/secretmanager/client/package-summary.html">io.micronaut.gcp.secretmanager.client</a> - package io.micronaut.gcp.secretmanager.client</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/secretmanager/configuration/package-summary.html">io.micronaut.gcp.secretmanager.configuration</a> - package io.micronaut.gcp.secretmanager.configuration</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/package-summary.html">io.micronaut.gcp.secretmanager.imports</a> - package io.micronaut.gcp.secretmanager.imports</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/tracing/zipkin/package-summary.html">io.micronaut.gcp.tracing.zipkin</a> - package io.micronaut.gcp.tracing.zipkin</dt>
 <dd>&nbsp;</dd>
@@ -949,6 +963,10 @@ application/json mime types.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/function/http/HttpFunction.html#newApplicationContextBuilder()" class="member-name-link">newApplicationContextBuilder()</a> - Method in class io.micronaut.gcp.function.http.<a href="io/micronaut/gcp/function/http/HttpFunction.html" title="class in io.micronaut.gcp.function.http">HttpFunction</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html#newImportDeclaration(io.micronaut.core.convert.value.ConvertibleValues,io.micronaut.retry.RetryPolicy)" class="member-name-link">newImportDeclaration(ConvertibleValues, RetryPolicy)</a> - Method in class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceImporter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html#newImportDeclaration(io.micronaut.core.util.ConnectionString,io.micronaut.retry.RetryPolicy)" class="member-name-link">newImportDeclaration(ConnectionString, RetryPolicy)</a> - Method in class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceImporter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/GoogleCloudConfiguration.html#NO_PROJECT_ID_MESSAGE" class="member-name-link">NO_PROJECT_ID_MESSAGE</a> - Static variable in class io.micronaut.gcp.<a href="io/micronaut/gcp/GoogleCloudConfiguration.html" title="class in io.micronaut.gcp">GoogleCloudConfiguration</a></dt>
 <dd>
 <div class="block">A message to report if no project id is configured.</div>
@@ -1006,6 +1024,8 @@ is used for OAuth2 token refresh.</div>
 <dd>
 <div class="block">The property used to enable tracing.</div>
 </dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html#PROVIDER" class="member-name-link">PROVIDER</a> - Static variable in class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceImporter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/PublisherConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.gcp.pubsub.configuration">PublisherConfigurationProperties</a> - Class in <a href="io/micronaut/gcp/pubsub/configuration/package-summary.html">io.micronaut.gcp.pubsub.configuration</a></dt>
 <dd>
 <div class="block">Configuration properties for PubSub Publishers.</div>
@@ -1237,6 +1257,10 @@ to handle exceptions.</div>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceReader.html#read(io.micronaut.context.env.Environment,io.micronaut.gcp.secretmanager.client.VersionedSecret,java.lang.String,int)" class="member-name-link">read(Environment, VersionedSecret, String, int)</a> - Static method in class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceReader.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceReader</a></dt>
+<dd>
+<div class="block">Reads a decoded secret payload with the available property source readers and returns it as a property source.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/pubsub/configuration/ThreeTenConverterRegistrar.html#register(io.micronaut.core.convert.MutableConversionService)" class="member-name-link">register(MutableConversionService)</a> - Method in class io.micronaut.gcp.pubsub.configuration.<a href="io/micronaut/gcp/pubsub/configuration/ThreeTenConverterRegistrar.html" title="class in io.micronaut.gcp.pubsub.configuration">ThreeTenConverterRegistrar</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/condition/RequiresGoogleProjectId.html" class="type-name-link" title="annotation interface in io.micronaut.gcp.condition">RequiresGoogleProjectId</a> - Annotation Interface in <a href="io/micronaut/gcp/condition/package-summary.html">io.micronaut.gcp.condition</a></dt>
@@ -1285,6 +1309,26 @@ transform it on reactive extensions.</div>
 </dd>
 <dt><a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html#%3Cinit%3E(io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties)" class="member-name-link">SecretManagerFactory(SecretManagerConfigurationProperties)</a> - Constructor for class io.micronaut.gcp.secretmanager.<a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerImporterClientFactory.html" class="type-name-link" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerImporterClientFactory</a> - Class in <a href="io/micronaut/gcp/secretmanager/imports/package-summary.html">io.micronaut.gcp.secretmanager.imports</a></dt>
+<dd>
+<div class="block">Internal client factory seam for Google Secret Manager config imports.</div>
+</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerImporterClientFactory.html#%3Cinit%3E()" class="member-name-link">SecretManagerImporterClientFactory()</a> - Constructor for class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerImporterClientFactory.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerImporterClientFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html" class="type-name-link" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceImporter</a> - Class in <a href="io/micronaut/gcp/secretmanager/imports/package-summary.html">io.micronaut.gcp.secretmanager.imports</a></dt>
+<dd>
+<div class="block">Property source importer for Google Secret Manager.</div>
+</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html#%3Cinit%3E()" class="member-name-link">SecretManagerPropertySourceImporter()</a> - Constructor for class io.micronaut.gcp.secretmanager.imports.<a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceImporter.html" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceImporter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/imports/SecretManagerPropertySourceReader.html" class="type-name-link" title="class in io.micronaut.gcp.secretmanager.imports">SecretManagerPropertySourceReader</a> - Class in <a href="io/micronaut/gcp/secretmanager/imports/package-summary.html">io.micronaut.gcp.secretmanager.imports</a></dt>
+<dd>
+<div class="block">Shared secret payload reader for Google Secret Manager config imports.</div>
+</dd>
+<dt><a href="io/micronaut/gcp/secretmanager/client/SecretManagerSecretAccessor.html" class="type-name-link" title="class in io.micronaut.gcp.secretmanager.client">SecretManagerSecretAccessor</a> - Class in <a href="io/micronaut/gcp/secretmanager/client/package-summary.html">io.micronaut.gcp.secretmanager.client</a></dt>
+<dd>
+<div class="block">Helper methods for building Secret Manager requests and mapping responses.</div>
+</dd>
 <dt><a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html#secretManagerServiceClient(com.google.api.gax.core.CredentialsProvider,com.google.api.gax.rpc.TransportChannelProvider)" class="member-name-link">secretManagerServiceClient(CredentialsProvider, TransportChannelProvider)</a> - Method in class io.micronaut.gcp.secretmanager.<a href="io/micronaut/gcp/secretmanager/SecretManagerFactory.html" title="class in io.micronaut.gcp.secretmanager">SecretManagerFactory</a></dt>
 <dd>
 <div class="block">Creates a <code>SecretManagerServiceClient</code> instance.</div>
@@ -1527,6 +1571,8 @@ fully-qualified topic name.</div>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="io/micronaut/gcp/secretmanager/client/SecretManagerSecretAccessor.html#toVersionedSecret(java.lang.String,java.lang.String,java.lang.String,com.google.cloud.secretmanager.v1.AccessSecretVersionResponse,io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties)" class="member-name-link">toVersionedSecret(String, String, String, AccessSecretVersionResponse, SecretManagerConfigurationProperties)</a> - Static method in class io.micronaut.gcp.secretmanager.client.<a href="io/micronaut/gcp/secretmanager/client/SecretManagerSecretAccessor.html" title="class in io.micronaut.gcp.secretmanager.client">SecretManagerSecretAccessor</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/gcp/logging/StackdriverTraceConstants.html#TRACE_ID_ATTRIBUTE" class="member-name-link">TRACE_ID_ATTRIBUTE</a> - Static variable in interface io.micronaut.gcp.logging.<a href="io/micronaut/gcp/logging/StackdriverTraceConstants.html" title="interface in io.micronaut.gcp.logging">StackdriverTraceConstants</a></dt>
 <dd>
 <div class="block">The JSON field name for the trace-id.</div>
