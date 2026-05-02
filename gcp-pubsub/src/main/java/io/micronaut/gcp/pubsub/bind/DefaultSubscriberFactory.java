@@ -120,7 +120,7 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
         }
     }
 
-    boolean isRunning(ProjectSubscriptionName subscriptionName) {
+    final boolean isRunning(ProjectSubscriptionName subscriptionName) {
         if (subscribers.containsKey(subscriptionName)) {
             return subscribers.get(subscriptionName).isRunning();
         }
