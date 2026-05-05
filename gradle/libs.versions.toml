@@ -15,7 +15,7 @@ brave-propagation-stackdriver = "2.3.1"
 cloudevents-api = "2.5.0"
 
 logback-json-classic = "0.1.5"
-zipkin-sender-stackdriver = "1.1.1"
+zipkin-sender-stackdriver = "2.3.1"
 system-stubs-core = "2.1.8"
 
 awaitility = '4.3.0'
