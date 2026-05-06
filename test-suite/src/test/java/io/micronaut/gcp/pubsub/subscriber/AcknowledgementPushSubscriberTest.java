@@ -137,7 +137,7 @@ class AcknowledgementPushSubscriberTest implements TestPropertyProvider {
     static class SubscriberCreatedListener implements BeanCreatedEventListener<AcknowledgementPushSubscriber> {
         @Override
         public AcknowledgementPushSubscriber onCreated(@NonNull BeanCreatedEvent<AcknowledgementPushSubscriber> event) {
-            return spy(event.getBean());
+            return org.mockito.Mockito.spy(event.getBean());
         }
     }
 }

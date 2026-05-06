@@ -140,7 +140,7 @@ class ContentTypePushSubscriberSpec implements TestPropertyProvider {
     static class SubscriberCreatedListener implements BeanCreatedEventListener<ContentTypePushSubscriber> {
         @Override
         public ContentTypePushSubscriber onCreated(@NonNull BeanCreatedEvent<ContentTypePushSubscriber> event) {
-            return spy(event.getBean());
+            return org.mockito.Mockito.spy(event.getBean());
         }
     }
 
