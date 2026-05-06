@@ -11,6 +11,23 @@ import java.security.PrivateKey
 
 class StackdriverConfigurationSpec extends Specification {
 
+    @Issue("https://github.com/micronaut-projects/micronaut-gcp/issues/761")
+    void "native image metadata includes grpc auth jwt service account methods"() {
+        when:
+        URL metadata = getClass().classLoader.getResource(
+                "META-INF/native-image/io.micronaut/gcp-tracing/reflect-config.json")
+        String reflectConfig = metadata?.text
+
+        then:
+        reflectConfig
+        reflectConfig.contains('"name": "com.google.auth.oauth2.ServiceAccountCredentials"')
+        reflectConfig.contains('"allPublicMethods": true')
+        reflectConfig.contains('"name": "getQuotaProjectId"')
+        reflectConfig.contains('"name": "com.google.auth.oauth2.ServiceAccountJwtAccessCredentials"')
+        reflectConfig.contains('"name": "com.google.auth.oauth2.ServiceAccountJwtAccessCredentials$Builder"')
+        reflectConfig.contains('"name": "setQuotaProjectId"')
+    }
+
     @Issue("https://github.com/micronaut-projects/micronaut-gcp/issues/1045")
     void "application starts successfully with stackdriver and zipkin enabled"() {
         given:
