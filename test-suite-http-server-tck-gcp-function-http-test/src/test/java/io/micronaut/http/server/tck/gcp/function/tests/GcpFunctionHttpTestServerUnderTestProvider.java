@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.gcp.pubsub.annotation;
+package io.micronaut.http.server.tck.gcp.function.tests;
 
-import io.micronaut.messaging.annotation.MessageListener;
+import io.micronaut.http.tck.EmbeddedServerUnderTest;
+import io.micronaut.http.tck.ServerUnderTest;
+import io.micronaut.http.tck.ServerUnderTestProvider;
+import org.jspecify.annotations.NonNull;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Map;
 
-/**
- * Indicates that a bean will be consuming PubSub Messages.
- *
- * @author Vinicius Carvalho
- * @since 2.0.0
- */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@MessageListener
-public @interface PubSubListener {
+public class GcpFunctionHttpTestServerUnderTestProvider implements ServerUnderTestProvider {
+
+    @NonNull
+    @Override
+    public ServerUnderTest getServer(Map<String, Object> properties) {
+        properties.putIfAbsent("micronaut.server.host", "localhost");
+        return new EmbeddedServerUnderTest(properties);
+    }
 }

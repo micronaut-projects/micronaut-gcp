@@ -1,6 +1,7 @@
 package io.micronaut.gcp.function.cloudevents
 
 import com.google.events.cloud.storage.v1.StorageObjectData
+import com.google.protobuf.util.Timestamps
 import io.cloudevents.CloudEvent
 import io.cloudevents.CloudEventContext
 import io.cloudevents.core.builder.CloudEventBuilder
@@ -65,9 +66,9 @@ class GoogleCloudStorageFunctionSpec extends Specification {
             size == 7
             etag == 'CNTohaymoPYCEAE='
             kmsKeyName == 'projects/my-project/locations/us-central1/keyRings/my-keyring/cryptoKeys/my-key-us-central1/cryptoKeyVersions/2'
-            timeCreated == OffsetDateTime.parse('2022-01-01T12:30:00.123Z')
-            updated == OffsetDateTime.parse('2022-10-01T12:30:00.456Z')
-            timeStorageClassUpdated == OffsetDateTime.parse('2022-10-01T12:30:00.456Z')
+            timeCreated == Timestamps.parse('2022-01-01T12:30:00.123Z')
+            updated == Timestamps.parse('2022-10-01T12:30:00.456Z')
+            timeStorageClassUpdated == Timestamps.parse('2022-10-01T12:30:00.456Z')
         }
 
         cleanup:
