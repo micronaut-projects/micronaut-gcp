@@ -37,15 +37,20 @@ import io.micronaut.tracing.brave.BraveTracerConfiguration;
 import zipkin2.Span;
 import zipkin2.reporter.AsyncReporter;
 import zipkin2.reporter.BytesEncoder;
+import zipkin2.reporter.Call;
+import zipkin2.reporter.Callback;
+import zipkin2.reporter.Encoding;
 import zipkin2.reporter.Sender;
-import zipkin2.reporter.stackdriver.StackdriverEncoder;
 import zipkin2.reporter.stackdriver.StackdriverSender;
+import zipkin2.reporter.stackdriver.zipkin.StackdriverEncoder;
 
 import org.jspecify.annotations.NonNull;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Configures the {@link StackdriverSender} for Micronaut if present on the classpath.
@@ -105,11 +110,12 @@ public class StackdriverSenderFactory {
 
         GoogleCredentials traceCredentials = credentials.createScoped(Arrays.asList(TRACE_SCOPE.toString()));
 
-        return StackdriverSender.newBuilder(channel)
+        StackdriverSender sender = StackdriverSender.newBuilder(channel)
                 .projectId(cloudConfiguration.getProjectId())
                 .callOptions(CallOptions.DEFAULT
                         .withCallCredentials(MoreCallCredentials.from(traceCredentials)))
                 .build();
+        return new StackdriverSenderAdapter(sender);
     }
 
     /**
@@ -136,7 +142,7 @@ public class StackdriverSenderFactory {
      * @return The bean.
      */
     @Singleton
-    @Requires(beans = StackdriverSender.class)
+    @Requires(beans = Sender.class)
     protected Propagation.Factory stackdriverPropagation() {
         return StackdriverTracePropagation.newFactory(B3Propagation.FACTORY);
     }
@@ -153,5 +159,91 @@ public class StackdriverSenderFactory {
     public AsyncReporter<Span> stackdriverReporter(@NonNull AsyncReporterConfiguration configuration) {
         return configuration.getBuilder()
                 .build((BytesEncoder<Span>) StackdriverEncoder.V2);
+    }
+
+    private static final class StackdriverSenderAdapter extends Sender {
+        private final StackdriverSender sender;
+
+        private StackdriverSenderAdapter(StackdriverSender sender) {
+            this.sender = sender;
+        }
+
+        @Override
+        public Encoding encoding() {
+            return sender.encoding();
+        }
+
+        @Override
+        public int messageMaxBytes() {
+            return sender.messageMaxBytes();
+        }
+
+        @Override
+        public int messageSizeInBytes(List<byte[]> encodedSpans) {
+            return sender.messageSizeInBytes(encodedSpans);
+        }
+
+        @Override
+        public int messageSizeInBytes(int encodedSizeInBytes) {
+            return sender.messageSizeInBytes(encodedSizeInBytes);
+        }
+
+        @Override
+        public Call<Void> sendSpans(List<byte[]> encodedSpans) {
+            return new StackdriverSenderCall(sender, encodedSpans);
+        }
+
+        @Override
+        public void send(List<byte[]> encodedSpans) throws IOException {
+            sender.send(encodedSpans);
+        }
+
+        @Override
+        public void close() {
+            sender.close();
+        }
+    }
+
+    private static final class StackdriverSenderCall extends Call<Void> {
+        private final StackdriverSender sender;
+        private final List<byte[]> encodedSpans;
+        private boolean canceled;
+
+        private StackdriverSenderCall(StackdriverSender sender, List<byte[]> encodedSpans) {
+            this.sender = sender;
+            this.encodedSpans = encodedSpans;
+        }
+
+        @Override
+        public Void execute() throws IOException {
+            sender.send(encodedSpans);
+            return null;
+        }
+
+        @Override
+        public void enqueue(Callback<Void> callback) {
+            try {
+                execute();
+                callback.onSuccess(null);
+            } catch (Throwable e) {
+                propagateIfFatal(e);
+                callback.onError(e);
+            }
+        }
+
+        @Override
+        public void cancel() {
+            canceled = true;
+        }
+
+        @Override
+        public boolean isCanceled() {
+            return canceled;
+        }
+
+        @Override
+        public Call<Void> clone() {
+            return new StackdriverSenderCall(sender, encodedSpans);
+        }
     }
 }
