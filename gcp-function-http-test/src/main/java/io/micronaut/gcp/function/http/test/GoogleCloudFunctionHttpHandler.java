@@ -20,6 +20,7 @@ import com.sun.net.httpserver.HttpHandler;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.gcp.function.http.HttpFunction;
+import io.micronaut.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,9 @@ class GoogleCloudFunctionHttpHandler implements HttpHandler {
 
     void sendHeaders(HttpExchange exchange, HttpExchangeHttpResponse response) {
         response.getHeaders().forEach((name, values) -> {
-            exchange.getResponseHeaders().put(name, values);
+            if (!HttpHeaders.CONTENT_LENGTH.equalsIgnoreCase(name)) {
+                exchange.getResponseHeaders().put(name, values);
+            }
         });
         try {
             exchange.sendResponseHeaders(response.getStatus(), 0);
