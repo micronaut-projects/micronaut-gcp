@@ -27,6 +27,7 @@ import io.micronaut.core.bind.BoundExecutable;
 import io.micronaut.core.bind.DefaultExecutableBinder;
 import io.micronaut.core.bind.exceptions.UnsatisfiedArgumentException;
 import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.order.Ordered;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.gcp.GoogleCloudConfiguration;
 import io.micronaut.gcp.pubsub.annotation.PubSubListener;
@@ -42,6 +43,7 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.messaging.Acknowledgement;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import io.micronaut.runtime.graceful.GracefulShutdownCapable;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Qualifier;
 import org.reactivestreams.Publisher;
@@ -53,6 +55,8 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -69,7 +73,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 5.4.0
  */
 @Internal
-abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> implements ExecutableMethodProcessor<A> {
+abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> implements ExecutableMethodProcessor<A>, GracefulShutdownCapable, Ordered {
 
     protected final BeanContext beanContext;
     protected final ConversionService conversionService;
@@ -161,6 +165,17 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
     @PreDestroy
     public final void shutDown() {
         shutDownMode.set(true);
+    }
+
+    @Override
+    public CompletionStage<?> shutdownGracefully() {
+        shutDown();
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
     }
 
     /**
