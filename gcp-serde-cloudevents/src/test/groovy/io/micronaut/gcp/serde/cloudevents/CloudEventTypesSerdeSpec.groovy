@@ -1,6 +1,15 @@
 package io.micronaut.gcp.serde.cloudevents
 
+import com.google.events.cloud.audit.v1.LogEntryData
+import com.google.events.cloud.cloudbuild.v1.BuildEventData
+import com.google.events.cloud.firestore.v1.DocumentEventData
+import com.google.events.cloud.pubsub.v1.MessagePublishedData
+import com.google.events.cloud.scheduler.v1.SchedulerJobData
 import com.google.events.cloud.storage.v1.StorageObjectData
+import com.google.events.firebase.analytics.v1.AnalyticsLogData
+import com.google.events.firebase.auth.v1.AuthEventData
+import com.google.events.firebase.database.v1.ReferenceEventData
+import com.google.events.firebase.remoteconfig.v1.RemoteConfigEventData
 import com.google.protobuf.util.Timestamps
 import io.micronaut.context.annotation.Property
 import io.micronaut.json.JsonMapper
@@ -13,6 +22,34 @@ import spock.lang.Specification
 class CloudEventTypesSerdeSpec extends Specification {
     @Inject
     JsonMapper jsonMapper
+
+    void "creates serdes for supported event types"() {
+        given:
+        CloudEventTypesSerde factory = new CloudEventTypesSerde()
+
+        expect:
+        factory.referenceEventDataSerde()
+        factory.authEventDataSerde()
+        factory.remoteConfigEventDataSerde()
+        factory.analyticsLogDataSerde()
+        factory.documentEventDataSerde()
+        factory.buildEventDataSerde()
+        factory.schedulerJobDataSerde()
+        factory.storageObjectDataSerde()
+        factory.logEntryDataSerde()
+        factory.messagePublishedDataSerde()
+
+        and:
+        ReferenceEventData.defaultInstance
+        AuthEventData.defaultInstance
+        RemoteConfigEventData.defaultInstance
+        AnalyticsLogData.defaultInstance
+        DocumentEventData.defaultInstance
+        BuildEventData.defaultInstance
+        SchedulerJobData.defaultInstance
+        LogEntryData.defaultInstance
+        MessagePublishedData.defaultInstance
+    }
 
     void "deserialize storage object"() {
 
