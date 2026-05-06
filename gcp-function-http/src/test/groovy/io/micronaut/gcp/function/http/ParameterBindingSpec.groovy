@@ -237,4 +237,48 @@ class ParameterBindingSpec extends Specification {
         googleResponse.text == 'Good: true'
 
     }
+
+    void "test completed file upload binding for #uri"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, uri)
+        googleRequest.parts.put("file", new MockGoogleHttpPart("test.txt", 'Hello upload', "text/plain"))
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'file:test.txt:text/plain:Hello upload'
+
+        where:
+        uri << [
+                "/parameters/completedFileUpload",
+                "/parameters/completedFileUploadBody",
+                "/parameters/completedFileUploadBodyValue",
+                "/parameters/completedFileUploadPart"
+        ]
+    }
+
+    void "test streaming file upload binding for #uri"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, uri)
+        googleRequest.parts.put("file", new MockGoogleHttpPart("test.txt", 'Hello upload', "text/plain"))
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'file:test.txt:text/plain:12:Hello upload'
+
+        where:
+        uri << [
+                "/parameters/streamingFileUpload",
+                "/parameters/streamingFileUploadBody",
+                "/parameters/streamingFileUploadBodyValue",
+                "/parameters/streamingFileUploadPart"
+        ]
+    }
 }

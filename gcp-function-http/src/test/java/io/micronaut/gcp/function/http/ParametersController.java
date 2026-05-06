@@ -20,9 +20,12 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.http.multipart.CompletedFileUpload;
+import io.micronaut.http.multipart.StreamingFileUpload;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 @Controller("/parameters")
@@ -114,6 +117,57 @@ public class ParametersController {
                 text.equals("Whatever") &&
                 new String(bytes).equals("My Doc") &&
                 IOUtils.readText(raw.getReader()).equals("Another Doc"));
+    }
+
+    @Post(value = "/completedFileUpload", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String completedFileUpload(CompletedFileUpload file) throws IOException {
+        return completedFileUploadResult(file);
+    }
+
+    @Post(value = "/completedFileUploadBody", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String completedFileUploadBody(@Body CompletedFileUpload file) throws IOException {
+        return completedFileUploadResult(file);
+    }
+
+    @Post(value = "/completedFileUploadBodyValue", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String completedFileUploadBodyValue(@Body("file") CompletedFileUpload upload) throws IOException {
+        return completedFileUploadResult(upload);
+    }
+
+    @Post(value = "/completedFileUploadPart", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String completedFileUploadPart(@Part("file") CompletedFileUpload upload) throws IOException {
+        return completedFileUploadResult(upload);
+    }
+
+    @Post(value = "/streamingFileUpload", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String streamingFileUpload(StreamingFileUpload file) throws IOException {
+        return streamingFileUploadResult(file);
+    }
+
+    @Post(value = "/streamingFileUploadBody", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String streamingFileUploadBody(@Body StreamingFileUpload file) throws IOException {
+        return streamingFileUploadResult(file);
+    }
+
+    @Post(value = "/streamingFileUploadBodyValue", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String streamingFileUploadBodyValue(@Body("file") StreamingFileUpload upload) throws IOException {
+        return streamingFileUploadResult(upload);
+    }
+
+    @Post(value = "/streamingFileUploadPart", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String streamingFileUploadPart(@Part("file") StreamingFileUpload upload) throws IOException {
+        return streamingFileUploadResult(upload);
+    }
+
+    private String completedFileUploadResult(CompletedFileUpload file) throws IOException {
+        return file.getName() + ":" + file.getFilename() + ":" + file.getContentType().map(MediaType::getName).orElse("none") + ":" + new String(file.getBytes());
+    }
+
+    private String streamingFileUploadResult(StreamingFileUpload file) throws IOException {
+        try (StreamingFileUpload upload = file; InputStream inputStream = upload.asInputStream()) {
+            MediaType mediaType = upload.metadata().mediaType();
+            return upload.getName() + ":" + upload.getFilename() + ":" + (mediaType == null ? "none" : mediaType.getName()) + ":" + upload.getDefinedSize().orElse(-1) + ":" + new String(inputStream.readAllBytes());
+        }
     }
 
 }
