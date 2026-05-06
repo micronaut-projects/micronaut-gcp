@@ -45,7 +45,7 @@ class IntegrationTestSpec  extends Specification {
             pubSubContainer.start()
             CONTAINER_PORT = pubSubContainer.getMappedPort(8085)
             CREDENTIALS_PROVIDER = NoCredentialsProvider.create()
-            def host = "localhost:" + IntegrationTest.CONTAINER_PORT
+            def host = pubSubContainer.getHost() + ":" + IntegrationTest.CONTAINER_PORT
             ManagedChannel channel = ManagedChannelBuilder.forTarget(host).usePlaintext().build()
             TRANSPORT_CHANNEL_PROVIDER =
                     FixedTransportChannelProvider.create(GrpcTransportChannel.create(channel))

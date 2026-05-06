@@ -5,8 +5,12 @@ plugins {
 repositories {
     mavenCentral()
 }
-configurations.all {
-    resolutionStrategy {
-        preferProjectModules()
+allprojects {
+    configurations.matching { it.name == "runtimeClasspath" || it.name.endsWith("RuntimeClasspath") }.all {
+        resolutionStrategy {
+            preferProjectModules()
+            // Remove once the Micronaut core BOM manages Netty 4.2.13.Final or newer.
+            force "io.netty:netty-codec-http:${libs.versions.netty.get()}"
+        }
     }
 }

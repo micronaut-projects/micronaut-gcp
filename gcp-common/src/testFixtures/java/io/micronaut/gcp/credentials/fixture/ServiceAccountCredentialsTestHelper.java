@@ -37,15 +37,23 @@ public class ServiceAccountCredentialsTestHelper {
     }
 
     public static File writeServiceCredentialsToTempFile(PrivateKey pk) throws IOException {
+        return writeServiceCredentialsToTempFile(pk, null);
+    }
+
+    public static File writeServiceCredentialsToTempFile(PrivateKey pk, String tokenUri) throws IOException {
         File tmpSACredentials = File.createTempFile("GoogleCredentialsFactorySpec-", ".json");
         tmpSACredentials.deleteOnExit();
-        GenericJson fileContents = buildServiceAccountJson(pk);
+        GenericJson fileContents = buildServiceAccountJson(pk, tokenUri);
         writeJsonToOutputStream(new FileOutputStream(tmpSACredentials), fileContents);
         return tmpSACredentials;
     }
 
     public static String encodeServiceCredentials(PrivateKey pk) throws IOException {
-        GenericJson serviceAccountCredentials = buildServiceAccountJson(pk);
+        return encodeServiceCredentials(pk, null);
+    }
+
+    public static String encodeServiceCredentials(PrivateKey pk, String tokenUri) throws IOException {
+        GenericJson serviceAccountCredentials = buildServiceAccountJson(pk, tokenUri);
         ByteArrayOutputStream serviceAccountCredentialsByteStream = new ByteArrayOutputStream();
         writeJsonToOutputStream(serviceAccountCredentialsByteStream, serviceAccountCredentials);
         return Base64.getEncoder().encodeToString(serviceAccountCredentialsByteStream.toByteArray());
@@ -59,6 +67,10 @@ public class ServiceAccountCredentialsTestHelper {
     }
 
     public static GenericJson buildServiceAccountJson(PrivateKey pk) throws IOException {
+        return buildServiceAccountJson(pk, null);
+    }
+
+    public static GenericJson buildServiceAccountJson(PrivateKey pk, String tokenUri) throws IOException {
         String jsonPrivateKey = """
             -----BEGIN PRIVATE KEY-----
             %s
@@ -72,6 +84,9 @@ public class ServiceAccountCredentialsTestHelper {
             GenericJson fileContents =
                 parser.parseAndClose(templateKeyFile, StandardCharsets.UTF_8, GenericJson.class);
             fileContents.set("private_key", jsonPrivateKey);
+            if (tokenUri != null) {
+                fileContents.set("token_uri", tokenUri);
+            }
             return fileContents;
         }
     }

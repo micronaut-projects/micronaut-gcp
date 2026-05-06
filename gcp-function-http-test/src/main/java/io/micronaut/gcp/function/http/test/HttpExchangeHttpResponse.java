@@ -75,7 +75,7 @@ class HttpExchangeHttpResponse implements HttpResponse {
     @Override
     public void appendHeader(String s, String s1) {
         if (headers.containsKey(s)) {
-            headers.get(s).add(s);
+            headers.get(s).add(s1);
         } else {
             List<String> values = new ArrayList<>();
             values.add(s1);
