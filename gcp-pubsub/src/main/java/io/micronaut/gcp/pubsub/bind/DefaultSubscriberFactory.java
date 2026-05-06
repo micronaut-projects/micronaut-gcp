@@ -23,22 +23,28 @@ import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.order.Ordered;
 import io.micronaut.gcp.Modules;
 import io.micronaut.gcp.pubsub.configuration.SubscriberConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubListenerException;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.runtime.graceful.GracefulShutdownCapable;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalLong;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Default implementation of {@link SubscriberFactory}.
@@ -46,13 +52,14 @@ import java.util.concurrent.ScheduledExecutorService;
  * @since 2.0.0
  */
 @Singleton
-public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseable {
+public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseable, GracefulShutdownCapable, Ordered {
 
     private final ConcurrentHashMap<ProjectSubscriptionName, Subscriber> subscribers = new ConcurrentHashMap<>();
     private final TransportChannelProvider transportChannelProvider;
     private final CredentialsProvider credentialsProvider;
     private final BeanContext beanContext;
     private final Logger logger = LoggerFactory.getLogger(DefaultSubscriberFactory.class);
+    private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     public DefaultSubscriberFactory(@Named(Modules.PUBSUB) TransportChannelProvider transportChannelProvider,
                                     @Named(Modules.PUBSUB) CredentialsProvider credentialsProvider,
@@ -64,6 +71,9 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
 
     @Override
     public Subscriber createSubscriber(SubscriberFactoryConfig config) {
+        if (shutdown.get()) {
+            throw new PubSubListenerException("Cannot create subscriber after shutdown has been initiated");
+        }
         Subscriber subscriber = subscribers.compute(config.getSubscriptionName(), (k, v) -> {
             if (v == null) {
                 Subscriber.Builder builder = Subscriber.newBuilder(config.getSubscriptionName(), config.getReceiver())
@@ -96,6 +106,9 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
     @PreDestroy
     @Override
     public void close() throws Exception {
+        if (!shutdown.compareAndSet(false, true)) {
+            return;
+        }
         while (!subscribers.entrySet().isEmpty()) {
             Iterator<Map.Entry<ProjectSubscriptionName, Subscriber>> it = subscribers.entrySet().iterator();
             while (it.hasNext()) {
@@ -118,6 +131,26 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
                 }
             }
         }
+    }
+
+    @Override
+    public CompletionStage<?> shutdownGracefully() {
+        try {
+            close();
+        } catch (Exception e) {
+            logger.error("Failed stopping subscribers during graceful shutdown", e);
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public OptionalLong reportActiveTasks() {
+        return OptionalLong.of(subscribers.values().stream().filter(SubscriberInterface::isRunning).count());
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE + 100;
     }
 
     final boolean isRunning(ProjectSubscriptionName subscriptionName) {
