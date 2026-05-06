@@ -7,6 +7,7 @@ dependencies {
     api(mnTracing.micronaut.tracing.brave.http)
     implementation(libs.google.auth.library.credentials)
     implementation(libs.zipkin.sender.stackdriver)
+    implementation(libs.zipkin.stackdriver.encoder)
     implementation(libs.brave.propagation.stackdriver)
     implementation(platform(mnGrpc.boms.grpc))
     implementation(libs.grpc.auth)
