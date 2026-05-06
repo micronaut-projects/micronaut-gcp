@@ -154,5 +154,4 @@ public class StackdriverSenderFactory {
         return configuration.getBuilder()
                 .build((BytesEncoder<Span>) StackdriverEncoder.V2);
     }
-
 }
