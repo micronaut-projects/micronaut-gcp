@@ -15,7 +15,7 @@ brave-propagation-stackdriver = "2.3.1"
 cloudevents-api = "2.5.0"
 
 logback-json-classic = "0.1.5"
-zipkin-sender-stackdriver = "1.1.1"
+zipkin-sender-stackdriver = "2.3.1"
 system-stubs-core = "2.1.8"
 
 awaitility = '4.3.0'
@@ -73,6 +73,7 @@ grpc-auth = { module = "io.grpc:grpc-auth" }
 grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded" }
 logback-json-classic = { module = "ch.qos.logback.contrib:logback-json-classic", version.ref = "logback-json-classic" }
 zipkin-sender-stackdriver = { module = "io.zipkin.gcp:zipkin-sender-stackdriver", version.ref = "zipkin-sender-stackdriver" }
+zipkin-stackdriver-encoder = { module = "io.zipkin.gcp:zipkin-encoder-stackdriver", version.ref = "zipkin-sender-stackdriver" }
 awaitility = { module = 'org.awaitility:awaitility', version.ref = 'awaitility' }
 system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "system-stubs-core" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
