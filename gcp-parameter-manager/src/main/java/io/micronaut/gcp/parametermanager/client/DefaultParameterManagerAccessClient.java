@@ -16,7 +16,12 @@
 package io.micronaut.gcp.parametermanager.client;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.parametermanager.v1.*;
+import com.google.cloud.parametermanager.v1.GetParameterVersionRequest;
+import com.google.cloud.parametermanager.v1.ParameterManagerClient;
+import com.google.cloud.parametermanager.v1.ParameterVersion;
+import com.google.cloud.parametermanager.v1.ParameterVersionName;
+import com.google.cloud.parametermanager.v1.RenderParameterVersionRequest;
+import com.google.cloud.parametermanager.v1.RenderParameterVersionResponse;
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
@@ -45,6 +50,7 @@ import java.util.concurrent.Executors;
 @Requires(classes = ParameterManagerClient.class)
 public class DefaultParameterManagerAccessClient implements ParameterManagerAccessClient {
 
+    private static final String GLOBAL = "global";
     private static final Logger LOG =
         LoggerFactory.getLogger(DefaultParameterManagerAccessClient.class);
     private final ParameterManagerClient client;
@@ -189,7 +195,7 @@ public class DefaultParameterManagerAccessClient implements ParameterManagerAcce
     private ParameterVersionName getParameterVersionName(String projectId, String parameterName,
                                                          String version) {
         return StringUtils.isEmpty(configurationProperties.getLocation()) ?
-            ParameterVersionName.of(projectId, "global", parameterName, version) :
+            ParameterVersionName.of(projectId, GLOBAL, parameterName, version) :
             ParameterVersionName.of(projectId, configurationProperties.getLocation(), parameterName,
                 version);
     }
@@ -208,7 +214,7 @@ public class DefaultParameterManagerAccessClient implements ParameterManagerAcce
     private VersionedParameter getVersionedParameter(String projectId, String parameterName,
                                                      String version, ParameterVersion response) {
         return StringUtils.isEmpty(configurationProperties.getLocation()) ?
-            new VersionedParameter(projectId, "global", parameterName, version,response.getPayload().getData().toByteArray()) :
+            new VersionedParameter(projectId, GLOBAL, parameterName, version, response.getPayload().getData().toByteArray()) :
             new VersionedParameter(projectId, configurationProperties.getLocation(), parameterName,
                 version, response.getPayload().getData().toByteArray());
     }
@@ -230,7 +236,7 @@ public class DefaultParameterManagerAccessClient implements ParameterManagerAcce
                                                              String version,
                                                              RenderParameterVersionResponse response) {
         return StringUtils.isEmpty(configurationProperties.getLocation()) ?
-            new VersionedParameter(projectId, "global", parameterName, version,
+            new VersionedParameter(projectId, GLOBAL, parameterName, version,
                 response.getRenderedPayload().toByteArray()) :
             new VersionedParameter(projectId, configurationProperties.getLocation(), parameterName,
                 version, response.getRenderedPayload().toByteArray());
