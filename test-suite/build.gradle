@@ -15,10 +15,3 @@ dependencies {
     implementation project(':micronaut-gcp-parameter-manager')
 
 }
-
-micronaut {
-    testResources {
-        // 10 minutes as this image is massive
-        clientTimeout = 600
-    }
-}
