@@ -17,23 +17,20 @@ package io.micronaut.gcp.secretmanager;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ServiceLoader;
 
 import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.EnvironmentPropertySource;
 import io.micronaut.context.env.PropertySource;
-import io.micronaut.context.env.PropertySourceLoader;
-import io.micronaut.context.env.PropertySourceReader;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.discovery.config.ConfigurationClient;
 import io.micronaut.gcp.secretmanager.client.SecretManagerClient;
 import io.micronaut.gcp.secretmanager.client.VersionedSecret;
 import io.micronaut.gcp.secretmanager.configuration.SecretManagerConfigurationProperties;
+import io.micronaut.gcp.secretmanager.imports.SecretManagerPropertySourceReader;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
@@ -54,8 +51,6 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
     private static final String CAMEL_CASE_REPLACE = "$1_$2";
     private static final String DESCRIPTION = "GCP Secret Manager Config Client";
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP SecretManager)";
-    private static final List<PropertySourceLoader> READERS = ServiceLoader.load(PropertySourceLoader.class)
-            .stream().map(ServiceLoader.Provider::get).toList();
     private static final String UNDERSCORE = "_";
     private static final String APPLICATION = "application";
     private static final String MICRONAUT_APPLICATION_NAME = "micronaut.application.name";
@@ -77,7 +72,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
         return Flux.fromIterable(configCandidates(environment).entrySet())
                 .flatMap(env ->
                         Mono.from(secretManagerClient.getSecret(env.getValue()))
-                                .mapNotNull(secret -> fromSecret(secret, env.getKey()))
+                                .mapNotNull(secret -> fromSecret(secret, env.getKey(), environment))
                 );
     }
 
@@ -94,7 +89,7 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
                 .filter(Objects::nonNull)
                 .collectMap(versionedSecret -> "sm." + versionedSecret.getName().replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase(),
                         versionedSecret -> (Object) new String(versionedSecret.getContents(), StandardCharsets.UTF_8).replaceAll("\\n", "").trim())
-                .map(m -> PropertySource.of("secret-manager-keys", m, PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE));
+                .map(m -> PropertySource.of("secret-manager-keys", m, PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE, PropertySource.Origin.of("GCP Secret Manager")));
     }
 
     /**
@@ -138,19 +133,8 @@ public class SecretManagerConfigurationClient implements ConfigurationClient {
      * @param priority Property Source position
      * @return Mapped PropertySource
      */
-    private PropertySource fromSecret(VersionedSecret secret, int priority) {
-        Map<String, Object> data = new HashMap<>();
-
-        for (PropertySourceReader reader : READERS) {
-            try {
-                data.putAll(reader.read(secret.getName(), secret.getContents()));
-                if (!data.isEmpty()) {
-                    break;
-                }
-            } catch (Exception e) {
-            }
-        }
-        return PropertySource.of(secret.getName() + PROPERTY_SOURCE_SUFFIX, data, priority);
+    private PropertySource fromSecret(VersionedSecret secret, int priority, Environment environment) {
+        return SecretManagerPropertySourceReader.read(environment, secret, secret.getName() + PROPERTY_SOURCE_SUFFIX, priority);
     }
 
     @Override

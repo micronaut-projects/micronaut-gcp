@@ -6,8 +6,9 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "8.0.0-M12"
+    id("io.micronaut.build.shared.settings") version "8.0.0-M18"
 }
+
 
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
@@ -28,6 +29,7 @@ include 'gcp-serde-cloudevents'
 include 'gcp-parameter-manager'
 
 include 'test-suite'
+include 'test-suite-utils'
 include 'test-suite-groovy'
 include 'test-suite-http-server-tck-gcp-function-http'
 include 'test-suite-http-server-tck-gcp-function-http-test'
@@ -43,7 +45,6 @@ micronautBuild {
     importMicronautCatalog("micronaut-rxjava3")
     importMicronautCatalog("micronaut-serde")
     importMicronautCatalog("micronaut-servlet")
-    importMicronautCatalog("micronaut-test-resources")
     importMicronautCatalog("micronaut-tracing")
     importMicronautCatalog("micronaut-validation")
 }

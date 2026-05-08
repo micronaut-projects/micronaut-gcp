@@ -20,17 +20,18 @@ import com.sun.net.httpserver.HttpHandler;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.gcp.function.http.HttpFunction;
+import io.micronaut.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Experimental
 @Internal
 class GoogleCloudFunctionHttpHandler implements HttpHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudFunctionHttpHandler.class);
     private final HttpFunction httpFunction;
-    private boolean headersSent = false;
 
     GoogleCloudFunctionHttpHandler(HttpFunction httpFunction) {
         this.httpFunction = httpFunction;
@@ -38,19 +39,23 @@ class GoogleCloudFunctionHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        AtomicBoolean headersSent = new AtomicBoolean();
         HttpExchangeHttpRequest request = new HttpExchangeHttpRequest(exchange);
         HttpExchangeHttpResponse response = new HttpExchangeHttpResponse(exchange,
             rsp -> {
-            sendHeaders(exchange, rsp);
-                headersSent = true;
+                if (headersSent.compareAndSet(false, true)) {
+                    sendHeaders(exchange, rsp);
+                }
             });
         try {
             httpFunction.service(request, response);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            exchange.sendResponseHeaders(500, 0);
+            if (headersSent.compareAndSet(false, true)) {
+                exchange.sendResponseHeaders(500, 0);
+            }
         }
-        if (!headersSent) {
+        if (headersSent.compareAndSet(false, true)) {
             sendHeaders(exchange, response);
         }
         exchange.close();
@@ -58,7 +63,9 @@ class GoogleCloudFunctionHttpHandler implements HttpHandler {
 
     void sendHeaders(HttpExchange exchange, HttpExchangeHttpResponse response) {
         response.getHeaders().forEach((name, values) -> {
-            exchange.getResponseHeaders().put(name, values);
+            if (!HttpHeaders.CONTENT_LENGTH.equalsIgnoreCase(name)) {
+                exchange.getResponseHeaders().put(name, values);
+            }
         });
         try {
             exchange.sendResponseHeaders(response.getStatus(), 0);

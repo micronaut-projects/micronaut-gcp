@@ -268,14 +268,16 @@ class GoogleCredentialsFactorySpec extends Specification {
     void "an access token should be able to be refreshed and retrieved"() {
         given:
         PrivateKey pk = generatePrivateKey()
-        File serviceAccountCredentials = writeServiceCredentialsToTempFile(pk)
+        EmbeddedServer gcp
+        def ctx
 
         when:
-        EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
+        gcp = ApplicationContext.run(EmbeddedServer, [
                 "spec.name" : "GoogleCredentialsFactorySpec",
-                "micronaut.server.port" : 8080
+                "micronaut.server.port" : -1
         ])
-        def ctx = ApplicationContext.run([
+        File serviceAccountCredentials = writeServiceCredentialsToTempFile(pk, gcp.URL.toString() + "/token")
+        ctx = ApplicationContext.run([
                 "gcp.credentials.use-http-client" : StringUtils.TRUE,
                 (GoogleCredentialsConfiguration.PREFIX + ".location"): serviceAccountCredentials.getPath()
         ])
@@ -291,18 +293,19 @@ class GoogleCredentialsFactorySpec extends Specification {
         gc.getAccessToken().getTokenValue() == "ThisIsAFreshToken"
 
         cleanup:
-        gcp.close()
-        ctx.close()
+        gcp?.close()
+        ctx?.close()
     }
 
     void "invalid credentials cause a warning to be logged when metadata is requested"(){
         given:
         PrivateKey pk = generatePrivateKey()
-        String encodedServiceAccountCredentials = encodeServiceCredentials(pk)
         EmbeddedServer gcp = ApplicationContext.run(EmbeddedServer, [
                 "spec.name" : "GoogleCredentialsFactorySpec",
-                "micronaut.server.port" : 8080
+                "micronaut.server.port" : -1
         ])
+        String tokenUri = gcp.URL.toString() + "/token"
+        String encodedServiceAccountCredentials = encodeServiceCredentials(pk, tokenUri)
         def ctx = ApplicationContext.run([
                 "gcp.credentials.use-http-client" : StringUtils.TRUE,
                 (GoogleCredentialsConfiguration.PREFIX + ".encoded-key"): encodedServiceAccountCredentials
@@ -329,7 +332,7 @@ class GoogleCredentialsFactorySpec extends Specification {
             callback.success
             captured.messages.any {
                 it.contains("WARN") &&
-                        it.contains("A 429 Too Many Requests response was received from http://localhost:8080/token while " +
+                        it.contains("A 429 Too Many Requests response was received from ${tokenUri} while " +
                                 "attempting to retrieve an access token for a GCP API request. The GCP libraries treat this as " +
                                 "a retryable error, but misconfigured credentials can keep it from ever succeeding.")
             }

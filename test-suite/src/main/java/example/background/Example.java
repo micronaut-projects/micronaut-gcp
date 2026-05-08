@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2026 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package example.background;
 
-import com.google.cloud.functions.*;
+import com.google.cloud.functions.BackgroundFunction;
+import com.google.cloud.functions.Context;
 import io.micronaut.gcp.function.GoogleFunctionInitializer;
 
-import jakarta.inject.*;
-import java.util.*;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import java.util.Map;
 
 public class Example extends GoogleFunctionInitializer // <1>
         implements BackgroundFunction<PubSubMessage> { // <2>

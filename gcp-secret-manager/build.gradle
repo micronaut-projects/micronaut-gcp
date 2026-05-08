@@ -12,5 +12,6 @@ dependencies {
     implementation(mn.snakeyaml)
 
     testImplementation(mn.snakeyaml)
+    testImplementation(testFixtures(project(":micronaut-gcp-common")))
 
 }

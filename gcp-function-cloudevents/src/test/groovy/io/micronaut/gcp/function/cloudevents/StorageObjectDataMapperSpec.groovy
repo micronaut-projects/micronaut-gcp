@@ -1,6 +1,7 @@
 package io.micronaut.gcp.function.cloudevents
 
 import com.google.events.cloud.storage.v1.StorageObjectData
+import com.google.protobuf.util.Timestamps
 import io.cloudevents.CloudEvent
 import io.cloudevents.CloudEventContext
 import io.cloudevents.core.builder.CloudEventBuilder
@@ -98,11 +99,11 @@ class StorageObjectDataMapperSpec extends Specification {
             kmsKeyName == 'projects/my-project/locations/us-central1/keyRings/my-keyring/cryptoKeys/my-key-us-central1/cryptoKeyVersions/2'
             temporaryHold == false
             eventBasedHold == true
-            retentionExpirationTime == OffsetDateTime.parse('2022-12-01T12:30:00.123Z')
-            timeCreated == OffsetDateTime.parse('2022-01-01T12:30:00.123Z')
-            updated == OffsetDateTime.parse('2022-04-01T12:30:00.123Z')
-            timeDeleted == OffsetDateTime.parse('2022-02-01T12:30:00.123Z')
-            timeStorageClassUpdated == OffsetDateTime.parse('2022-03-01T12:30:00.123Z')
+            retentionExpirationTime == Timestamps.parse('2022-12-01T12:30:00.123Z')
+            timeCreated == Timestamps.parse('2022-01-01T12:30:00.123Z')
+            updated == Timestamps.parse('2022-04-01T12:30:00.123Z')
+            timeDeleted == Timestamps.parse('2022-02-01T12:30:00.123Z')
+            timeStorageClassUpdated == Timestamps.parse('2022-03-01T12:30:00.123Z')
             //customTime == OffsetDateTime.parse('2022-05-01T12:30:00.123Z')
             metadata.foo == "1"
             metadata.bar == "2"

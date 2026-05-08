@@ -17,7 +17,11 @@ package io.micronaut.gcp.pubsub.bind;
 //tag::imports[]
 import io.micronaut.core.bind.annotation.Bindable;
 //end::imports[]
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 // tag::clazz[]
 @Documented

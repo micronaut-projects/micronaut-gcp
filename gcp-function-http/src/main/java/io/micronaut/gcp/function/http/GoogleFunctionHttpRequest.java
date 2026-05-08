@@ -370,7 +370,7 @@ final class GoogleFunctionHttpRequest<B> implements
         }
     }
 
-    private class GoogleFunctionMutableHttpRequest implements MutableHttpRequest<B> {
+    private final class GoogleFunctionMutableHttpRequest implements MutableHttpRequest<B> {
         private URI uri = GoogleFunctionHttpRequest.this.getUri();
 
         @Nullable

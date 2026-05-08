@@ -12,12 +12,6 @@ dependencies {
     testImplementation(mnTest.micronaut.test.spock)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
+    testImplementation(projects.testSuiteUtils)
     implementation project(':micronaut-gcp-parameter-manager')
-}
-
-micronaut {
-    testResources {
-        // 10 minutes as this image is massive
-        clientTimeout = 600
-    }
 }

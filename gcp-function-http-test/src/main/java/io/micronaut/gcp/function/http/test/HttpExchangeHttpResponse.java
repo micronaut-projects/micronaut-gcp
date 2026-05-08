@@ -26,7 +26,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Experimental
@@ -71,7 +75,7 @@ class HttpExchangeHttpResponse implements HttpResponse {
     @Override
     public void appendHeader(String s, String s1) {
         if (headers.containsKey(s)) {
-            headers.get(s).add(s);
+            headers.get(s).add(s1);
         } else {
             List<String> values = new ArrayList<>();
             values.add(s1);

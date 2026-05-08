@@ -1,12 +1,12 @@
 package io.micronaut.gcp.pubsub.subscriber;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.pubsub.v1.PubsubMessage;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
+import io.micronaut.pubsub.testcontainers.PubSubEmulator;
+import io.micronaut.test.support.TestPropertyProvider;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.gcp.pubsub.push.PushRequest;
 import io.micronaut.gcp.pubsub.support.Animal;
@@ -23,22 +23,32 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import tools.jackson.dataformat.xml.XmlMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 
 //tag::clazzBegin[]
 @MicronautTest
 @Property(name = "spec.name", value = "ContentTypePushSubscriberTest")
 @Property(name = "gcp.projectId", value = "test-project")
-class ContentTypePushSubscriberSpec {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ContentTypePushSubscriberSpec implements TestPropertyProvider {
+    @Override
+    public @NonNull Map<String, String> getProperties() {
+        return PubSubEmulator.getProperties();
+    }
+
     @Inject
     JsonMapper jsonMapper;
 //end::clazzBegin[]
@@ -112,7 +122,7 @@ class ContentTypePushSubscriberSpec {
 //end::testMethodEnd[]
 
     @Test
-    void testXmlPojo() throws JsonProcessingException {
+    void testXmlPojo() {
         Animal dog = new Animal("cat");
         String encodedData = Base64.getEncoder().encodeToString(xmlMapper.writeValueAsBytes(dog));
         PushRequest request = new PushRequest("projects/test-project/subscriptions/animals-legacy-push", new PushRequest.PushMessage(new HashMap<>(), encodedData, "1", "2021-02-26T19:13:55.749Z"));
@@ -130,7 +140,7 @@ class ContentTypePushSubscriberSpec {
     static class SubscriberCreatedListener implements BeanCreatedEventListener<ContentTypePushSubscriber> {
         @Override
         public ContentTypePushSubscriber onCreated(@NonNull BeanCreatedEvent<ContentTypePushSubscriber> event) {
-            return spy(event.getBean());
+            return org.mockito.Mockito.spy(event.getBean());
         }
     }
 

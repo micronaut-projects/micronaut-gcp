@@ -7,7 +7,12 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
 import io.micronaut.core.annotation.Internal;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -32,15 +37,23 @@ public class ServiceAccountCredentialsTestHelper {
     }
 
     public static File writeServiceCredentialsToTempFile(PrivateKey pk) throws IOException {
+        return writeServiceCredentialsToTempFile(pk, null);
+    }
+
+    public static File writeServiceCredentialsToTempFile(PrivateKey pk, String tokenUri) throws IOException {
         File tmpSACredentials = File.createTempFile("GoogleCredentialsFactorySpec-", ".json");
         tmpSACredentials.deleteOnExit();
-        GenericJson fileContents = buildServiceAccountJson(pk);
+        GenericJson fileContents = buildServiceAccountJson(pk, tokenUri);
         writeJsonToOutputStream(new FileOutputStream(tmpSACredentials), fileContents);
         return tmpSACredentials;
     }
 
     public static String encodeServiceCredentials(PrivateKey pk) throws IOException {
-        GenericJson serviceAccountCredentials = buildServiceAccountJson(pk);
+        return encodeServiceCredentials(pk, null);
+    }
+
+    public static String encodeServiceCredentials(PrivateKey pk, String tokenUri) throws IOException {
+        GenericJson serviceAccountCredentials = buildServiceAccountJson(pk, tokenUri);
         ByteArrayOutputStream serviceAccountCredentialsByteStream = new ByteArrayOutputStream();
         writeJsonToOutputStream(serviceAccountCredentialsByteStream, serviceAccountCredentials);
         return Base64.getEncoder().encodeToString(serviceAccountCredentialsByteStream.toByteArray());
@@ -54,6 +67,10 @@ public class ServiceAccountCredentialsTestHelper {
     }
 
     public static GenericJson buildServiceAccountJson(PrivateKey pk) throws IOException {
+        return buildServiceAccountJson(pk, null);
+    }
+
+    public static GenericJson buildServiceAccountJson(PrivateKey pk, String tokenUri) throws IOException {
         String jsonPrivateKey = """
             -----BEGIN PRIVATE KEY-----
             %s
@@ -67,6 +84,9 @@ public class ServiceAccountCredentialsTestHelper {
             GenericJson fileContents =
                 parser.parseAndClose(templateKeyFile, StandardCharsets.UTF_8, GenericJson.class);
             fileContents.set("private_key", jsonPrivateKey);
+            if (tokenUri != null) {
+                fileContents.set("token_uri", tokenUri);
+            }
             return fileContents;
         }
     }

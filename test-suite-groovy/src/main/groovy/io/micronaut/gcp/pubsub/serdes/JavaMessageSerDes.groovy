@@ -19,7 +19,11 @@ import io.micronaut.core.serialize.exceptions.SerializationException;
 import io.micronaut.core.type.Argument;
 
 import jakarta.inject.Singleton;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 //end::imports[]
 
 // tag::clazz[]

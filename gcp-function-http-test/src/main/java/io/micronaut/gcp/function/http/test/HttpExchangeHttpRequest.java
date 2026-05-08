@@ -111,7 +111,7 @@ class HttpExchangeHttpRequest implements HttpRequest {
 
     @Nullable
     private String getHeader(@NonNull String headerName) {
-        return getHeaders().get(headerName).stream().findFirst().orElse(null);
+        return httpExchange.getRequestHeaders().getFirst(headerName);
     }
 
     @NonNull
