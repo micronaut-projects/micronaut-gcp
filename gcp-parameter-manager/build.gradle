@@ -13,3 +13,7 @@ dependencies {
 
     testImplementation(mn.snakeyaml)
 }
+
+micronautBuild {
+    binaryCompatibility.enabledAfter("6.0.0")
+}
