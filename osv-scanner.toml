@@ -1,0 +1,3 @@
+[[IgnoredVulns]]
+id = "GHSA-rcgg-9c38-7xpx"
+reason = "io.opentelemetry:opentelemetry-api:1.51.0 (GHSA-rcgg-9c38-7xpx; fixed: 1.62.0)"
