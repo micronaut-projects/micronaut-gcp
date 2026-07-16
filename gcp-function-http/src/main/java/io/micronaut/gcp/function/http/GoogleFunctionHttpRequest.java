@@ -98,6 +98,7 @@ final class GoogleFunctionHttpRequest<B> implements
     private final GoogleFunctionHeaders headers;
     private final GoogleFunctionHttpResponse<?> googleResponse;
     private final Supplier<ByteBody> byteBody;
+    private final Executor ioExecutor;
     private MutableHttpParameters httpParameters;
     private MutableConvertibleValues<Object> attributes;
     private B parsedBody;
@@ -132,6 +133,7 @@ final class GoogleFunctionHttpRequest<B> implements
         this.method = method;
         this.headers = new GoogleFunctionHeaders(conversionService);
         this.conversionService = conversionService;
+        this.ioExecutor = ioExecutor;
 
         this.body = SupplierUtil.memoizedNonEmpty(() -> {
             B built = parsedBody != null ? parsedBody :  (B) bodyBuilder.buildBody(this::getInputStream, this);
@@ -189,6 +191,10 @@ final class GoogleFunctionHttpRequest<B> implements
      */
     GoogleFunctionHttpResponse<?> getGoogleResponse() {
         return googleResponse;
+    }
+
+    Executor getIoExecutor() {
+        return ioExecutor;
     }
 
     @NonNull
