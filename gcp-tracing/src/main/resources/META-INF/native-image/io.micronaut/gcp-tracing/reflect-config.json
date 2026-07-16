@@ -1,0 +1,63 @@
+[
+  {
+    "name": "com.google.auth.oauth2.GoogleCredentials",
+    "methods": [
+      {
+        "name": "getQuotaProjectId",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.google.auth.oauth2.ServiceAccountCredentials",
+    "allPublicMethods": true
+  },
+  {
+    "name": "com.google.auth.oauth2.ServiceAccountJwtAccessCredentials",
+    "methods": [
+      {
+        "name": "newBuilder",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.google.auth.oauth2.ServiceAccountJwtAccessCredentials$Builder",
+    "methods": [
+      {
+        "name": "build",
+        "parameterTypes": []
+      },
+      {
+        "name": "setClientId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setClientEmail",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setPrivateKey",
+        "parameterTypes": [
+          "java.security.PrivateKey"
+        ]
+      },
+      {
+        "name": "setPrivateKeyId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setQuotaProjectId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ]
+  }
+]
