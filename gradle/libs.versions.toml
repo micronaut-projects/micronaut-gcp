@@ -1,5 +1,5 @@
 [versions]
-micronaut = "5.0.0"
+micronaut = "5.1.6"
 managed-google-auth-library-oauth2http = "1.49.0"
 managed-google-functions-framework-api = "2.0.1"
 managed-google-function-invoker = "2.0.1"
@@ -22,19 +22,19 @@ system-stubs-core = "2.1.8"
 awaitility = '4.3.0'
 
 micronaut-test = "5.0.0"
-micronaut-grpc = "5.0.0"
-micronaut-jackson-xml = "5.0.0"
+micronaut-grpc = "5.1.0"
+micronaut-jackson-xml = "5.1.0"
 micronaut-logging = "2.0.0"
-micronaut-reactor = "4.0.0"
-micronaut-rxjava3 = "4.0.0"
-micronaut-serde = "3.0.0"
-micronaut-servlet = "6.0.0"
-micronaut-tracing = "8.0.0"
-micronaut-discovery = "5.0.0-M1"
-micronaut-validation = "5.0.0"
+micronaut-reactor = "4.1.0"
+micronaut-rxjava3 = "4.1.0"
+micronaut-serde = "3.1.0"
+micronaut-servlet = "6.1.0"
+micronaut-tracing = "8.1.0"
+micronaut-discovery = "5.0.0"
+micronaut-validation = "5.1.0"
 
 # Micronaut
-micronaut-gradle-plugin = "5.0.0-M1"
+micronaut-gradle-plugin = "5.0.2"
 
 [libraries]
 # Core
