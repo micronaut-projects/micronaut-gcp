@@ -1,11 +1,11 @@
 [versions]
 micronaut = "5.1.6"
-managed-google-auth-library-oauth2http = "1.46.0"
+managed-google-auth-library-oauth2http = "1.49.0"
 managed-google-functions-framework-api = "2.0.1"
 managed-google-function-invoker = "2.0.1"
-managed-google-cloud-core = "2.69.0"
-managed-google-cloud-pubsub = "1.150.2"
-managed-google-cloud-secretmanager = "2.91.0"
+managed-google-cloud-core = "2.72.0"
+managed-google-cloud-pubsub = "1.152.0"
+managed-google-cloud-secretmanager = "2.94.0"
 managed-google-cloudevent-types="0.17.1"
 managed-gax = "2.79.0"
 
@@ -15,7 +15,7 @@ brave-propagation-stackdriver = "2.3.1"
 cloudevents-api = "4.0.2"
 
 logback-json-classic = "0.1.5"
-netty = "4.2.13.Final"
+netty = "4.2.16.Final"
 zipkin-sender-stackdriver = "2.3.1"
 system-stubs-core = "2.1.8"
 
