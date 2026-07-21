@@ -43,9 +43,6 @@ class ContentTypePushSubscriberSpec extends Specification implements TestPropert
 //end::injectClient[]
 
     @Inject
-    ContentTypePushSubscriber subscriber
-
-    @Inject
     @Named("xml")
     XmlMapper xmlMapper
 
@@ -128,34 +125,26 @@ class ContentTypePushSubscriberSpec extends Specification implements TestPropert
         assert "dog" == (receivedMessage as Animal).getName()
     }
 
-    @MockBean(ContentTypePushSubscriber)
-    ContentTypePushSubscriber testSubscriber() {
-        return new TestContentTypePushSubscriber()
-    }
+    @MockBean(MessageProcessor)
+    MessageProcessor messageProcessor() {
+        return new MessageProcessor() {
+            @Override
+            reactor.core.publisher.Mono<Boolean> handleByteArrayMessage(byte[] data) {
+                receivedMessage = data
+                return MessageProcessor.super.handleByteArrayMessage(data)
+            }
 
-    class TestContentTypePushSubscriber extends ContentTypePushSubscriber {
-        @Override
-        void receiveRaw(byte[] data, String id) {
-            receivedMessage = data
-            super.receiveRaw(data, id)
-        }
+            @Override
+            reactor.core.publisher.Mono<Boolean> handlePubSubMessage(PubsubMessage pubsubMessage) {
+                receivedMessage = pubsubMessage
+                return MessageProcessor.super.handlePubSubMessage(pubsubMessage)
+            }
 
-        @Override
-        void receiveNative(PubsubMessage pubsubMessage) {
-            receivedMessage = pubsubMessage
-            super.receiveNative(pubsubMessage)
-        }
-
-        @Override
-        void receivePojo(Animal animal, String id) {
-            receivedMessage = animal
-            super.receivePojo(animal, id)
-        }
-
-        @Override
-        void receiveXML(Animal animal, String id) {
-            receivedMessage = animal
-            super.receiveXML(animal, id)
+            @Override
+            reactor.core.publisher.Mono<Boolean> handleAnimalMessage(Animal animal) {
+                receivedMessage = animal
+                return MessageProcessor.super.handleAnimalMessage(animal)
+            }
         }
     }
 //tag::clazzEnd[]

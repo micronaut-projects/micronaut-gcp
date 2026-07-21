@@ -28,20 +28,30 @@ import io.micronaut.gcp.pubsub.support.Animal;
 @PubSubListener
 class ContentTypeSubscriber {
 
+    private final MessageProcessor messageProcessor
+
+    ContentTypeSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
     @Subscription("raw-subscription") // <1>
     void receiveRaw(byte[] data, @MessageId String id) {
+        messageProcessor.handleByteArrayMessage(data).block()
     }
 
     @Subscription("native-subscription") // <2>
     void receiveNative(PubsubMessage message) {
+        messageProcessor.handlePubSubMessage(message).block()
     }
 
     @Subscription("animals") // <3>
     void receivePojo(Animal animal, @MessageId String id) {
+        messageProcessor.handleAnimalMessage(animal).block()
     }
 
     @Subscription(value = "animals-legacy", contentType = "application/xml") // <4>
     void receiveXML(Animal animal, @MessageId String id) {
+        messageProcessor.handleAnimalMessage(animal).block()
     }
 
 }

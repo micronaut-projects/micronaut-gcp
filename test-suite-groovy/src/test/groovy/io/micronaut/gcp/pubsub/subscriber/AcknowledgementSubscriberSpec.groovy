@@ -5,9 +5,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
-import io.micronaut.gcp.pubsub.bind.DefaultPubSubAcknowledgement
 import io.micronaut.gcp.pubsub.support.Animal
-import io.micronaut.messaging.Acknowledgement
 import io.micronaut.pubsub.testcontainers.PubSubEmulator
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
@@ -29,25 +27,18 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
     @Inject
     TestPublisher publisher
 
-    MessageProcessor messageProcessor
-
-    @Inject
-    AcknowledgementSubscriber subscriber
-
     Object message
-
-    Acknowledgement acknowledgement
+    boolean nack
 
     def setup() {
         message = null
-        acknowledgement = null
+        nack = false
     }
 
     void "blocking subscriber with manual ack"() {
         setup:
         def conditions = new PollingConditions(initialDelay: 1)
         Animal dog = new Animal("dog")
-        messageProcessor.handleAnimalMessage(_ as Animal) >> Mono.just(Boolean.TRUE)
 
         when:
         publisher.publishAnimal(dog)
@@ -57,8 +48,6 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
             assert message != null
             assert message instanceof Animal
             assert (message as Animal).name == "dog"
-            assert acknowledgement instanceof DefaultPubSubAcknowledgement
-            assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
         }
     }
 
@@ -66,7 +55,7 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
         setup:
         def conditions = new PollingConditions(initialDelay: 1)
         Animal dog = new Animal("dog")
-        messageProcessor.handleAnimalMessage(_ as Animal) >>> [Mono.just(Boolean.FALSE), Mono.just(Boolean.TRUE)]
+        nack = true
 
         when:
         publisher.publishAnimal(dog)
@@ -76,8 +65,6 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
             assert message != null
             assert message instanceof Animal
             assert (message as Animal).name == "dog"
-            assert acknowledgement instanceof DefaultPubSubAcknowledgement
-            assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
         }
     }
 
@@ -85,7 +72,6 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
         setup:
         def conditions = new PollingConditions(initialDelay: 1)
         Animal dog = new Animal("dog")
-        messageProcessor.handleAnimalMessage(_ as Animal) >> Mono.just(Boolean.TRUE)
 
         when:
         publisher.publishAnimalAsync(dog)
@@ -93,9 +79,7 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
         then:
         conditions.eventually {
             assert message != null
-            assert message instanceof Mono
-            assert acknowledgement instanceof DefaultPubSubAcknowledgement
-            assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
+            assert message instanceof Animal
         }
     }
 
@@ -103,7 +87,7 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
         setup:
         def conditions = new PollingConditions(initialDelay: 1)
         Animal dog = new Animal("dog")
-        messageProcessor.handleAnimalMessage(_ as Animal) >>> [Mono.just(Boolean.FALSE), Mono.just(Boolean.TRUE)]
+        nack = true
 
         when:
         publisher.publishAnimalAsync(dog)
@@ -111,36 +95,20 @@ class AcknowledgementSubscriberSpec extends Specification implements TestPropert
         then:
         conditions.eventually {
             assert message != null
-            assert message instanceof Mono
-            assert acknowledgement instanceof DefaultPubSubAcknowledgement
-            assert (acknowledgement as DefaultPubSubAcknowledgement).isClientAck()
+            assert message instanceof Animal
         }
     }
 
-    @MockBean(AcknowledgementSubscriber)
-    AcknowledgementSubscriber subscriberForTest() {
-        messageProcessor = Mock(MessageProcessor)
-        return new TestAcknowledgementSubscriber(messageProcessor)
-    }
-
-    class TestAcknowledgementSubscriber extends AcknowledgementSubscriber {
-
-        TestAcknowledgementSubscriber(MessageProcessor messageProcessor) {
-            super(messageProcessor)
-        }
-
-        @Override
-        void onMessage(Animal animal, Acknowledgement ack) {
-            message = animal
-            acknowledgement = ack
-            super.onMessage(animal, ack)
-        }
-
-        @Override
-        Mono<Boolean> onReactiveMessage(Mono<Animal> animal, Acknowledgement ack) {
-            message = animal
-            acknowledgement = ack
-            return super.onReactiveMessage(animal, ack)
+    @MockBean(MessageProcessor)
+    MessageProcessor messageProcessor() {
+        return new MessageProcessor() {
+            @Override
+            Mono<Boolean> handleAnimalMessage(Animal animal) {
+                message = animal
+                boolean result = !nack
+                nack = false
+                return Mono.just(result)
+            }
         }
     }
 

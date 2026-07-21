@@ -33,24 +33,30 @@ import io.micronaut.scheduling.annotation.ExecuteOn
 @ExecuteOn(TaskExecutors.BLOCKING) // <1>
 class ContentTypePushSubscriber {
 
+    private final MessageProcessor messageProcessor
+
+    ContentTypePushSubscriber(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor
+    }
+
     @PushSubscription("raw-push-subscription") // <2>
     void receiveRaw(byte[] data, @MessageId String id) {
-        //process with blocking code
+        messageProcessor.handleByteArrayMessage(data).block()
     }
 
     @PushSubscription("native-push-subscription") // <3>
     void receiveNative(PubsubMessage message) {
-        //process with blocking code
+        messageProcessor.handlePubSubMessage(message).block()
     }
 
     @PushSubscription("animals-push") // <4>
     void receivePojo(Animal animal, @MessageId String id) {
-        //process with blocking code
+        messageProcessor.handleAnimalMessage(animal).block()
     }
 
     @PushSubscription(value = "animals-legacy-push", contentType = "application/xml") // <5>
     void receiveXML(Animal animal, @MessageId String id) {
-        //process with blocking code
+        messageProcessor.handleAnimalMessage(animal).block()
     }
 
 }
