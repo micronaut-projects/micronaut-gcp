@@ -7,3 +7,5 @@ To enable Google Cloud Parameter Manager support in an existing project, add the
 build configuration:
 
 dependency:micronaut-gcp-parameter-manager[groupId="io.micronaut.gcp"]
+
+For configuration files stored in Parameter Manager, prefer `micronaut.config.import` with the Google Parameter Manager importer. For direct runtime parameter access from application code, inject `ParameterManagerClient` or use api:gcp.parametermanager.client.ParameterManagerAccessClient[].
