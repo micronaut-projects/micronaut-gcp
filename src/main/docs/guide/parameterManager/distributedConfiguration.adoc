@@ -1,23 +1,12 @@
-You can use Micronaut’s https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration[Distributed Configuration]
-feature together with Google Cloud Parameter Manager to centrally store and load your application configuration. Google
-Cloud Parameter Manager supports https://docs.cloud.google.com/secret-manager/parameter-manager/docs/list-parameter-versions[parameter versioning].
-Micronaut always loads an explicit parameter version, ensuring predictable and repeatable configuration behavior, since
-Parameter Manager does not support `latest` as a version.
+You can use https://docs.micronaut.io/latest/guide/index.html#distributedConfiguration[Distributed Configuration] with Google Cloud Parameter Manager by importing specific parameters through `micronaut.config.import`.
 
-For new applications, prefer importing individual parameters through `micronaut.config.import` as described below. The
-bootstrap `config-client` integration further down remains available for existing applications that rely on its default
-config resolution behavior.
+This is the preferred approach for new applications because it avoids bootstrap-specific wiring and makes each imported parameter explicit.
+
+IMPORTANT: Make sure you have configured credentials following the <<setup, Setting up GCP>> section, and that the configured identity can read the target parameters. If you need more information, see the official link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/access-control[Parameter Manager access control] documentation.
 
 == Importing a configuration parameter
 
-Store a configuration payload such as YAML, JSON, or properties in a Parameter Manager parameter and import it through
-`micronaut.config.import`. Parameter Manager does not keep file extensions, so the importer either uses the configured
-`format` or defaults to YAML-style parsing for extensionless parameters.
-
-IMPORTANT: Make sure you have configured credentials following the <<setup, Setting up GCP>> section, and that the
-configured identity can read the target parameters. See the official
-https://docs.cloud.google.com/secret-manager/parameter-manager/docs/access-control[Parameter Manager access control]
-documentation for details.
+Store a configuration payload such as YAML, JSON, or properties in a Parameter Manager parameter. Parameter Manager does not keep file extensions, so the importer either uses the configured `format` or defaults to YAML-style parsing for extensionless parameters.
 
 [source,yaml]
 ----
@@ -26,7 +15,7 @@ micronaut:
     import: gcp-parameter-manager://application?project-id=my-gcp-project&version=1
 ----
 
-The importer renders the parameter version at startup, resolving any secret references it contains, and publishes the result as a Micronaut property source. See <<parameterManagerParametersResolution, Parameters Resolution>> below.
+The importer renders the parameter version at startup and publishes it as a Micronaut property source. See <<parameterManagerParametersResolution,Parameters Resolution>> below for how secret references inside a parameter are handled.
 
 When you use the scalar connection-string form, you can pass additional importer options as query parameters:
 
@@ -35,11 +24,9 @@ When you use the scalar connection-string form, you can pass additional importer
 micronaut.config.import=gcp-parameter-manager://application?project-id=my-gcp-project&version=1&credentials-location=credentials-file-path
 ----
 
-In that form, `credentials-location` maps directly to the importer option of the same name. If you need `encoded-key`,
-prefer the structured import form below so the Base64 value does not need URI escaping. If neither credential option is
-supplied, the importer falls back to Application Default Credentials.
+In that form, `credentials-location` maps directly to the importer option of the same name. If you need `encoded-key`, prefer the structured import form below so the Base64 value does not need URI escaping. If neither credential option is supplied, the importer falls back to Application Default Credentials.
 
-=== Structured import declarations
+== Structured import declarations
 
 If you need to pass extra options such as credentials, project id, or regional location, use the structured import form:
 
@@ -69,13 +56,11 @@ Supported importer options are:
 |`optional` |Marks the import as optional
 |===
 
-When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default
-Credentials, using the same resolution order described in the <<setup, Setting up GCP>> section.
+When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <<setup, Setting up GCP>> section.
 
-=== Retry options
+== Retry options
 
-`gcp-parameter-manager` imports also support the standard retry options provided by `RetryablePropertySourceImporter`.
-These options work with both scalar connection-string imports and structured import declarations.
+`gcp-parameter-manager` imports also support the standard retry options provided by `RetryablePropertySourceImporter`. These options work with both scalar connection-string imports and structured import declarations.
 
 |===
 |Option |Description
@@ -96,10 +81,25 @@ micronaut:
     import: gcp-parameter-manager://application?project-id=my-gcp-project&version=1&retry-attempts=5&retry-delay=1s&retry-multiplier=1.5
 ----
 
-=== Regional imports
+Example using structured form:
 
-To comply with data residency requirements, you can point the importer at a regional parameter by setting `location` in
-the import declaration:
+[source,yaml]
+----
+micronaut:
+  config:
+    import:
+      provider: gcp-parameter-manager
+      path: application
+      project-id: my-gcp-project
+      version: 1
+      retry-attempts: 5
+      retry-delay: 1s
+      retry-max-delay: 30s
+----
+
+== Regional imports
+
+To comply with data residency requirements, you can point the importer at a regional parameter by setting `location` in the import declaration:
 
 [source,yaml]
 ----
@@ -116,114 +116,77 @@ micronaut:
 [[parameterManagerParametersResolution]]
 == Parameters Resolution
 
-The framework uses the https://docs.cloud.google.com/secret-manager/parameter-manager/docs/render-parameter-version[render functionality]
-when reading parameters, whether through `micronaut.config.import` or the legacy bootstrap integration below. This
-allows parameter versions to reference secrets stored in Google Cloud Secret Manager.
+The framework uses the link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/render-parameter-version[render functionality] when reading parameters. This allows parameter versions to reference secrets stored in Google Cloud Secret Manager.
 
-IMPORTANT: If a parameter references a Secret Manager secret, the specific parameter must also be granted the Secret
-Manager Secret Accessor role for that secret. Refer to the official https://docs.cloud.google.com/secret-manager/parameter-manager/docs/reference-secrets-in-parameter[Reference Secrets in Parameter]
-guide for more details.
+IMPORTANT: If a parameter references a Secret Manager secret, the specific parameter must also be granted the Secret Manager Secret Accessor role for that secret. Refer to the official link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/reference-secrets-in-parameter[Reference Secrets in Parameter] guide for more details.
+
+Because imports are required by default, a parameter whose secret reference cannot be resolved (missing secret, or missing `roles/secretmanager.secretAccessor` on it) fails application startup rather than loading with a missing property. Add `optional: true` to the import declaration if you want startup to continue without it instead.
 
 == Legacy bootstrap integration
 
-The bootstrap/config-client based integration below remains available for existing applications. Unlike the
-`micronaut.config.import` importer above, it can resolve the default `application`-named configuration and lets you
-whitelist several parameters at once through `custom-configs` and `keys`.
+The older bootstrap/config-client based integration remains available for existing applications. Unlike Secret Manager, it has no default parameter name resolution -- you must explicitly whitelist every parameter through `custom-configs` or `keys`, each given as a `<parameter-name>/<parameter-version>` pair.
 
-=== Enabling Distributed Configuration
-
-To enable distributed configuration, create a bootstrap configuration file in `src/main/resources/`:
+For new development, prefer `micronaut.config.import`. Use the bootstrap configuration path only when you need this legacy resolution behavior.
 
 .bootstrap configuration
 [configuration]
 ----
 micronaut:
-    application:
-        name: sample-app
-    config-client:
-        enabled: true
+  application:
+    name: sample-app
+  config-client:
+    enabled: true
 ----
 
-IMPORTANT: Ensure that your project is configured with valid Google Cloud credentials as described in the
-<<setup, Setting up GCP>> section. The service account used by your application must have permission to read parameters.
-Refer to the official https://docs.cloud.google.com/secret-manager/parameter-manager/docs/access-control[Parameter Manager Access Control]
-documentation for details.
+IMPORTANT: The service account used by your application must have permission to read parameters. See the official link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/access-control[Parameter Manager access control] documentation.
 
-==== Using Regional Parameters
+=== Regional parameters (legacy)
 
-If your application must comply with data residency requirements, you can use regional parameters with Distributed
-Configuration. To enable distributed configuration for regional parameters, create a bootstrap configuration file in
-`src/main/resources/`:
+Set `gcp.parameter-manager.location` to use the bootstrap client against a regional endpoint:
 
-.bootstrap configuration
 [configuration]
 ----
-micronaut:
-    application:
-        name: sample-app
-    config-client:
-        enabled: true
 gcp:
-    parameter-manager:
-        location: us-east1
+  parameter-manager:
+    location: us-east1
 ----
 
-IMPORTANT: The `gcp.parameter-manager.location` property is required when using regional parameters for distributed
-configuration. For more information, see the official https://docs.cloud.google.com/secret-manager/docs/locations#parameter_manager_locations[Parameter Manager regional endpoint locations]
-documentation.
+=== Custom configuration files
 
-=== Loading Custom Configuration Files
+`custom-configs` loads a parameter's content as a configuration file (`yaml`, `json`, or `properties`), merging its keys directly into the environment:
 
-When loading configuration from Parameter Manager, the framework attempts to resolve parameters as configuration files
-in the following format: `yaml`, `json`, `properties`. You have to explicitly whitelist configuration parameters using
-the `custom-configs` setting. Each entry must include the parameter name and version:
-
-.bootstrap configuration
 [configuration]
 ----
-micronaut:
-    application:
-        name: sample-app
-    config-client:
-        enabled: true
 gcp:
-    parameter-manager:
-        custom-configs:
-            - my-first-config/v1
-            - my-second-config/v1
+  parameter-manager:
+    custom-configs:
+      - my-first-config/v1
+      - my-second-config/v1
 ----
 
-TIP: Parameters listed under `custom-configs` must represent valid configuration files (for example, YAML or properties
-files), not individual key/value entries.
+TIP: Entries under `custom-configs` must be valid configuration files, not individual key/value entries.
 
-=== Loading Key/Value Pairs into a PropertySource
+=== Key/value parameters
 
-Google Cloud Parameter Manager can also store individual parameters that map to a single string value, such as a
-`DB_PASSWORD`. You must explicitly whitelist the `keys` you want to load. Each entry must include the parameter name
-and version:
+`keys` loads a parameter's raw content as a single string value, rather than parsing it as a config file -- useful for a parameter that stores something like a `DB_PASSWORD`:
 
-.bootstrap configuration
 [configuration]
 ----
-micronaut:
-    application:
-        name: sample-app
-    config-client:
-        enabled: true
 gcp:
-    parameter-manager:
-        keys:
-            - DB_PASSWORD/newVersion
-            - dbUser/otherVersion
+  parameter-manager:
+    keys:
+      - DB_PASSWORD/newVersion
+      - dbUser/otherVersion
 ----
 
-All whitelisted Parameter Manager `keys` are loaded into the Micronaut environment with a `pm` prefix.
-The following table shows how parameters are resolved:
+Keys are exposed in the environment under a `pm.` prefix, converted to dotted-lowercase form:
 
 |===
-|Parameter Name with version|Micronaut resolved property
-|`DB_PASSWORD/newVersion`
-|`{pm.db.password}`
-|`dbUser/otherVersion`
-|`{pm.db.user}`
+|Parameter name/version |Resolved property
+|`DB_PASSWORD/newVersion` |`pm.db.password`
+|`dbUser/otherVersion` |`pm.db.user`
 |===
+
+== Parameter Versioning
+
+Google Cloud Parameter Manager supports link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/list-parameter-versions[parameter versioning]. Unlike Secret Manager, it does not support `latest` as a version -- every import, whether through `micronaut.config.import` or the legacy bootstrap path, must specify an explicit version.
