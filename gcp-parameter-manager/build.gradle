@@ -14,7 +14,3 @@ dependencies {
     testImplementation(mn.snakeyaml)
     testImplementation(testFixtures(project(":micronaut-gcp-common")))
 }
-
-micronautBuild {
-    binaryCompatibility.enabledAfter("6.0.0")
-}
