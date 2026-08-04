@@ -52,6 +52,8 @@ import java.util.concurrent.Executors;
 public class PubSubConfigurationFactory {
 
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
+    // A little larger than 10MB PubSub limit
+    private static final int MAX_INBOUND_MESSAGE_SIZE = 11 * 1024 * 1024;
 
     private final GoogleCloudConfiguration googleCloudConfiguration;
 
@@ -81,6 +83,7 @@ public class PubSubConfigurationFactory {
         return InstantiatingGrpcChannelProvider.newBuilder()
                 .setHeaderProvider(new UserAgentHeaderProvider(Modules.PUBSUB))
                 .setKeepAliveTime(Duration.ofMinutes(this.pubSubConfigurationProperties.getKeepAliveIntervalMinutes()))
+                .setMaxInboundMessageSize(MAX_INBOUND_MESSAGE_SIZE)
                 .build();
     }
 
