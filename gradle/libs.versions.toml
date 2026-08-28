@@ -1,5 +1,5 @@
 [versions]
-micronaut = "5.1.9"
+micronaut = "5.1.13"
 managed-google-auth-library-oauth2http = "1.49.0"
 managed-google-functions-framework-api = "2.0.2"
 managed-google-function-invoker = "2.0.2"
@@ -25,12 +25,12 @@ micronaut-test = "5.1.0"
 micronaut-grpc = "5.1.0"
 micronaut-jackson-xml = "5.1.0"
 micronaut-logging = "2.1.0"
-micronaut-reactor = "4.1.0"
+micronaut-reactor = "4.2.0"
 micronaut-rxjava3 = "4.1.0"
-micronaut-serde = "3.1.0"
+micronaut-serde = "3.1.1"
 micronaut-servlet = "6.1.0"
 micronaut-tracing = "8.2.0"
-micronaut-discovery = "5.0.0"
+micronaut-discovery = "5.1.0"
 micronaut-validation = "5.1.0"
 
 # Micronaut
