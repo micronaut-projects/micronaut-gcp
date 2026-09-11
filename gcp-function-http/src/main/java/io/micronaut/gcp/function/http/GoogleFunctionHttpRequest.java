@@ -23,6 +23,7 @@ import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.convert.value.MutableConvertibleValuesMap;
 import io.micronaut.core.execution.ExecutionFlow;
+import io.micronaut.core.io.IOUtils;
 import io.micronaut.core.io.buffer.ByteArrayBufferFactory;
 import io.micronaut.core.io.buffer.ByteBuffer;
 import io.micronaut.core.type.Argument;
@@ -62,8 +63,10 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -213,7 +216,10 @@ final class GoogleFunctionHttpRequest<B> implements
         MediaType mediaType = getContentType().orElse(MediaType.APPLICATION_JSON_TYPE);
         Map<CharSequence, List<String>> values = new HashMap<>(3);
         values.putAll(googleRequest.getQueryParameters());
-        if (isFormSubmission(mediaType)) {
+        if (MediaType.MULTIPART_FORM_DATA_TYPE.getName().equalsIgnoreCase(mediaType.getName())) {
+            // a multipart body is not URL encoded; the invoker parses it into parts
+            values.putAll(multipartFormFields());
+        } else if (isFormSubmission(mediaType)) {
             Map<String, List<String>> parameters = null;
             try {
                 parameters = new QueryStringDecoder(new String(getInputStream().readAllBytes(), getCharacterEncoding()), false).parameters();
@@ -226,6 +232,37 @@ final class GoogleFunctionHttpRequest<B> implements
             values.putAll(parameters);
         }
         return new SimpleHttpParameters(values, conversionService);
+    }
+
+    /**
+     * @return The form fields of a multipart request, which are the parts without a file name
+     */
+    private Map<String, List<String>> multipartFormFields() {
+        Map<String, com.google.cloud.functions.HttpRequest.HttpPart> parts;
+        try {
+            parts = googleRequest.getParts();
+        } catch (IllegalStateException | UnsupportedOperationException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Request parts are not available: {}", e.getMessage(), e);
+            }
+            return Map.of();
+        }
+        Map<String, List<String>> fields = new LinkedHashMap<>(parts.size());
+        for (Map.Entry<String, com.google.cloud.functions.HttpRequest.HttpPart> entry : parts.entrySet()) {
+            com.google.cloud.functions.HttpRequest.HttpPart part = entry.getValue();
+            if (part.getFileName().isPresent()) {
+                // file uploads are bound with @Part, not as form fields
+                continue;
+            }
+            try (BufferedReader reader = part.getReader()) {
+                fields.computeIfAbsent(entry.getKey(), k -> new ArrayList<>()).add(IOUtils.readText(reader));
+            } catch (IOException ex) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Error reading form field [{}]: {}", entry.getKey(), ex.getMessage(), ex);
+                }
+            }
+        }
+        return fields;
     }
 
     @NonNull

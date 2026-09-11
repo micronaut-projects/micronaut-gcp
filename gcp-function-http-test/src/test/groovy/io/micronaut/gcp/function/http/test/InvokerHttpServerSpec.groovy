@@ -5,9 +5,11 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Part
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
+import io.micronaut.http.client.multipart.MultipartBody
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
 
@@ -37,6 +39,18 @@ class InvokerHttpServerSpec extends Specification {
         result == 'goodbody'
     }
 
+    void 'test invoke multipart post via server'() {
+        when:
+        def result = client.toBlocking().retrieve(HttpRequest.POST('/test/multipart', MultipartBody.builder()
+                .addPart('name', 'Fred')
+                .addPart('file', 'file.txt', MediaType.TEXT_PLAIN_TYPE, 'Some text'.bytes)
+                .build())
+                .contentType(MediaType.MULTIPART_FORM_DATA_TYPE), String)
+
+        then:
+        result == 'Fred: Some text'
+    }
+
 
     @Controller('/test')
     static class TestController {
@@ -48,6 +62,11 @@ class InvokerHttpServerSpec extends Specification {
         @Post(value = '/', processes = MediaType.TEXT_PLAIN)
         String test(@Body String body) {
             return 'good' + body
+        }
+
+        @Post(value = '/multipart', consumes = MediaType.MULTIPART_FORM_DATA, produces = MediaType.TEXT_PLAIN)
+        String multipart(String name, @Part('file') String file) {
+            return name + ': ' + file
         }
     }
 }

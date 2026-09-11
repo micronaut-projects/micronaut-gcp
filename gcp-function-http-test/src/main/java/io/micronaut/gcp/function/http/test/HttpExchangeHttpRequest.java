@@ -19,6 +19,7 @@ import com.google.cloud.functions.HttpRequest;
 import com.sun.net.httpserver.HttpExchange;
 import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.gcp.function.http.GoogleMultipartParts;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.util.StringUtils;
@@ -29,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,7 @@ import static io.micronaut.http.util.HttpHeadersUtil.parseCharacterEncoding;
 @Internal
 class HttpExchangeHttpRequest implements HttpRequest {
     private final HttpExchange httpExchange;
+    private @Nullable Map<String, HttpPart> parts;
 
     HttpExchangeHttpRequest(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
@@ -72,7 +75,17 @@ class HttpExchangeHttpRequest implements HttpRequest {
 
     @Override
     public Map<String, HttpPart> getParts() {
-        throw new UnsupportedOperationException("Not implemented");
+        Map<String, HttpPart> parts = this.parts;
+        if (parts == null) {
+            // like the Functions Framework invoker, parse the whole multipart body, which consumes it
+            try {
+                parts = GoogleMultipartParts.parse(getHeader(HttpHeaders.CONTENT_TYPE), httpExchange.getRequestBody().readAllBytes());
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+            this.parts = parts;
+        }
+        return parts;
     }
 
     @Override

@@ -116,4 +116,9 @@ public class ParametersController {
                 IOUtils.readText(raw.getReader()).equals("Another Doc"));
     }
 
+    @Post(value = "/multipart-fields", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String multipartFields(String name, @Part("file") String file) {
+        return name + ": " + file;
+    }
+
 }

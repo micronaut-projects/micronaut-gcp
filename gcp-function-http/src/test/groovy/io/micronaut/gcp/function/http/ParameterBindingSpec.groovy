@@ -6,6 +6,7 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.http.client.multipart.MultipartBody
 import spock.lang.PendingFeature
 import spock.lang.Specification
 
@@ -236,5 +237,34 @@ class ParameterBindingSpec extends Specification {
         googleResponse.statusCode == HttpStatus.OK.code
         googleResponse.text == 'Good: true'
 
+    }
+
+    void "test multipart form field binding"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart-fields")
+        googleRequest.parts.put("name", new MockGoogleHttpPart(null, 'Fred', "text/plain"))
+        googleRequest.parts.put("file", new MockGoogleHttpPart("file.txt", 'Some text', "text/plain"))
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA + "; boundary=abc")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'Fred: Some text'
+    }
+
+    void "test multipart body passed to invoke"() {
+        given:
+        def request = io.micronaut.http.HttpRequest.POST("/parameters/multipart-fields", MultipartBody.builder()
+                .addPart("name", "Fred")
+                .addPart("file", "file.txt", MediaType.TEXT_PLAIN_TYPE, 'Some text'.bytes)
+                .build())
+                .contentType(MediaType.MULTIPART_FORM_DATA_TYPE)
+        def response = new HttpFunction().invoke(request)
+
+        expect:
+        response.status == HttpStatus.OK
+        response.bodyAsText == 'Fred: Some text'
     }
 }
