@@ -267,4 +267,55 @@ class ParameterBindingSpec extends Specification {
         response.status == HttpStatus.OK
         response.bodyAsText == 'Fred: Some text'
     }
+
+    void "test multipart form fields when the request parts are not available"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart-optional") {
+            @Override
+            Map getParts() {
+                throw new IllegalStateException("Content-Type must be multipart/form-data")
+            }
+        }
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA + "; boundary=abc")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'name: null'
+    }
+
+    void "test multipart form field that cannot be read"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart-optional")
+        googleRequest.parts.put("name", new MockGoogleHttpPart(null, 'Fred', "text/plain") {
+            @Override
+            BufferedReader getReader() throws IOException {
+                throw new IOException("Broken part")
+            }
+        })
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA + "; boundary=abc")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'name: null'
+    }
+
+    void "test URL encoded form binding"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/form", "name=Fred")
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+        googleRequest.addHeader(HttpHeaders.CONTENT_LENGTH, "9")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'name: Fred'
+    }
 }

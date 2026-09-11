@@ -22,15 +22,16 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.client.multipart.MultipartBody;
 import io.micronaut.http.client.multipart.MultipartDataFactory;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
-import io.netty.handler.codec.http.multipart.Attribute;
 import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import io.netty.handler.codec.http.multipart.FileUpload;
+import io.netty.handler.codec.http.multipart.HttpData;
 import io.netty.handler.codec.http.multipart.HttpPostMultipartRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.jspecify.annotations.Nullable;
@@ -41,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -87,15 +87,16 @@ public final class GoogleMultipartParts {
         try {
             Map<String, HttpRequest.HttpPart> parts = new LinkedHashMap<>();
             for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
-                if (data instanceof FileUpload upload) {
-                    parts.put(upload.getName(), new InMemoryPart(upload.getFilename(), upload.getContentType(), upload.getCharset(), upload.get()));
-                } else if (data instanceof Attribute attribute) {
-                    parts.put(attribute.getName(), new InMemoryPart(null, null, attribute.getCharset(), attribute.get()));
+                // the decoder only produces attributes and file uploads, both held in memory by the factory
+                HttpData httpData = (HttpData) data;
+                byte[] content = ByteBufUtil.getBytes(httpData.content());
+                if (httpData instanceof FileUpload upload) {
+                    parts.put(upload.getName(), new InMemoryPart(upload.getFilename(), upload.getContentType(), upload.getCharset(), content));
+                } else {
+                    parts.put(httpData.getName(), new InMemoryPart(null, null, httpData.getCharset(), content));
                 }
             }
             return Collections.unmodifiableMap(parts);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } finally {
             decoder.destroy();
             nettyRequest.release();
@@ -110,10 +111,10 @@ public final class GoogleMultipartParts {
      * @return The parts by name, or empty if the body is not a multipart body
      */
     public static Optional<Map<String, HttpRequest.HttpPart>> fromBody(@Nullable Object body) {
-        if (MULTIPART_BODY_PRESENT && body != null) {
-            return MultipartBodyParts.fromBody(body);
+        if (body == null || !MULTIPART_BODY_PRESENT) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return MultipartBodyParts.fromBody(body);
     }
 
     private static boolean isMultipartFormData(@Nullable String contentType) {
@@ -132,7 +133,7 @@ public final class GoogleMultipartParts {
                 return Optional.empty();
             }
             List<PendingPart> data = multipartBody.getData(INSTANCE);
-            Map<String, HttpRequest.HttpPart> parts = new LinkedHashMap<>(data.size());
+            Map<String, HttpRequest.HttpPart> parts = LinkedHashMap.newLinkedHashMap(data.size());
             for (PendingPart part : data) {
                 parts.put(part.name, new InMemoryPart(part.fileName, part.contentType, part.charset, part.content));
             }
@@ -153,15 +154,12 @@ public final class GoogleMultipartParts {
 
         @Override
         public void setContent(PendingPart fileUploadObject, Object content) throws IOException {
-            if (content instanceof byte[] bytes) {
-                fileUploadObject.content = bytes;
-            } else if (content instanceof File file) {
-                fileUploadObject.content = Files.readAllBytes(file.toPath());
-            } else if (content instanceof InputStream inputStream) {
-                fileUploadObject.content = inputStream.readAllBytes();
-            } else {
-                throw new IllegalArgumentException("Unsupported multipart content: " + content);
-            }
+            fileUploadObject.content = switch (content) {
+                case byte[] bytes -> bytes;
+                case File file -> Files.readAllBytes(file.toPath());
+                case InputStream inputStream -> inputStream.readAllBytes();
+                default -> throw new IllegalArgumentException("Unsupported multipart content: " + content);
+            };
         }
 
         /**
@@ -185,16 +183,26 @@ public final class GoogleMultipartParts {
 
     /**
      * A part held in memory.
-     *
-     * @param fileName    The file name, absent for a form field
-     * @param contentType The content type
-     * @param charset     The charset
-     * @param content     The content
      */
-    private record InMemoryPart(@Nullable String fileName,
-                                @Nullable String contentType,
-                                @Nullable Charset charset,
-                                byte[] content) implements HttpRequest.HttpPart {
+    private static final class InMemoryPart implements HttpRequest.HttpPart {
+
+        private final @Nullable String fileName;
+        private final @Nullable String contentType;
+        private final @Nullable Charset charset;
+        private final byte[] content;
+
+        /**
+         * @param fileName    The file name, absent for a form field
+         * @param contentType The content type
+         * @param charset     The charset
+         * @param content     The content
+         */
+        private InMemoryPart(@Nullable String fileName, @Nullable String contentType, @Nullable Charset charset, byte[] content) {
+            this.fileName = fileName;
+            this.contentType = contentType;
+            this.charset = charset;
+            this.content = content;
+        }
 
         @Override
         public Optional<String> getFileName() {

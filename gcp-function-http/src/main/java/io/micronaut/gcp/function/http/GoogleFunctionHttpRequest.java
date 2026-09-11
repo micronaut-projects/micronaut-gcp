@@ -242,12 +242,10 @@ final class GoogleFunctionHttpRequest<B> implements
         try {
             parts = googleRequest.getParts();
         } catch (IllegalStateException | UnsupportedOperationException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Request parts are not available: {}", e.getMessage(), e);
-            }
+            LOG.debug("Request parts are not available: {}", e.getMessage(), e);
             return Map.of();
         }
-        Map<String, List<String>> fields = new LinkedHashMap<>(parts.size());
+        Map<String, List<String>> fields = LinkedHashMap.newLinkedHashMap(parts.size());
         for (Map.Entry<String, com.google.cloud.functions.HttpRequest.HttpPart> entry : parts.entrySet()) {
             com.google.cloud.functions.HttpRequest.HttpPart part = entry.getValue();
             if (part.getFileName().isPresent()) {

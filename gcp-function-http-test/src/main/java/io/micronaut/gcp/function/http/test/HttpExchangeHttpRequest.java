@@ -75,17 +75,17 @@ class HttpExchangeHttpRequest implements HttpRequest {
 
     @Override
     public Map<String, HttpPart> getParts() {
-        Map<String, HttpPart> parts = this.parts;
-        if (parts == null) {
+        Map<String, HttpPart> result = this.parts;
+        if (result == null) {
             // like the Functions Framework invoker, parse the whole multipart body, which consumes it
             try {
-                parts = GoogleMultipartParts.parse(getHeader(HttpHeaders.CONTENT_TYPE), httpExchange.getRequestBody().readAllBytes());
+                result = GoogleMultipartParts.parse(getHeader(HttpHeaders.CONTENT_TYPE), httpExchange.getRequestBody().readAllBytes());
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
-            this.parts = parts;
+            this.parts = result;
         }
-        return parts;
+        return result;
     }
 
     @Override

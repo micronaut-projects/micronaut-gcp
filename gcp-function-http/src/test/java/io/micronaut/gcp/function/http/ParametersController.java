@@ -121,4 +121,14 @@ public class ParametersController {
         return name + ": " + file;
     }
 
+    @Post(value = "/multipart-optional", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String multipartOptional(@org.jspecify.annotations.Nullable String name) {
+        return "name: " + name;
+    }
+
+    @Post(value = "/form", consumes = MediaType.APPLICATION_FORM_URLENCODED, produces = "text/plain")
+    String form(String name) {
+        return "name: " + name;
+    }
+
 }
