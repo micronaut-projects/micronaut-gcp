@@ -34,7 +34,8 @@ public class GcpFunctionHttpServerUnderTest implements ServerUnderTest {
 
     public GcpFunctionHttpServerUnderTest(Map<String, Object> properties) {
         properties.put("micronaut.server.context-path", "/");
-        properties.put("endpoints.refresh.enabled", StringUtils.FALSE);
+        // the CORS TCK tests enable the refresh endpoint themselves and post to it
+        properties.putIfAbsent("endpoints.refresh.enabled", StringUtils.FALSE);
         properties.put("endpoints.health.service-ready-indicator-enabled", StringUtils.FALSE);
         this.function = new HttpFunction(
             ApplicationContext.builder(Environment.FUNCTION, Environment.GOOGLE_COMPUTE, Environment.TEST)

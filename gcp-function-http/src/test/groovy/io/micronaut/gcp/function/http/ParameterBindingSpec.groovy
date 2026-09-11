@@ -6,6 +6,7 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.http.client.multipart.MultipartBody
 import spock.lang.PendingFeature
 import spock.lang.Specification
 
@@ -236,5 +237,85 @@ class ParameterBindingSpec extends Specification {
         googleResponse.statusCode == HttpStatus.OK.code
         googleResponse.text == 'Good: true'
 
+    }
+
+    void "test multipart form field binding"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart-fields")
+        googleRequest.parts.put("name", new MockGoogleHttpPart(null, 'Fred', "text/plain"))
+        googleRequest.parts.put("file", new MockGoogleHttpPart("file.txt", 'Some text', "text/plain"))
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA + "; boundary=abc")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'Fred: Some text'
+    }
+
+    void "test multipart body passed to invoke"() {
+        given:
+        def request = io.micronaut.http.HttpRequest.POST("/parameters/multipart-fields", MultipartBody.builder()
+                .addPart("name", "Fred")
+                .addPart("file", "file.txt", MediaType.TEXT_PLAIN_TYPE, 'Some text'.bytes)
+                .build())
+                .contentType(MediaType.MULTIPART_FORM_DATA_TYPE)
+        def response = new HttpFunction().invoke(request)
+
+        expect:
+        response.status == HttpStatus.OK
+        response.bodyAsText == 'Fred: Some text'
+    }
+
+    void "test multipart form fields when the request parts are not available"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart-optional") {
+            @Override
+            Map getParts() {
+                throw new IllegalStateException("Content-Type must be multipart/form-data")
+            }
+        }
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA + "; boundary=abc")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'name: null'
+    }
+
+    void "test multipart form field that cannot be read"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/multipart-optional")
+        googleRequest.parts.put("name", new MockGoogleHttpPart(null, 'Fred', "text/plain") {
+            @Override
+            BufferedReader getReader() throws IOException {
+                throw new IOException("Broken part")
+            }
+        })
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA + "; boundary=abc")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'name: null'
+    }
+
+    void "test URL encoded form binding"() {
+        given:
+        HttpRequest googleRequest = new MockGoogleRequest(HttpMethod.POST, "/parameters/form", "name=Fred")
+        googleRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+        googleRequest.addHeader(HttpHeaders.CONTENT_LENGTH, "9")
+        HttpResponse googleResponse = new MockGoogleResponse()
+        new HttpFunction()
+                .service(googleRequest, googleResponse)
+
+        expect:
+        googleResponse.statusCode == HttpStatus.OK.code
+        googleResponse.text == 'name: Fred'
     }
 }

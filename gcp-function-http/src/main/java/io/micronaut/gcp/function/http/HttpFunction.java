@@ -252,7 +252,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
             @Override
             public Map<String, HttpPart> getParts() {
-                return Collections.emptyMap();
+                return GoogleMultipartParts.fromBody(body).orElse(Collections.emptyMap());
             }
 
             @Override

@@ -12,6 +12,8 @@ dependencies {
     implementation(mn.micronaut.router)
     compileOnly(libs.managed.functions.framework.api)
     compileOnly(mn.micronaut.jackson.databind)
+    // lets HttpFunction.invoke pass the parts of a client MultipartBody to the function
+    compileOnly(mn.micronaut.http.client.core)
 
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)
@@ -19,5 +21,6 @@ dependencies {
     testImplementation(mnRxjava3.micronaut.rxjava3)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(libs.managed.functions.framework.api)
+    testImplementation(mn.micronaut.http.client.core)
 
 }

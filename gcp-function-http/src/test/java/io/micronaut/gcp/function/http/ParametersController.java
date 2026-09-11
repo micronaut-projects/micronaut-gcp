@@ -116,4 +116,19 @@ public class ParametersController {
                 IOUtils.readText(raw.getReader()).equals("Another Doc"));
     }
 
+    @Post(value = "/multipart-fields", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String multipartFields(String name, @Part("file") String file) {
+        return name + ": " + file;
+    }
+
+    @Post(value = "/multipart-optional", consumes = MediaType.MULTIPART_FORM_DATA, produces = "text/plain")
+    String multipartOptional(@org.jspecify.annotations.Nullable String name) {
+        return "name: " + name;
+    }
+
+    @Post(value = "/form", consumes = MediaType.APPLICATION_FORM_URLENCODED, produces = "text/plain")
+    String form(String name) {
+        return "name: " + name;
+    }
+
 }
