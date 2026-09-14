@@ -1,5 +1,5 @@
 [versions]
-micronaut = "5.2.1"
+micronaut = "5.2.2"
 managed-google-auth-library-oauth2http = "1.49.0"
 managed-google-functions-framework-api = "2.0.2"
 managed-google-function-invoker = "2.0.2"
