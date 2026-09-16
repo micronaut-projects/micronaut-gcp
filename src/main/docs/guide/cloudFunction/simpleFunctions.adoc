@@ -10,11 +10,14 @@ Now define a class that implements one of Google Cloud Found's interfaces, for e
 
 The following is an example of a `BackgroundFunction` that uses Micronaut and Google Cloud Function:
 
-snippet::example.background.Example[source="main"]
+snippet::example.background.Example[source="main", languages="java,kotlin,groovy"]
 
 <1> The function extends from `io.micronaut.function.executor.FunctionInitializer`
 <2> The function implements `com.google.cloud.functions.BackgroundFunction`
 <3> Dependency injection can be used on the fields
+
+[.lang-python]
+NOTE: A Google Cloud Function needs a Java entry point class that the Functions Framework instantiates before any Micronaut application context (and with it the Python runtime) exists, so raw functions cannot be written in Python. Use the HTTP functions described below, which run a regular Micronaut application, instead.
 
 When you extend from `FunctionInitializer` the Micronaut `ApplicationContext` will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using `jakarta.inject.Inject` as usual.
 
