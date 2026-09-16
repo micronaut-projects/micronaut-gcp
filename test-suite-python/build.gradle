@@ -1,0 +1,41 @@
+plugins {
+    id 'java-library'
+    id "io.micronaut.build.internal.gcp-testsuite"
+    id "io.micronaut.build.internal.python"
+}
+
+dependencies {
+    // The Java PythonRuntimeInitializer (src/test/java) is processed by javac
+    testAnnotationProcessor(platform(mn.micronaut.core.bom))
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    // Annotation processors of the Python sources MUST be testImplementation (not testAnnotationProcessor): the Python compiler
+    // compiler takes the compile classpath as its annotation processor path.
+    testImplementation(mnSerde.micronaut.serde.processor)
+    testImplementation(mn.micronaut.inject.python.test)
+    testImplementation(mn.micronaut.context.python)
+
+    testImplementation(mnTest.micronaut.test.junit5)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
+}
+
+// TODO(python): the documentation classes live in src/main/python (the `source="main"` snippets) and the
+// tests in src/test/python. Compiling them separately yields two GraalPy VFS roots whose generated shim
+// modules shadow each other at test time, and the Python compiler resolves the imports of a source file
+// only within its own source root, so both roots are merged into one directory compiled with the tests.
+def mergedPythonSources = tasks.register("mergePythonSources", Sync) {
+    from(layout.projectDirectory.dir("src/main/python"))
+    from(layout.projectDirectory.dir("src/test/python"))
+    into(layout.buildDirectory.dir("merged-python-sources"))
+}
+tasks.named("compilePython") {
+    enabled = false
+}
+tasks.named("compileTestPython") {
+    dependsOn(mergedPythonSources)
+    source.setFrom(mergedPythonSources.map { it.destinationDir })
+}
+
+tasks.withType(Test).configureEach {
+    systemProperty "micronaut.python.pool.enabled", "false"
+}
