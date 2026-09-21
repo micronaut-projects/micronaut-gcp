@@ -15,5 +15,5 @@ from .MessagePublishTime import MessagePublishTime
 class CustomBindingSubscriber:
 
     def on_message(self, animal: Animal, publish_time: Annotated[Long, MessagePublishTime]) -> None:  # <1>
-        pass
+        ...
 # end::clazz[]

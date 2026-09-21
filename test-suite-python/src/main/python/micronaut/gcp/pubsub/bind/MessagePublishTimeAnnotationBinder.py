@@ -4,21 +4,19 @@ from com.google.protobuf.util import Timestamps
 from jakarta.inject import Singleton
 from micronaut.core.bind import ArgumentBinder
 from micronaut.core.convert import ArgumentConversionContext, ConversionService
+from micronaut.gcp.pubsub.bind import PubSubAnnotatedArgumentBinder, PubSubConsumerState
 
 from .MessagePublishTime import MessagePublishTime
-
-# TODO(python): java.type needed because importing `io.micronaut.gcp.pubsub.bind` collides with the Python snippet package of the same name
-PubSubAnnotatedArgumentBinder = java.type("io.micronaut.gcp.pubsub.bind.PubSubAnnotatedArgumentBinder")
-PubSubConsumerState = java.type("io.micronaut.gcp.pubsub.bind.PubSubConsumerState")
 # end::imports[]
 
-# TODO(python): java.type needed because `getAnnotationType()` must return the generated Java annotation class, and the Python decorator function is not a `Class`
+# TODO(python): java.type needed because `getAnnotationType()` must return the generated Java annotation class; a Python-defined
+# annotation is a decorator function at runtime and is not converted to a `Class` (imported Java annotations are)
 MessagePublishTimeClass = java.type("micronaut.gcp.pubsub.bind.MessagePublishTime")
 
 
 # tag::clazz[]
 @Singleton  # <1>
-class MessagePublishTimeAnnotationBinder(PubSubAnnotatedArgumentBinder):  # <2>
+class MessagePublishTimeAnnotationBinder(PubSubAnnotatedArgumentBinder[MessagePublishTime]):  # <2>
 
     def __init__(self, conversion_service: ConversionService):  # <3>
         self.conversion_service = conversion_service

@@ -5,7 +5,6 @@ from micronaut.gcp.pubsub.support.Animal import Animal
 from micronaut.messaging import Acknowledgement
 from micronaut.scheduling import TaskExecutors
 from micronaut.scheduling.annotation import ExecuteOn
-from org.reactivestreams import Publisher
 from reactor.core.publisher import Mono
 
 from .MessageProcessor import MessageProcessor
@@ -29,7 +28,7 @@ class AcknowledgementPushSubscriber:
             acknowledgement.nack()
 
     @PushSubscription("animals-async-push")
-    def on_reactive_message(self, animal: Mono[Animal], acknowledgement: Acknowledgement) -> Publisher[bool]:
+    def on_reactive_message(self, animal: Mono[Animal], acknowledgement: Acknowledgement) -> Mono[bool]:
         def acknowledge(result):
             if result:
                 acknowledgement.ack()

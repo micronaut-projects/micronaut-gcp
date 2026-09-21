@@ -1,5 +1,7 @@
 [versions]
 micronaut = "5.2.2"
+# The Python compiler and runtime of test-suite-python: only that suite resolves this core version
+micronaut-python = "5.2.3"
 managed-google-auth-library-oauth2http = "1.49.0"
 managed-google-functions-framework-api = "2.0.2"
 managed-google-function-invoker = "2.0.2"
@@ -37,6 +39,7 @@ micronaut-validation = "5.1.0"
 micronaut-gradle-plugin = "5.0.2"
 
 [libraries]
+micronaut-core-python = { module = "io.micronaut:micronaut-core-bom", version.ref = "micronaut-python" }
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 

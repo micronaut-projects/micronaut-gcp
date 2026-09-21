@@ -17,5 +17,5 @@ class CustomHeaderSubscriber:
 
     @Subscription("animals")
     def on_message(self, animal: Animal, content_type: Annotated[str, MessageHeader("Content-Type")], code: Annotated[int, MessageHeader("code")]) -> None:  # <1>
-        pass
+        ...
 # end::clazz[]

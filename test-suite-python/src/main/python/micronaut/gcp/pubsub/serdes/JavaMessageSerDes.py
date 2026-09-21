@@ -1,12 +1,9 @@
 # tag::imports[]
-import java
 from jakarta.inject import Singleton
 from java.io import ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream
 from micronaut.core.serialize.exceptions import SerializationException
 from micronaut.core.type import Argument
-
-# TODO(python): java.type needed because importing `io.micronaut.gcp.pubsub.serdes` collides with the Python snippet package of the same name
-PubSubMessageSerDes = java.type("io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes")
+from micronaut.gcp.pubsub.serdes import PubSubMessageSerDes
 # end::imports[]
 
 

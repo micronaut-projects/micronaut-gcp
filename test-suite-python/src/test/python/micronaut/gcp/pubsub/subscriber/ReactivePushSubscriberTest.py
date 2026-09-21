@@ -12,7 +12,7 @@ from micronaut.http.client import HttpClient
 from micronaut.http.client.annotation import Client
 from micronaut.json import JsonMapper
 from micronaut.test.extensions.junit5.annotation import MicronautTest
-from org.junit.jupiter.api import BeforeEach, Disabled, Test
+from org.junit.jupiter.api import BeforeEach, Test
 from tools.jackson.dataformat.xml import XmlMapper
 
 from micronaut.gcp.pubsub.subscriber.MessageProcessor import MessageProcessor
@@ -36,7 +36,6 @@ class ReactivePushSubscriberTest:
                               PushRequest.PushMessage(HashMap(), encoded_data, "1", "2021-02-26T19:13:55.749Z"))
         return self.pushClient.toBlocking().exchange(HttpRequest.POST("/push", request))
 
-    @Disabled("TODO(python): bytes as a generic type argument (Mono[bytes]) is compiled to Mono<Byte>, so the message body binder cannot resolve byte[] as the body type")
     @Test
     def test_raw_bytes(self):
         response = self.push("raw-push-subscription", Base64.getEncoder().encodeToString("foo".encode()))

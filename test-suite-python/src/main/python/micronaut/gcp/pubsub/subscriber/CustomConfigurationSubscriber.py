@@ -14,5 +14,5 @@ class CustomConfigurationSubscriber:
 
     @Subscription(value="animals", configuration="custom")  # <1>
     def on_message(self, animal: Animal) -> None:
-        pass
+        ...
 # end::clazz[]

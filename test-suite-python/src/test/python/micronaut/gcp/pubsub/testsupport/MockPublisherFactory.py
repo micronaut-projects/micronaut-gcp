@@ -1,14 +1,10 @@
-import java
 from com.google.api.core import ApiFutures
 from com.google.cloud.pubsub.v1 import PublisherInterface
 from jakarta.inject import Singleton
 from micronaut.context.annotation import Replaces
+from micronaut.gcp.pubsub.support import PublisherFactory, PublisherFactoryConfig
 
 from .MockPubSubEngine import MockPubSubEngine
-
-# TODO(python): java.type needed because importing `io.micronaut.gcp.pubsub.support` collides with the Python snippet package of the same name
-PublisherFactory = java.type("io.micronaut.gcp.pubsub.support.PublisherFactory")
-PublisherFactoryConfig = java.type("io.micronaut.gcp.pubsub.support.PublisherFactoryConfig")
 
 
 class MockPublisher:

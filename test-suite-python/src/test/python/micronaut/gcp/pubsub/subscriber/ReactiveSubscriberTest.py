@@ -9,7 +9,7 @@ from micronaut.context.annotation import Property, Requires
 from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
 from micronaut.gcp.pubsub.support.Animal import Animal
 from micronaut.test.extensions.junit5.annotation import MicronautTest
-from org.junit.jupiter.api import BeforeEach, Disabled, Test
+from org.junit.jupiter.api import BeforeEach, Test
 
 from micronaut.gcp.pubsub.subscriber.MessageProcessor import MessageProcessor
 
@@ -56,7 +56,6 @@ class ReactiveSubscriberTest:
             TimeUnit.MILLISECONDS.sleep(50)
         assert self.messageProcessor.unwrapped_result is not None, "no message received"
 
-    @Disabled("TODO(python): bytes as a generic type argument (Mono[bytes]) is compiled to Mono<Byte>, so the message body binder cannot resolve byte[] as the body type")
     @Test
     def test_raw_bytes(self):
         self.publisher.publish_raw("foo".encode())

@@ -33,9 +33,6 @@ snippet::io.micronaut.gcp.pubsub.bind.MessagePublishTimeAnnotationBinder[tags="i
 <4> The message publish time is retrieved from the message state.
 <5> The value is converted to the argument type. For example this allows the argument to be a `String` even though the epochMillis is a `Long`.
 
-[.lang-python]
-NOTE: The Python binder implements the raw `PubSubAnnotatedArgumentBinder` interface and returns the generated annotation class from `getAnnotationType()`; the annotation itself is a decorator function meta-annotated with `@Bindable`.
-
 TIP: You could also return a `com.google.protobuf.Timestamp` if you register the appropriate type converter to the conversion service, but such example is outside of the scope of this documentation.
 
 The annotation can now be used on the argument in a consumer method.

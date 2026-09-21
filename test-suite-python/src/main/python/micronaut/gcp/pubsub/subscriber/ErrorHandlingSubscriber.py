@@ -1,13 +1,10 @@
 # tag::imports[]
-import java
 from com.google.pubsub.v1 import PubsubMessage
 from micronaut.context.annotation import Requires
 from micronaut.gcp.pubsub.annotation import PubSubListener, Subscription
+from micronaut.gcp.pubsub.bind import PubSubConsumerState
 from micronaut.gcp.pubsub.exception import PubSubMessageReceiverException, PubSubMessageReceiverExceptionHandler
 from micronaut.gcp.pubsub.support.Animal import Animal
-
-# TODO(python): java.type needed because importing `io.micronaut.gcp.pubsub.bind` collides with the Python snippet package of the same name
-PubSubConsumerState = java.type("io.micronaut.gcp.pubsub.bind.PubSubConsumerState")
 # end::imports[]
 
 

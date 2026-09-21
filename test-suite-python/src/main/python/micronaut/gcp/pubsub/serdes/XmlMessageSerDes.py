@@ -1,14 +1,11 @@
 from typing import Annotated
 
-import java
 from jakarta.inject import Named, Singleton
 from micronaut.core.serialize.exceptions import SerializationException
 from micronaut.core.type import Argument
+from micronaut.gcp.pubsub.serdes import PubSubMessageSerDes
 from micronaut.http import MediaType
 from tools.jackson.dataformat.xml import XmlMapper
-
-# TODO(python): java.type needed because importing `io.micronaut.gcp.pubsub.serdes` collides with the Python snippet package of the same name
-PubSubMessageSerDes = java.type("io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes")
 
 
 @Singleton

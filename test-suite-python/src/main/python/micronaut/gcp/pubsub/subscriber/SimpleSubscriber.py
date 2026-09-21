@@ -14,9 +14,9 @@ class SimpleSubscriber:
 
     @Subscription("animals")  # <2>
     def on_message(self, animal: Animal) -> None:
-        pass
+        ...
 
     @Subscription("projects/eu-project/subscriptions/animals")  # <3>
     def on_message_eu(self, animal: Animal) -> None:
-        pass
+        ...
 # end::clazz[]

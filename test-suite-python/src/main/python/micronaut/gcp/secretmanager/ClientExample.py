@@ -1,12 +1,8 @@
 # tag::imports[]
-import java
 from micronaut.context.event import StartupEvent
+from micronaut.gcp.secretmanager.client import SecretManagerClient, VersionedSecret
 from micronaut.runtime.event.annotation import EventListener
 from reactor.core.publisher import Mono
-
-# TODO(python): java.type needed because importing `io.micronaut.gcp.secretmanager` collides with the Python snippet package of the same name
-SecretManagerClient = java.type("io.micronaut.gcp.secretmanager.client.SecretManagerClient")
-VersionedSecret = java.type("io.micronaut.gcp.secretmanager.client.VersionedSecret")
 # end::imports[]
 
 
