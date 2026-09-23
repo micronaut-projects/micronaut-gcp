@@ -236,6 +236,15 @@
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-common"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -394,6 +403,15 @@ There is an unavoidable performance impact to enabled JUL log statements when us
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"org.slf4j:jul-to-slf4j:2.0.9"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -464,6 +482,15 @@ There is an unavoidable performance impact to enabled JUL log statements when us
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-logging&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-logging"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -661,6 +688,15 @@ The environment detection executes a HTTP request to the Google Cloud metadata s
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-tracing"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -794,6 +830,15 @@ See the guide for <a href="https://guides.micronaut.io/latest/micronaut-cloud-tr
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-http-client"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -909,6 +954,15 @@ gcp.http.client.auth.patterns[1]=/bar/**</code></pre>
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -928,6 +982,15 @@ gcp.http.client.auth.patterns[1]=/bar/**</code></pre>
     &lt;artifactId&gt;functions-framework-api&lt;/artifactId&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+build = [
+    <span class="hljs-string">"com.google.cloud.functions:functions-framework-api"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -1110,6 +1173,18 @@ class LoggingService {
 </tr>
 </table>
 </div>
+<div class="admonitionblock note lang-python">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A Google Cloud Function needs a Java entry point class that the Functions Framework instantiates before any Micronaut application context (and with it the Python runtime) exists, so raw functions cannot be written in Python. Use the HTTP functions described below, which run a regular Micronaut application, instead.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>When you extend from <code>FunctionInitializer</code> the Micronaut <code>ApplicationContext</code> will be initialized and dependency injection will be performed on the function instance. You can use inject any bean using <code>jakarta.inject.Inject</code> as usual.</p>
 </div>
@@ -1219,6 +1294,15 @@ Functions require a no argument constructor hence you must use field injection (
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-http"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -1238,6 +1322,15 @@ Functions require a no argument constructor hence you must use field injection (
     &lt;artifactId&gt;functions-framework-api&lt;/artifactId&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+build = [
+    <span class="hljs-string">"com.google.cloud.functions:functions-framework-api"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -1262,6 +1355,15 @@ Functions require a no argument constructor hence you must use field injection (
     &lt;artifactId&gt;micronaut-http-server-netty&lt;/artifactId&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+build = [
+    <span class="hljs-string">"io.micronaut:micronaut-http-server-netty"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -1389,19 +1491,44 @@ See the guide for <a href="https://guides.micronaut.io/latest/micronaut-google-c
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-function-cloudevents"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
-<p>In your application, create a class that extends <a href="../api/io/micronaut/gcp/function/cloudevents/GoogleCloudEventsFunction.html">GoogleCloudEventsFunction</a>. Google publishes POJOs for <a href="https://github.com/googleapis/google-cloudevents-java">Google Cloud Events</a>. For example, to subscribe to a <a href="https://cloud.google.com/storage">Google Cloud Storage</a> event, your function may look like this:</p>
+<p>In your application, create a class that extends <a href="../api/io/micronaut/gcp/function/cloudevents/GoogleCloudEventsFunction.html">GoogleCloudEventsFunction</a>. Google publishes POJOs for <a href="https://github.com/googleapis/google-cloudevents-java">Google Cloud Events</a>. For example, to subscribe to a <a href="https://cloud.google.com/storage">Google Cloud Storage</a> event, your function may look like this:
+snippet::example.cloudevents.Example[source="main", languages="java,kotlin,groovy"]</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class TestFunction extends GoogleCloudEventsFunction&lt;StorageObjectData&gt; {
-    @Override
-    protected void accept(@NonNull CloudEventContext context, @Nullable StorageObjectData data) throws Exception {
-    }
-}</code></pre>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The function extends from <a href="../api/io/micronaut/gcp/function/cloudevents/GoogleCloudEventsFunction.html">GoogleCloudEventsFunction</a> with the type of the event data</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>accept</code> method receives the CloudEvent context and the deserialized event data</td>
+</tr>
+</table>
 </div>
+<div class="admonitionblock note lang-python">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A Google Cloud Function needs a Java entry point class that the Functions Framework instantiates before any Micronaut application context (and with it the Python runtime) exists, so CloudEvents functions cannot be written in Python.
+</td>
+</tr>
+</table>
 </div>
 
 <h1 id="cloudRun"><a class="anchor" href="#cloudRun"></a>8 Google Cloud Run</h1>
@@ -1487,6 +1614,15 @@ The project does not attempt to create any of the resources in Google Cloud such
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-pubsub"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="sect1">
@@ -1507,6 +1643,19 @@ public interface AnimalClient {
     void send(byte[] data); // <b class="conum">(3)</b>
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+
+@PubSubClient  # <b class="conum">(1)</b>
+class AnimalClient(ABC):
+
+    @Topic("animals")  # <b class="conum">(2)</b>
+    @abstractmethod
+    def send(self, data: bytes) -&gt; None:  # <b class="conum">(3)</b>
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1594,6 +1743,27 @@ public final class AnimalService {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+from .AnimalClient import AnimalClient
+
+@Singleton
+class AnimalService:
+
+    def __init__(self, animal_client: AnimalClient):  # <b class="conum">(1)</b>
+        self.animal_client = animal_client
+
+    def some_business_method(self, animal: Animal) -&gt; None:
+        serialized_body = self.serialize(animal)
+        self.animal_client.send(serialized_body)
+
+    def serialize(self, animal: Animal) -&gt; bytes | None:  # <b class="conum">(2)</b>
+        return None</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.support.Animal
 import jakarta.inject.Singleton
 
@@ -1677,6 +1847,20 @@ public class AnimalListener {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubListener
+
+from micronaut.gcp.pubsub.annotation import Subscription
+
+@PubSubListener  # <b class="conum">(1)</b>
+class AnimalListener:
+
+    @Subscription("animals")  # <b class="conum">(2)</b>
+    def on_message(self, data: bytes) -&gt; None:  # <b class="conum">(3)</b>
+        print("Message received")</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubListener;
 
 import io.micronaut.gcp.pubsub.annotation.Subscription;
@@ -1754,6 +1938,20 @@ public class AnimalListener {
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubListener
+
+from micronaut.gcp.pubsub.annotation import PushSubscription
+
+@PubSubListener  # <b class="conum">(1)</b>
+class AnimalListener:
+
+    @PushSubscription("animals-push")  # <b class="conum">(2)</b>
+    def on_push_message(self, data: bytes) -&gt; None:  # <b class="conum">(3)</b>
+        print("Message received")</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1902,6 +2100,18 @@ See <a href="{apimicronaut}scheduling/executor/ExecutorConfiguration.html">Execu
 <p>Pub/Sub support in micronaut follows the same pattern used for other types of clients such as the HTTP Client.
 By annotating an interface with <a href="../api/io/micronaut/gcp/pubsub/annotation/PubSubClient.html">@PubSubClient</a> the framework will create an implementation bean that handles communication with Pub/Sub for you.</p>
 </div>
+<div class="admonitionblock note lang-python">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In Python the client is an abstract class (<code>ABC</code>) whose <code>@Topic</code> methods are abstract with <code>&#8230;&#8203;</code> bodies; since Python has no method overloading, each message type gets its own method name.
+</td>
+</tr>
+</table>
+</div>
 <div class="sect1">
 <h2 id="_topics">Topics</h2>
 <div class="sectionbody">
@@ -1929,6 +2139,31 @@ public interface SimpleClient {
     @Topic("animals")
     void send(Animal animal); // <b class="conum">(4)</b>
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.pubsub.v1 import PubsubMessage
+from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubClient  # <b class="conum">(1)</b>
+class SimpleClient(ABC):
+
+    @Topic("animals")
+    @abstractmethod
+    def send_message(self, message: PubsubMessage) -&gt; None:  # <b class="conum">(2)</b>
+        ...
+
+    @Topic("animals")
+    @abstractmethod
+    def send_bytes(self, data: bytes) -&gt; None:  # <b class="conum">(3)</b>
+        ...
+
+    @Topic("animals")
+    @abstractmethod
+    def send_animal(self, animal: Animal) -&gt; None:  # <b class="conum">(4)</b>
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2049,6 +2284,25 @@ public interface MultipleProjectClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubClient
+class MultipleProjectClient(ABC):
+
+    @Topic("animals")
+    @abstractmethod
+    def send_us(self, animal: Animal) -&gt; None:  # <b class="conum">(1)</b>
+        ...
+
+    @Topic("projects/eu-project/topics/animals")
+    @abstractmethod
+    def send_eu(self, animal: Animal) -&gt; None:  # <b class="conum">(2)</b>
+        ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Animal
@@ -2157,6 +2411,41 @@ public interface CustomSerDesClient {
     void sendWithCustomType(Animal animal);
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.pubsub.v1 import PubsubMessage
+from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubClient
+class CustomSerDesClient(ABC):
+
+    @Topic("animals")  # <b class="conum">(1)</b>
+    @abstractmethod
+    def send_message(self, pubsub_message: PubsubMessage) -&gt; None:
+        ...
+
+    @Topic("animals")  # <b class="conum">(2)</b>
+    @abstractmethod
+    def send_bytes(self, data: bytes) -&gt; None:
+        ...
+
+    @Topic(value="animals", contentType="image/gif")  # <b class="conum">(3)</b>
+    @abstractmethod
+    def send_bytes_with_custom_type(self, data: bytes) -&gt; None:
+        ...
+
+    @Topic("animals")  # <b class="conum">(4)</b>
+    @abstractmethod
+    def send_animal(self, animal: Animal) -&gt; None:
+        ...
+
+    @Topic(value="animals", contentType="application/xml")  # <b class="conum">(5)</b>
+    @abstractmethod
+    def send_animal_with_custom_type(self, animal: Animal) -&gt; None:
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2274,6 +2563,28 @@ public interface CustomHeadersClient {
     void sendWithDynamicHeaders(Animal animal, @MessageHeader(name = "code") Integer code); // <b class="conum">(3)</b>
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Animal import Animal
+from micronaut.messaging.annotation import MessageHeader
+
+@PubSubClient
+@MessageHeader(name="application-name", value="petclinic")  # <b class="conum">(1)</b>
+class CustomHeadersClient(ABC):
+
+    @MessageHeader(name="status", value="healthy")  # <b class="conum">(2)</b>
+    @Topic("animals")
+    @abstractmethod
+    def send_with_static_headers(self, animal: Animal) -&gt; None:
+        ...
+
+    @Topic("animals")
+    @abstractmethod
+    def send_with_dynamic_headers(self, animal: Animal, code: Annotated[int, MessageHeader(name="code")]) -&gt; None:  # <b class="conum">(3)</b>
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2570,6 +2881,25 @@ public interface CustomConfigurationClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubClient
+class CustomConfigurationClient(ABC):
+
+    @Topic(value="animals", configuration="batching")  # <b class="conum">(1)</b>
+    @abstractmethod
+    def batch_send(self, animal: Animal) -&gt; None:
+        ...
+
+    @Topic(value="animals", configuration="immediate")  # <b class="conum">(2)</b>
+    @abstractmethod
+    def send(self, animal: Animal) -&gt; None:
+        ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Animal
@@ -2684,6 +3014,31 @@ public interface CustomReturnClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Animal import Animal
+from reactor.core.publisher import Mono
+
+@PubSubClient
+class CustomReturnClient(ABC):
+
+    @Topic("animals")
+    @abstractmethod
+    def send(self, animal: Animal) -&gt; None:  # <b class="conum">(1)</b>
+        ...
+
+    @Topic("animals")
+    @abstractmethod
+    def send_with_id(self, animal: Animal) -&gt; str:  # <b class="conum">(2)</b>
+        ...
+
+    @Topic("animals")
+    @abstractmethod
+    def send_reactive(self, animal: Animal) -&gt; Mono[str]:  # <b class="conum">(3)</b>
+        ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Animal
@@ -2777,6 +3132,20 @@ public interface LocationClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubClient
+class LocationClient(ABC):
+
+    @Topic(value="animals", endpoint="europe-west1-pubsub.googleapis.com:443")  # <b class="conum">(1)</b>
+    @abstractmethod
+    def send(self, animal: Animal) -&gt; None:
+        ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.gcp.pubsub.support.Animal
@@ -2833,6 +3202,20 @@ public interface OrderClient {
     @Topic(value = "orders", endpoint = "us-central1-pubsub.googleapis.com:443") // <b class="conum">(1)</b>
     void send(Order order, @OrderingKey String key); // <b class="conum">(2)</b>
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import OrderingKey, PubSubClient, Topic
+from micronaut.gcp.pubsub.support.Order import Order
+
+@PubSubClient
+class OrderClient(ABC):
+
+    @Topic(value="orders", endpoint="us-central1-pubsub.googleapis.com:443")  # <b class="conum">(1)</b>
+    @abstractmethod
+    def send(self, order: Order, key: Annotated[str, OrderingKey]) -&gt; None:  # <b class="conum">(2)</b>
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2898,6 +3281,24 @@ public final class OrderService {
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from micronaut.gcp.pubsub.support.Order import Order
+
+from .OrderClient import OrderClient
+
+@Singleton
+class OrderService:
+
+    def __init__(self, client: OrderClient):
+        self.client = client
+
+    def place_order(self) -&gt; None:
+        order = Order(100, "GOOG")
+        self.client.send(order, order.symbol)</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3076,6 +3477,24 @@ public class SimpleSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import PubSubListener, Subscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubListener  # <b class="conum">(1)</b>
+class SimpleSubscriber:
+
+    @Subscription("animals")  # <b class="conum">(2)</b>
+    def on_message(self, animal: Animal) -&gt; None:
+        ...
+
+    @Subscription("projects/eu-project/subscriptions/animals")  # <b class="conum">(3)</b>
+    def on_message_eu(self, animal: Animal) -&gt; None:
+        ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
@@ -3236,6 +3655,38 @@ public class ContentTypeSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.pubsub.v1 import PubsubMessage
+from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import MessageId, PubSubListener, Subscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+from .MessageProcessor import MessageProcessor
+
+@PubSubListener
+class ContentTypeSubscriber:
+
+    def __init__(self, message_processor: MessageProcessor):
+        self.message_processor = message_processor
+
+    @Subscription("raw-subscription")  # <b class="conum">(1)</b>
+    def receive_raw(self, data: bytes, id: Annotated[str, MessageId]) -&gt; None:
+        self.message_processor.handle_byte_array_message(data).block()
+
+    @Subscription("native-subscription")  # <b class="conum">(2)</b>
+    def receive_native(self, message: PubsubMessage) -&gt; None:
+        self.message_processor.handle_pub_sub_message(message).block()
+
+    @Subscription("animals")  # <b class="conum">(3)</b>
+    def receive_pojo(self, animal: Animal, id: Annotated[str, MessageId]) -&gt; None:
+        self.message_processor.handle_animal_message(animal).block()
+
+    @Subscription(value="animals-legacy", contentType="application/xml")  # <b class="conum">(4)</b>
+    def receive_xml(self, animal: Animal, id: Annotated[str, MessageId]) -&gt; None:
+        self.message_processor.handle_animal_message(animal).block()</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.MessageId
@@ -3379,6 +3830,45 @@ public class ContentTypePushSubscriber {
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.pubsub.v1 import PubsubMessage
+from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import MessageId, PubSubListener, PushSubscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+from micronaut.scheduling import TaskExecutors
+from micronaut.scheduling.annotation import ExecuteOn
+
+from .MessageProcessor import MessageProcessor
+
+@PubSubListener
+@ExecuteOn(TaskExecutors.BLOCKING)  # <b class="conum">(1)</b>
+class ContentTypePushSubscriber:
+
+    def __init__(self, message_processor: MessageProcessor):
+        self.message_processor = message_processor
+
+    @PushSubscription("raw-push-subscription")  # <b class="conum">(2)</b>
+    def receive_raw(self, data: bytes, id: Annotated[str, MessageId]) -&gt; None:
+        # process with blocking code
+        self.message_processor.handle_byte_array_message(data).block()
+
+    @PushSubscription("native-push-subscription")  # <b class="conum">(3)</b>
+    def receive_native(self, message: PubsubMessage) -&gt; None:
+        # process with blocking code
+        self.message_processor.handle_pub_sub_message(message).block()
+
+    @PushSubscription("animals-push")  # <b class="conum">(4)</b>
+    def receive_pojo(self, animal: Animal, id: Annotated[str, MessageId]) -&gt; None:
+        # process with blocking code
+        self.message_processor.handle_animal_message(animal).block()
+
+    @PushSubscription(value="animals-legacy-push", contentType="application/xml")  # <b class="conum">(5)</b>
+    def receive_xml(self, animal: Animal, id: Annotated[str, MessageId]) -&gt; None:
+        # process with blocking code
+        self.message_processor.handle_animal_message(animal).block()</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3541,6 +4031,40 @@ public class ReactiveSubscriber {
 <div class="listingblock multi-language-sample">
 <div class="title">Using Reactive Types</div>
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.pubsub.v1 import PubsubMessage
+from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import MessageId, PubSubListener, Subscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+from reactor.core.publisher import Mono
+
+from .MessageProcessor import MessageProcessor
+
+@PubSubListener
+class ReactiveSubscriber:
+
+    def __init__(self, message_processor: MessageProcessor):
+        self.message_processor = message_processor
+
+    @Subscription("raw-subscription")  # <b class="conum">(1)</b>
+    def receive_raw(self, data: Mono[bytes], id: Annotated[str, MessageId]) -&gt; Mono[object]:
+        return data.flatMap(self.message_processor.handle_byte_array_message)
+
+    @Subscription("native-subscription")  # <b class="conum">(2)</b>
+    def receive_native(self, message: Mono[PubsubMessage]) -&gt; Mono[object]:
+        return message.flatMap(self.message_processor.handle_pub_sub_message)
+
+    @Subscription("animals")  # <b class="conum">(3)</b>
+    def receive_pojo(self, animal: Mono[Animal], id: Annotated[str, MessageId]) -&gt; Mono[object]:
+        return animal.flatMap(self.message_processor.handle_animal_message)
+
+    @Subscription(value="animals-legacy", contentType="application/xml")  # <b class="conum">(4)</b>
+    def receive_xml(self, animal: Mono[Animal], id: Annotated[str, MessageId]) -&gt; Mono[object]:
+        return animal.flatMap(self.message_processor.handle_animal_message)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types</div>
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.MessageId
@@ -3693,6 +4217,40 @@ public class ReactivePushSubscriber {
 <div class="listingblock multi-language-sample">
 <div class="title">Using Reactive Types With Push Subscriptions</div>
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.pubsub.v1 import PubsubMessage
+from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import MessageId, PubSubListener, PushSubscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+from reactor.core.publisher import Mono
+
+from .MessageProcessor import MessageProcessor
+
+@PubSubListener
+class ReactivePushSubscriber:
+
+    def __init__(self, message_processor: MessageProcessor):
+        self.message_processor = message_processor
+
+    @PushSubscription("raw-push-subscription")  # <b class="conum">(1)</b>
+    def receive_raw(self, data: Mono[bytes], id: Annotated[str, MessageId]) -&gt; Mono[object]:
+        return data.flatMap(self.message_processor.handle_byte_array_message)
+
+    @PushSubscription("native-push-subscription")  # <b class="conum">(2)</b>
+    def receive_native(self, message: Mono[PubsubMessage]) -&gt; Mono[object]:
+        return message.flatMap(self.message_processor.handle_pub_sub_message)
+
+    @PushSubscription("animals-push")  # <b class="conum">(3)</b>
+    def receive_pojo(self, animal: Mono[Animal], id: Annotated[str, MessageId]) -&gt; Mono[object]:
+        return animal.flatMap(self.message_processor.handle_animal_message)
+
+    @PushSubscription(value="animals-legacy-push", contentType="application/xml")  # <b class="conum">(4)</b>
+    def receive_xml(self, animal: Mono[Animal], id: Annotated[str, MessageId]) -&gt; Mono[object]:
+        return animal.flatMap(self.message_processor.handle_animal_message)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using Reactive Types With Push Subscriptions</div>
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.pubsub.v1.PubsubMessage
 import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.MessageId
@@ -3834,6 +4392,21 @@ public class CustomHeaderSubscriber {
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import PubSubListener, Subscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+from micronaut.messaging.annotation import MessageHeader
+
+@PubSubListener
+class CustomHeaderSubscriber:
+
+    @Subscription("animals")
+    def on_message(self, animal: Animal, content_type: Annotated[str, MessageHeader("Content-Type")], code: Annotated[int, MessageHeader("code")]) -&gt; None:  # <b class="conum">(1)</b>
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4042,6 +4615,20 @@ public class CustomConfigurationSubscriber {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import PubSubListener, Subscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubListener
+class CustomConfigurationSubscriber:
+
+    @Subscription(value="animals", configuration="custom")  # <b class="conum">(1)</b>
+    def on_message(self, animal: Animal) -&gt; None:
+        ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
@@ -4232,6 +4819,41 @@ public class AcknowledgementSubscriber {
 <div class="listingblock multi-language-sample">
 <div class="title">Manual Acknowledgement of Pull Messages</div>
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import PubSubListener, Subscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+from micronaut.messaging import Acknowledgement
+from reactor.core.publisher import Mono
+
+from .MessageProcessor import MessageProcessor
+
+@PubSubListener
+class AcknowledgementSubscriber:
+
+    def __init__(self, message_processor: MessageProcessor):
+        self.message_processor = message_processor
+
+    @Subscription("animals")
+    def on_message(self, animal: Animal, acknowledgement: Acknowledgement) -&gt; None:
+        if self.message_processor.handle_animal_message(animal).block():
+            acknowledgement.ack()
+        else:
+            acknowledgement.nack()
+
+    @Subscription("animals-async")
+    def on_reactive_message(self, animal: Mono[Animal], acknowledgement: Acknowledgement) -&gt; Mono[bool]:
+        def acknowledge(result):
+            if result:
+                acknowledgement.ack()
+            else:
+                acknowledgement.nack()
+
+        return animal.flatMap(self.message_processor.handle_animal_message).doOnNext(acknowledge)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Pull Messages</div>
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.annotation.Subscription
@@ -4359,6 +4981,44 @@ public class AcknowledgementPushSubscriber {
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Manual Acknowledgement of Push Messages</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import PubSubListener, PushSubscription
+from micronaut.gcp.pubsub.support.Animal import Animal
+from micronaut.messaging import Acknowledgement
+from micronaut.scheduling import TaskExecutors
+from micronaut.scheduling.annotation import ExecuteOn
+from reactor.core.publisher import Mono
+
+from .MessageProcessor import MessageProcessor
+
+@PubSubListener
+class AcknowledgementPushSubscriber:
+
+    def __init__(self, message_processor: MessageProcessor):
+        self.message_processor = message_processor
+
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @PushSubscription("animals-push")
+    def on_message(self, animal: Animal, acknowledgement: Acknowledgement) -&gt; None:
+        if self.message_processor.handle_animal_message(animal).block():
+            acknowledgement.ack()
+        else:
+            acknowledgement.nack()
+
+    @PushSubscription("animals-async-push")
+    def on_reactive_message(self, animal: Mono[Animal], acknowledgement: Acknowledgement) -&gt; Mono[bool]:
+        def acknowledge(result):
+            if result:
+                acknowledgement.ack()
+            else:
+                acknowledgement.nack()
+
+        return animal.flatMap(self.message_processor.handle_animal_message).doOnNext(acknowledge)</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4530,6 +5190,31 @@ public class ErrorHandlingSubscriber implements PubSubMessageReceiverExceptionHa
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.pubsub.v1 import PubsubMessage
+from micronaut.context.annotation import Requires
+from micronaut.gcp.pubsub.annotation import PubSubListener, Subscription
+from micronaut.gcp.pubsub.bind import PubSubConsumerState
+from micronaut.gcp.pubsub.exception import PubSubMessageReceiverException, PubSubMessageReceiverExceptionHandler
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+@PubSubListener
+class ErrorHandlingSubscriber(PubSubMessageReceiverExceptionHandler):  # <b class="conum">(1)</b>
+
+    @Subscription("animals")
+    def on_message(self, animal: Animal) -&gt; None:
+        raise RuntimeError("error")
+
+    def handle(self, exception: PubSubMessageReceiverException) -&gt; None:  # <b class="conum">(2)</b>
+        listener = exception.getListener()  # <b class="conum">(3)</b>
+        state: PubSubConsumerState = exception.getState()  # <b class="conum">(4)</b>
+        original_message: PubsubMessage = state.getPubsubMessage()
+        content_type = state.getContentType()
+        # some logic
+        state.getAckReplyConsumer().ack()  # <b class="conum">(5)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
 import io.micronaut.gcp.pubsub.annotation.PubSubListener
 import io.micronaut.gcp.pubsub.exception.PubSubMessageReceiverException
@@ -4669,6 +5354,18 @@ public @interface MessagePublishTime {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.core.bind.annotation import Bindable
+
+@Bindable  # <b class="conum">(1)</b>
+def MessagePublishTime():
+    def decorator(target):
+        return target
+
+    return decorator</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.core.bind.annotation.Bindable
 
 @MustBeDocumented
@@ -4726,6 +5423,31 @@ public class MessagePublishTimeAnnotationBinder implements PubSubAnnotatedArgume
         return () -&gt; conversionService.convert(epochMillis, context); // <b class="conum">(5)</b>
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">import java
+from com.google.protobuf.util import Timestamps
+from jakarta.inject import Singleton
+from micronaut.core.bind import ArgumentBinder
+from micronaut.core.convert import ArgumentConversionContext, ConversionService
+from micronaut.gcp.pubsub.bind import PubSubAnnotatedArgumentBinder, PubSubConsumerState
+
+from .MessagePublishTime import MessagePublishTime
+
+@Singleton  # <b class="conum">(1)</b>
+class MessagePublishTimeAnnotationBinder(PubSubAnnotatedArgumentBinder[MessagePublishTime]):  # <b class="conum">(2)</b>
+
+    def __init__(self, conversion_service: ConversionService):  # <b class="conum">(3)</b>
+        self.conversion_service = conversion_service
+
+    def getAnnotationType(self):
+        return MessagePublishTimeClass
+
+    def bind(self, context: ArgumentConversionContext, source: PubSubConsumerState) -&gt; ArgumentBinder.BindingResult[object]:
+        epoch_millis = Timestamps.toMillis(source.getPubsubMessage().getPublishTime())  # <b class="conum">(4)</b>
+        return lambda: self.conversion_service.convert(epoch_millis, context)  # <b class="conum">(5)</b></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4842,6 +5564,20 @@ public class CustomBindingSubscriber {
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.gcp.pubsub.annotation import PubSubListener
+from micronaut.gcp.pubsub.support.Animal import Animal
+
+from .MessagePublishTime import MessagePublishTime
+
+@PubSubListener
+class CustomBindingSubscriber:
+
+    def on_message(self, animal: Animal, publish_time: Annotated[Long, MessagePublishTime]) -&gt; None:  # <b class="conum">(1)</b>
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4975,6 +5711,38 @@ public class JavaMessageSerDes implements PubSubMessageSerDes {
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from jakarta.inject import Singleton
+from java.io import ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream
+from micronaut.core.serialize.exceptions import SerializationException
+from micronaut.core.type import Argument
+from micronaut.gcp.pubsub.serdes import PubSubMessageSerDes
+
+@Singleton  # <b class="conum">(1)</b>
+class JavaMessageSerDes(PubSubMessageSerDes):
+
+    def supportedType(self) -&gt; str:  # <b class="conum">(2)</b>
+        return "application/x.java"
+
+    def deserialize(self, data: bytes, type: Argument) -&gt; object:
+        bin = ByteArrayInputStream(data)
+        try:
+            reader = ObjectInputStream(bin)
+            return reader.readObject()
+        except Exception as e:
+            raise SerializationException("Failed to deserialize object", e)
+
+    def serialize(self, data: object) -&gt; bytes:
+        baos = ByteArrayOutputStream()
+        try:
+            writer = ObjectOutputStream(baos)
+            writer.writeObject(data)
+        except Exception as e:
+            raise SerializationException("Failed to serialize object", e)
+        return baos.toByteArray()</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5263,6 +6031,9 @@ class ContentTypePushSubscriberSpec implements TestPropertyProvider {
     @Inject
     JsonMapper jsonMapper;
 
+    @Inject
+    @Client("/")
+    HttpClient pushClient;
 
     @Test
     void testJsonPojo() throws IOException {
@@ -5284,6 +6055,65 @@ class ContentTypePushSubscriberSpec implements TestPropertyProvider {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">@MicronautTest
+@Property(name="spec.name", value="ContentTypePushSubscriberTest")
+@Property(name="gcp.projectId", value="test-project")
+class ContentTypePushSubscriberSpec:
+    jsonMapper: Annotated[JsonMapper, Inject]
+
+    pushClient: Annotated[HttpClient, Inject, Client("/")]
+
+    @Test
+    def test_json_pojo(self):
+        dog = Animal("dog")
+
+        encoded_data = Base64.getEncoder().encodeToString(self.jsonMapper.writeValueAsBytes(dog))  # <b class="conum">(1)</b>
+
+        request = PushRequest("projects/test-project/subscriptions/animals-push",  # <b class="conum">(2)</b>
+                              PushRequest.PushMessage(HashMap(), encoded_data, "1", "2021-02-26T19:13:55.749Z"))
+
+        response = self.pushClient.toBlocking().exchange(HttpRequest.POST("/push", request))  # <b class="conum">(3)</b>
+
+        assert response.getStatus() == HttpStatus.OK</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@MicronautTest
+@Property(name = "spec.name", value = "ContentTypePushSubscriberSpec")
+@Property(name = "gcp.projectId", value = "test-project")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ContentTypePushSubscriberSpec : TestPropertyProvider {
+
+    override fun getProperties(): Map&lt;String, String&gt; = PubSubEmulator.getProperties()
+
+    @Inject
+    lateinit var jsonMapper: JsonMapper
+
+    @Inject
+    @field:Client("/")
+    lateinit var pushClient: HttpClient
+
+    @Test
+    fun testJsonPojo() {
+        val dog = Animal("dog")
+
+        val encodedData = Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(dog)) // <b class="conum">(1)</b>
+
+        val request = PushRequest("projects/test-project/subscriptions/animals-push", // <b class="conum">(2)</b>
+            PushRequest.PushMessage(HashMap(), encodedData, "1", "2021-02-26T19:13:55.749Z"))
+
+        val response = pushClient.toBlocking().exchange&lt;PushRequest, Any&gt;(HttpRequest.POST("/push", request)) // <b class="conum">(3)</b>
+
+        assertEquals(HttpStatus.OK, response.status)
+
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@MicronautTest
 @Property(name = "spec.name", value = "ContentTypePushSubscriberSpec")
 @Property(name = "gcp.projectId", value = "test-project")
@@ -5296,6 +6126,9 @@ class ContentTypePushSubscriberSpec extends Specification implements TestPropert
     @Inject
     JsonMapper jsonMapper
 
+    @Inject
+    @Client("/")
+    HttpClient pushClient
 
     void "receive pojo message from json"() {
         given:
@@ -5363,6 +6196,15 @@ Applications can also use it to store configuration files and use it as secure d
     &lt;groupId&gt;io.micronaut.gcp&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-gcp-secret-manager&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.gcp:micronaut-gcp-secret-manager"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -5692,6 +6534,26 @@ public final class GoogleClientExample {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.cloud.secretmanager.v1 import AccessSecretVersionRequest, AccessSecretVersionResponse, SecretManagerServiceClient, SecretVersionName
+from micronaut.context.event import StartupEvent
+from micronaut.runtime.event.annotation import EventListener
+
+class GoogleClientExample:
+
+    def __init__(self, google_secret_manager_client: SecretManagerServiceClient):  # <b class="conum">(1)</b>
+        self.client = google_secret_manager_client
+
+    @EventListener
+    def on_startup(self, event: StartupEvent) -&gt; None:
+        response: AccessSecretVersionResponse = self.client.accessSecretVersion(AccessSecretVersionRequest
+                .newBuilder()
+                .setName(SecretVersionName.of("my-cloud-project", "secretName", "latest").toString())
+                .build())
+        secret = response.getPayload().getData().toStringUtf8()</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
 import com.google.cloud.secretmanager.v1.SecretVersionName
@@ -5780,6 +6642,26 @@ public final class GoogleLocationClientExample {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from com.google.cloud.secretmanager.v1 import AccessSecretVersionRequest, AccessSecretVersionResponse, SecretManagerServiceClient, SecretVersionName
+from micronaut.context.event import StartupEvent
+from micronaut.runtime.event.annotation import EventListener
+
+class GoogleLocationClientExample:
+
+    def __init__(self, google_secret_manager_client: SecretManagerServiceClient):  # <b class="conum">(1)</b>
+        self.client = google_secret_manager_client
+
+    @EventListener
+    def on_startup(self, event: StartupEvent) -&gt; None:
+        response: AccessSecretVersionResponse = self.client.accessSecretVersion(AccessSecretVersionRequest
+                .newBuilder()
+                .setName(SecretVersionName.ofProjectLocationSecretSecretVersionName("my-cloud-project", "us-central1", "secretName", "latest").toString())
+                .build())
+        secret = response.getPayload().getData().toStringUtf8()</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
 import com.google.cloud.secretmanager.v1.SecretVersionName
@@ -5862,6 +6744,25 @@ public final class ClientExample {
         Mono&lt;VersionedSecret&gt; fromOtherProject = Mono.from(client.getSecret("secretId", "latest", "another-project-id")); //<b class="conum">(3)</b>
     }
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.context.event import StartupEvent
+from micronaut.gcp.secretmanager.client import SecretManagerClient, VersionedSecret
+from micronaut.runtime.event.annotation import EventListener
+from reactor.core.publisher import Mono
+
+class ClientExample:
+
+    def __init__(self, client: SecretManagerClient):
+        self.client = client
+
+    @EventListener
+    def on_startup(self, event: StartupEvent) -&gt; None:
+        secret: Mono[VersionedSecret] = Mono.from_(self.client.getSecret("secretId"))  # <b class="conum">(1)</b>
+        v2: Mono[VersionedSecret] = Mono.from_(self.client.getSecret("secretId", "v2"))  # <b class="conum">(2)</b>
+        from_other_project: Mono[VersionedSecret] = Mono.from_(self.client.getSecret("secretId", "latest", "another-project-id"))  # <b class="conum">(3)</b></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5980,6 +6881,15 @@ See the guide for <a href="https://guides.micronaut.io/latest/micronaut-cloud-se
     &lt;groupId&gt;io.micronaut.objectstorage&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-object-storage-gcp&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.objectstorage:micronaut-object-storage-gcp"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
