@@ -1,7 +1,7 @@
 [versions]
 micronaut = "5.2.2"
 # The Python compiler and runtime of test-suite-python: only that suite resolves this core version
-micronaut-python = "5.2.3"
+micronaut-python = "5.2.7"
 managed-google-auth-library-oauth2http = "1.49.0"
 managed-google-functions-framework-api = "2.0.2"
 managed-google-function-invoker = "2.0.2"
@@ -23,17 +23,17 @@ system-stubs-core = "2.1.8"
 
 awaitility = '4.3.0'
 
-micronaut-test = "5.1.0"
+micronaut-test = "5.2.0"
 micronaut-grpc = "5.1.0"
 micronaut-jackson-xml = "5.1.0"
 micronaut-logging = "2.1.0"
-micronaut-reactor = "4.2.0"
+micronaut-reactor = "4.3.0"
 micronaut-rxjava3 = "4.1.0"
-micronaut-serde = "3.1.1"
-micronaut-servlet = "6.1.0"
+micronaut-serde = "3.2.2"
+micronaut-servlet = "6.2.1"
 micronaut-tracing = "8.2.0"
 micronaut-discovery = "5.1.0"
-micronaut-validation = "5.1.0"
+micronaut-validation = "5.2.0"
 
 # Micronaut
 micronaut-gradle-plugin = "5.0.2"
