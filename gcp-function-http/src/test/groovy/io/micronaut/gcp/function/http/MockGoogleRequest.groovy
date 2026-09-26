@@ -82,7 +82,7 @@ class MockGoogleRequest implements HttpRequest {
     long getContentLength() {
         return resolveHeaderValue(HttpHeaders.CONTENT_LENGTH)
                     .map({s -> Long.valueOf(s)})
-                    .orElse(0)
+                    .orElse(body.bytes.length)
     }
 
     @Override
