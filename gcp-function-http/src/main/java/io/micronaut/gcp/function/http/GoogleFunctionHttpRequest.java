@@ -281,6 +281,11 @@ final class GoogleFunctionHttpRequest<B> implements
         return headers;
     }
 
+    @Override
+    public long getContentLength() {
+        return googleRequest.getContentLength();
+    }
+
     @NonNull
     @Override
     public MutableConvertibleValues<Object> getAttributes() {

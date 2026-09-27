@@ -217,6 +217,10 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
         request.getHeaders().forEach(headers::put);
         request.getParameters().forEach(parameters::put);
         Object body = request.getBody().orElse(null);
+        byte[] bodyBytes = bodyToByteArray(body, request, jsonMapper);
+        if (body != null && !headers.containsKey(HttpHeaders.CONTENT_LENGTH)) {
+            headers.put(HttpHeaders.CONTENT_LENGTH, List.of(String.valueOf(bodyBytes.length)));
+        }
         try {
             request.getCookies().forEach((s, cookie) ->
                     headers.computeIfAbsent(HttpHeaders.COOKIE, s1 -> new ArrayList<>())
@@ -293,46 +297,7 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
 
             @Override
             public InputStream getInputStream() {
-                if (body != null) {
-                    if (body instanceof CharSequence csBody) {
-                        return new ByteArrayInputStream(csBody.toString().getBytes());
-                    }
-                    if (body instanceof byte[] byteBody) {
-                        return new ByteArrayInputStream(byteBody);
-                    } else {
-                        MediaType mediaType = getContentType().map(MediaType::new).orElse(null);
-                        if (mediaType != null) {
-                            @SuppressWarnings("unchecked")
-                            Argument<Object> bodyArgument = (Argument<Object>) Argument.of(body.getClass());
-                            @SuppressWarnings("unchecked")
-                            MessageBodyWriter<Object> writer = (MessageBodyWriter<Object>) messageBodyHandlerRegistry
-                                .findWriter(bodyArgument, mediaType)
-                                .orElseGet(() -> messageBodyHandlerRegistry.findWriter(bodyArgument).orElse(null));
-                            if (writer != null) {
-                                try {
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    writer.writeTo(bodyArgument, mediaType, body, new SimpleHttpHeaders(conversionService), baos);
-                                    return new ByteArrayInputStream(baos.toByteArray());
-                                } catch (CodecException e) {
-                                    if (LOG.isDebugEnabled()) {
-                                        LOG.debug("Failed to encode body using MessageBodyWriter for media type {}", mediaType, e);
-                                    }
-                                }
-                            }
-                        } else {
-                            // No mediatype, so try and convert the body to a byte array from whatever it may be
-                            return BodyUtils.bodyAsByteArray(
-                                    jsonMapper,
-                                    () -> request.getContentType().orElse(null),
-                                    request::getCharacterEncoding,
-                                    () -> body
-                                )
-                                .map(ByteArrayInputStream::new)
-                                .orElseGet(() -> new ByteArrayInputStream(new byte[0]));
-                        }
-                    }
-                }
-                return new ByteArrayInputStream(new byte[0]);
+                return new ByteArrayInputStream(bodyBytes);
             }
 
             @Override
@@ -345,6 +310,49 @@ public class HttpFunction extends FunctionInitializer implements com.google.clou
                 return headers;
             }
         };
+    }
+
+    private byte[] bodyToByteArray(Object body, io.micronaut.http.HttpRequest<?> request, JsonMapper jsonMapper) {
+        if (body == null) {
+            return new byte[0];
+        }
+        if (body instanceof CharSequence csBody) {
+            return csBody.toString().getBytes();
+        }
+        if (body instanceof byte[] byteBody) {
+            return byteBody;
+        }
+
+        MediaType mediaType = request.getContentType().orElse(null);
+        if (mediaType != null) {
+            @SuppressWarnings("unchecked")
+            Argument<Object> bodyArgument = (Argument<Object>) Argument.of(body.getClass());
+            @SuppressWarnings("unchecked")
+            MessageBodyWriter<Object> writer = (MessageBodyWriter<Object>) messageBodyHandlerRegistry
+                .findWriter(bodyArgument, mediaType)
+                .orElseGet(() -> messageBodyHandlerRegistry.findWriter(bodyArgument).orElse(null));
+            if (writer != null) {
+                try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    writer.writeTo(bodyArgument, mediaType, body, new SimpleHttpHeaders(conversionService), baos);
+                    return baos.toByteArray();
+                } catch (CodecException e) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Failed to encode body using MessageBodyWriter for media type {}", mediaType, e);
+                    }
+                }
+            }
+            return new byte[0];
+        }
+
+        // No mediatype, so try and convert the body to a byte array from whatever it may be
+        return BodyUtils.bodyAsByteArray(
+                jsonMapper,
+                () -> request.getContentType().orElse(null),
+                request::getCharacterEncoding,
+                () -> body
+            )
+            .orElseGet(() -> new byte[0]);
     }
 
     /**
