@@ -172,6 +172,48 @@ class ParameterBindingSpec extends Specification {
         googleResponse.bodyAsText == '{"name":"bar","age":30}'
     }
 
+    void "test string body with Micronaut request"() {
+
+        given:
+        def request = io.micronaut.http.HttpRequest.POST("/parameters/stringBody", "Foo")
+                .contentType(MediaType.TEXT_PLAIN)
+
+        when:
+        def googleResponse = new HttpFunction().invoke(request)
+
+        then:
+        googleResponse.status == HttpStatus.OK
+        googleResponse.bodyAsText == 'Hello Foo'
+    }
+
+    void "test byte array body with Micronaut request"() {
+
+        given:
+        def request = io.micronaut.http.HttpRequest.POST("/parameters/bytesBody", "Foo".bytes)
+                .contentType(MediaType.TEXT_PLAIN)
+
+        when:
+        def googleResponse = new HttpFunction().invoke(request)
+
+        then:
+        googleResponse.status == HttpStatus.OK
+        googleResponse.bodyAsText == 'Hello Foo'
+    }
+
+    void "test body without content type with Micronaut request"() {
+
+        given:
+        def request = io.micronaut.http.HttpRequest.GET("/simple/text")
+                .body(new Person("ignored"))
+
+        when:
+        def googleResponse = new HttpFunction().invoke(request)
+
+        then:
+        googleResponse.status == HttpStatus.OK
+        googleResponse.bodyAsText == 'good'
+    }
+
     void "test JSON POJO body - invalid JSON"() {
 
         given:
