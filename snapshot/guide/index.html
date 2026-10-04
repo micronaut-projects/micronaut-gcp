@@ -726,7 +726,12 @@ tracing.gcp.tracing.enabled=true</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">tracing = {zipkin = {enabled = true, sampler = "probability=1.0"}, gcp = {tracing = {enabled = true}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[tracing.zipkin]
+enabled = true
+sampler = "probability=1.0"
+
+[tracing.gcp.tracing]
+enabled = true</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -865,7 +870,8 @@ gcp.http.client.auth.patterns[1]=/bar/**</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">gcp = {http = {client = {auth = {patterns = ["/foo/**", "/bar/**"]}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[gcp.http.client.auth]
+patterns = ["/foo/**", "/bar/**"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2792,7 +2798,14 @@ gcp.pubsub.publisher.immediate.batching.enabled=false</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">gcp = {pubsub = {publisher = {batching = {executor = "batch-executor"}, immediate = {executor = "immediate-executor", batching = {enabled = false}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[gcp.pubsub.publisher.batching]
+executor = "batch-executor"
+
+[gcp.pubsub.publisher.immediate]
+executor = "immediate-executor"
+
+[gcp.pubsub.publisher.immediate.batching]
+enabled = false</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4544,7 +4557,9 @@ gcp.pubsub.subscriber.custom.parallel-pull-count=4</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">gcp = {pubsub = {subscriber = {custom = {executor = "custom-executor", parallel-pull-count = 4}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[gcp.pubsub.subscriber.custom]
+executor = "custom-executor"
+parallel-pull-count = 4</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -5910,7 +5925,9 @@ micronaut.executors.custom.nThreads=32</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">micronaut = {executors = {custom = {type = "scheduled", nThreads = 32}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[micronaut.executors.custom]
+type = "scheduled"
+nThreads = 32</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
