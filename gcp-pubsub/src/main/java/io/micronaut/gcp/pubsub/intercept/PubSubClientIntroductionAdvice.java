@@ -36,17 +36,21 @@ import io.micronaut.gcp.pubsub.configuration.PubSubConfigurationProperties;
 import io.micronaut.gcp.pubsub.exception.PubSubClientException;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
+import io.micronaut.gcp.pubsub.support.DefaultPublisherFactory;
 import io.micronaut.gcp.pubsub.support.PubSubPublisherState;
 import io.micronaut.gcp.pubsub.support.PubSubTopicUtils;
 import io.micronaut.gcp.pubsub.support.PublisherFactory;
 import io.micronaut.gcp.pubsub.support.PublisherFactoryConfig;
+import io.micronaut.gcp.pubsub.support.RetainedPublishers;
 import io.micronaut.http.MediaType;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.MessageBody;
 import io.micronaut.messaging.annotation.MessageHeader;
 import io.micronaut.scheduling.TaskExecutors;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -78,19 +82,55 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
     private final GoogleCloudConfiguration googleCloudConfiguration;
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
     private final ExecutorService executorService;
+    @Nullable
+    private final RetainedPublishers retainedPublishers;
 
+    /**
+     * @param publisherFactory The factory of the publishers
+     * @param serDesRegistry The serializers of the messages
+     * @param executorService The executor service that completes a publication
+     * @param conversionService The conversion service
+     * @param googleCloudConfiguration The Google Cloud configuration
+     * @param pubSubConfigurationProperties The Pub/Sub configuration
+     * @deprecated Use {@link #PubSubClientIntroductionAdvice(PublisherFactory, PubSubMessageSerDesRegistry, ExecutorService, ConversionService, GoogleCloudConfiguration, PubSubConfigurationProperties, RetainedPublishers)}
+     */
+    @Deprecated(since = "6.3.0", forRemoval = true)
     public PubSubClientIntroductionAdvice(PublisherFactory publisherFactory,
                                           PubSubMessageSerDesRegistry serDesRegistry,
                                           @Named(TaskExecutors.IO) ExecutorService executorService,
                                           ConversionService conversionService,
                                           GoogleCloudConfiguration googleCloudConfiguration,
                                           PubSubConfigurationProperties pubSubConfigurationProperties) {
+        this(publisherFactory, serDesRegistry, executorService, conversionService, googleCloudConfiguration, pubSubConfigurationProperties, null);
+    }
+
+    /**
+     * @param publisherFactory The factory of the publishers
+     * @param serDesRegistry The serializers of the messages
+     * @param executorService The executor service that completes a publication
+     * @param conversionService The conversion service
+     * @param googleCloudConfiguration The Google Cloud configuration
+     * @param pubSubConfigurationProperties The Pub/Sub configuration
+     * @param retainedPublishers The publishers retained across a restart, which exist in development mode only, and
+     * are used only with the {@link DefaultPublisherFactory}
+     * @since 6.3.0
+     */
+    @Inject
+    public PubSubClientIntroductionAdvice(PublisherFactory publisherFactory,
+                                          PubSubMessageSerDesRegistry serDesRegistry,
+                                          @Named(TaskExecutors.IO) ExecutorService executorService,
+                                          ConversionService conversionService,
+                                          GoogleCloudConfiguration googleCloudConfiguration,
+                                          PubSubConfigurationProperties pubSubConfigurationProperties,
+                                          @Nullable RetainedPublishers retainedPublishers) {
         this.publisherFactory = publisherFactory;
         this.executorService = executorService;
         this.serDesRegistry = serDesRegistry;
         this.conversionService = conversionService;
         this.googleCloudConfiguration = googleCloudConfiguration;
         this.pubSubConfigurationProperties = pubSubConfigurationProperties;
+        // a publisher of another factory may hold what the application gave it
+        this.retainedPublishers = publisherFactory.getClass() == DefaultPublisherFactory.class ? retainedPublishers : null;
     }
 
     @Override
@@ -120,7 +160,10 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
 
                 PubSubPublisherState.TopicState topicState = new PubSubPublisherState.TopicState(contentType, projectTopicName, configurationName, endpoint, orderingArgument.isPresent());
                 logger.debug("Created a new publisher[{}] for topic: {}", context.getExecutableMethod().getName(), topic);
-                PublisherInterface publisher = publisherFactory.createPublisher(new PublisherFactoryConfig(topicState, pubSubConfigurationProperties.getPublishingExecutor()));
+                PublisherFactoryConfig publisherConfig = new PublisherFactoryConfig(topicState, pubSubConfigurationProperties.getPublishingExecutor());
+                PublisherInterface publisher = retainedPublishers == null
+                    ? publisherFactory.createPublisher(publisherConfig)
+                    : retainedPublishers.publisher(publisherKey(method, publisherConfig), () -> publisherFactory.createPublisher(publisherConfig));
                 return new PubSubPublisherState(topicState, staticMessageAttributes, bodyArgument, publisher, orderingArgument);
             });
 
@@ -221,9 +264,33 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
         return new AbstractMap.SimpleEntry<>(name, value);
     }
 
+    /**
+     * The key a publisher is retained by across a restart: the client method, by name, and what the publisher is built
+     * from.
+     */
+    private static String publisherKey(ExecutableMethod<?, ?> method, PublisherFactoryConfig config) {
+        PubSubPublisherState.TopicState topicState = config.getTopicState();
+        StringBuilder key = new StringBuilder(method.getDeclaringType().getName()).append('#').append(method.getMethodName()).append('(');
+        for (Argument<?> argument : method.getArguments()) {
+            key.append(argument.getType().getName()).append(',');
+        }
+        return key.append(") ").append(topicState.getProjectTopicName())
+            .append(" configuration=").append(topicState.getConfigurationName())
+            .append(" endpoint=").append(topicState.getEndpoint())
+            .append(" ordered=").append(topicState.getOrdered())
+            .append(" executor=").append(config.getDefaultExecutor())
+            .toString();
+    }
+
     @Override
     @PreDestroy
     public void close() throws Exception {
+        if (retainedPublishers != null) {
+            // development mode: the publishers are kept for the next advice, which shuts down those no longer used
+            publisherStateCache.clear();
+            retainedPublishers.adviceClosed();
+            return;
+        }
         for (PubSubPublisherState publisherState : publisherStateCache.values()) {
             publisherState.close();
         }
