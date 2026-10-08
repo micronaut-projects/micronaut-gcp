@@ -83,6 +83,11 @@ final class DefaultPushSubscriberHandler implements PushSubscriberHandler {
         });
     }
 
+    @Override
+    public void removeSubscriber(ProjectSubscriptionName projectSubscriptionName) {
+        receivers.remove(projectSubscriptionName);
+    }
+
     private enum AckReply {
         ACK,
         NACK

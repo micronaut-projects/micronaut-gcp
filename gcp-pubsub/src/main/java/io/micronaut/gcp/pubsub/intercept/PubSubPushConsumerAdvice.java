@@ -96,6 +96,11 @@ final class PubSubPushConsumerAdvice extends AbstractPubSubConsumerMethodProcess
     }
 
     @Override
+    protected void removeSubscriber(ProjectSubscriptionName projectSubscriptionName) {
+        subscriberHandler.removeSubscriber(projectSubscriptionName);
+    }
+
+    @Override
     protected void handleException(PubSubMessageReceiverException ex) {
         super.handleException(PubSubPushMessageReceiverException.from(ex));
     }
