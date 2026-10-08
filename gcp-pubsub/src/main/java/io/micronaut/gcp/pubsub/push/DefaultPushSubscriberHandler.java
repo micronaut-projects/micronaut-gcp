@@ -51,8 +51,9 @@ final class DefaultPushSubscriberHandler implements PushSubscriberHandler {
     @Override
     public CompletableFuture<MutableHttpResponse<Object>> handleRequest(PushRequest pushRequest) {
         ProjectSubscriptionName subscription = ProjectSubscriptionName.parse(pushRequest.subscription());
-        if (receivers.containsKey(subscription)) {
-            MessageReceiver receiver = receivers.get(subscription);
+        // read once: a receiver can be removed concurrently, as development mode restarts the subscribers
+        MessageReceiver receiver = receivers.get(subscription);
+        if (receiver != null) {
             var result = new CompletableFuture<AckReply>();
             receiver.receiveMessage(pushRequest.message().asPubsubMessage(), new AckReplyConsumer() {
                     @Override

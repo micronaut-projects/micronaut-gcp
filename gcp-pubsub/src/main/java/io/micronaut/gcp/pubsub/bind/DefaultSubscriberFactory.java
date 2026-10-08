@@ -107,7 +107,9 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
             return;
         }
         try {
-            if (subscriber.isRunning()) {
+            // one still starting is stopped too: it would otherwise become active alongside its replacement
+            ApiService.State state = subscriber.state();
+            if (state != ApiService.State.TERMINATED && state != ApiService.State.FAILED) {
                 subscriber.stopAsync().awaitTerminated();
             }
         } catch (Exception e) {
