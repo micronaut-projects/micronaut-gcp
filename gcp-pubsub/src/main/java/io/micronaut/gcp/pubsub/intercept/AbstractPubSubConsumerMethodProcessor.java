@@ -54,8 +54,10 @@ import reactor.core.publisher.Flux;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -80,6 +82,7 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
     protected final PubSubBinderRegistry binderRegistry;
     protected final PubSubMessageReceiverExceptionHandler exceptionHandler;
     private final AtomicBoolean shutDownMode = new AtomicBoolean(false);
+    private final List<ProjectSubscriptionName> subscriptions = new CopyOnWriteArrayList<>();
     private final Class<A> annotationType;
     private final Logger logger = LoggerFactory.getLogger(AbstractPubSubConsumerMethodProcessor.class);
 
@@ -117,6 +120,7 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
                 String configuration = subscriptionAnnotation.stringValue("configuration").orElse("");
                 MessageReceiver receiver = buildMessageReceiver(beanDefinition, method, defaultContentType, projectSubscriptionName, hasAckArg, binder, bean);
                 addSubscriber(projectSubscriptionName, receiver, configuration);
+                subscriptions.add(projectSubscriptionName);
             }
         }
     }
@@ -159,6 +163,24 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
     }
 
     /**
+     * Removes the subscribers this processor added, so that it delivers no message more, and the subscriptions can be
+     * subscribed again. Development mode calls it as the processor is destroyed, before the processor that replaces it
+     * subscribes again. The processor enters shutdown mode first, as it does as it is destroyed, so that a subscriber
+     * that stops nacks the messages it holds when {@code gcp.pubsub.nack-on-shutdown} is set.
+     */
+    final void removeSubscribers() {
+        shutDown();
+        for (ProjectSubscriptionName subscription : subscriptions) {
+            try {
+                removeSubscriber(subscription);
+            } catch (RuntimeException e) {
+                logger.warn("Failed to remove the subscriber of {}", subscription, e);
+            }
+        }
+        subscriptions.clear();
+    }
+
+    /**
      * Enter shutdown mode.
      */
     @PreDestroy
@@ -185,6 +207,13 @@ abstract class AbstractPubSubConsumerMethodProcessor<A extends Annotation> imple
      * @param configuration the optional name of the configured receiver
      */
     protected abstract void addSubscriber(@NonNull ProjectSubscriptionName projectSubscriptionName, @NonNull MessageReceiver receiver, @Nullable String configuration);
+
+    /**
+     * A hook for removing a subscriber added with {@link #addSubscriber(ProjectSubscriptionName, MessageReceiver, String)}.
+     *
+     * @param projectSubscriptionName the subscription name
+     */
+    protected abstract void removeSubscriber(@NonNull ProjectSubscriptionName projectSubscriptionName);
 
     /**
      *

@@ -22,6 +22,7 @@ import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Retain;
 import io.micronaut.context.exceptions.ConfigurationException;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -82,6 +83,11 @@ public class GoogleCredentialsFactory {
      *     </li>
      * </ol>
      *
+     * <p>Development mode retains the credentials, with the access token they cached, across a restart of the
+     * application, until a change under {@value GoogleCredentialsConfiguration#PREFIX} releases them. They are not
+     * retained when they were built on the {@link HttpTransportFactory} of the HTTP client
+     * ({@code gcp.credentials.use-http-client}), which belongs to the stopped application.</p>
+     *
      * @return The {@link GoogleCredentials}
      * @throws IOException An exception if an error occurs
      */
@@ -89,6 +95,7 @@ public class GoogleCredentialsFactory {
     @Requires(property = GoogleCredentialsConfiguration.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
     @Primary
     @Singleton
+    @Retain(invalidatedBy = GoogleCredentialsConfiguration.PREFIX)
     protected GoogleCredentials defaultGoogleCredentials() throws IOException {
         final List<String> scopes = configuration.getScopes().stream()
                 .map(URI::toString).collect(Collectors.toList());
