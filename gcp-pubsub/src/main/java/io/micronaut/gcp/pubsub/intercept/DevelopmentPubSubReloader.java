@@ -148,10 +148,10 @@ final class DevelopmentPubSubReloader implements BeanPreDestroyEventListener<Obj
     DevelopmentPubSubReloader(BeanContext beanContext) {
         this.beanContext = beanContext;
         if (beanContext instanceof WatchableBeanContext watchable) {
-            watchable.watchDefinitions(Object.class, LISTENERS, new ListenerDefinitionsWatcher());
+            watchable.definitions().qualifier(LISTENERS).watch(new ListenerDefinitionsWatcher());
             // one watch, so that a bean that is several of these, such as a serializer that is a binder too, restarts once
-            watchable.watchDefinitions(Object.class, REGISTERED, new RegistryDefinitionsWatcher());
-            watchable.watchClassChanges(new ClassWatcher());
+            watchable.definitions().qualifier(REGISTERED).watch(new RegistryDefinitionsWatcher());
+            watchable.classChanges().watch(new ClassWatcher());
         }
     }
 
