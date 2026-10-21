@@ -15,11 +15,26 @@
  */
 package io.micronaut.gcp.parametermanager.imports
 
+import com.google.api.core.ApiFuture
+import com.google.api.core.ApiFutures
+import com.google.api.gax.grpc.GrpcStatusCode
+import com.google.api.gax.rpc.ApiCallContext
+import com.google.api.gax.rpc.ApiException
+import com.google.api.gax.rpc.NotFoundException
+import com.google.api.gax.rpc.UnaryCallable
+import com.google.cloud.parametermanager.v1.ParameterManagerClient
+import com.google.cloud.parametermanager.v1.stub.ParameterManagerStub
+import com.google.cloud.parametermanager.v1.RenderParameterVersionRequest
+import com.google.cloud.parametermanager.v1.RenderParameterVersionResponse
+import com.google.protobuf.ByteString
+import io.grpc.Status
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.PropertySourceImporter
 import io.micronaut.core.convert.value.ConvertibleValues
 import io.micronaut.core.io.service.SoftServiceLoader
 import io.micronaut.core.util.ConnectionString
+import io.micronaut.gcp.parametermanager.configuration.ParameterManagerConfigurationProperties
+import org.jspecify.annotations.Nullable
 import spock.lang.Specification
 
 class ParameterManagerPropertySourceImporterSpec extends Specification {
@@ -119,7 +134,7 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
         e.message == 'Google Cloud Parameter Manager config import path cannot be blank'
     }
 
-    void "rejects declarations without a version because Parameter Manager does not support latest"() {
+    void "rejects declarations without a version"() {
         given:
         PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()
 
@@ -128,7 +143,7 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
 
         then:
         IllegalArgumentException e = thrown()
-        e.message == "Google Cloud Parameter Manager imports require version to be specified; Parameter Manager does not support 'latest' as a version"
+        e.message == "Google Cloud Parameter Manager imports require version to be specified"
     }
 
     void "rejects declarations with both credentials-location and encoded-key"() {
@@ -174,5 +189,131 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
 
         then:
         declaration.declaration().path() == 'application'
+    }
+
+    void "optional import of a missing parameter version is omitted"() {
+        given:
+        def declaration = importDeclaration(optional: true)
+
+        when:
+        def result = ParameterManagerPropertySourceImporter.renderParameter(clientRendering(notFound()), declaration, new ParameterManagerConfigurationProperties())
+
+        then:
+        result.isEmpty()
+    }
+
+    void "required import of a missing parameter version still fails"() {
+        given:
+        def declaration = importDeclaration([:])
+
+        when:
+        ParameterManagerPropertySourceImporter.renderParameter(clientRendering(notFound()), declaration, new ParameterManagerConfigurationProperties())
+
+        then:
+        thrown(NotFoundException)
+    }
+
+    void "optional import of an existing parameter version is rendered"() {
+        given:
+        def declaration = importDeclaration(optional: true)
+
+        when:
+        def result = ParameterManagerPropertySourceImporter.renderParameter(clientRendering(null), declaration, new ParameterManagerConfigurationProperties())
+
+        then:
+        result.isPresent()
+        result.get().name == 'application'
+        new String(result.get().contents) == 'key: value'
+    }
+
+    void "per-import encoded key overrides a global credentials location"() {
+        given:
+        ApplicationContext context = ApplicationContext.run(['gcp.credentials.location': '/global/sa.json'])
+        def declaration = importDeclaration(['encoded-key': 'ZW5jb2RlZA=='])
+
+        when:
+        def resolved = ParameterManagerPropertySourceImporter.resolveDeclaration(context.environment, declaration)
+
+        then:
+        resolved.encodedKey() == 'ZW5jb2RlZA=='
+        resolved.credentialsLocation() == null
+
+        cleanup:
+        context.close()
+    }
+
+    void "per-import credentials location overrides a global encoded key"() {
+        given:
+        ApplicationContext context = ApplicationContext.run(['gcp.credentials.encoded-key': 'Z2xvYmFs'])
+        def declaration = importDeclaration(['credentials-location': '/import/sa.json'])
+
+        when:
+        def resolved = ParameterManagerPropertySourceImporter.resolveDeclaration(context.environment, declaration)
+
+        then:
+        resolved.credentialsLocation() == '/import/sa.json'
+        resolved.encodedKey() == null
+
+        cleanup:
+        context.close()
+    }
+
+    void "global credentials are used when the import supplies none"() {
+        given:
+        ApplicationContext context = ApplicationContext.run(['gcp.credentials.location': '/global/sa.json'])
+        def declaration = importDeclaration([:])
+
+        when:
+        def resolved = ParameterManagerPropertySourceImporter.resolveDeclaration(context.environment, declaration)
+
+        then:
+        resolved.credentialsLocation() == '/global/sa.json'
+        resolved.encodedKey() == null
+
+        cleanup:
+        context.close()
+    }
+
+    void "global credentials specifying both modes are still rejected when the import supplies none"() {
+        given:
+        ApplicationContext context = ApplicationContext.run(['gcp.credentials.location': '/global/sa.json',
+                                                             'gcp.credentials.encoded-key': 'Z2xvYmFs'])
+        def declaration = importDeclaration([:])
+
+        when:
+        ParameterManagerPropertySourceImporter.resolveDeclaration(context.environment, declaration)
+
+        then:
+        IllegalArgumentException e = thrown()
+        e.message == 'Please specify only one of credentials-location or encoded-key for gcp-parameter-manager imports'
+
+        cleanup:
+        context.close()
+    }
+
+    private static ParameterManagerImportDeclaration importDeclaration(Map values) {
+        Map all = [provider: 'gcp-parameter-manager', path: 'application', version: '1', 'project-id': 'my-gcp-project'] + values
+        new ParameterManagerPropertySourceImporter().newImportDeclaration(ConvertibleValues.of(all)).declaration()
+    }
+
+    private static ApiException notFound() {
+        new NotFoundException('parameter version not found', null, GrpcStatusCode.of(Status.Code.NOT_FOUND), false)
+    }
+
+    private ParameterManagerClient clientRendering(@Nullable ApiException failure) {
+        ParameterManagerStub stub = Stub(ParameterManagerStub) {
+            renderParameterVersionCallable() >> new UnaryCallable<RenderParameterVersionRequest, RenderParameterVersionResponse>() {
+                @Override
+                ApiFuture<RenderParameterVersionResponse> futureCall(RenderParameterVersionRequest request, ApiCallContext context) {
+                    if (failure != null) {
+                        return ApiFutures.immediateFailedFuture(failure)
+                    }
+                    ApiFutures.immediateFuture(RenderParameterVersionResponse.newBuilder()
+                        .setRenderedPayload(ByteString.copyFromUtf8('key: value'))
+                        .build())
+                }
+            }
+        }
+        ParameterManagerClient.create(stub)
     }
 }

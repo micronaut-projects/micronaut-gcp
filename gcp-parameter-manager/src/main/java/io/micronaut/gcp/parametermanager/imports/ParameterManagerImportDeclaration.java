@@ -28,7 +28,7 @@ import org.jspecify.annotations.Nullable;
  * @param encodedKey Optional base64 encoded credentials json
  * @param projectId Optional project id override
  * @param location Optional regional parameter location
- * @param version The parameter version to import. Parameter Manager does not support {@code latest}, so a version must always be specified
+ * @param version The parameter version to import. A version must always be specified
  * @since 6.1.0
  */
 @Internal

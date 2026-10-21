@@ -19,6 +19,7 @@ import io.micronaut.context.event.StartupEvent
 import io.micronaut.gcp.parametermanager.client.ParameterManagerAccessClient
 import io.micronaut.gcp.parametermanager.client.VersionedParameter
 import io.micronaut.runtime.event.annotation.EventListener
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 //end::imports[]
 
@@ -37,6 +38,9 @@ class ClientExample {
         Mono<VersionedParameter> otherProjectParameter = client.getParameter("parameterName", "v1", "other-project-id") // <2>
         Mono<VersionedParameter> renderedParameter = client.getRenderedParameter("parameterName", "parameterVersion") // <3>
         Mono<VersionedParameter> otherProjectRenderedParameter = client.getRenderedParameter("parameterName", "v1", "other-project-id") // <4>
+        // Nothing is fetched until the publishers are subscribed to
+        Flux.merge(parameter, otherProjectParameter, renderedParameter, otherProjectRenderedParameter)
+            .subscribe { VersionedParameter versionedParameter -> println "Loaded ${versionedParameter.name}" }
     }
 }
 //end::clazz[]

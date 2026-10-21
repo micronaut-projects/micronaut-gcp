@@ -18,6 +18,7 @@ package io.micronaut.gcp.parametermanager
 import io.micronaut.context.event.StartupEvent
 import io.micronaut.gcp.parametermanager.client.ParameterManagerAccessClient
 import io.micronaut.runtime.event.annotation.EventListener
+import reactor.core.publisher.Flux
 //end::imports[]
 
 //tag::clazz[]
@@ -28,6 +29,9 @@ class ClientExample(private val client: ParameterManagerAccessClient) {
         val otherProjectParameter = client.getParameter("parameterName", "v1", "other-project-id") // <2>
         val renderedParameter = client.getRenderedParameter("parameterName", "parameterVersion") // <3>
         val otherProjectRenderedParameter = client.getRenderedParameter("parameterName", "v1", "other-project-id") // <4>
+        // Nothing is fetched until the publishers are subscribed to
+        Flux.merge(parameter, otherProjectParameter, renderedParameter, otherProjectRenderedParameter)
+            .subscribe { println("Loaded ${it.name}") }
     }
 }
 //end::clazz[]

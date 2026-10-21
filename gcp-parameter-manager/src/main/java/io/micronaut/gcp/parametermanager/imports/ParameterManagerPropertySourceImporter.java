@@ -17,10 +17,12 @@ package io.micronaut.gcp.parametermanager.imports;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.auth.http.HttpTransportFactory;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.parametermanager.v1.ParameterManagerClient;
+import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.PropertySource;
 import io.micronaut.context.env.PropertySource.Origin;
 import io.micronaut.core.annotation.Internal;
@@ -137,10 +139,14 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
     @Override
     protected Optional<PropertySource> importRetryablePropertySource(ImportContext<ParameterManagerImportDeclaration> context) {
         ArgumentUtils.requireNonNull("context", context);
-        ParameterManagerImportDeclaration declaration = resolveDeclaration(context, context.importDeclaration());
+        ParameterManagerImportDeclaration declaration = resolveDeclaration(context.environment(), context.importDeclaration());
         ParameterManagerConfigurationProperties configurationProperties = new ParameterManagerConfigurationProperties();
         configurationProperties.setLocation(declaration.location());
-        VersionedParameter parameter = fetchParameter(declaration, configurationProperties);
+        Optional<VersionedParameter> fetched = fetchParameter(declaration, configurationProperties);
+        if (fetched.isEmpty()) {
+            return Optional.empty();
+        }
+        VersionedParameter parameter = fetched.get();
         String sourceName = context.connectionString() != null ? context.getCanonicalLocation() : PROVIDER + ":" + declaration.path();
         String extension = StringUtils.isNotEmpty(declaration.format()) ? declaration.format() : inferExtension(parameter.getName());
         String content = new String(parameter.getContents(), StandardCharsets.UTF_8);
@@ -148,19 +154,42 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         return context.importPropertySource(content, sourceName, extension, origin != null ? origin : Origin.of(sourceName));
     }
 
-    private VersionedParameter fetchParameter(ParameterManagerImportDeclaration declaration,
-                                              ParameterManagerConfigurationProperties configurationProperties) {
+    private Optional<VersionedParameter> fetchParameter(ParameterManagerImportDeclaration declaration,
+                                                        ParameterManagerConfigurationProperties configurationProperties) {
         try {
             GoogleCredentials credentials = buildGoogleCredentials(declaration);
             ParameterManagerFactory factory = new ParameterManagerFactory(configurationProperties);
             CredentialsProvider credentialsProvider = factory.credentialsProvider(credentials);
             TransportChannelProvider transportChannelProvider = factory.transportChannelProvider();
             try (ParameterManagerClient client = CLIENT_FACTORY.create(configurationProperties, credentialsProvider, transportChannelProvider)) {
-                String projectId = declaration.projectId();
-                return ParameterManagerParameterAccessor.renderParameter(client, projectId, declaration.path(), declaration.version(), configurationProperties);
+                return renderParameter(client, declaration, configurationProperties);
             }
         } catch (IOException e) {
             throw new IllegalStateException("Could not instantiate ParameterManagerClient for config import", e);
+        }
+    }
+
+    /**
+     * Renders the declared parameter version. A missing parameter or version yields an empty result for
+     * optional declarations, so that the import is skipped, and is rethrown for required declarations.
+     *
+     * @param client The Parameter Manager client used to render the parameter
+     * @param declaration The resolved import declaration
+     * @param configurationProperties The Parameter Manager configuration derived for the import
+     * @return The rendered parameter, or empty when an optional parameter does not exist
+     */
+    static Optional<VersionedParameter> renderParameter(ParameterManagerClient client,
+                                                        ParameterManagerImportDeclaration declaration,
+                                                        ParameterManagerConfigurationProperties configurationProperties) {
+        try {
+            return Optional.of(ParameterManagerParameterAccessor.renderParameter(
+                client, declaration.projectId(), declaration.path(), declaration.version(), configurationProperties));
+        } catch (NotFoundException e) {
+            if (!declaration.optional()) {
+                throw e;
+            }
+            LOG.debug("Optional gcp-parameter-manager import for path [{}] and version [{}] was not found, skipping it", declaration.path(), declaration.version());
+            return Optional.empty();
         }
     }
 
@@ -193,30 +222,40 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         return credentials;
     }
 
-    private ParameterManagerImportDeclaration resolveDeclaration(ImportContext<ParameterManagerImportDeclaration> context,
-                                                                  ParameterManagerImportDeclaration declaration) {
+    /**
+     * Resolves the declaration against the global configuration. Global credentials are only used when the
+     * import does not supply credentials itself, so a per-import credential acts as an override of the global one.
+     *
+     * @param environment The environment the import is resolved in
+     * @param declaration The declaration as parsed from the import
+     * @return The declaration with global credentials and project id filled in when absent
+     */
+    static ParameterManagerImportDeclaration resolveDeclaration(Environment environment,
+                                                                ParameterManagerImportDeclaration declaration) {
         String credentialsLocation = declaration.credentialsLocation();
         String encodedKey = declaration.encodedKey();
         String projectId = declaration.projectId();
-        if (!StringUtils.hasText(credentialsLocation) && context.environment().containsProperty(GCP_CREDENTIALS_LOCATION)) {
-            credentialsLocation = context.environment().getRequiredProperty(GCP_CREDENTIALS_LOCATION, String.class);
-        }
-        if (!StringUtils.hasText(encodedKey) && context.environment().containsProperty(GCP_CREDENTIALS_ENCODED_KEY)) {
-            encodedKey = context.environment().getRequiredProperty(GCP_CREDENTIALS_ENCODED_KEY, String.class);
+        if (!StringUtils.hasText(credentialsLocation) && !StringUtils.hasText(encodedKey)) {
+            if (environment.containsProperty(GCP_CREDENTIALS_LOCATION)) {
+                credentialsLocation = environment.getRequiredProperty(GCP_CREDENTIALS_LOCATION, String.class);
+            }
+            if (environment.containsProperty(GCP_CREDENTIALS_ENCODED_KEY)) {
+                encodedKey = environment.getRequiredProperty(GCP_CREDENTIALS_ENCODED_KEY, String.class);
+            }
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("Resolving gcp-parameter-manager import for path [{}] with visible bootstrap keys gcp.project-id={}, gcp.projectId={}, gcp.credentials.location={}, gcp.credentials.encoded-key={}",
                 declaration.path(),
-                context.environment().containsProperty(GCP_PROJECT_ID),
-                context.environment().containsProperty(GCP_PROJECT_ID_CAMEL_CASE),
-                context.environment().containsProperty(GCP_CREDENTIALS_LOCATION),
-                context.environment().containsProperty(GCP_CREDENTIALS_ENCODED_KEY));
+                environment.containsProperty(GCP_PROJECT_ID),
+                environment.containsProperty(GCP_PROJECT_ID_CAMEL_CASE),
+                environment.containsProperty(GCP_CREDENTIALS_LOCATION),
+                environment.containsProperty(GCP_CREDENTIALS_ENCODED_KEY));
         }
         if (!StringUtils.hasText(projectId)) {
-            if (context.environment().containsProperty(GCP_PROJECT_ID)) {
-                projectId = context.environment().getRequiredProperty(GCP_PROJECT_ID, String.class);
-            } else if (context.environment().containsProperty(GCP_PROJECT_ID_CAMEL_CASE)) {
-                projectId = context.environment().getRequiredProperty(GCP_PROJECT_ID_CAMEL_CASE, String.class);
+            if (environment.containsProperty(GCP_PROJECT_ID)) {
+                projectId = environment.getRequiredProperty(GCP_PROJECT_ID, String.class);
+            } else if (environment.containsProperty(GCP_PROJECT_ID_CAMEL_CASE)) {
+                projectId = environment.getRequiredProperty(GCP_PROJECT_ID_CAMEL_CASE, String.class);
             }
         }
         validateCredentials(StringUtils.hasText(credentialsLocation) ? credentialsLocation : null, StringUtils.hasText(encodedKey) ? encodedKey : null);
@@ -250,7 +289,7 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
 
     private static String validateVersion(@Nullable String version) {
         if (!StringUtils.hasText(version)) {
-            throw new IllegalArgumentException("Google Cloud Parameter Manager imports require version to be specified; Parameter Manager does not support 'latest' as a version");
+            throw new IllegalArgumentException("Google Cloud Parameter Manager imports require version to be specified");
         }
         return version;
     }

@@ -48,7 +48,7 @@ Supported importer options are:
 |Option |Description
 |`path` |The parameter name to import
 |`project-id` |The Google Cloud project containing the parameter
-|`version` |The parameter version to import. Required; Parameter Manager does not support `latest`
+|`version` |The parameter version to import. Required
 |`format` |Explicit payload format such as `yml`, `yaml`, `json`, or `properties`
 |`location` |Regional Parameter Manager location for regional parameters
 |`credentials-location` |Path to a service account credentials file used only for this import
@@ -189,4 +189,4 @@ Keys are exposed in the environment under a `pm.` prefix, converted to dotted-lo
 
 == Parameter Versioning
 
-Google Cloud Parameter Manager supports link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/list-parameter-versions[parameter versioning]. Unlike Secret Manager, it does not support `latest` as a version -- every import, whether through `micronaut.config.import` or the legacy bootstrap path, must specify an explicit version.
+Google Cloud Parameter Manager supports link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/list-parameter-versions[parameter versioning]. Every import, whether through `micronaut.config.import` or the legacy bootstrap path, must specify a `version`, unlike Secret Manager imports which default to `latest`.
