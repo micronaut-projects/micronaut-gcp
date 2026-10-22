@@ -1,0 +1,5 @@
+custom:
+  value: foo
+acme:
+  customer:
+    tier: gold
