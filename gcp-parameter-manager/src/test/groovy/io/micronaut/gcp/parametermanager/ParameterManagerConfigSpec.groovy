@@ -133,21 +133,6 @@ class ParameterManagerConfigSpec extends Specification {
         "Parameter reference must not be empty" == ex.message
     }
 
-    void "invalid parameter reference without slash"() {
-        given:
-        System.setProperty(Environment.BOOTSTRAP_CONTEXT_PROPERTY, "true")
-        when:
-        ApplicationContext context = ApplicationContext.run(["spec.name"                              : "ParameterManagerConfigSpec",
-                                                             "micronaut.application.name"             : "parameter-manager-test",
-                                                             "micronaut.config-client.enabled"        : true,
-                                                             "gcp.projectId"                          : "first-gcp-project",
-                                                             "gcp.parameter-manager.custom-configs[0]": "microParamv1"])
-        then:
-        Exception ex = thrown(Exception)
-        ex instanceof ConfigurationException
-        "Invalid parameter format. The expected format is '<parameter_name>/<parameter_version>', but the value was: microParamv1" == ex.message
-    }
-
     void "invalid parameter reference without parameter name"() {
         given:
         System.setProperty(Environment.BOOTSTRAP_CONTEXT_PROPERTY, "true")

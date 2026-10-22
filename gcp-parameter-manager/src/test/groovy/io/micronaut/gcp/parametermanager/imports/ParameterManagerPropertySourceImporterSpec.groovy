@@ -134,16 +134,15 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
         e.message == 'Google Cloud Parameter Manager config import path cannot be blank'
     }
 
-    void "rejects declarations without a version"() {
+    void "defaults the version to latest when not specified"() {
         given:
         PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()
 
         when:
-        importer.newImportDeclaration(ConvertibleValues.of([provider: 'gcp-parameter-manager', path: 'application']))
+        def declaration = importer.newImportDeclaration(ConvertibleValues.of([provider: 'gcp-parameter-manager', path: 'application']))
 
         then:
-        IllegalArgumentException e = thrown()
-        e.message == "Google Cloud Parameter Manager imports require version to be specified"
+        declaration.declaration().version() == 'latest'
     }
 
     void "rejects declarations with both credentials-location and encoded-key"() {

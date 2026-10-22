@@ -67,6 +67,7 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
     private static final String PROJECT_ID = "project-id";
     private static final String LOCATION = "location";
     private static final String VERSION = "version";
+    private static final String LATEST = "latest";
     private static final String GCP_CREDENTIALS_LOCATION = "gcp.credentials.location";
     private static final String GCP_CREDENTIALS_ENCODED_KEY = "gcp.credentials.encoded-key";
     private static final String GCP_PROJECT_ID = "gcp.project-id";
@@ -95,7 +96,7 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         String credentialsLocation = connectionString.getUsername().orElse(connectionString.getOptions().get(CREDENTIALS_LOCATION));
         String projectId = connectionString.getOptions().get(PROJECT_ID);
         String location = connectionString.getOptions().get(LOCATION);
-        String version = validateVersion(connectionString.getOptions().get(VERSION));
+        String version = resolveVersion(connectionString.getOptions().get(VERSION));
         String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
         String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
         validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
@@ -120,7 +121,7 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         String encodedKey = values.get(ENCODED_KEY, String.class).orElse(null);
         String projectId = values.get(PROJECT_ID, String.class).orElse(null);
         String location = values.get(LOCATION, String.class).orElse(null);
-        String version = validateVersion(values.get(VERSION, String.class).orElse(null));
+        String version = resolveVersion(values.get(VERSION, String.class).orElse(null));
         String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
         String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
         validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
@@ -287,11 +288,8 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         return path;
     }
 
-    private static String validateVersion(@Nullable String version) {
-        if (!StringUtils.hasText(version)) {
-            throw new IllegalArgumentException("Google Cloud Parameter Manager imports require version to be specified");
-        }
-        return version;
+    private static String resolveVersion(@Nullable String version) {
+        return StringUtils.hasText(version) ? version : LATEST;
     }
 
     private static void validateCredentials(@Nullable String credentialsLocation, @Nullable String encodedKey) {

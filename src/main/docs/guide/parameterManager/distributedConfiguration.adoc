@@ -48,7 +48,7 @@ Supported importer options are:
 |Option |Description
 |`path` |The parameter name to import
 |`project-id` |The Google Cloud project containing the parameter
-|`version` |The parameter version to import. Required
+|`version` |The parameter version to import; defaults to `latest`
 |`format` |Explicit payload format such as `yml`, `yaml`, `json`, or `properties`
 |`location` |Regional Parameter Manager location for regional parameters
 |`credentials-location` |Path to a service account credentials file used only for this import
@@ -124,7 +124,7 @@ Because imports are required by default, a parameter whose secret reference cann
 
 == Legacy bootstrap integration
 
-The older bootstrap/config-client based integration remains available for existing applications. Unlike Secret Manager, it has no default parameter name resolution -- you must explicitly whitelist every parameter through `custom-configs` or `keys`, each given as a `<parameter-name>/<parameter-version>` pair.
+The older bootstrap/config-client based integration remains available for existing applications. Unlike Secret Manager, it has no default parameter name resolution -- you must explicitly whitelist every parameter through `custom-configs` or `keys`, each given as a `<parameter-name>/<parameter-version>` pair. The version may be omitted, in which case `latest` is used, the same as for `micronaut.config.import`.
 
 For new development, prefer `micronaut.config.import`. Use the bootstrap configuration path only when you need this legacy resolution behavior.
 
@@ -179,6 +179,8 @@ gcp:
       - dbUser/otherVersion
 ----
 
+A name without a version, such as `DB_PASSWORD`, loads the `latest` version. A trailing slash, such as `DB_PASSWORD/`, is an error.
+
 Keys are exposed in the environment under a `pm.` prefix, converted to dotted-lowercase form:
 
 |===
@@ -189,4 +191,4 @@ Keys are exposed in the environment under a `pm.` prefix, converted to dotted-lo
 
 == Parameter Versioning
 
-Google Cloud Parameter Manager supports link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/list-parameter-versions[parameter versioning]. Every import, whether through `micronaut.config.import` or the legacy bootstrap path, must specify a `version`, unlike Secret Manager imports which default to `latest`.
+Google Cloud Parameter Manager supports link:https://docs.cloud.google.com/secret-manager/parameter-manager/docs/list-parameter-versions[parameter versioning]. Parameter Manager imports default to `latest` when no `version` is given. Set an explicit `version` to pin an import to a specific parameter version.

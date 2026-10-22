@@ -55,6 +55,7 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
     private static final String CAMEL_CASE_REGEX = "([a-z])([A-Z]+)";
     private static final String CAMEL_CASE_REPLACE = "$1_$2";
     private static final String DESCRIPTION = "GCP Parameter Manager Config Client";
+    private static final String LATEST = "latest";
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP ParameterManager)";
     private static List<PropertySourceLoader> readers;
     private final ParameterManagerAccessClient parameterManagerAccessClient;
@@ -182,17 +183,18 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
     }
 
     /**
-     * Parses a parameter string in the form "parameter_name/parameter_version" into a
-     * {@link ParsedParameter} object.
+     * Parses a parameter string in the form "parameter_name[/parameter_version]" into a
+     * {@link ParsedParameter} object. When no version is given, {@code latest} is used.
      * Examples:
      * "my-param/1"    -> name="my-param", version="1"
      * "my-param/ver1" -> name="my-param", version="ver1"
+     * "my-param"      -> name="my-param", version="latest"
      *
-     * @param raw - the raw string for the parameter name containing version.
+     * @param raw - the raw string for the parameter name, optionally containing a version.
      * @return a {@link ParsedParameter} object containing name and version
      * @throws ConfigurationException if the input is invalid or empty
      */
-    private ParsedParameter parseNameAndVersion(String raw) {
+    static ParsedParameter parseNameAndVersion(String raw) {
         String trimmed = raw.trim();
         if (trimmed.isEmpty()) {
             throw new ConfigurationException("Parameter reference must not be empty");
@@ -201,8 +203,7 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
         int idx = trimmed.lastIndexOf('/');
 
         if (idx < 0) {
-            throw new ConfigurationException("Invalid parameter format. The expected format is " +
-                "'<parameter_name>/<parameter_version>', but the value was: " + raw);
+            return new ParsedParameter(trimmed, LATEST);
         }
 
         String name = trimmed.substring(0, idx);
@@ -223,11 +224,11 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
     }
 
     /**
-     * Private record class to hold the parsed parameter name and version.
+     * Record class to hold the parsed parameter name and version.
      *
      * @param name    - The name of the Parameter.
      * @param version - The version of the Parameter.
      */
-    private record ParsedParameter(String name, String version) {
+    record ParsedParameter(String name, String version) {
     }
 }
