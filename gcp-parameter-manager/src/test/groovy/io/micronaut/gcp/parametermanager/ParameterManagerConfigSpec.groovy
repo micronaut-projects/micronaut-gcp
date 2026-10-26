@@ -72,8 +72,8 @@ class ParameterManagerConfigSpec extends Specification {
                                                              "gcp.parameter-manager.keys[0]"  : "DB_PASSWORD/firstversion",
                                                              "gcp.parameter-manager.keys[1]"  : "dbUser/vers1"])
         expect:
-        "very-sensitive-password" == context.getRequiredProperty("pm.db.password", String)
-        "sqluser" == context.getRequiredProperty("pm.db.user", String)
+        "very-sensitive-password" == context.getRequiredProperty("pm.db.password", String).trim()
+        "sqluser" == context.getRequiredProperty("pm.db.user", String).trim()
         cleanup:
         context.stop()
     }
@@ -95,8 +95,8 @@ class ParameterManagerConfigSpec extends Specification {
         "INFO" == context.getRequiredProperty("logging.level", String)
         "logs/application.log" == context.getRequiredProperty("logging.file.name", String)
         true == context.getRequiredProperty("logging.enabled", Boolean)
-        "very-sensitive-password" == context.getRequiredProperty("pm.db.password", String)
-        "sqluser" == context.getRequiredProperty("pm.db.user", String)
+        "very-sensitive-password" == context.getRequiredProperty("pm.db.password", String).trim()
+        "sqluser" == context.getRequiredProperty("pm.db.user", String).trim()
         cleanup:
         context.stop()
     }
@@ -113,7 +113,7 @@ class ParameterManagerConfigSpec extends Specification {
         expect:
         "second-foo" == context.getRequiredProperty("custom.value", String)
         "golden" == context.getRequiredProperty("acme.customer.tier", String)
-        "secondsqluser" == context.getRequiredProperty("pm.dbuser", String)
+        "secondsqluser" == context.getRequiredProperty("pm.dbuser", String).trim()
         cleanup:
         context.stop()
     }

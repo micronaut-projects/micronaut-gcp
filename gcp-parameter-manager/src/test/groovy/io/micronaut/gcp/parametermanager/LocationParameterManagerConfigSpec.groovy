@@ -76,8 +76,8 @@ class LocationParameterManagerConfigSpec extends Specification {
                                                              "gcp.parameter-manager.keys[0]"  : "DB_PASSWORD/firstversion",
                                                              "gcp.parameter-manager.keys[1]"  : "dbUser/vers1"])
         expect:
-        "regional-sensitive-password" == context.getRequiredProperty("pm.db.password", String)
-        "regionalsqluser" == context.getRequiredProperty("pm.db.user", String)
+        "regional-sensitive-password" == context.getRequiredProperty("pm.db.password", String).trim()
+        "regionalsqluser" == context.getRequiredProperty("pm.db.user", String).trim()
         cleanup:
         context.stop()
     }
@@ -100,8 +100,8 @@ class LocationParameterManagerConfigSpec extends Specification {
         "DEBUG" == context.getRequiredProperty("logging.level", String)
         "resources/logs/application.log" == context.getRequiredProperty("logging.file.name", String)
         true == context.getRequiredProperty("logging.enabled", Boolean)
-        "regional-sensitive-password" == context.getRequiredProperty("pm.db.password", String)
-        "regionalsqluser" == context.getRequiredProperty("pm.db.user", String)
+        "regional-sensitive-password" == context.getRequiredProperty("pm.db.password", String).trim()
+        "regionalsqluser" == context.getRequiredProperty("pm.db.user", String).trim()
         cleanup:
         context.stop()
     }
@@ -119,7 +119,7 @@ class LocationParameterManagerConfigSpec extends Specification {
         expect:
         "foo-us-central" == context.getRequiredProperty("custom.value", String)
         "copper" == context.getRequiredProperty("acme.customer.tier", String)
-        "postgres-user" == context.getRequiredProperty("pm.db.user", String)
+        "postgres-user" == context.getRequiredProperty("pm.db.user", String).trim()
         cleanup:
         context.stop()
     }
@@ -137,7 +137,7 @@ class LocationParameterManagerConfigSpec extends Specification {
         expect:
         "second-foo-regional" == context.getRequiredProperty("custom.value", String)
         "bronze" == context.getRequiredProperty("acme.customer.tier", String)
-        "secondregionalsqluser" == context.getRequiredProperty("pm.dbuser", String)
+        "secondregionalsqluser" == context.getRequiredProperty("pm.dbuser", String).trim()
         cleanup:
         context.stop()
     }

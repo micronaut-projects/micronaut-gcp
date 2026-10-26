@@ -181,6 +181,8 @@ gcp:
 
 A name without a version, such as `DB_PASSWORD`, loads the `latest` version. A trailing slash, such as `DB_PASSWORD/`, is an error.
 
+The value is used exactly as stored: embedded newlines and surrounding whitespace are kept. A trailing newline added when the value was stored, for example with `echo`, becomes part of the value, so store secrets without one.
+
 Keys are exposed in the environment under a `pm.` prefix, converted to dotted-lowercase form:
 
 |===

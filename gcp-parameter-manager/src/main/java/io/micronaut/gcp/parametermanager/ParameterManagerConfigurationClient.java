@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.EnvironmentPropertySource;
 import io.micronaut.context.env.PropertySource;
-import io.micronaut.context.env.PropertySourceLoader;
 import io.micronaut.context.env.PropertySourceReader;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.StringUtils;
@@ -57,7 +56,6 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
     private static final String DESCRIPTION = "GCP Parameter Manager Config Client";
     private static final String LATEST = "latest";
     private static final String PROPERTY_SOURCE_SUFFIX = " (GCP ParameterManager)";
-    private static List<PropertySourceLoader> readers;
     private final ParameterManagerAccessClient parameterManagerAccessClient;
     private final ParameterManagerConfigurationProperties parameterManagerConfigurationProperties;
 
@@ -95,8 +93,8 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
      */
     @Override
     public Publisher<PropertySource> getPropertySources(Environment environment) {
-        readers = environment.getPropertySourceLoaders().stream().toList();
-        return Flux.concat(resolveParameterConfigs(), resolveParameterKeys());
+        List<PropertySourceReader> readers = List.copyOf(environment.getPropertySourceLoaders());
+        return Flux.concat(resolveParameterConfigs(readers), resolveParameterKeys());
     }
 
     /**
@@ -105,12 +103,12 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
      *
      * @return Flux of property sources.
      */
-    private Publisher<PropertySource> resolveParameterConfigs() {
+    private Publisher<PropertySource> resolveParameterConfigs(List<PropertySourceReader> readers) {
         return Flux.fromIterable(configCandidates().entrySet()).flatMap(env -> {
             ParsedParameter parsedParameter = parseNameAndVersion(env.getValue());
             return Mono.from(parameterManagerAccessClient.getRenderedParameter(parsedParameter.name,
                     parsedParameter.version))
-                .mapNotNull(parameter -> fromParameter(parameter, env.getKey()));
+                .mapNotNull(parameter -> fromParameter(parameter, env.getKey(), readers));
         });
     }
 
@@ -130,14 +128,32 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
                 ParsedParameter parsedParameter = parseNameAndVersion(parameter);
                 return parameterManagerAccessClient.getRenderedParameter(parsedParameter.name,
                     parsedParameter.version);
-            }).filter(Objects::nonNull).collectMap(versionedParameter -> "pm." +
-                    versionedParameter.getName().replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE)
-                        .toUpperCase(),
-                versionedParameter -> (Object) new String(versionedParameter.getContents(),
-                    StandardCharsets.UTF_8).replaceAll("\\n", "").trim()).map(
+            }).filter(Objects::nonNull).collectMap(versionedParameter -> keyPropertyName(versionedParameter.getName()),
+                versionedParameter -> (Object) keyPropertyValue(versionedParameter)).map(
                 m -> PropertySource.of("parameter-manager-keys", m,
                     PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE,
                     PropertySource.Origin.of("GCP Parameter Manager")));
+    }
+
+    /**
+     * Converts a parameter name into the property name used for a key: {@code DB_PASSWORD} and
+     * {@code dbPassword} both become {@code pm.DB_PASSWORD}.
+     *
+     * @param parameterName - The Parameter Manager parameter name.
+     * @return The property name.
+     */
+    static String keyPropertyName(String parameterName) {
+        return "pm." + parameterName.replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase();
+    }
+
+    /**
+     * Returns the value of a key exactly as stored. Newlines and surrounding whitespace are kept.
+     *
+     * @param parameter - The rendered parameter.
+     * @return The decoded value.
+     */
+    static String keyPropertyValue(VersionedParameter parameter) {
+        return new String(parameter.getContents(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -164,9 +180,12 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
      * @param parameter - The {@link VersionedParameter} fetched from GCP Parameter Manager to be
      *                  parsed.
      * @param priority  - The priority to assign to the resulting {@link PropertySource}
+     * @param readers   - The readers captured from the environment of the load that requested
+     *                  this parameter.
      * @return Mapped PropertySource.
      */
-    private PropertySource fromParameter(VersionedParameter parameter, int priority) {
+    private PropertySource fromParameter(VersionedParameter parameter, int priority,
+                                         List<PropertySourceReader> readers) {
         Map<String, Object> data = new HashMap<>();
 
         for (PropertySourceReader reader : readers) {
