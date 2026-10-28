@@ -35,6 +35,7 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -143,7 +144,7 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
      * @return The property name.
      */
     static String keyPropertyName(String parameterName) {
-        return "pm." + parameterName.replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase();
+        return "pm." + parameterName.replaceAll(CAMEL_CASE_REGEX, CAMEL_CASE_REPLACE).toUpperCase(Locale.ROOT);
     }
 
     /**

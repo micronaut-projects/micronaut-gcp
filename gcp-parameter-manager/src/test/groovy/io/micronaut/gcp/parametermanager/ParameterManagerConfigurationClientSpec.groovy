@@ -15,7 +15,9 @@
  */
 package io.micronaut.gcp.parametermanager
 
+import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
+import io.micronaut.context.env.PropertySource
 import io.micronaut.context.env.PropertySourceLoader
 import io.micronaut.gcp.parametermanager.client.ParameterManagerAccessClient
 import io.micronaut.gcp.parametermanager.client.VersionedParameter
@@ -98,5 +100,29 @@ class ParameterManagerConfigurationClientSpec extends Specification {
         'DB_PASSWORD' | 'secret'
         'dbPassword'  | 'line one\nline two\n'
         'DB_PASSWORD' | ' padded '
+    }
+
+    void "key property lookup does not depend on the JVM default locale"() {
+        given:
+        Locale original = Locale.getDefault()
+
+        when:
+        Locale.setDefault(Locale.forLanguageTag('tr-TR'))
+        String property
+        Optional<String> looked
+        ApplicationContext context
+        try {
+            property = ParameterManagerConfigurationClient.keyPropertyName('apiKey')
+            context = ApplicationContext.run()
+            context.environment.addPropertySource(PropertySource.of('keys', [(property): 'secret'], PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE))
+            looked = context.environment.getProperty('pm.api.key', String)
+        } finally {
+            Locale.setDefault(original)
+            context?.close()
+        }
+
+        then:
+        property == 'pm.API_KEY'
+        looked.orElse(null) == 'secret'
     }
 }
