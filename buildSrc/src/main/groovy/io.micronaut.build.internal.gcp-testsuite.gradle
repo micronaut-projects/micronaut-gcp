@@ -10,6 +10,7 @@ dependencies {
     annotationProcessor(mn.micronaut.inject.java)
 
     compileOnly(projects.micronautGcpFunctionHttp)
+    compileOnly(projects.micronautGcpFunctionCloudevents)
     implementation(projects.micronautGcpPubsub)
     implementation(projects.micronautGcpSecretManager)
     implementation(mn.reactor)

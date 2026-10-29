@@ -62,13 +62,19 @@ class GoogleCloudFunctionHttpHandler implements HttpHandler {
     }
 
     void sendHeaders(HttpExchange exchange, HttpExchangeHttpResponse response) {
+        long contentLength = response.getHeaders().entrySet().stream()
+            .filter(entry -> HttpHeaders.CONTENT_LENGTH.equalsIgnoreCase(entry.getKey()))
+            .flatMap(entry -> entry.getValue().stream())
+            .findFirst()
+            .map(Long::parseLong)
+            .orElse(0L);
         response.getHeaders().forEach((name, values) -> {
             if (!HttpHeaders.CONTENT_LENGTH.equalsIgnoreCase(name)) {
                 exchange.getResponseHeaders().put(name, values);
             }
         });
         try {
-            exchange.sendResponseHeaders(response.getStatus(), 0);
+            exchange.sendResponseHeaders(response.getStatus(), contentLength);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }

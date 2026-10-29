@@ -1,6 +1,9 @@
 Pub/Sub support in micronaut follows the same pattern used for other types of clients such as the HTTP Client.
 By annotating an interface with ann:gcp.pubsub.annotation.PubSubClient[] the framework will create an implementation bean that handles communication with Pub/Sub for you.
 
+[.lang-python]
+NOTE: In Python the client is an abstract class (`ABC`) whose `@Topic` methods are abstract with `...` bodies; since Python has no method overloading, each message type gets its own method name.
+
 == Topics
 
 In order to publish messages to Pub/Sub you need a method annotated with a `@Topic` annotation.
