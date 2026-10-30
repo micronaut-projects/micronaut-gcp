@@ -11,6 +11,14 @@ allprojects {
             preferProjectModules()
             // Remove once the Micronaut core BOM manages Netty 4.2.13.Final or newer.
             force "io.netty:netty-codec-http:${libs.versions.netty.get()}"
+            // GHSA-prj3-ccx8-p6x4: remove once google-cloud-parametermanager's own dependency graph pulls grpc-netty-shaded 1.75.0+.
+            force "io.grpc:grpc-netty-shaded:1.75.0"
+            // GHSA-jhq6-gfmj-v8fx, GHSA-p47f-322f-whfh: remove once the Micronaut core BOM manages logback-core 1.5.34 or newer.
+            force "ch.qos.logback:logback-core:1.5.34"
+            // GHSA-xxph-c9ww-hj94: remove once the Google Cloud client libraries pull guava 33.7.2 or newer.
+            force "com.google.guava:guava:33.7.2-jre"
+            // GHSA-ccrj-gw8r-854m: remove once the Micronaut tracing dependencies pull opentelemetry-api 1.67.0 or newer.
+            force "io.opentelemetry:opentelemetry-api:1.67.0"
         }
     }
 }
