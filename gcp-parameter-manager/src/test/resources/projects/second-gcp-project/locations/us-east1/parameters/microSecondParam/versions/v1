@@ -1,0 +1,5 @@
+custom:
+  value: second-foo-regional
+acme:
+  customer:
+    tier: bronze

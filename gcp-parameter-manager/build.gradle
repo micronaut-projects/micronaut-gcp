@@ -1,0 +1,26 @@
+plugins {
+    id("io.micronaut.build.internal.gcp-module")
+}
+
+dependencies {
+    api(mn.micronaut.messaging)
+    api(projects.micronautGcpCommon)
+    api(libs.managed.google.cloud.parametermanager)
+
+    implementation(libs.micronaut.discovery.client)
+    implementation(mn.reactor)
+    implementation(mn.snakeyaml)
+
+    testImplementation(mn.snakeyaml)
+    testImplementation(testFixtures(project(":micronaut-gcp-common")))
+
+    // Declared directly (not as constraints): Maven consumers ignore dependencyManagement from transitive
+    // POMs, so only direct declarations make them resolve the advisory-fixed versions. The gRPC version
+    // matches the one the Micronaut gRPC BOM aligns on, so consumers are not downgraded.
+    api("com.google.guava:guava:33.7.2-jre") { because("GHSA-xxph-c9ww-hj94") }
+    runtimeOnly("io.grpc:grpc-netty-shaded:1.82.2") { because("GHSA-prj3-ccx8-p6x4") }
+}
+
+micronautBuild {
+    binaryCompatibility.enabledAfter("6.3.0")
+}
