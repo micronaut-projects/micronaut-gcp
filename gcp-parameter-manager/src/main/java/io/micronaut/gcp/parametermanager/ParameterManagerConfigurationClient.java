@@ -44,7 +44,7 @@ import java.util.Objects;
  * from Google Cloud Parameter Manager.
  *
  * @author Dhaval Bhensdadiya
- * @since 6.0.0
+ * @since 6.3.0
  */
 @Singleton
 @BootstrapContextCompatible

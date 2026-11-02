@@ -25,7 +25,7 @@ import org.reactivestreams.Publisher;
  * transform it on reactive extensions.
  *
  * @author Dhaval Bhensdadiya
- * @since 6.0.0
+ * @since 6.3.0
  */
 public interface ParameterManagerAccessClient {
 

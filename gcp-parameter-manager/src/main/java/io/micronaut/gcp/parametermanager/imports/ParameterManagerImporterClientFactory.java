@@ -25,7 +25,7 @@ import io.micronaut.gcp.parametermanager.configuration.ParameterManagerConfigura
 /**
  * Internal client factory seam for Google Cloud Parameter Manager config imports.
  *
- * @since 6.1.0
+ * @since 6.3.0
  */
 @Internal
 public final class ParameterManagerImporterClientFactory {

@@ -28,7 +28,7 @@ import java.util.Set;
  * Configuration for ParameterManager clients and config client integration.
  *
  * @author Dhaval Bhensdadiya
- * @since 6.0.0
+ * @since 6.3.0
  */
 @ConfigurationProperties(ParameterManagerConfigurationProperties.PREFIX)
 @BootstrapContextCompatible

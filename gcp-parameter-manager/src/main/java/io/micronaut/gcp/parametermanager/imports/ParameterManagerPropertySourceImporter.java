@@ -52,7 +52,7 @@ import java.util.Optional;
 /**
  * Property source importer for Google Cloud Parameter Manager.
  *
- * @since 6.1.0
+ * @since 6.3.0
  */
 @Internal
 public final class ParameterManagerPropertySourceImporter extends RetryablePropertySourceImporter<ParameterManagerImportDeclaration> {

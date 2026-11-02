@@ -21,7 +21,7 @@ package io.micronaut.gcp.parametermanager.client;
  * and {@link com.google.cloud.parametermanager.v1.ParameterVersion} with parameter information.
  *
  * @author Dhaval Bhensdadiya
- * @since 6.0.0
+ * @since 6.3.0
  */
 public class VersionedParameter {
 

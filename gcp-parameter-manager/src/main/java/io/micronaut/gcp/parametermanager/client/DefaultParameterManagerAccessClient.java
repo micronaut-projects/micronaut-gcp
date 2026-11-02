@@ -43,7 +43,7 @@ import java.util.concurrent.Executors;
  * Default implementation of {@link ParameterManagerAccessClient}.
  *
  * @author Dhaval Bhensdadiya
- * @since 6.0.0
+ * @since 6.3.0
  */
 @Singleton
 @BootstrapContextCompatible

@@ -39,7 +39,7 @@ import java.io.IOException;
  * Factory to create ParameterManager clients.
  *
  * @author Dhaval Bhensdadiya
- * @since 6.0.0
+ * @since 6.3.0
  */
 @Factory
 @Requires(classes = {ParameterManagerClient.class})

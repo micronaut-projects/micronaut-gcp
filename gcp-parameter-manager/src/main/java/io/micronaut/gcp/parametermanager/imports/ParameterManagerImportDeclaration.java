@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * @param projectId Optional project id override
  * @param location Optional regional parameter location
  * @param version The parameter version to import. Defaults to {@code latest} when not specified
- * @since 6.1.0
+ * @since 6.3.0
  */
 @Internal
 record ParameterManagerImportDeclaration(String path,

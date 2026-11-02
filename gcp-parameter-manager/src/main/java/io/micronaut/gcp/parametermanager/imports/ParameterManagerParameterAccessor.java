@@ -27,7 +27,7 @@ import io.micronaut.gcp.parametermanager.configuration.ParameterManagerConfigura
 /**
  * Helper methods for building Parameter Manager render requests and mapping responses.
  *
- * @since 6.1.0
+ * @since 6.3.0
  */
 @Internal
 public final class ParameterManagerParameterAccessor {
