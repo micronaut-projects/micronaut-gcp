@@ -37,6 +37,7 @@ pubsub:
   executors: Configuring Thread pools
   emulator: Using Google Cloud Pub/Sub emulator
   pushTesting: Testing Push Subscribers
+  pubsubDevMode: Development mode
 secretManager:
   title: Google Cloud Secret Manager Support
   distributedConfiguration: Distributed Configuration

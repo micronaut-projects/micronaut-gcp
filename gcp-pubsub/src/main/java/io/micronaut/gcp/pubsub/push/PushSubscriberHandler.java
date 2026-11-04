@@ -49,4 +49,15 @@ public interface PushSubscriberHandler {
      * @param receiver the message receiver to bind to the subscription
      */
     void addSubscriber(@NonNull ProjectSubscriptionName projectSubscriptionName, @NonNull MessageReceiver receiver);
+
+    /**
+     * Removes the {@link MessageReceiver} bound to the given subscription, if any, so that a receiver can be bound to it
+     * again. The default implementation does nothing.
+     *
+     * @param projectSubscriptionName the subscription name
+     * @since 6.3.0
+     */
+    default void removeSubscriber(@NonNull ProjectSubscriptionName projectSubscriptionName) {
+        // a handler that keeps no receivers has none to remove
+    }
 }

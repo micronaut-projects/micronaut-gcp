@@ -91,4 +91,9 @@ final class PubSubConsumerAdvice extends AbstractPubSubConsumerMethodProcessor<S
             throw new PubSubListenerException("Failed to create subscriber", e);
         }
     }
+
+    @Override
+    protected void removeSubscriber(ProjectSubscriptionName projectSubscriptionName) {
+        subscriberFactory.removeSubscriber(projectSubscriptionName);
+    }
 }
