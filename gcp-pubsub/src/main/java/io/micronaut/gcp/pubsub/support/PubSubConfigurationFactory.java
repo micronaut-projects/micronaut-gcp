@@ -51,9 +51,13 @@ import java.util.concurrent.Executors;
 @Requires(classes = Publisher.class)
 public class PubSubConfigurationFactory {
 
+    /**
+     * Maximum inbound gRPC message size. Pub/Sub accepts messages of up to 10 MB while the gRPC
+     * default is 4 MB, so allow a little more than the Pub/Sub limit to leave room for metadata.
+     */
+    static final int MAX_INBOUND_MESSAGE_SIZE = 11 * 1024 * 1024;
+
     private final PubSubConfigurationProperties pubSubConfigurationProperties;
-    // A little larger than 10MB PubSub limit
-    private static final int MAX_INBOUND_MESSAGE_SIZE = 11 * 1024 * 1024;
 
     private final GoogleCloudConfiguration googleCloudConfiguration;
 
@@ -96,7 +100,10 @@ public class PubSubConfigurationFactory {
     @Requires(property = "pubsub.emulator.host")
     public TransportChannelProvider localChannelProvider(Environment environment) {
         String host = environment.getProperty("pubsub.emulator.host", String.class).get();
-        return FixedTransportChannelProvider.create(GrpcTransportChannel.create(ManagedChannelBuilder.forTarget(host).usePlaintext().build()));
+        return FixedTransportChannelProvider.create(GrpcTransportChannel.create(ManagedChannelBuilder.forTarget(host)
+            .usePlaintext()
+            .maxInboundMessageSize(MAX_INBOUND_MESSAGE_SIZE)
+            .build()));
     }
 
     /**
