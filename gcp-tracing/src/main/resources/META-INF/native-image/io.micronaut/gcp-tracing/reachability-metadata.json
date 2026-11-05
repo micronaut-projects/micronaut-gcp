@@ -1,0 +1,272 @@
+{
+  "reflection": [
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$6"
+      },
+      "type": "java.nio.Bits",
+      "fields": [
+        {
+          "name": "UNALIGNED"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$4"
+      },
+      "type": "java.nio.Buffer",
+      "fields": [
+        {
+          "name": "address"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0"
+      },
+      "type": "java.nio.ByteBuffer",
+      "methods": [
+        {
+          "name": "alignedSlice",
+          "parameterTypes": [
+            "int"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$9"
+      },
+      "type": "java.nio.ByteBuffer"
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0"
+      },
+      "type": "java.nio.DirectByteBuffer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "int"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "long"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$5"
+      },
+      "type": "java.nio.DirectByteBuffer"
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$7"
+      },
+      "type": "jdk.internal.misc.Unsafe",
+      "methods": [
+        {
+          "name": "getUnsafe",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$8"
+      },
+      "type": "jdk.internal.misc.Unsafe",
+      "methods": [
+        {
+          "name": "allocateUninitializedArray",
+          "parameterTypes": [
+            "java.lang.Class",
+            "int"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.CleanerJava9"
+      },
+      "type": "sun.misc.Unsafe",
+      "methods": [
+        {
+          "name": "invokeCleaner",
+          "parameterTypes": [
+            "java.nio.ByteBuffer"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.CleanerJava9$1"
+      },
+      "type": "sun.misc.Unsafe",
+      "methods": [
+        {
+          "name": "invokeCleaner",
+          "parameterTypes": [
+            "java.nio.ByteBuffer"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$1"
+      },
+      "type": "sun.misc.Unsafe",
+      "fields": [
+        {
+          "name": "theUnsafe"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$2"
+      },
+      "type": "sun.misc.Unsafe"
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$3"
+      },
+      "type": "sun.misc.Unsafe"
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.buffer.AbstractByteBufAllocator"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.buffer.AbstractByteBufAllocator",
+      "methods": [
+        {
+          "name": "toLeakAwareBuffer",
+          "parameterTypes": [
+            "io.grpc.netty.shaded.io.netty.buffer.ByteBuf"
+          ]
+        },
+        {
+          "name": "toLeakAwareBuffer",
+          "parameterTypes": [
+            "io.grpc.netty.shaded.io.netty.buffer.CompositeByteBuf"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.buffer.AdvancedLeakAwareByteBuf"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.buffer.AdvancedLeakAwareByteBuf",
+      "methods": [
+        {
+          "name": "touch",
+          "parameterTypes": []
+        },
+        {
+          "name": "touch",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "recordLeakNonRefCountingOperation",
+          "parameterTypes": [
+            "io.grpc.netty.shaded.io.netty.util.ResourceLeakTracker"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.ReferenceCountUtil"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.util.ReferenceCountUtil",
+      "methods": [
+        {
+          "name": "touch",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "touch",
+          "parameterTypes": [
+            "java.lang.Object",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.MpmcArrayQueueConsumerIndexField"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.MpmcArrayQueueConsumerIndexField",
+      "fields": [
+        {
+          "name": "consumerIndex"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.MpmcArrayQueueProducerIndexField"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.MpmcArrayQueueProducerIndexField",
+      "fields": [
+        {
+          "name": "producerIndex"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.unpadded.MpscUnpaddedArrayQueueConsumerIndexField"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.unpadded.MpscUnpaddedArrayQueueConsumerIndexField",
+      "fields": [
+        {
+          "name": "consumerIndex"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.unpadded.MpscUnpaddedArrayQueueProducerIndexField"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.unpadded.MpscUnpaddedArrayQueueProducerIndexField",
+      "fields": [
+        {
+          "name": "producerIndex"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "typeReached": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.unpadded.MpscUnpaddedArrayQueueProducerLimitField"
+      },
+      "type": "io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.unpadded.MpscUnpaddedArrayQueueProducerLimitField",
+      "fields": [
+        {
+          "name": "producerLimit"
+        }
+      ]
+    }
+  ]
+}
