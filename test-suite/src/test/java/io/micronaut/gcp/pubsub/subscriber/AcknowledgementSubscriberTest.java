@@ -71,7 +71,9 @@ class AcknowledgementSubscriberTest implements TestPropertyProvider {
         verify(subscriber, timeout(5000)).onMessage(animalArg.capture(), ackArg.capture());
         Assertions.assertEquals("dog", animalArg.getValue().getName());
         Assertions.assertInstanceOf(DefaultPubSubAcknowledgement.class, ackArg.getValue());
-        Assertions.assertTrue(((DefaultPubSubAcknowledgement)ackArg.getValue()).isClientAck());
+        DefaultPubSubAcknowledgement ack = (DefaultPubSubAcknowledgement) ackArg.getValue();
+        // onMessage is recorded when it is called; ack() runs after the processor returns
+        await().atMost(Duration.ofSeconds(3)).until(ack::isClientAck);
     }
 
     @Test
@@ -87,7 +89,9 @@ class AcknowledgementSubscriberTest implements TestPropertyProvider {
         verify(subscriber, timeout(5000).times(2)).onMessage(animalArg.capture(), ackArg.capture());
         Assertions.assertEquals("cat", animalArg.getValue().getName());
         Assertions.assertInstanceOf(DefaultPubSubAcknowledgement.class, ackArg.getValue());
-        Assertions.assertTrue(((DefaultPubSubAcknowledgement)ackArg.getValue()).isClientAck());
+        DefaultPubSubAcknowledgement ack = (DefaultPubSubAcknowledgement) ackArg.getValue();
+        // onMessage is recorded when it is called; ack() runs after the processor returns
+        await().atMost(Duration.ofSeconds(3)).until(ack::isClientAck);
     }
 
     @Test
