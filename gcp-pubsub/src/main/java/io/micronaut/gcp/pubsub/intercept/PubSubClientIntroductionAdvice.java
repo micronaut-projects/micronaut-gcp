@@ -135,7 +135,8 @@ public class PubSubClientIntroductionAdvice implements MethodInterceptor<Object,
             Argument[] arguments = context.getArguments();
             for (Argument arg : arguments) {
                 AnnotationValue<MessageHeader> headerAnn = arg.getAnnotation(MessageHeader.class);
-                if (headerAnn != null) {
+                // A null header value means the header is not set: omit it rather than sending the string "null"
+                if (headerAnn != null && parameterValues.get(arg.getName()) != null) {
                     Map.Entry<String, String> entry = getNameAndValue(arg, headerAnn, parameterValues);
                     messageAttributes.put(entry.getKey(), entry.getValue());
                 }
