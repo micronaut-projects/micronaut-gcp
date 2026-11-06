@@ -113,16 +113,8 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
             Iterator<Map.Entry<ProjectSubscriptionName, Subscriber>> it = subscribers.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<ProjectSubscriptionName, Subscriber> entry = it.next();
-                SubscriberInterface subscriber = entry.getValue();
                 try {
-                    if (subscriber.isRunning()) {
-                        subscriber.stopAsync().awaitTerminated();
-                    } else {
-                        logger.warn("Subscriber for {} was terminated early.", entry.getKey());
-                        if (subscriber.state() == ApiService.State.FAILED && logger.isTraceEnabled()) {
-                            logger.trace("Subscriber {} failed due to ", entry.getKey(), subscriber.failureCause());
-                        }
-                    }
+                    stopSubscriber(entry.getKey(), entry.getValue());
                 } catch (Exception e) {
                     logger.error("Failed stopping subscriber for " + entry.getKey(), e);
                 } finally {
@@ -130,6 +122,17 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
                     logger.debug("Subscriber for {} was shut down successfully.", entry.getKey());
                 }
             }
+        }
+    }
+
+    private void stopSubscriber(ProjectSubscriptionName subscriptionName, SubscriberInterface subscriber) {
+        if (subscriber.isRunning()) {
+            subscriber.stopAsync().awaitTerminated();
+            return;
+        }
+        logger.warn("Subscriber for {} was terminated early.", subscriptionName);
+        if (subscriber.state() == ApiService.State.FAILED && logger.isTraceEnabled()) {
+            logger.trace("Subscriber {} failed due to ", subscriptionName, subscriber.failureCause());
         }
     }
 
