@@ -104,10 +104,10 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
                 if (queryMetadataServer()) {
                     return true;
                 }
-            } catch (UnknownHostException e) {
+            } catch (UnknownHostException _) {
                 // the metadata host only resolves on Google Cloud: not Google, no point retrying
                 return false;
-            } catch (IOException e) {
+            } catch (IOException _) {
                 // the server may not be reachable yet, for example while a service mesh sidecar starts
             }
             if (attempt < maxAttempts && !sleep()) {
@@ -135,7 +135,7 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
         try {
             Thread.sleep(retryDelay);
             return true;
-        } catch (InterruptedException e) {
+        } catch (InterruptedException _) {
             Thread.currentThread().interrupt();
             return false;
         }
