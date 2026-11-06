@@ -105,7 +105,7 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
 
     @PreDestroy
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (!shutdown.compareAndSet(false, true)) {
             return;
         }
@@ -138,11 +138,7 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
 
     @Override
     public CompletionStage<?> shutdownGracefully() {
-        try {
-            close();
-        } catch (Exception e) {
-            logger.error("Failed stopping subscribers during graceful shutdown", e);
-        }
+        close();
         return CompletableFuture.completedFuture(null);
     }
 
