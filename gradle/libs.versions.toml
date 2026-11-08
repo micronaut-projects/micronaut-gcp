@@ -1,13 +1,13 @@
 [versions]
-micronaut = "5.2.20"
-managed-google-auth-library-oauth2http = "1.54.0"
+micronaut = "5.2.22"
+managed-google-auth-library-oauth2http = "1.57.0"
 managed-google-functions-framework-api = "2.0.2"
 managed-google-function-invoker = "2.0.2"
-managed-google-cloud-core = "2.77.0"
-managed-google-cloud-pubsub = "1.157.0"
-managed-google-cloud-secretmanager = "2.99.0"
+managed-google-cloud-core = "2.80.0"
+managed-google-cloud-pubsub = "1.160.0"
+managed-google-cloud-secretmanager = "2.102.0"
 managed-google-cloudevent-types="0.17.1"
-managed-gax = "2.87.0"
+managed-gax = "2.90.0"
 
 brave-opentracing = "1.0.1"
 brave-propagation-stackdriver = "2.3.1"
@@ -15,7 +15,7 @@ brave-propagation-stackdriver = "2.3.1"
 cloudevents-api = "4.1.1"
 
 logback-json-classic = "0.1.5"
-netty = "4.2.19.Final"
+netty = "4.2.20.Final"
 zipkin-sender-stackdriver = "2.3.1"
 system-stubs-core = "2.1.8"
 
