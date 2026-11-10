@@ -93,6 +93,31 @@ public class DefaultSubscriberFactory implements SubscriberFactory, AutoCloseabl
         return subscriber;
     }
 
+    /**
+     * Stops the subscriber of a subscription and forgets it, waiting until it has terminated: the messages it received
+     * are processed, or nacked when {@code gcp.pubsub.nack-on-shutdown} is set, before it returns.
+     *
+     * @param subscriptionName The subscription
+     * @since 6.3.0
+     */
+    @Override
+    public void removeSubscriber(ProjectSubscriptionName subscriptionName) {
+        Subscriber subscriber = subscribers.remove(subscriptionName);
+        if (subscriber == null) {
+            return;
+        }
+        try {
+            // one still starting is stopped too: it would otherwise become active alongside its replacement
+            ApiService.State state = subscriber.state();
+            if (state != ApiService.State.TERMINATED && state != ApiService.State.FAILED) {
+                subscriber.stopAsync().awaitTerminated();
+            }
+        } catch (Exception e) {
+            logger.error("Failed stopping subscriber for " + subscriptionName, e);
+        }
+        logger.debug("Subscriber for {} was removed.", subscriptionName);
+    }
+
     @PreDestroy
     @Override
     public void close() throws Exception {
