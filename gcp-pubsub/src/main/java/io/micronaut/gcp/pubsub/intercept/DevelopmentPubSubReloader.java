@@ -43,7 +43,6 @@ import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDes;
 import io.micronaut.gcp.pubsub.serdes.PubSubMessageSerDesRegistry;
 import io.micronaut.gcp.pubsub.support.PubSubConfigurationFactory;
 import io.micronaut.inject.BeanDefinition;
-import io.micronaut.inject.BeanDefinitionReference;
 import io.micronaut.inject.BeanType;
 import io.micronaut.inject.ExecutableMethod;
 import org.slf4j.Logger;
@@ -203,10 +202,20 @@ final class DevelopmentPubSubReloader implements BeanPreDestroyEventListener<Obj
         for (ClassChange classChange : change.changes()) {
             String className = classChange.className();
             Class<?> type = load(className, change.newLoader());
-            if (isListener(type) || wasCompiledWith(className, LISTENER_STEREOTYPES)) {
+            if (isListener(type)) {
                 listeners.add(className);
             }
-            if (isRegisteredOrClient(type) || wasCompiledWith(className, CLIENTS) || wasRegistered(className)) {
+            if (isRegisteredOrClient(type)) {
+                registries = true;
+            }
+        }
+        // what the beans were as the context was compiled: a change applied in place leaves the definitions as they were
+        for (BeanDefinition<?> definition : changedDefinitions(change)) {
+            String beanType = definition.getBeanType().getName();
+            if (declares(definition, LISTENER_STEREOTYPES) && !listeners.contains(beanType)) {
+                listeners.add(beanType);
+            }
+            if (isRegisteredBean(definition) || declares(definition, CLIENTS)) {
                 registries = true;
             }
         }
@@ -276,78 +285,49 @@ final class DevelopmentPubSubReloader implements BeanPreDestroyEventListener<Obj
     }
 
     /**
-     * Whether the class a change replaces carried one of the stereotypes as the context was compiled: a bean
-     * definition of it, or of its proxy, has it on the class or an executable method. The references are matched by
-     * name, so that only the definitions of that class are loaded, and nothing of a previous class is kept.
+     * The definitions of the context built from a class of a change applied in place: its bean type or a superclass
+     * of it, the factory that declares it, or the class its advice intercepts, as the event tells.
      *
-     * @param className The changed class
-     * @param stereotypes The stereotypes
-     * @return Whether one was there
+     * @param change The change
+     * @return The definitions
      */
-    private boolean wasCompiledWith(String className, List<Class<? extends Annotation>> stereotypes) {
-        for (BeanDefinitionReference<?> reference : definitionsOf(className)) {
-            try {
-                if (hasStereotype(reference.getAnnotationMetadata(), stereotypes)) {
-                    return true;
-                }
-                BeanDefinition<?> definition = reference.load();
-                if (definition == null) {
-                    continue;
-                }
-                for (ExecutableMethod<?, ?> method : definition.getExecutableMethods()) {
-                    if (hasStereotype(method.getAnnotationMetadata(), stereotypes)) {
-                        return true;
-                    }
-                }
-            } catch (RuntimeException | LinkageError e) {
-                // a definition of that name that no longer loads: what it was is unknown, so it counts
-                return true;
+    private List<BeanDefinition<?>> changedDefinitions(ClassChangeEvent change) {
+        List<BeanDefinition<?>> changed = new ArrayList<>();
+        for (BeanDefinition<?> definition : beanContext.getAllBeanDefinitions()) {
+            if (change.affectsDefinition(definition)) {
+                changed.add(definition);
             }
         }
-        return false;
+        return changed;
+    }
+
+    /**
+     * Whether a definition carries one of the stereotypes, on the class or an executable method.
+     *
+     * @param definition The definition
+     * @param stereotypes The stereotypes
+     * @return Whether one is there
+     */
+    private static boolean declares(BeanDefinition<?> definition, List<Class<? extends Annotation>> stereotypes) {
+        try {
+            if (hasStereotype(definition.getAnnotationMetadata(), stereotypes)) {
+                return true;
+            }
+            for (ExecutableMethod<?, ?> method : definition.getExecutableMethods()) {
+                if (hasStereotype(method.getAnnotationMetadata(), stereotypes)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (RuntimeException | LinkageError e) {
+            // a method that no longer resolves: what it was is unknown, so it counts
+            return true;
+        }
     }
 
     private static boolean hasStereotype(AnnotationMetadata metadata, List<Class<? extends Annotation>> stereotypes) {
         for (Class<? extends Annotation> stereotype : stereotypes) {
             if (metadata.hasStereotype(stereotype)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Whether the class a change replaces was a serializer, a binder, a registry or a client bean as the context was
-     * compiled, or a factory that produced one: a product of a factory is defined by {@code $Factory$...$Definition},
-     * whose bean type is the product and whose declaring type is the factory.
-     */
-    private boolean wasRegistered(String className) {
-        for (BeanDefinitionReference<?> reference : definitionsOf(className)) {
-            try {
-                if (isRegisteredBean(reference)) {
-                    return true;
-                }
-            } catch (RuntimeException | LinkageError e) {
-                return true;
-            }
-        }
-        int lastDot = className.lastIndexOf('.');
-        String products = className.substring(0, lastDot + 1) + '$' + className.substring(lastDot + 1) + '$';
-        for (BeanDefinitionReference<?> reference : beanContext.getBeanDefinitionReferences()) {
-            String name = reference.getBeanDefinitionName();
-            if (!name.startsWith(products) || !name.endsWith("$Definition")) {
-                continue;
-            }
-            try {
-                if (!isRegisteredBean(reference)) {
-                    continue;
-                }
-                // the name alone matches a nested class too: the declaring type tells the product of this factory
-                BeanDefinition<?> definition = reference.load();
-                if (definition == null || definition.getDeclaringType().map(Class::getName).filter(className::equals).isPresent()) {
-                    return true;
-                }
-            } catch (RuntimeException | LinkageError e) {
                 return true;
             }
         }
@@ -365,21 +345,6 @@ final class DevelopmentPubSubReloader implements BeanPreDestroyEventListener<Obj
             }
         }
         return hasStereotype(candidate.getAnnotationMetadata(), CLIENTS);
-    }
-
-    private List<BeanDefinitionReference<?>> definitionsOf(String className) {
-        int lastDot = className.lastIndexOf('.');
-        // $Name$Definition, the definitions of its proxies and, for an introduced interface, $Name$Intercepted$Definition
-        String prefix = className.substring(0, lastDot + 1) + '$' + className.substring(lastDot + 1);
-        String definition = prefix + "$Definition";
-        List<BeanDefinitionReference<?>> references = new ArrayList<>();
-        for (BeanDefinitionReference<?> reference : beanContext.getBeanDefinitionReferences()) {
-            String name = reference.getBeanDefinitionName();
-            if (name.equals(definition) || name.startsWith(definition + '$') || name.startsWith(prefix + "$Intercepted$Definition")) {
-                references.add(reference);
-            }
-        }
-        return references;
     }
 
     /**
