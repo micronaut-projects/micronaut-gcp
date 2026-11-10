@@ -18,6 +18,7 @@ package io.micronaut.gcp.pubsub.push;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import org.jspecify.annotations.NonNull;
+import io.micronaut.core.annotation.Experimental;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.MutableHttpResponse;
 
@@ -52,11 +53,13 @@ public interface PushSubscriberHandler {
 
     /**
      * Removes the {@link MessageReceiver} bound to the given subscription, if any, so that a receiver can be bound to it
-     * again. The default implementation does nothing.
+     * again. The default implementation does nothing. Development mode calls it to restart the subscribers; it may
+     * change or go in a later release.
      *
      * @param projectSubscriptionName the subscription name
      * @since 6.3.0
      */
+    @Experimental
     default void removeSubscriber(@NonNull ProjectSubscriptionName projectSubscriptionName) {
         // a handler that keeps no receivers has none to remove
     }

@@ -17,6 +17,7 @@ package io.micronaut.gcp.pubsub.bind;
 
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.pubsub.v1.ProjectSubscriptionName;
+import io.micronaut.core.annotation.Experimental;
 
 /**
  * Factory to create {@link SubscriberInterface} using default configurations.
@@ -35,11 +36,13 @@ public interface SubscriberFactory {
 
     /**
      * Stops the subscriber created for a subscription, if any, and forgets it, so that a subscriber can be created for
-     * the subscription again. The default implementation does nothing.
+     * the subscription again. The default implementation does nothing. Development mode calls it to restart the
+     * subscribers; it may change or go in a later release.
      *
      * @param subscriptionName The subscription
      * @since 6.3.0
      */
+    @Experimental
     default void removeSubscriber(ProjectSubscriptionName subscriptionName) {
         // a factory that keeps no subscribers has none to remove
     }
