@@ -54,5 +54,8 @@ class GoogleBinderRegistry extends DefaultRequestBinderRegistry {
         addArgumentBinder(new GoogleRequestBinder());
         addArgumentBinder(new GoogleResponseBinder());
         addArgumentBinder(new GooglePartBinder<>(messageBodyHandlerRegistry, conversionService));
+        addArgumentBinder(new GoogleCompletedFileUploadBinder());
+        addArgumentBinder(new GoogleStreamingFileUploadBinder());
+        addArgumentBinder(new GoogleBodyAnnotationBinder<>(defaultBodyAnnotationBinder));
     }
 }
