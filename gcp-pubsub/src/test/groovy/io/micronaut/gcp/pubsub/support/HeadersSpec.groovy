@@ -9,6 +9,7 @@ import io.micronaut.gcp.pubsub.annotation.PubSubClient
 import io.micronaut.gcp.pubsub.annotation.Topic
 import io.micronaut.json.JsonMapper
 import io.micronaut.messaging.annotation.MessageHeader
+import org.jspecify.annotations.Nullable
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 
@@ -69,6 +70,17 @@ class HeadersSpec extends AbstractPublisherSpec {
             pubsubMessage.getAttributesMap().get("dynamic") == "foo"
     }
 
+    void "a null dynamic header value is omitted instead of sent as the string null"() {
+        Person person = new Person()
+        person.name = "alf"
+        when:
+            // a method of its own: publishers are cached per method, and a mock from another feature no longer answers
+            clientWithoutHeaders.sendWithNullableHeaderValue(person, null)
+        then:
+            def pubsubMessage = (PubsubMessage)DataHolder.getInstance().getData()
+            !pubsubMessage.getAttributesMap().containsKey("dynamic")
+            pubsubMessage.getAttributesMap().size() == 1
+    }
 
 }
 
@@ -88,5 +100,8 @@ interface ClientWithoutHeaders {
 
     @Topic("test-topic")
     String sendWithHeadersAsFirstArg(@MessageHeader("dynamic") String value, Object data)
+
+    @Topic("test-topic")
+    String sendWithNullableHeaderValue(Object data, @MessageHeader("dynamic") @Nullable String value)
 
 }
