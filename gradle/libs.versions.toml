@@ -1,6 +1,6 @@
 [versions]
-micronaut = "5.2.22"
-managed-google-auth-library-oauth2http = "1.57.0"
+micronaut = "5.2.23"
+managed-google-auth-library-oauth2http = "1.58.0"
 managed-google-functions-framework-api = "2.0.2"
 managed-google-function-invoker = "2.0.2"
 managed-google-cloud-core = "2.80.0"
