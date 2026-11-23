@@ -33,6 +33,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -129,11 +130,42 @@ public class ParameterManagerConfigurationClient implements ConfigurationClient 
                 ParsedParameter parsedParameter = parseNameAndVersion(parameter);
                 return parameterManagerAccessClient.getRenderedParameter(parsedParameter.name,
                     parsedParameter.version);
-            }).filter(Objects::nonNull).collectMap(versionedParameter -> keyPropertyName(versionedParameter.getName()),
-                versionedParameter -> (Object) keyPropertyValue(versionedParameter)).map(
+            }).filter(Objects::nonNull).collectList().map(
+                ParameterManagerConfigurationClient::keyValues).map(
                 m -> PropertySource.of("parameter-manager-keys", m,
                     PropertySource.PropertyConvention.ENVIRONMENT_VARIABLE,
                     PropertySource.Origin.of("GCP Parameter Manager")));
+    }
+
+    /**
+     * Builds the key/value map. Results arrive in RPC completion order, so they are sorted first: a conflict is then
+     * reported identically on every startup, and no value is picked by timing. Two different references that map to
+     * the same property name are rejected.
+     *
+     * @param parameters the rendered key parameters
+     * @return the property map keyed by property name
+     * @throws ConfigurationException if two different parameter references map to the same property name
+     */
+    static Map<String, Object> keyValues(List<VersionedParameter> parameters) {
+        List<VersionedParameter> sorted = parameters.stream()
+            .sorted(Comparator.comparing(VersionedParameter::getName).thenComparing(VersionedParameter::getVersion))
+            .toList();
+        Map<String, Object> values = new HashMap<>();
+        Map<String, VersionedParameter> sources = new HashMap<>();
+        for (VersionedParameter parameter : sorted) {
+            String property = keyPropertyName(parameter.getName());
+            VersionedParameter previous = sources.putIfAbsent(property, parameter);
+            if (previous != null) {
+                if (previous.getName().equals(parameter.getName()) && previous.getVersion().equals(parameter.getVersion())) {
+                    continue;
+                }
+                throw new ConfigurationException("Parameter keys " + previous.getName() + "/" + previous.getVersion()
+                    + " and " + parameter.getName() + "/" + parameter.getVersion() + " both map to property " + property
+                    + "; use only one of them");
+            }
+            values.put(property, keyPropertyValue(parameter));
+        }
+        return values;
     }
 
     /**

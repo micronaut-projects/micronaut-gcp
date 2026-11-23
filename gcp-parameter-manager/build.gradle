@@ -1,6 +1,13 @@
+import groovy.xml.XmlSlurper
+
 plugins {
     id("io.micronaut.build.internal.gcp-module")
 }
+
+def grpcVersion = "1.83.0"
+def grpcApi = ["grpc-api", "grpc-stub", "grpc-protobuf", "grpc-context", "grpc-core", "grpc-inprocess",
+               "grpc-alts", "grpc-grpclb", "grpc-auth", "grpc-netty-shaded"]
+def grpcRuntime = ["grpc-protobuf-lite", "grpc-util", "grpc-googleapis", "grpc-xds", "grpc-services"]
 
 dependencies {
     api(mn.micronaut.messaging)
@@ -14,13 +21,51 @@ dependencies {
     testImplementation(mn.snakeyaml)
     testImplementation(testFixtures(project(":micronaut-gcp-common")))
 
-    // Declared directly (not as constraints): Maven consumers ignore dependencyManagement from transitive
-    // POMs, so only direct declarations make them resolve the advisory-fixed versions. The gRPC version
-    // matches the one the Micronaut gRPC BOM aligns on, so consumers are not downgraded.
+    // Declared directly (not as constraints): Maven consumers ignore dependencyManagement from transitive POMs, and the
+    // Google client POM pins its gRPC artifacts at 1.71.0. Maven keeps the nearest declaration, so these direct entries
+    // make the transport, core and API resolve to one consistent version for Maven as well as Gradle consumers.
+    // 1.83.0 is the version the rest of the graph already selects for grpc-api (via gax), so the artifacts stay consistent.
     api("com.google.guava:guava:33.7.2-jre") { because("GHSA-xxph-c9ww-hj94") }
-    runtimeOnly("io.grpc:grpc-netty-shaded:1.82.2") { because("GHSA-prj3-ccx8-p6x4") }
+    grpcApi.each { api("io.grpc:$it:${grpcVersion}") }
+    grpcRuntime.each { runtimeOnly("io.grpc:$it:${grpcVersion}") }
 }
 
 micronautBuild {
     binaryCompatibility.enabledAfter("6.3.0")
+}
+
+// Maven consumers resolve the POM as published, so the direct gRPC and Guava entries must be present with the pinned
+// versions. This fails the build if the generated POM drifts from the versions declared above.
+tasks.register("verifyPublishedPomVersions") {
+    dependsOn("generatePomFileForMavenPublication")
+    def pomFile = layout.buildDirectory.file("publications/maven/pom-default.xml")
+    inputs.file(pomFile)
+    doLast {
+        def pom = new XmlSlurper(false, false).parse(pomFile.get().asFile)
+        def dependencies = pom.dependencies.dependency
+        def errors = []
+        dependencies.each { dep ->
+            def group = dep.groupId.text()
+            def artifact = dep.artifactId.text()
+            def version = dep.version.text()
+            if (group == "io.grpc" && version != grpcVersion) {
+                errors << "io.grpc:$artifact:$version (expected $grpcVersion)"
+            }
+            if (group == "com.google.guava" && artifact == "guava" && version != "33.7.2-jre") {
+                errors << "com.google.guava:guava:$version (expected 33.7.2-jre)"
+            }
+        }
+        def published = dependencies.findAll { it.groupId.text() == "io.grpc" }.collect { it.artifactId.text() }
+        (grpcApi + grpcRuntime).each { if (!published.contains(it)) { errors << "io.grpc:$it missing from POM" } }
+        if (!dependencies.any { it.groupId.text() == "com.google.guava" && it.artifactId.text() == "guava" }) {
+            errors << "com.google.guava:guava missing from POM"
+        }
+        if (!errors.isEmpty()) {
+            throw new GradleException("Published POM has gRPC/Guava versions Maven consumers would not resolve consistently: " + errors.join(", "))
+        }
+    }
+}
+
+tasks.named("check") {
+    dependsOn("verifyPublishedPomVersions")
 }

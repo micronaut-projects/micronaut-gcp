@@ -145,6 +145,46 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
         declaration.declaration().version() == 'latest'
     }
 
+    void "accepts inline encoded-key in declarations without exposing it in their string form"() {
+        given:
+        PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()
+
+        when:
+        def declaration = importer.newImportDeclaration(ConvertibleValues.of([
+                provider              : 'gcp-parameter-manager',
+                path                  : 'application',
+                version               : '1',
+                'project-id'          : 'my-gcp-project',
+                'encoded-key'         : 'c2VjcmV0S2V5'
+        ]))
+
+        then:
+        declaration.declaration().encodedKey() == 'c2VjcmV0S2V5'
+        !declaration.toString().contains('c2VjcmV0S2V5')
+        declaration.toString().contains('<redacted>')
+    }
+
+    void "warns that an inline encoded-key is deprecated without echoing the key"() {
+        expect:
+        ParameterManagerPropertySourceImporter.inlineEncodedKeyWarning(null) == null
+        def warning = ParameterManagerPropertySourceImporter.inlineEncodedKeyWarning('c2VjcmV0S2V5')
+        warning.contains('inline encoded-key')
+        warning.contains('deprecated')
+        !warning.contains('c2VjcmV0S2V5')
+    }
+
+    void "accepts inline encoded-key in a scalar connection string"() {
+        given:
+        PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()
+
+        when:
+        def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-parameter-manager://application?project-id=my-gcp-project&version=1&encoded-key=c2VjcmV0S2V5'))
+
+        then:
+        declaration.declaration().encodedKey() == 'c2VjcmV0S2V5'
+        !declaration.toString().contains('c2VjcmV0S2V5')
+    }
+
     void "rejects declarations with both credentials-location and encoded-key"() {
         given:
         PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()

@@ -16,6 +16,7 @@
 package io.micronaut.gcp.parametermanager
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.context.env.Environment
 import io.micronaut.context.env.PropertySource
 import io.micronaut.context.env.PropertySourceLoader
@@ -24,6 +25,8 @@ import io.micronaut.gcp.parametermanager.client.VersionedParameter
 import io.micronaut.gcp.parametermanager.configuration.ParameterManagerConfigurationProperties
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+
+import java.time.Duration
 import spock.lang.Specification
 
 class ParameterManagerConfigurationClientSpec extends Specification {
@@ -125,4 +128,28 @@ class ParameterManagerConfigurationClientSpec extends Specification {
         property == 'pm.API_KEY'
         looked.orElse(null) == 'secret'
     }
+
+    void "conflicting key spellings fail with the same error whichever response completes first"() {
+        given:
+        def properties = new ParameterManagerConfigurationProperties()
+        properties.keys = ['DB_PASSWORD/v1', 'dbPassword/v2'] as Set
+        def access = Stub(ParameterManagerAccessClient) {
+            getRenderedParameter(_ as String, _ as String) >> { args ->
+                def delay = args[0] == slowName ? Duration.ofMillis(300) : Duration.ofMillis(10)
+                Mono.just(parameter(args[0], args[1], 'value')).delayElement(delay)
+            }
+        }
+        def client = new ParameterManagerConfigurationClient(access, properties)
+
+        when:
+        Flux.from(client.getPropertySources(environmentWith(loaderReading('unused', 'x')))).collectList().block()
+
+        then:
+        ConfigurationException e = thrown()
+        e.message == 'Parameter keys DB_PASSWORD/v1 and dbPassword/v2 both map to property pm.DB_PASSWORD; use only one of them'
+
+        where:
+        slowName << ['DB_PASSWORD', 'dbPassword']
+    }
 }
+

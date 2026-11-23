@@ -40,4 +40,22 @@ record ParameterManagerImportDeclaration(String path,
                                          @Nullable String projectId,
                                          @Nullable String location,
                                          String version) {
+
+    /**
+     * Renders the declaration without the inline {@code encodedKey}, because declarations are published in
+     * diagnostic metadata.
+     *
+     * @return A string representation that never includes the encoded key
+     */
+    @Override
+    public String toString() {
+        return "ParameterManagerImportDeclaration[path=" + path
+            + ", optional=" + optional
+            + ", format=" + format
+            + ", credentialsLocation=" + credentialsLocation
+            + ", encodedKey=" + (encodedKey == null ? null : "<redacted>")
+            + ", projectId=" + projectId
+            + ", location=" + location
+            + ", version=" + version + "]";
+    }
 }

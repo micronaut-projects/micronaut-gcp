@@ -58,6 +58,8 @@ Supported importer options are:
 
 When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <<setup, Setting up GCP>> section.
 
+NOTE: The `encoded-key` option is deprecated but still supported. Micronaut derives the public identity of a config import from its declaration, so an inline key can appear in environment metadata. Prefer `credentials-location` for the import, or set `gcp.credentials.encoded-key` globally. The importer logs a warning when it finds an inline key.
+
 == Retry options
 
 `gcp-parameter-manager` imports also support the standard retry options provided by `RetryablePropertySourceImporter`. These options work with both scalar connection-string imports and structured import declarations.
