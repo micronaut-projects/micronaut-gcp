@@ -145,12 +145,12 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
         declaration.declaration().version() == 'latest'
     }
 
-    void "accepts inline encoded-key in declarations without exposing it in their string form"() {
+    void "rejects inline encoded-key in structured declarations without echoing the key"() {
         given:
         PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()
 
         when:
-        def declaration = importer.newImportDeclaration(ConvertibleValues.of([
+        importer.newImportDeclaration(ConvertibleValues.of([
                 provider              : 'gcp-parameter-manager',
                 path                  : 'application',
                 version               : '1',
@@ -159,30 +159,60 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
         ]))
 
         then:
-        declaration.declaration().encodedKey() == 'c2VjcmV0S2V5'
-        !declaration.toString().contains('c2VjcmV0S2V5')
-        declaration.toString().contains('<redacted>')
+        IllegalArgumentException e = thrown()
+        e.message.startsWith('Inline encoded-key is not supported for gcp-parameter-manager imports')
+        !e.message.contains('c2VjcmV0S2V5')
     }
 
-    void "warns that an inline encoded-key is deprecated without echoing the key"() {
-        expect:
-        ParameterManagerPropertySourceImporter.inlineEncodedKeyWarning(null) == null
-        def warning = ParameterManagerPropertySourceImporter.inlineEncodedKeyWarning('c2VjcmV0S2V5')
-        warning.contains('inline encoded-key')
-        warning.contains('deprecated')
-        !warning.contains('c2VjcmV0S2V5')
-    }
-
-    void "accepts inline encoded-key in a scalar connection string"() {
+    void "rejects inline encoded-key in scalar connection strings"() {
         given:
         PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()
 
         when:
-        def declaration = importer.newImportDeclaration(ConnectionString.parse('gcp-parameter-manager://application?project-id=my-gcp-project&version=1&encoded-key=c2VjcmV0S2V5'))
+        importer.newImportDeclaration(ConnectionString.parse(uri))
 
         then:
-        declaration.declaration().encodedKey() == 'c2VjcmV0S2V5'
-        !declaration.toString().contains('c2VjcmV0S2V5')
+        IllegalArgumentException e = thrown()
+        e.message.startsWith('Inline encoded-key is not supported for gcp-parameter-manager imports')
+        !e.message.contains('c2VjcmV0S2V5')
+
+        where:
+        uri << [
+                'gcp-parameter-manager://application?project-id=my-gcp-project&version=1&encoded-key=c2VjcmV0S2V5'
+        ]
+    }
+
+    void "inline encoded-key in micronaut.config.import fails startup without exposing the key"() {
+        when:
+        ApplicationContext.run(['micronaut.config.import':
+            'gcp-parameter-manager://application?project-id=my-gcp-project&version=1&encoded-key=c2VjcmV0S2V5'])
+
+        then:
+        Throwable e = thrown(Exception)
+        assertRejectedWithoutKey(e)
+    }
+
+    void "inline encoded-key in a structured micronaut.config.import fails startup without exposing the key"() {
+        when:
+        ApplicationContext.builder()
+            .properties(['micronaut.config.import': [[
+                provider    : 'gcp-parameter-manager',
+                path        : 'application',
+                version     : '1',
+                'project-id': 'my-gcp-project',
+                'encoded-key': 'c2VjcmV0S2V5'
+            ]]])
+            .start()
+
+        then:
+        Throwable e = thrown(Exception)
+        assertRejectedWithoutKey(e)
+    }
+
+    void "declarations never expose a key in their string form"() {
+        expect:
+        !new ParameterManagerImportDeclaration('application', false, null, null, 'c2VjcmV0S2V5', 'p', null, '1').toString().contains('c2VjcmV0S2V5')
+        new ParameterManagerImportDeclaration('application', false, null, null, 'c2VjcmV0S2V5', 'p', null, '1').toString().contains('<redacted>')
     }
 
     void "rejects declarations with both credentials-location and encoded-key"() {
@@ -265,22 +295,6 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
         new String(result.get().contents) == 'key: value'
     }
 
-    void "per-import encoded key overrides a global credentials location"() {
-        given:
-        ApplicationContext context = ApplicationContext.run(['gcp.credentials.location': '/global/sa.json'])
-        def declaration = importDeclaration(['encoded-key': 'ZW5jb2RlZA=='])
-
-        when:
-        def resolved = ParameterManagerPropertySourceImporter.resolveDeclaration(context.environment, declaration)
-
-        then:
-        resolved.encodedKey() == 'ZW5jb2RlZA=='
-        resolved.credentialsLocation() == null
-
-        cleanup:
-        context.close()
-    }
-
     void "per-import credentials location overrides a global encoded key"() {
         given:
         ApplicationContext context = ApplicationContext.run(['gcp.credentials.encoded-key': 'Z2xvYmFs'])
@@ -328,6 +342,15 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
 
         cleanup:
         context.close()
+    }
+
+    private void assertRejectedWithoutKey(Throwable e) {
+        List<String> messages = []
+        for (Throwable t = e; t != null; t = t.cause) {
+            messages << String.valueOf(t.message)
+        }
+        assert messages.any { it.contains('Inline encoded-key is not supported') }
+        assert messages.every { !it.contains('c2VjcmV0S2V5') }
     }
 
     private static ParameterManagerImportDeclaration importDeclaration(Map values) {

@@ -24,7 +24,7 @@ When you use the scalar connection-string form, you can pass additional importer
 micronaut.config.import=gcp-parameter-manager://application?project-id=my-gcp-project&version=1&credentials-location=credentials-file-path
 ----
 
-In that form, `credentials-location` maps directly to the importer option of the same name. If you need `encoded-key`, prefer the structured import form below so the Base64 value does not need URI escaping. If neither credential option is supplied, the importer falls back to Application Default Credentials.
+In that form, `credentials-location` maps directly to the importer option of the same name. Inline `encoded-key` is not accepted in import declarations, in either the scalar or the structured form. If neither credential option is supplied, the importer falls back to the global `gcp.credentials` settings and then to Application Default Credentials.
 
 == Structured import declarations
 
@@ -52,13 +52,12 @@ Supported importer options are:
 |`format` |Explicit payload format such as `yml`, `yaml`, `json`, or `properties`
 |`location` |Regional Parameter Manager location for regional parameters
 |`credentials-location` |Path to a service account credentials file used only for this import
-|`encoded-key` |Base64 encoded service account credentials used only for this import
 |`optional` |Marks the import as optional
 |===
 
-When `credentials-location` and `encoded-key` are both absent, the importer falls back to Google Application Default Credentials, using the same resolution order described in the <<setup, Setting up GCP>> section.
+When `credentials-location` is absent, the importer falls back to the global `gcp.credentials` settings and then to Google Application Default Credentials, using the same resolution order described in the <<setup, Setting up GCP>> section.
 
-NOTE: The `encoded-key` option is deprecated but still supported. Micronaut derives the public identity of a config import from its declaration, so an inline key can appear in environment metadata. Prefer `credentials-location` for the import, or set `gcp.credentials.encoded-key` globally. The importer logs a warning when it finds an inline key.
+NOTE: Inline `encoded-key` values are rejected because Micronaut exposes import declarations in environment metadata. To supply a service account key, set `gcp.credentials.encoded-key` globally, or use `credentials-location` for a single import.
 
 == Retry options
 

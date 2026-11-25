@@ -99,8 +99,8 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         String version = resolveVersion(connectionString.getOptions().get(VERSION));
         String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
         String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
-        warnInlineEncodedKey(normalizedEncodedKey);
         validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
+        rejectInlineEncodedKey(normalizedEncodedKey);
         return new ParameterManagerImportDeclaration(
             path,
             connectionString.isOptional(),
@@ -125,8 +125,8 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         String version = resolveVersion(values.get(VERSION, String.class).orElse(null));
         String normalizedCredentialsLocation = StringUtils.isNotEmpty(credentialsLocation) ? credentialsLocation : null;
         String normalizedEncodedKey = StringUtils.isNotEmpty(encodedKey) ? encodedKey : null;
-        warnInlineEncodedKey(normalizedEncodedKey);
         validateCredentials(normalizedCredentialsLocation, normalizedEncodedKey);
+        rejectInlineEncodedKey(normalizedEncodedKey);
         return new ParameterManagerImportDeclaration(
             path,
             optional,
@@ -295,32 +295,17 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
     }
 
     /**
-     * Inline {@code encoded-key} values remain supported, but Micronaut Core derives the public identity of an import
-     * from its declaration, so the key can appear in environment metadata. Callers are warned to move the credentials
-     * to {@code credentials-location} or the global {@code gcp.credentials.encoded-key} setting.
-     */
-    private static void warnInlineEncodedKey(@Nullable String encodedKey) {
-        String message = inlineEncodedKeyWarning(encodedKey);
-        if (message != null) {
-            LOG.warn(message);
-        }
-    }
-
-    /**
-     * Returns the deprecation warning for an inline encoded key, or {@code null} when none is declared. The message never
-     * contains the key itself.
+     * Inline {@code encoded-key} is rejected in import declarations. Micronaut Core derives the public identity of a
+     * config import from its declaration, so an inline key would be exposed in environment metadata. The message never
+     * contains the key.
      *
      * @param encodedKey The inline encoded key from the declaration, or {@code null}
-     * @return The warning message, or {@code null}
      */
-    @Nullable
-    static String inlineEncodedKeyWarning(@Nullable String encodedKey) {
-        if (encodedKey == null) {
-            return null;
+    private static void rejectInlineEncodedKey(@Nullable String encodedKey) {
+        if (encodedKey != null) {
+            throw new IllegalArgumentException("Inline encoded-key is not supported for gcp-parameter-manager imports because Micronaut exposes "
+                + "import declarations in environment metadata. Use credentials-location for this import, or set gcp.credentials.encoded-key globally");
         }
-        return "gcp-parameter-manager import declares an inline encoded-key, which is deprecated. Micronaut exposes the import "
-            + "declaration in environment metadata, so the key may be visible there. Use credentials-location for this import or "
-            + "set gcp.credentials.encoded-key globally";
     }
 
     private static void validateCredentials(@Nullable String credentialsLocation, @Nullable String encodedKey) {
