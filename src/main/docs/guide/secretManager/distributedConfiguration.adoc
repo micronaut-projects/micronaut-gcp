@@ -8,7 +8,7 @@ IMPORTANT: Make sure you have configured credentials following the <<setup, Sett
 
 Store a configuration payload such as YAML, JSON, or properties in a Secret Manager secret. Secret Manager does not keep file extensions, so the importer either uses the configured `format` or defaults to YAML-style parsing for extensionless secrets.
 
-[source,yaml]
+[configuration]
 ----
 micronaut:
   config:
@@ -19,9 +19,11 @@ The importer loads the secret at startup and publishes it as a Micronaut propert
 
 When you use the scalar connection-string form, you can pass additional importer options as query parameters:
 
-[source]
+[configuration]
 ----
-micronaut.config.import=gcp-secret-manager://application?project-id=my-gcp-project&credentials-location=credentials-file-path
+micronaut:
+  config:
+    import: "gcp-secret-manager://application?project-id=my-gcp-project&credentials-location=credentials-file-path"
 ----
 
 In that form, `credentials-location` maps directly to the importer option of the same name. If you need `encoded-key`, prefer the structured import form below so the Base64 value does not need URI escaping. If neither credential option is supplied, the importer falls back to Application Default Credentials.
@@ -30,7 +32,7 @@ In that form, `credentials-location` maps directly to the importer option of the
 
 If you need to pass extra options such as credentials, project id, or regional location, use the structured import form:
 
-[source,yaml]
+[configuration]
 ----
 micronaut:
   config:
@@ -73,7 +75,7 @@ When `credentials-location` and `encoded-key` are both absent, the importer fall
 
 Example using scalar connection-string form:
 
-[source,yaml]
+[configuration]
 ----
 micronaut:
   config:
@@ -82,7 +84,7 @@ micronaut:
 
 Example using structured form:
 
-[source,yaml]
+[configuration]
 ----
 micronaut:
   config:
@@ -99,7 +101,7 @@ micronaut:
 
 To comply with data residency requirements, you can point the importer at a regional secret by setting `location` in the import declaration:
 
-[source,yaml]
+[configuration]
 ----
 micronaut:
   config:
