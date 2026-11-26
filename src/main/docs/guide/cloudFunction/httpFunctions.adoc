@@ -49,6 +49,23 @@ task('runFunction', type: JavaExec, dependsOn: classes) {
 
 With this in place you can run `./gradlew runFunction` to run the function locally.
 
+=== Multipart Uploads
+
+HTTP functions support binding multipart file parts to Micronaut's upload types.
+For completed uploads, bind the file part to api:http.multipart.CompletedFileUpload[].
+Streaming uploads are also supported with api:http.multipart.StreamingFileUpload[].
+If the parameter name does not match the multipart part name, use `@Body("...")` or `@Part("...")`.
+The lower-level Google Functions API remains available by binding `@Part` to `com.google.cloud.functions.HttpRequest.HttpPart`.
+
+snippet::example.http.MultipartUploadController[tags="imports, clazz", source="main"]
+
+You can test these endpoints locally with `curl`:
+
+[source,bash]
+----
+$ curl -i -F file=@test.txt http://localhost:8080/upload/completed
+----
+
 === Deployment
 
 When deploying the function to Cloud Function you should use the api:gcp.function.http.HttpFunction[] class as the handler reference.
@@ -86,5 +103,3 @@ $ curl -i $YOUR_HTTP_TRIGGER_URL/hello/John
 ```
 
 TIP: See the guide for https://guides.micronaut.io/latest/micronaut-google-cloud-http-function.html[Deploy an HTTP Function to Google Cloud Functions] to learn more.
-
-

@@ -30,6 +30,8 @@ import io.micronaut.http.body.MessageBodyHandlerRegistry;
 import io.micronaut.http.body.MessageBodyReader;
 import io.micronaut.http.codec.CodecException;
 import io.micronaut.http.exceptions.HttpStatusException;
+import io.micronaut.http.multipart.CompletedFileUpload;
+import io.micronaut.http.multipart.StreamingFileUpload;
 import io.micronaut.http.simple.SimpleHttpHeaders;
 
 import java.io.BufferedReader;
@@ -80,6 +82,8 @@ final class GooglePartBinder<T> implements AnnotatedRequestArgumentBinder<Part, 
                 if (HttpPart.class.isAssignableFrom(type)) {
                     //noinspection unchecked
                     return () -> (Optional<T>) Optional.of(part);
+                } else if (CompletedFileUpload.class.isAssignableFrom(type) || StreamingFileUpload.class.isAssignableFrom(type)) {
+                    return () -> GoogleMultipartSupport.bindFileUpload(argument, partName, part, googleRequest.getIoExecutor());
                 } else if (String.class.isAssignableFrom(type)) {
                     try (BufferedReader reader = part.getReader()) {
                         final String content = IOUtils.readText(reader);
