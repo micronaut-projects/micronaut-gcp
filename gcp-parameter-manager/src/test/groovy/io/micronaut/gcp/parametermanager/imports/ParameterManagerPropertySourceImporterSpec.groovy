@@ -182,6 +182,19 @@ class ParameterManagerPropertySourceImporterSpec extends Specification {
         ]
     }
 
+    void "rejects query encoded-key even when an empty URI password is present"() {
+        given:
+        PropertySourceImporter importer = new ParameterManagerPropertySourceImporter()
+
+        when:
+        importer.newImportDeclaration(ConnectionString.parse('gcp-parameter-manager://:@application?project-id=my-gcp-project&version=1&encoded-key=c2VjcmV0S2V5', ConnectionString.ParseMode.HOST))
+
+        then:
+        IllegalArgumentException e = thrown()
+        e.message.startsWith('Inline encoded-key is not supported for gcp-parameter-manager imports')
+        !e.message.contains('c2VjcmV0S2V5')
+    }
+
     void "inline encoded-key in micronaut.config.import fails startup without exposing the key"() {
         when:
         ApplicationContext.run(['micronaut.config.import':

@@ -92,6 +92,11 @@ public final class ParameterManagerPropertySourceImporter extends RetryablePrope
         }
         String path = validatePath(rawPath);
         String format = connectionString.getOptions().get(FORMAT);
+        // Check both sources before precedence: an empty URI password is present, and would otherwise hide a query key.
+        String queryEncodedKey = connectionString.getOptions().get(ENCODED_KEY);
+        String passwordEncodedKey = connectionString.getPassword().orElse(null);
+        rejectInlineEncodedKey(StringUtils.isNotEmpty(queryEncodedKey) ? queryEncodedKey : null);
+        rejectInlineEncodedKey(StringUtils.isNotEmpty(passwordEncodedKey) ? passwordEncodedKey : null);
         String encodedKey = connectionString.getPassword().orElse(connectionString.getOptions().get(ENCODED_KEY));
         String credentialsLocation = connectionString.getUsername().orElse(connectionString.getOptions().get(CREDENTIALS_LOCATION));
         String projectId = connectionString.getOptions().get(PROJECT_ID);
