@@ -1,0 +1,44 @@
+== Accessing Parameter Manager via Client Libraries
+
+=== Google Cloud Java Client
+
+If your application needs direct access to link:https://docs.cloud.google.com/java/docs/reference/google-cloud-parametermanager/latest/overview[Google Cloud Parameter Manager],
+Micronaut exposes a bean of type link:https://docs.cloud.google.com/java/docs/reference/google-cloud-parametermanager/latest/com.google.cloud.parametermanager.v1.ParameterManagerClient[ParameterManagerClient],
+which can be injected and used to interact with Parameter Manager using the official Google Cloud Java SDK.
+
+snippet::io.micronaut.gcp.parametermanager.GoogleClientExample[tags="imports, clazz", source="main"]
+
+<1> Injects ParameterManagerClient
+
+
+==== Using Regional Endpoints
+
+To access regional parameters using the Google Java client, the same ParameterManagerClient bean can be used.
+To enable regional endpoints for ParameterManagerClient, you must set `gcp.parameter-manager.location` to one of the
+link:https://docs.cloud.google.com/secret-manager/docs/locations#parameter_manager_locations[available locations].
+
+snippet::io.micronaut.gcp.parametermanager.GoogleLocationClientExample[tags="imports, clazz", source="main"]
+
+<1> Injects ParameterManagerClient
+
+=== Micronaut Parameter Manager Client
+
+If you prefer not to work directly with Google gRPC-based libraries, Micronaut provides a higher-level wrapper client:
+api:gcp.parametermanager.client.ParameterManagerAccessClient[].
+This client offers a reactive API and is used internally by the framework.
+
+snippet::io.micronaut.gcp.parametermanager.ClientExample[tags="imports, clazz", source="main"]
+
+<1> Uses the current project from GoogleCloudCredentials to retrieve parameter version details
+<2> Uses an explicitly provided project to retrieve parameter version details
+<3> Uses the current project from GoogleCloudCredentials to render a parameter version
+<4> Uses an explicitly provided project to render a parameter version
+
+==== Using Regional Parameters with the Wrapper Client
+
+To access regional parameters with ParameterManagerAccessClient, you must set `gcp.parameter-manager.location` to one
+of the link:https://docs.cloud.google.com/secret-manager/docs/locations#parameter_manager_locations[available locations].
+
+TIP: Although client libraries can be used at any point during application runtime, it is recommended to load parameters
+only once during application startup. This minimizes latency from remote calls and helps reduce costs associated with
+parameter retrieval.

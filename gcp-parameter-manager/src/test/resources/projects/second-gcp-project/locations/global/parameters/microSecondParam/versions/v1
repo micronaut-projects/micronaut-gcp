@@ -1,0 +1,5 @@
+custom:
+  value: second-foo
+acme:
+  customer:
+    tier: golden

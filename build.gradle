@@ -1,3 +1,5 @@
+import org.gradle.api.plugins.JavaPlugin
+
 plugins {
     id "io.micronaut.build.internal.parent"
 }
@@ -11,6 +13,19 @@ allprojects {
             preferProjectModules()
             // Remove once the Micronaut core BOM manages Netty 4.2.13.Final or newer.
             force "io.netty:netty-codec-http:${libs.versions.netty.get()}"
+        }
+    }
+    // Minimum versions for advisory fixes, declared on implementation (not on the resolvable runtimeClasspath).
+    // Constraints only raise versions, so newer BOM-managed components are not downgraded.
+    plugins.withType(JavaPlugin) {
+        def floors = [
+            "io.grpc:grpc-netty-shaded:1.75.0": "GHSA-prj3-ccx8-p6x4",
+            "ch.qos.logback:logback-core:1.5.34": "GHSA-jhq6-gfmj-v8fx, GHSA-p47f-322f-whfh",
+            "com.google.guava:guava:33.7.2-jre": "GHSA-xxph-c9ww-hj94",
+            "io.opentelemetry:opentelemetry-api:1.67.0": "GHSA-ccrj-gw8r-854m"
+        ]
+        floors.each { coordinate, advisory ->
+            project.dependencies.constraints.add("implementation", coordinate) { because advisory }
         }
     }
 }

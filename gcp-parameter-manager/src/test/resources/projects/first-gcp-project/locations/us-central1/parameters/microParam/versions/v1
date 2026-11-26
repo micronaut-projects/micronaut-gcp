@@ -1,0 +1,5 @@
+custom:
+  value: foo-us-central
+acme:
+  customer:
+    tier: copper

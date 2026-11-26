@@ -36,4 +36,9 @@ public interface Modules {
      */
     String SECRET_MANAGER = "secret-manager";
 
+    /**
+     * Module name for parameter-manager.
+     */
+    String PARAMETER_MANAGER = "parameter-manager";
+
 }
