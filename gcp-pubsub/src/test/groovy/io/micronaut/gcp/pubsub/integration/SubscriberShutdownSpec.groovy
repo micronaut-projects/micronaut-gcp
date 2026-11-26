@@ -38,7 +38,8 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         PollingConditions conditions = new PollingConditions(timeout: 10)
         EmbeddedServer subscriberServer = ApplicationContext.run(EmbeddedServer, [
                 "server.name" : "ShutdownSubscriberServer",
-                "gcp.projectId" : "test-project"
+                "gcp.projectId" : "test-project",
+                "micronaut.lifecycle.graceful-shutdown.enabled" : true
 
         ], "integration")
 
@@ -90,6 +91,7 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         EmbeddedServer subscriberServer = ApplicationContext.run(EmbeddedServer, [
                 "server.name" : "ShutdownSubscriberServer",
                 "gcp.projectId" : "test-project",
+                "micronaut.lifecycle.graceful-shutdown.enabled" : true,
                 "micronaut.executors.scheduled.core-pool-size" : 5,
                 "gcp.pubsub.nack-on-shutdown" : true
 
@@ -129,6 +131,48 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
         }
         listener.messagesProcessed.get() < 100
     }
+
+    void "a listener can still publish while the application shuts down gracefully"() {
+        given:
+        TopicName inTopic = TopicName.of("test-project", "forward-in")
+        TopicName outTopic = TopicName.of("test-project", "forward-out")
+        pubSubResourceAdmin.createTopic(inTopic)
+        pubSubResourceAdmin.createTopic(outTopic)
+        pubSubResourceAdmin.createSubscription(inTopic, ProjectSubscriptionName.of("test-project", "forward-in-sub"))
+        PollingConditions conditions = new PollingConditions(timeout: 10)
+        EmbeddedServer subscriberServer = ApplicationContext.run(EmbeddedServer, [
+                "server.name" : "ForwardingSubscriberServer",
+                "gcp.projectId" : "test-project",
+                "micronaut.lifecycle.graceful-shutdown.enabled" : true
+        ], "integration")
+        def ctx = ApplicationContext.run([
+                "spec.name" : "SubscriberShutdownSpec",
+                "gcp.projectId" : "test-project"
+        ], "integration")
+        def listener = subscriberServer.applicationContext.getBean(ForwardingListener)
+        def publisher = ctx.getBean(PubSubShutdownClient)
+
+        when:
+        5.times { publisher.forward("ping") }
+
+        then:
+        conditions.eventually {
+            listener.inProgress.get() > 0
+        }
+
+        when: "shutdown starts while a listener is still working and is about to publish"
+        subscriberServer.stop()
+
+        then:
+        conditions.eventually {
+            !subscriberServer.isRunning()
+        }
+        listener.publishFailures.isEmpty()
+        listener.published.get() == listener.received.get()
+
+        cleanup:
+        ctx?.close()
+    }
 }
 
 @PubSubClient
@@ -136,6 +180,46 @@ class SubscriberShutdownSpec extends IntegrationTestSpec {
 interface PubSubShutdownClient {
     @Topic(value ="topic")
     void send(String msg)
+
+    @Topic(value = "forward-in")
+    void forward(String msg)
+}
+
+@PubSubClient
+@Requires(property = "server.name", value = "ForwardingSubscriberServer")
+interface ForwardingClient {
+    @Topic(value = "forward-out")
+    String send(String msg)
+}
+
+@Requires(property = "server.name", value = "ForwardingSubscriberServer")
+@PubSubListener
+class ForwardingListener {
+
+    final ForwardingClient client
+    final AtomicInteger received = new AtomicInteger()
+    final AtomicInteger inProgress = new AtomicInteger()
+    final AtomicInteger published = new AtomicInteger()
+    final List<Throwable> publishFailures = Collections.synchronizedList([])
+
+    ForwardingListener(ForwardingClient client) {
+        this.client = client
+    }
+
+    @Subscription("forward-in-sub")
+    void onMessage(String message) {
+        received.incrementAndGet()
+        inProgress.incrementAndGet()
+        try {
+            Thread.sleep(1000)
+            client.send(message)
+            published.incrementAndGet()
+        } catch (Throwable e) {
+            publishFailures.add(e)
+        } finally {
+            inProgress.decrementAndGet()
+        }
+    }
 }
 
 @Requires(property = "server.name", value = "ShutdownSubscriberServer")
