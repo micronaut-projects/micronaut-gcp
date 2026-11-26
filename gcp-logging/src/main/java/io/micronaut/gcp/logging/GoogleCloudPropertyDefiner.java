@@ -20,11 +20,13 @@ import io.micronaut.context.env.Environment;
 import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.StringUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -39,6 +41,12 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
     private static final int DEFAULT_READ_TIMEOUT = 500;
     private static final int DEFAULT_CONNECT_TIMEOUT = 500;
     private static final String GOOGLE_COMPUTE_METADATA = "http://metadata.google.internal";
+    private static final int DEFAULT_MAX_ATTEMPTS = 3;
+    private static final long DEFAULT_RETRY_DELAY = 500;
+
+    private int maxAttempts = DEFAULT_MAX_ATTEMPTS;
+    private long retryDelay = DEFAULT_RETRY_DELAY;
+    private String metadataUrl = GOOGLE_COMPUTE_METADATA;
 
     /**
      * @return true if application is running on GCP via metadata server detection or if user provided MICRONAUT_ENVIRONMENTS value.
@@ -57,33 +65,84 @@ public class GoogleCloudPropertyDefiner extends PropertyDefinerBase {
         return isGcp ? "CONSOLE_JSON" : "STDOUT";
     }
 
-    private Boolean isGoogleCompute() {
-        try {
-            final HttpURLConnection con = createConnection(GOOGLE_COMPUTE_METADATA);
-            con.setRequestMethod("GET");
-            con.setDoOutput(true);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
+    /**
+     * Sets how many times the metadata server is queried before deciding the application is not
+     * running on Google Cloud. Set from logback.xml with {@code <maxAttempts>} inside {@code <define>}.
+     * A host name that does not resolve is never retried.
+     *
+     * @param maxAttempts the number of attempts, at least 1
+     * @since 6.2.1
+     */
+    public void setMaxAttempts(int maxAttempts) {
+        this.maxAttempts = Math.max(1, maxAttempts);
+    }
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            if (con.getHeaderField("Metadata-Flavor") != null &&
-                    con.getHeaderField("Metadata-Flavor").equalsIgnoreCase("Google")) {
-                return true;
-            }
+    /**
+     * Sets the delay between metadata server attempts in milliseconds. Set from logback.xml with
+     * {@code <retryDelay>} inside {@code <define>}.
+     *
+     * @param retryDelay the delay in milliseconds
+     * @since 6.2.1
+     */
+    public void setRetryDelay(long retryDelay) {
+        this.retryDelay = Math.max(0, retryDelay);
+    }
 
-        } catch (IOException e) {
-            // well not google then
+    /**
+     * Overrides the metadata server URL. Defaults to {@code http://metadata.google.internal}.
+     *
+     * @param metadataUrl the metadata server URL
+     * @since 6.2.1
+     */
+    public void setMetadataUrl(String metadataUrl) {
+        this.metadataUrl = metadataUrl;
+    }
+
+    private boolean isGoogleCompute() {
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                if (queryMetadataServer()) {
+                    return true;
+                }
+            } catch (UnknownHostException _) {
+                // the metadata host only resolves on Google Cloud: not Google, no point retrying
+                return false;
+            } catch (IOException _) {
+                // the server may not be reachable yet, for example while a service mesh sidecar starts
+            }
+            if (attempt < maxAttempts && !sleep()) {
+                return false;
+            }
         }
         return false;
     }
 
-    private  HttpURLConnection createConnection(String spec) throws IOException {
-        final URL url = new URL(spec);
+    private boolean queryMetadataServer() throws IOException {
+        HttpURLConnection con = createConnection(metadataUrl);
+        try {
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Metadata-Flavor", "Google");
+            try (InputStream in = con.getInputStream()) {
+                in.transferTo(OutputStream.nullOutputStream());
+            }
+            return "Google".equalsIgnoreCase(con.getHeaderField("Metadata-Flavor"));
+        } finally {
+            con.disconnect();
+        }
+    }
+
+    private boolean sleep() {
+        try {
+            Thread.sleep(retryDelay);
+            return true;
+        } catch (InterruptedException _) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    private HttpURLConnection createConnection(String spec) throws IOException {
+        final URL url = URI.create(spec).toURL();
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setReadTimeout(DEFAULT_READ_TIMEOUT);
         con.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT);

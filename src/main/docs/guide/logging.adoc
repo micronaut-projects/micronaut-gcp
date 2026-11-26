@@ -92,4 +92,20 @@ You logging configuration would look like this:
 
 <1> Chooses the appropriate appender depending on the environment.
 
+The metadata server is queried up to 3 times, 500 milliseconds apart, so that a server that is not reachable yet at startup (for example while an Istio or Anthos Service Mesh sidecar starts) does not switch the logs to plain text. When the metadata host name does not resolve, which is the case outside Google Cloud, detection stops after the first attempt. To change the number of attempts or the delay, define your own property with the same class:
+
+[source,xml]
+----
+<configuration>
+    <define name="google_cloud_logging_detected" class="io.micronaut.gcp.logging.GoogleCloudPropertyDefiner">
+        <maxAttempts>5</maxAttempts>
+        <retryDelay>1000</retryDelay>
+    </define>
+    <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" />
+    <root level="INFO">
+        <appender-ref ref="${google_cloud_logging_detected}" />
+    </root>
+</configuration>
+----
+
 NOTE: The environment detection executes a HTTP request to the Google Cloud metadata server. If you rather skip this to improve startup time, just set  `MICRONAUT_ENVIRONMENTS` environment variable or the `micronaut.environments` System property as described in the https://docs.micronaut.io/latest/guide/index.html#environments[reference documentation].
